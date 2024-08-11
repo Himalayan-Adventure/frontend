@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Overpass } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/navbar";
 const overpass = Overpass({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
           overpass.className,
         )}
       >
+        <Navbar />
         {children}
       </body>
     </html>
