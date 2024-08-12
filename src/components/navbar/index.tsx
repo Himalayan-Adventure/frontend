@@ -1,7 +1,10 @@
+"use client";
 import Image from "next/image";
 import Logo from "../logo";
 import Link from "next/link";
 import { InfoBar } from "./info-bar";
+import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 export const Navbar = () => {
   const navLinks = [
     {
@@ -33,13 +36,19 @@ export const Navbar = () => {
       href: "/our-team",
     },
   ];
+  const router = useRouter();
+  const pathname = usePathname();
   return (
     <div className="sticky top-0 bg-black py-2.5">
       <div className="container flex flex-col">
         <InfoBar />
         <nav className="flex gap-x-4 text-white">
           {navLinks.map((navLink) => (
-            <Link key={`nav-link-${navLink.name}`} href={navLink.href}>
+            <Link
+              key={`nav-link-${navLink.name}`}
+              href={navLink.href}
+              className={cn()}
+            >
               {navLink.name}
             </Link>
           ))}
