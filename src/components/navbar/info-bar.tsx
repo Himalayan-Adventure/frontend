@@ -9,7 +9,7 @@ export const InfoBar = () => {
   return (
     <div className="flex justify-between items-center text-white">
       <Logo />
-      <span className="flex gap-x-5 items-center">
+      <span className="flex gap-x-7 items-center">
         {/* TODO: replace lucide icon with figma icons*/}
         {[
           {
@@ -44,7 +44,7 @@ export const InfoBar = () => {
         ))}
       </span>
       <span className="flex items-center gap-x-7">
-        <Button className="capitalize border border-gray-50 rounded-full text-base leading-5 px-10 py-2.5 bg-transparent text-gray-50 font-semibold">
+        <Button className="capitalize border border-gray-50 rounded-full text-base leading-5 px-10 py-3 bg-transparent text-gray-50 font-semibold">
           Plan with us
         </Button>
         <Avatar>
