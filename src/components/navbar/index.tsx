@@ -47,7 +47,7 @@ export const Navbar = () => {
             <Link
               key={`nav-link-${navLink.name}`}
               href={navLink.href}
-              className={cn()}
+              className={cn(pathname.includes(navLink.href))}
             >
               {navLink.name}
             </Link>
