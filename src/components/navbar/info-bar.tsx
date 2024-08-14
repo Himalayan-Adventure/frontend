@@ -5,12 +5,14 @@ import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Menu, Phone } from "lucide-react";
+import Image from "next/image";
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTrigger,
 } from "../ui/drawer";
+import { socialIcons } from "@/config/constants";
 export const InfoBar = () => {
   const contacts = [
     {
@@ -90,6 +92,22 @@ export const InfoBar = () => {
             <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">
               Plan with us
             </Button>
+
+            <div className="flex flex-row justify-center gap-x-2 brightness-200">
+              {socialIcons.map((item) => (
+                <Link
+                  key={`social-link-${item.name}`}
+                  href={item.href}
+                  target="_blank"
+                >
+                  <Image
+                    src={item.icon}
+                    alt={`${item.name} Icon`}
+                    className="h-auto w-12"
+                  />
+                </Link>
+              ))}
+            </div>
             <span className="flex items-start gap-x-4">
               <Avatar>
                 <AvatarImage src="https://github.com/shadcn.png" />
