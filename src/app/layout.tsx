@@ -4,7 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
-const overpass = Overpass({ subsets: ["latin"], variable: "--font-serif" });
+const overpass = Overpass({ subsets: ["latin"], variable: "--font-overpass" });
 
 export const metadata: Metadata = {
   title: "Himalayan Adventure",
@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-serif antialiased",
+          "min-h-screen bg-background font-overpass antialiased",
           overpass.className
         )}
       >

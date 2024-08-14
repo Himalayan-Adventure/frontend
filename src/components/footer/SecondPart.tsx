@@ -118,7 +118,7 @@ export default function UsefulLinksSection() {
                   alt={social.alt}
                   width={24}
                   height={24}
-                  className="w-6 h-6" // Tailwind classes for consistent size
+                  className="w-6 h-6 bg-black" // Tailwind classes for consistent size
                 />
               </Link>
             ))}
