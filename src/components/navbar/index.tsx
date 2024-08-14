@@ -47,7 +47,7 @@ export const Navbar = () => {
   const overflowDir = useOverflowDetection(containerRef);
 
   return (
-    <div className="sticky top-0 bg-black pb-4">
+    <div className="sticky top-0 pb-4 z-50">
       <div className="flex w-full flex-col">
         <InfoBar />
         <nav className="container w-full relative">
