@@ -3,6 +3,7 @@ import { Overpass } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
+import Footer from "@/components/footer";
 const overpass = Overpass({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
@@ -20,11 +21,12 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-serif antialiased",
-          overpass.className,
+          overpass.className
         )}
       >
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
