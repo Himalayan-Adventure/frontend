@@ -94,7 +94,7 @@ const Navlinks = ({ scrollY }: { scrollY: number }) => {
       ) : null}
       <div
         ref={containerRef}
-        className="hide-scrollbar relative flex w-full justify-start gap-x-10 overflow-x-auto pb-6 text-white md:justify-center"
+        className="hide-scrollbar relative flex w-full justify-start gap-x-10 overflow-x-auto pb-2 text-white md:justify-center lg:pb-6"
       >
         {navLinks.map((navLink) => (
           <Link
@@ -103,7 +103,7 @@ const Navlinks = ({ scrollY }: { scrollY: number }) => {
             className={cn(
               "relative",
               pathname.includes(navLink.href) &&
-                "text-primary after:absolute after:-bottom-5 after:h-1 after:w-full after:bg-primary after:content-['']",
+                "text-primary after:absolute after:-bottom-2 after:h-1 after:w-full after:bg-primary after:content-[''] lg:after:-bottom-5",
             )}
           >
             <Text variant="text-xl" className="whitespace-nowrap text-sm">
