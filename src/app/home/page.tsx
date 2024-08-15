@@ -55,7 +55,7 @@ export default function Home() {
           </Link>
         ))}
       </aside>
-      <header className="relative top-20 z-10 flex flex-col items-center gap-y-10 text-white">
+      <header className="relative top-[calc(var(--navbar-height)+2em)] z-10 flex flex-col items-center gap-y-10 text-white">
         <Text
           variant="display-lg"
           className="text-lg font-black capitalize tracking-wide md:text-2xl lg:text-4xl 2xl:text-[50px]"
