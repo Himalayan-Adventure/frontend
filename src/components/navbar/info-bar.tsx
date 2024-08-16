@@ -28,16 +28,16 @@ export const InfoBar = () => {
   ];
 
   return (
-    <div className="flex justify-between items-center text-white bg-black/40 container py-7 lg:py-3">
+    <div className="container flex items-center justify-between bg-black/40 py-7 text-white lg:py-3">
       <Logo className="max-w-[130px] lg:max-w-[220px]" />
-      <span className="hidden lg:flex gap-x-7 items-center">
+      <span className="hidden items-center gap-x-7 lg:flex">
         {/* TODO: replace lucide icon with figma icons*/}
         {contacts.map((item) => (
           <div
             key={`info-bar-${item.name}`}
             className="flex items-center gap-x-6"
           >
-            <div className="border border-white rounded-full w-[52px] h-[52px]  aspect-square p-2 grid place-items-center">
+            <div className="grid aspect-square h-[52px] w-[52px] place-items-center rounded-full border border-white p-2">
               {item.icon}
             </div>
             <div>
@@ -51,8 +51,8 @@ export const InfoBar = () => {
           </div>
         ))}
       </span>
-      <span className="lg:flex items-center gap-x-7 hidden">
-        <Button className="capitalize border border-gray-50 rounded-full text-base  px-10 py-3 bg-transparent text-gray-50 font-semibold leading-none">
+      <span className="hidden items-center gap-x-7 lg:flex">
+        <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-none text-gray-50">
           Plan with us
         </Button>
         <Avatar>
@@ -66,12 +66,12 @@ export const InfoBar = () => {
         <DrawerTrigger className="lg:hidden">
           <Menu />
         </DrawerTrigger>
-        <DrawerContent className="container flex h-full justify-between lg:hidden bg-black/40 text-white border-none">
-          <div className="pt-10 space-y-4">
+        <DrawerContent className="container flex h-full justify-between border-none bg-black/40 text-white lg:hidden">
+          <div className="space-y-4 pt-10">
             {contacts.map((item) => (
               <div
                 key={`info-bar-${item.name}`}
-                className="flex items-start gap-x-6 "
+                className="flex items-start gap-x-6"
               >
                 {item.icon}
                 <span>
@@ -86,8 +86,8 @@ export const InfoBar = () => {
             ))}
           </div>
 
-          <span className="flex flex-col items-start gap-y-7 lg:hidden py-5">
-            <Button className="capitalize border border-gray-50 rounded-full text-base leading-5 px-10 py-3 bg-transparent text-gray-50 font-semibold">
+          <span className="flex flex-col items-start gap-y-7 py-5 lg:hidden">
+            <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">
               Plan with us
             </Button>
             <span className="flex items-start gap-x-4">

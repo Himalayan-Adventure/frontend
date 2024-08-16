@@ -20,8 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-overpass antialiased",
-          overpass.className
+          "font-overpass min-h-screen bg-background antialiased",
+          overpass.className,
         )}
       >
         <Navbar />

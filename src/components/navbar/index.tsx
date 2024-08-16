@@ -50,15 +50,15 @@ export const Navbar = () => {
     <div className="sticky top-0 bg-black pb-4">
       <div className="flex w-full flex-col">
         <InfoBar />
-        <nav className="container w-full relative">
+        <nav className="container relative w-full">
           {overflowDir === "left" || overflowDir === "both" ? (
             <div className="absolute left-4 top-1/2 z-10 grid h-9 w-8 -translate-y-1/2 place-items-center bg-gradient-to-r from-black lg:hidden">
-              <ChevronLeft className="absolute animate-chevron-left text-xl text-primary" />
+              <ChevronLeft className="animate-chevron-left absolute text-xl text-primary" />
             </div>
           ) : null}
           <div
             ref={containerRef}
-            className="flex w-full relative gap-x-10  text-white lg:justify-center overflow-x-auto justify-start hide-scrollbar pb-6"
+            className="hide-scrollbar relative flex w-full justify-start gap-x-10 overflow-x-auto pb-6 text-white lg:justify-center"
           >
             {navLinks.map((navLink) => (
               <Link
@@ -66,11 +66,11 @@ export const Navbar = () => {
                 href={navLink.href}
                 className={cn(
                   pathname.includes(navLink.href) &&
-                    "text-primary after:content-[''] after:bg-primary after:h-1 after:absolute after:w-full after:-bottom-5 ",
+                    "text-primary after:absolute after:-bottom-5 after:h-1 after:w-full after:bg-primary after:content-['']",
                   "relative",
                 )}
               >
-                <Text variant="text-xl" className="text-sm whitespace-nowrap">
+                <Text variant="text-xl" className="whitespace-nowrap text-sm">
                   {navLink.name}
                 </Text>
               </Link>
@@ -79,7 +79,7 @@ export const Navbar = () => {
 
           {overflowDir === "right" || overflowDir === "both" ? (
             <div className="absolute right-4 top-1/2 z-10 grid h-9 w-8 -translate-y-1/2 place-items-center bg-gradient-to-r from-transparent to-black lg:hidden">
-              <ChevronRight className="absolute animate-chevron-right text-xl text-primary" />
+              <ChevronRight className="animate-chevron-right absolute text-xl text-primary" />
             </div>
           ) : null}
         </nav>
