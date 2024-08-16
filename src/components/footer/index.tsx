@@ -1,5 +1,5 @@
-import FirstPart from "./FirstPart";
-import SecondPart from "./SecondPart";
+import FirstPart from "./first-part";
+import SecondPart from "./second-part";
 
 export default function Footer() {
   return (
