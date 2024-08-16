@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Logo from "../logo";
 
 export default function FirstPart() {
   const usefulLinks = [
@@ -30,7 +31,7 @@ export default function FirstPart() {
             <h1 className="text-lg lg:text-2xl font-medium">
               Subscribe For Newsletter
             </h1>
-            <div className="bg-[#6b6a6d] p-3 lg:p-6 my-2 lg:my-4 rounded-xl max-w-full lg:max-w-[880px]">
+            <div className="bg-gray-500 p-3 lg:p-6 my-2 lg:my-4 rounded-xl max-w-full lg:max-w-[880px]">
               <form className="flex flex-col sm:flex-row gap-2 lg:gap-4">
                 <input
                   type="email"
@@ -39,7 +40,7 @@ export default function FirstPart() {
                 />
                 <button
                   type="submit"
-                  className="p-2 lg:p-4 bg-[#FD9100] text-white transition-colors rounded-xl w-full sm:w-auto text-sm"
+                  className="p-2 lg:p-4 bg-primary text-white transition-colors rounded-xl w-full sm:w-auto text-sm"
                 >
                   Subscribe
                 </button>
@@ -61,15 +62,9 @@ export default function FirstPart() {
             </div>
           </div>
           <div className="pt-2 md:pt-4 lg:pt-8">
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={500}
-              height={500}
-              className="w-28 lg:w-52"
-            />
+            <Logo />
             <div className="mt-2">
-              <h1 className="lg:text-lg lg:text-[25px] font-medium">
+              <h1 className="lg:text-[25px] font-medium">
                 Lorem ipsum
               </h1>
               <p className="mt-2 text-sm lg:text-base">
