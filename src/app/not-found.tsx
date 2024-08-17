@@ -1,6 +1,7 @@
 import Link from "next/link";
-
+import { redirect } from "next/navigation";
 const NotFound = () => {
+  redirect("/home");
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center">
       <h2>Not Found</h2>
