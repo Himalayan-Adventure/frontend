@@ -3,11 +3,46 @@ import Logo from "../logo";
 import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MapPin, Menu, Phone } from "lucide-react";
+import {
+  Cloud,
+  CreditCard,
+  Github,
+  Keyboard,
+  LifeBuoy,
+  LogOut,
+  Mail,
+  MapPin,
+  Menu,
+  MessageSquare,
+  Phone,
+  Plus,
+  PlusCircle,
+  Settings,
+  User,
+  UserCheck,
+  UserCircle,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import Image from "next/image";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { m } from "framer-motion";
 import { socialIcons } from "@/config/constants";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
   const contacts = [
     {
@@ -23,6 +58,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
       href: "tel:+977 98867554",
     },
   ];
+  const [user, setUser] = useState(null);
 
   return (
     <m.div
@@ -61,10 +97,57 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-none text-gray-50">
             Plan with us
           </Button>
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          {!user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="group h-full rounded-full bg-background p-2 transition-all ease-in-out hover:bg-primary">
+                <User className="size-6 text-primary transition-all ease-in-out group-hover:text-background" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom">
+                <DropdownMenuLabel>Not signed in</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <UserCheck className="mr-2 h-4 w-4" />
+                    <span>Login</span>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem>
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    <span>Register</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    <span>Billing</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </span>
 
         {/*  For mobile*/}
