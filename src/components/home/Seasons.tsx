@@ -12,18 +12,18 @@ export default function Seasons() {
   return (
     <section className="container py-8">
       <div>
-        <h1 className="text-3xl lg:text-5xl font-bold mb-4">
+        <h1 className="mb-4 text-3xl font-bold lg:text-5xl">
           Find Travel Inspiration by Seasons
         </h1>
-        <p className="text-lg lg:text-2xl text-gray-700 mb-6 max-w-3xl">
+        <p className="mb-6 max-w-3xl text-lg text-gray-700 lg:text-2xl">
           Discover beautiful destinations and travel ideas for every season of
           the year. Explore the perfect getaways for spring, summer, fall, and
           winter.
         </p>
-        <div className="flex space-x-4 mt-4 lg:mt-8">
+        <div className="mt-4 flex flex-wrap space-x-4 space-y-4 lg:mt-8">
           {seasons.map((season) => (
-            <div key={season.name} className="flex flex-col  space-x-4">
-              <div className="w-24 lg:w-60 h-24 lg:h-48 flex items-center  overflow-hidden">
+            <div key={season.name} className="flex flex-col space-x-4">
+              <div className="flex h-24 w-24 items-center overflow-hidden lg:h-48 lg:w-60">
                 <Image
                   src={season.imageSrc}
                   alt={season.name}
@@ -32,7 +32,9 @@ export default function Seasons() {
                   className="object-cover"
                 />
               </div>
-              <p className="mt-2 text-lg lg:text-2xl font-semibold">{season.name}</p>
+              <p className="mt-2 text-lg font-semibold lg:text-2xl">
+                {season.name}
+              </p>
             </div>
           ))}
         </div>
