@@ -10,6 +10,7 @@ import Link from "next/link";
 import { socialIcons } from "@/config/constants";
 import WhatWeDo from "@/components/home/WhatWeDo";
 import Seasons from "@/components/home/Seasons";
+import HomeCarousel from "@/components/home/Carousel";
 export default function Home() {
   return (
     <main>
@@ -75,6 +76,7 @@ export default function Home() {
       </section>
       <WhatWeDo />
       <Seasons />
+      <HomeCarousel />
     </main>
   );
 }

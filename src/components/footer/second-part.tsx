@@ -97,11 +97,11 @@ export default function UsefulLinksSection() {
     ));
 
   return (
-    <section className="bg-black text-white py-8 -mt-4">
+    <section className="-mt-4 bg-black py-8 text-white">
       <div className="container">
-        <div className="flex flex-col md:flex-row justify-between  py-4 md:py-8 gap-4">
+        <div className="flex flex-col justify-between gap-4 py-4 md:flex-row md:py-8">
           <div className="flex">
-            <button className="px-6 py-2 text-sm md:text-base text-white rounded-lg border border-white">
+            <button className="rounded-lg border border-white px-6 py-2 text-sm text-white md:text-base">
               About Us
             </button>
           </div>
@@ -118,7 +118,7 @@ export default function UsefulLinksSection() {
                   alt={social.alt}
                   width={24}
                   height={24}
-                  className="w-6 h-6 bg-black" // Tailwind classes for consistent size
+                  className="h-6 w-6 bg-black" // Tailwind classes for consistent size
                 />
               </Link>
             ))}
@@ -126,20 +126,20 @@ export default function UsefulLinksSection() {
         </div>
 
         <div className="border-b-2 border-white pb-8">
-          <h1 className="text-xl lg:text-2xl font-semibold mb-6">
+          <h1 className="mb-6 text-xl font-semibold lg:text-2xl">
             Useful Links
           </h1>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-6">
             {usefulLinks.map((column, idx) => (
               <div key={idx}>
-                <h2 className="font-semibold lg:text-lg mb-4">
+                <h2 className="mb-4 font-semibold lg:text-lg">
                   {column.title}
                 </h2>
                 <ul className="space-y-2">
                   {column.links.map((link, index) => (
                     <li key={index}>
                       <Link href={link.href}>
-                        <div className="hover:underline text-sm md:text-base">
+                        <div className="text-sm hover:underline md:text-base">
                           {link.name}
                         </div>
                       </Link>
@@ -151,25 +151,25 @@ export default function UsefulLinksSection() {
           </div>
         </div>
 
-        <div className="border-b-2 border-white py-8 flex flex-col md:flex-row justify-between gap-8">
+        <div className="flex flex-col justify-between gap-8 border-b-2 border-white py-8 md:flex-row">
           <div>
-            <h3 className="font-semibold lg:text-lg mb-4">We Accept</h3>
+            <h3 className="mb-4 font-semibold lg:text-lg">We Accept</h3>
             <ul className="flex gap-6">{renderList(paymentMethods)}</ul>
           </div>
 
           <div>
-            <h3 className="font-semibold lg:text-lg mb-4">Affiliated with</h3>
+            <h3 className="mb-4 font-semibold lg:text-lg">Affiliated with</h3>
             <ul className="flex gap-6">{renderList(affiliations)}</ul>
           </div>
 
           <div>
-            <h3 className="font-semibold lg:text-lg mb-4">Recommended by</h3>
+            <h3 className="mb-4 font-semibold lg:text-lg">Recommended by</h3>
             <ul className="flex gap-6">{renderList(recommendations)}</ul>
           </div>
         </div>
 
         <div className="flex justify-center pt-4">
-          <p className="text-sm md:text-base text-center">
+          <p className="text-center text-sm md:text-base">
             Copyright © 2024, Gurukul Hub Pvt. Ltd. All Rights reserved.
           </p>
         </div>
