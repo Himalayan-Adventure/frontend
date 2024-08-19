@@ -43,6 +43,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import { ChooseAccType } from "../auth/choose-acc-type";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
   const contacts = [
     {
@@ -113,8 +115,13 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem>
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    <span>Register</span>
+                    <Dialog>
+                      <DialogTrigger className="flex">
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        <span>Register</span>
+                      </DialogTrigger>
+                      <ChooseAccType />
+                    </Dialog>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
