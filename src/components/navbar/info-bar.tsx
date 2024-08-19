@@ -96,37 +96,47 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           ))}
         </span>
         <span className="hidden items-center gap-x-7 lg:flex">
-          <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-none text-gray-50">
-            Plan with us
+          <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 font-semibold capitalize text-gray-50">
+            <p className="text-base leading-none">Plan with us</p>
           </Button>
           {!user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="group h-full rounded-full bg-background p-2 transition-all ease-in-out hover:bg-primary">
-                <User className="size-6 text-primary transition-all ease-in-out group-hover:text-background" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="bottom">
-                <DropdownMenuLabel>Not signed in</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+            // <DropdownMenu>
+            //   <DropdownMenuTrigger className="group h-full rounded-full bg-background p-2 transition-all ease-in-out hover:bg-primary">
+            //     <User className="size-6 text-primary transition-all ease-in-out group-hover:text-background" />
+            //   </DropdownMenuTrigger>
+            //   <DropdownMenuContent side="bottom">
+            //     <DropdownMenuLabel>Not signed in</DropdownMenuLabel>
+            //     <DropdownMenuSeparator />
+            //
+            //     <DropdownMenuGroup>
+            //       <DropdownMenuItem>
+            //         <UserCheck className="mr-2 h-4 w-4" />
+            //         <span>Login</span>
+            //       </DropdownMenuItem>
+            //
+            //       <DropdownMenuItem>
+            <span className="flex flex-col items-stretch gap-y-1">
+              <Dialog>
+                <DialogTrigger className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white">
+                  <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} />
+                  <p className="font-semibold">Register</p>
+                </DialogTrigger>
+                <ChooseAccType />
+              </Dialog>
 
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <UserCheck className="mr-2 h-4 w-4" />
-                    <span>Login</span>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem>
-                    <Dialog>
-                      <DialogTrigger className="flex">
-                        <UserPlus className="mr-2 h-4 w-4" />
-                        <span>Register</span>
-                      </DialogTrigger>
-                      <ChooseAccType />
-                    </Dialog>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <Dialog>
+                <DialogTrigger className="flex items-center justify-center rounded-full bg-primary px-4 py-1 text-white">
+                  <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
+                  <p className="font-semibold">Login</p>
+                </DialogTrigger>
+                <ChooseAccType />
+              </Dialog>
+            </span>
           ) : (
+            //       </DropdownMenuItem>
+            //     </DropdownMenuGroup>
+            //   </DropdownMenuContent>
+            // </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
