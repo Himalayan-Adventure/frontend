@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Image from "next/image";
 import { useState } from "react";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 
@@ -56,7 +57,7 @@ export default function HomeCarousel() {
   ];
 
   return (
-    <section className="container flex justify-center py-8">
+    <section className="container flex justify-center py-8 lg:py-16">
       <Carousel
         opts={{
           align: "start",
@@ -67,11 +68,13 @@ export default function HomeCarousel() {
           {cardsData.map((card, index) => (
             <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
               <div className="relative p-4">
-                <Card className="relative border-none">
-                  <img
+                <Card className="relative border-none shadow-none">
+                  <Image
                     src={card.image}
                     alt={card.title}
-                    className="w-full rounded-2xl object-cover lg:h-96"
+                    className="rounded-2xl object-cover"
+                    width={500}
+                    height={800}
                   />
                   {/* Favorite Button */}
                   <div className="absolute right-4 top-4">

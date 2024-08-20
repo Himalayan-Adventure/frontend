@@ -10,7 +10,7 @@ const seasons = [
 
 export default function Seasons() {
   return (
-    <section className="container py-8">
+    <section className="container py-8 lg:py-16">
       <div>
         <h1 className="mb-4 text-3xl font-bold lg:text-5xl">
           Find Travel Inspiration by Seasons
@@ -20,10 +20,10 @@ export default function Seasons() {
           the year. Explore the perfect getaways for spring, summer, fall, and
           winter.
         </p>
-        <div className="mt-4 flex flex-wrap space-x-4 space-y-4 lg:mt-8">
+        <div className="mt-4 flex flex-wrap gap-4 lg:mt-8">
           {seasons.map((season) => (
-            <div key={season.name} className="flex flex-col space-x-4">
-              <div className="flex h-24 w-24 items-center overflow-hidden lg:h-48 lg:w-60">
+            <div key={season.name} className="flex flex-col">
+              <div className="flex h-24 w-24 items-center lg:h-40 lg:w-52 overflow-hidden ">
                 <Image
                   src={season.imageSrc}
                   alt={season.name}
@@ -32,9 +32,7 @@ export default function Seasons() {
                   className="object-cover"
                 />
               </div>
-              <p className="mt-2 text-lg font-semibold lg:text-2xl">
-                {season.name}
-              </p>
+              <p className="text-lg font-semibold lg:text-2xl">{season.name}</p>
             </div>
           ))}
         </div>
