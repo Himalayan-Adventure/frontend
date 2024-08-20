@@ -92,7 +92,7 @@ export const ChooseAccType = () => {
       <DialogFooter className="flex-row justify-center sm:justify-center">
         <Button
           type="submit"
-          className="font-poppins w-3/4 max-w-[400px] self-end bg-foreground px-10 py-8 font-bold sm:w-1/2 sm:py-4"
+          className="font-poppins w-3/4 max-w-[350px] self-end bg-foreground px-10 py-8 font-bold sm:w-1/2 sm:py-6"
         >
           Continue
         </Button>

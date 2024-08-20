@@ -4,25 +4,14 @@ import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Cloud,
   CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
   LogOut,
-  Mail,
   MapPin,
   Menu,
-  MessageSquare,
   Phone,
-  Plus,
-  PlusCircle,
-  Settings,
   User,
   UserCheck,
-  UserCircle,
   UserPlus,
-  Users,
 } from "lucide-react";
 import Image from "next/image";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -43,8 +32,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import { ChooseAccType } from "../auth/choose-acc-type";
+import { LoginCard } from "../auth/login";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
   const contacts = [
     {
@@ -129,7 +119,9 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
                   <p className="font-semibold">Login</p>
                 </DialogTrigger>
-                <ChooseAccType />
+                <DialogContent>
+                  <LoginCard />
+                </DialogContent>
               </Dialog>
             </span>
           ) : (
