@@ -11,6 +11,7 @@ import { socialIcons } from "@/config/constants";
 import WhatWeDo from "@/components/home/WhatWeDo";
 import Seasons from "@/components/home/Seasons";
 import HomeCarousel from "@/components/home/Carousel";
+import WhyUs from "@/components/home/WhyUs";
 export default function Home() {
   return (
     <main>
@@ -77,6 +78,7 @@ export default function Home() {
       <WhatWeDo />
       <Seasons />
       <HomeCarousel />
+      <WhyUs />
     </main>
   );
 }
