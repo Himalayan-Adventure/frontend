@@ -15,12 +15,12 @@ export default function Logo({
   theme?: "light" | "dark";
 }): JSX.Element {
   return (
-    <Link href={"/"} className={cn(className)}>
+    <Link href={"/"}>
       <Image
         src={theme === "dark" ? logo : logoLight}
         alt="logo"
-        width={215}
-        height={81}
+        className={cn(className)}
+        priority
       />
     </Link>
   );

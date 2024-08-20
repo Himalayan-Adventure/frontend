@@ -20,7 +20,7 @@ import Logo from "@/components/logo";
 import { useForm } from "react-hook-form";
 import { LoginFormSchema, TLoginForm } from "@/validators/login-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
-export const LoginCard = () => {
+export const RegisterCard = () => {
   const form = useForm<TLoginForm>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
@@ -29,7 +29,7 @@ export const LoginCard = () => {
     },
   });
   return (
-    <DialogContent className="[&>*]:font-poppins !flex w-[95vw] max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-fit sm:p-8 md:p-8">
+    <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:p-8 xl:w-fit">
       <div>
         <Logo theme="light" className="h-12 object-cover" />
         {/* <DialogClose className="top-0" /> */}
@@ -38,7 +38,7 @@ export const LoginCard = () => {
         {/* </span> */}
         <div className="my-4 [&>*]:text-neutral-900">
           <Text
-            variant="display-sm"
+            variant="display-md"
             className="font-poppins text-left font-bold capitalize"
           >
             Login
@@ -82,7 +82,7 @@ export const LoginCard = () => {
       <div className="mt-8 flex flex-row justify-center sm:justify-center">
         <Button
           type="submit"
-          className="font-poppins w-full self-end bg-foreground px-10 py-6 font-bold"
+          className="font-poppins w-full self-end bg-foreground px-10 py-8 font-bold sm:py-6"
         >
           Login
         </Button>

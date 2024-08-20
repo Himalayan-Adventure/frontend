@@ -119,9 +119,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
                   <p className="font-semibold">Login</p>
                 </DialogTrigger>
-                <DialogContent>
-                  <LoginCard />
-                </DialogContent>
+                <LoginCard />
               </Dialog>
             </span>
           ) : (
