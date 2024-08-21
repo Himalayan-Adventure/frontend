@@ -15,21 +15,30 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, Check, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Check, ChevronLeft, Eye, EyeOffIcon } from "lucide-react";
 import Logo from "@/components/logo";
 import { useForm } from "react-hook-form";
 import { LoginFormSchema, TLoginForm } from "@/validators/login-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  RegisterFormSchema,
+  TRegisterForm,
+} from "@/validators/register-validator";
+import Link from "next/link";
+import { PhoneInput } from "@/components/ui/phone-input";
 export const RegisterCard = () => {
-  const form = useForm<TLoginForm>({
-    resolver: zodResolver(LoginFormSchema),
+  const form = useForm<TRegisterForm>({
+    resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
+      username: "",
       email: "",
+      number: 0,
       password: "",
     },
   });
+  const [showPassword, setShowPassword] = useState(false);
   return (
-    <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:p-8 xl:w-fit">
+    <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
       <div>
         <Logo theme="light" className="h-12 object-cover" />
         {/* <DialogClose className="top-0" /> */}
@@ -38,14 +47,27 @@ export const RegisterCard = () => {
         {/* </span> */}
         <div className="my-4 [&>*]:text-neutral-900">
           <Text
-            variant="display-md"
+            variant="display-sm"
             className="font-poppins text-left font-bold capitalize"
           >
-            Login
+            Sign up
           </Text>
         </div>
         <Form {...form}>
           <form className="space-y-8">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>User name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -59,23 +81,104 @@ export const RegisterCard = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      defaultCountry="NP"
+                      placeholder="977 **********"
+                      {...field}
+                      value={field.value as any}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="capitalize">Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="password" {...field} />
+                    <FormControl>
+                      <div className="relative flex w-full flex-col">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          {...field}
+                          className=""
+                        />
+                        <Button
+                          type="button"
+                          tabIndex={-1}
+                          aria-label="Toggle see password"
+                          variant="ghost"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 transform p-0 text-gray-400"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOffIcon className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
                   </FormControl>
-                  <span className="relative top-2 cursor-pointer text-[12px] transition-colors ease-in hover:text-primary hover:underline">
-                    Forgot Password?
-                  </span>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="capitalize">Confirm Password</FormLabel>
+                  <FormControl>
+                    <FormControl>
+                      <div className="relative flex w-full flex-col">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Confirm password"
+                          {...field}
+                          className=""
+                        />
+                        <Button
+                          type="button"
+                          tabIndex={-1}
+                          aria-label="Toggle see password"
+                          variant="ghost"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 transform p-0 text-gray-400"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOffIcon className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Text variant="text-sm" className="text-center text-xs">
+              By creating an account or signing you agree to our{" "}
+              <Link href="/" className="font-bold underline">
+                Terms and Conditions
+              </Link>
+            </Text>
           </form>
         </Form>
       </div>

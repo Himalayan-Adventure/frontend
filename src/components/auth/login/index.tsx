@@ -29,7 +29,7 @@ export const LoginCard = () => {
     },
   });
   return (
-    <DialogContent className="[&>*]:font-poppins !flex w-[95vw] max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-fit sm:p-8 md:p-8">
+    <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
       <div>
         <Logo theme="light" className="h-12 object-cover" />
         {/* <DialogClose className="top-0" /> */}
@@ -67,7 +67,7 @@ export const LoginCard = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="password" {...field} />
+                    <Input type="password" placeholder="Password" {...field} />
                   </FormControl>
                   <span className="relative top-2 cursor-pointer text-[12px] transition-colors ease-in hover:text-primary hover:underline">
                     Forgot Password?

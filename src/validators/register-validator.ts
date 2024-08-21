@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const LoginFormSchema = z.object({
+export const RegisterFormSchema = z.object({
   username: z.string().min(1, { message: "Please enter a name" }),
   email: z.string().email(),
   number: z.number().min(10),
@@ -10,4 +10,4 @@ export const LoginFormSchema = z.object({
     .max(20, { message: "Password cannot exceed 20 characters" }),
 });
 
-export type TLoginForm = z.infer<typeof LoginFormSchema>;
+export type TRegisterForm = z.infer<typeof RegisterFormSchema>;

@@ -35,6 +35,7 @@ import {
 import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import { ChooseAccType } from "../auth/choose-acc-type";
 import { LoginCard } from "../auth/login";
+import { RegisterCard } from "../auth/register";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
   const contacts = [
     {
@@ -111,7 +112,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} />
                   <p className="font-semibold">Register</p>
                 </DialogTrigger>
-                <ChooseAccType />
+                <RegisterCard />
               </Dialog>
 
               <Dialog>
