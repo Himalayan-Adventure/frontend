@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image"; // Import if using Next.js's Image component
+import Image from "next/image";
 
 const seasons = [
   { name: "Spring", imageSrc: "/images/spring.png" },
@@ -12,10 +12,10 @@ export default function Seasons() {
   return (
     <section className="container py-8 lg:py-16">
       <div>
-        <h1 className="mb-4 text-3xl font-bold lg:text-5xl">
+        <h1 className="comp-heading mb-4">
           Find Travel Inspiration by Seasons
         </h1>
-        <p className="mb-6 max-w-3xl text-lg text-gray-700 lg:text-2xl">
+        <p className="comp-subheading mb-6 max-w-3xl">
           Discover beautiful destinations and travel ideas for every season of
           the year. Explore the perfect getaways for spring, summer, fall, and
           winter.
@@ -23,7 +23,7 @@ export default function Seasons() {
         <div className="mt-4 flex flex-wrap gap-4 lg:mt-8">
           {seasons.map((season) => (
             <div key={season.name} className="flex flex-col">
-              <div className="flex h-24 w-24 items-center lg:h-40 lg:w-52 overflow-hidden ">
+              <div className="flex h-24 w-24 items-center overflow-hidden lg:h-40 lg:w-52">
                 <Image
                   src={season.imageSrc}
                   alt={season.name}

@@ -77,3 +77,13 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.comp-heading {
+  @apply text-2xl lg:text-5xl font-[600]
+}
+
+.comp-subheading {
+  @apply text-lg text-gray-700 lg:text-2xl
+}
+
+

@@ -12,10 +12,15 @@ import WhatWeDo from "@/components/home/WhatWeDo";
 import Seasons from "@/components/home/Seasons";
 import HomeCarousel from "@/components/home/Carousel";
 import WhyUs from "@/components/home/WhyUs";
+import ExplorePackages from "@/components/home/ExplorePackages";
+import Services from "@/components/home/Services";
+import CTA from "@/components/home/CTA";
+import PopularDestinations from "@/components/home/PopularDestinations";
+import Testimonials from "@/components/home/Testimonials";
 export default function Home() {
   return (
     <main>
-      <section className="flex min-h-screen flex-col">
+      <section className="flex h-[80vh] flex-col overflow-hidden">
         {/*
         overlay images
       */}
@@ -79,6 +84,11 @@ export default function Home() {
       <Seasons />
       <HomeCarousel />
       <WhyUs />
+      <ExplorePackages />
+      <Services />
+      <CTA />
+      <PopularDestinations />
+      <Testimonials />
     </main>
   );
 }
