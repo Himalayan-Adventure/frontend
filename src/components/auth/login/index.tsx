@@ -1,9 +1,12 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { FaRegUser as UserIcon } from "react-icons/fa";
 import { Text } from "@/components/ui/text";
-import { DialogContent } from "@/components/ui/dialog";
-import { useState } from "react";
+import {
+  DialogClose,
+  DialogContent,
+  DialogOverlay,
+} from "@/components/ui/dialog";
+import { SetStateAction, useState } from "react";
 import {
   Form,
   FormControl,
@@ -15,12 +18,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, Check, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Check, ChevronLeft, Eye, EyeOffIcon } from "lucide-react";
 import Logo from "@/components/logo";
 import { useForm } from "react-hook-form";
 import { LoginFormSchema, TLoginForm } from "@/validators/login-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
-export const LoginCard = () => {
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+export const LoginCard = ({
+  setIsOpen,
+}: {
+  setIsOpen: React.Dispatch<SetStateAction<boolean>>;
+}) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
   const form = useForm<TLoginForm>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
@@ -28,8 +39,14 @@ export const LoginCard = () => {
       password: "",
     },
   });
+  function onSubmit(values: TLoginForm) {
+    toast.success("Successfully logged in!");
+    router.refresh();
+    setIsOpen(false);
+  }
   return (
     <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
+      <DialogClose onClick={() => setIsOpen(false)} />
       <div>
         <Logo theme="light" className="h-12 object-cover" />
         {/* <DialogClose className="top-0" /> */}
@@ -45,7 +62,7 @@ export const LoginCard = () => {
           </Text>
         </div>
         <Form {...form}>
-          <form className="space-y-8">
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="email"
@@ -65,27 +82,48 @@ export const LoginCard = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="capitalize">Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Password" {...field} />
+                    <FormControl>
+                      <div className="relative flex w-full flex-col">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          {...field}
+                          className=""
+                        />
+                        <Button
+                          type="button"
+                          tabIndex={-1}
+                          aria-label="Toggle see password"
+                          variant="ghost"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 transform p-0 text-gray-400"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOffIcon className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
                   </FormControl>
-                  <span className="relative top-2 cursor-pointer text-[12px] transition-colors ease-in hover:text-primary hover:underline">
-                    Forgot Password?
-                  </span>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <div className="mt-8 flex flex-row justify-center sm:justify-center">
+              <Button
+                type="submit"
+                className="font-poppins w-full self-end bg-foreground px-10 py-6 font-bold"
+              >
+                Login
+              </Button>
+            </div>
           </form>
         </Form>
-      </div>
-      <div className="mt-8 flex flex-row justify-center sm:justify-center">
-        <Button
-          type="submit"
-          className="font-poppins w-full self-end bg-foreground px-10 py-6 font-bold"
-        >
-          Login
-        </Button>
       </div>
     </DialogContent>
   );

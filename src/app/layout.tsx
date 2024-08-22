@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/sonner";
 const overpass = Overpass({ subsets: ["latin"], variable: "--font-overpass" });
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -31,6 +32,7 @@ export default function RootLayout({
           poppins.className,
         )}
       >
+        <Toaster richColors />
         <Navbar />
         {children}
         <Footer />

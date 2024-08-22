@@ -1,9 +1,8 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { FaRegUser as UserIcon } from "react-icons/fa";
 import { Text } from "@/components/ui/text";
-import { DialogContent } from "@/components/ui/dialog";
-import { useState } from "react";
+import { DialogContent, DialogOverlay } from "@/components/ui/dialog";
+import { SetStateAction, useState } from "react";
 import {
   Form,
   FormControl,
@@ -26,170 +25,192 @@ import {
 } from "@/validators/register-validator";
 import Link from "next/link";
 import { PhoneInput } from "@/components/ui/phone-input";
-export const RegisterCard = () => {
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+export const RegisterCard = ({
+  setIsOpen,
+}: {
+  setIsOpen: React.Dispatch<SetStateAction<boolean>>;
+}) => {
+  const router = useRouter();
   const form = useForm<TRegisterForm>({
     resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
       username: "",
       email: "",
-      number: 0,
+      number: "",
       password: "",
+      confirmPassword: "",
     },
   });
+  function onSubmit(values: TRegisterForm) {
+    toast.success("Successfully registered");
+    setIsOpen(false);
+    router.refresh();
+  }
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfPassword, setShowConfPassword] = useState(false);
   return (
-    <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
-      <div>
-        <Logo theme="light" className="h-12 object-cover" />
-        {/* <DialogClose className="top-0" /> */}
-        {/* <span className="absolute left-4 top-4 cursor-pointer sm:left-8"> */}
-        {/*   <ArrowLeft strokeWidth={3} /> */}
-        {/* </span> */}
-        <div className="my-4 [&>*]:text-neutral-900">
-          <Text
-            variant="display-sm"
-            className="font-poppins text-left font-bold capitalize"
-          >
-            Sign up
-          </Text>
-        </div>
-        <Form {...form}>
-          <form className="space-y-8">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="john.doe@email.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="number"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <PhoneInput
-                      defaultCountry="NP"
-                      placeholder="977 **********"
-                      {...field}
-                      value={field.value as any}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="capitalize">Password</FormLabel>
-                  <FormControl>
-                    <FormControl>
-                      <div className="relative flex w-full flex-col">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Password"
-                          {...field}
-                          className=""
-                        />
-                        <Button
-                          type="button"
-                          tabIndex={-1}
-                          aria-label="Toggle see password"
-                          variant="ghost"
-                          className="absolute right-4 top-1/2 -translate-y-1/2 transform p-0 text-gray-400"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOffIcon className="h-5 w-5" />
-                          ) : (
-                            <Eye className="h-5 w-5" />
-                          )}
-                        </Button>
-                      </div>
-                    </FormControl>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="capitalize">Confirm Password</FormLabel>
-                  <FormControl>
-                    <FormControl>
-                      <div className="relative flex w-full flex-col">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Confirm password"
-                          {...field}
-                          className=""
-                        />
-                        <Button
-                          type="button"
-                          tabIndex={-1}
-                          aria-label="Toggle see password"
-                          variant="ghost"
-                          className="absolute right-4 top-1/2 -translate-y-1/2 transform p-0 text-gray-400"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOffIcon className="h-5 w-5" />
-                          ) : (
-                            <Eye className="h-5 w-5" />
-                          )}
-                        </Button>
-                      </div>
-                    </FormControl>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Text variant="text-sm" className="text-center text-xs">
-              By creating an account or signing you agree to our{" "}
-              <Link href="/" className="font-bold underline">
-                Terms and Conditions
-              </Link>
+    <>
+      <DialogOverlay onClick={() => setIsOpen(false)} />
+      <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
+        <div>
+          <Logo theme="light" className="h-12 object-cover" />
+          {/* <DialogClose className="top-0" /> */}
+          {/* <span className="absolute left-4 top-4 cursor-pointer sm:left-8"> */}
+          {/*   <ArrowLeft strokeWidth={3} /> */}
+          {/* </span> */}
+          <div className="my-4 [&>*]:text-neutral-900">
+            <Text
+              variant="display-sm"
+              className="font-poppins text-left font-bold capitalize"
+            >
+              Sign up
             </Text>
-          </form>
-        </Form>
-      </div>
-      <div className="mt-8 flex flex-row justify-center sm:justify-center">
-        <Button
-          type="submit"
-          className="font-poppins w-full self-end bg-foreground px-10 py-8 font-bold sm:py-6"
-        >
-          Login
-        </Button>
-      </div>
-    </DialogContent>
+          </div>
+          <Form {...form}>
+            <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>User name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="john.doe@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <PhoneInput
+                        defaultCountry="NP"
+                        placeholder="977 **********"
+                        {...field}
+                        value={field.value as any}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="capitalize">Password</FormLabel>
+                    <FormControl>
+                      <FormControl>
+                        <div className="relative flex w-full flex-col">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            {...field}
+                            className=""
+                          />
+                          <Button
+                            type="button"
+                            tabIndex={-1}
+                            aria-label="Toggle see password"
+                            variant="ghost"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 transform p-0 text-gray-400"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? (
+                              <EyeOffIcon className="h-5 w-5" />
+                            ) : (
+                              <Eye className="h-5 w-5" />
+                            )}
+                          </Button>
+                        </div>
+                      </FormControl>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="capitalize">
+                      Confirm Password
+                    </FormLabel>
+                    <FormControl>
+                      <FormControl>
+                        <div className="relative flex w-full flex-col">
+                          <Input
+                            type={showConfPassword ? "text" : "password"}
+                            placeholder="Confirm password"
+                            {...field}
+                            className=""
+                          />
+                          <Button
+                            type="button"
+                            tabIndex={-1}
+                            aria-label="Toggle see password"
+                            variant="ghost"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 transform p-0 text-gray-400"
+                            onClick={() =>
+                              setShowConfPassword(!showConfPassword)
+                            }
+                          >
+                            {showConfPassword ? (
+                              <EyeOffIcon className="h-5 w-5" />
+                            ) : (
+                              <Eye className="h-5 w-5" />
+                            )}
+                          </Button>
+                        </div>
+                      </FormControl>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Text variant="text-sm" className="text-center text-xs">
+                By creating an account or signing you agree to our{" "}
+                <Link href="/" className="font-bold underline">
+                  Terms and Conditions
+                </Link>
+              </Text>
+
+              <div className="mt-8 flex flex-row justify-center sm:justify-center">
+                <Button
+                  type="submit"
+                  className="font-poppins w-full self-end bg-foreground px-10 py-8 font-bold sm:py-6"
+                >
+                  Login
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+      </DialogContent>
+    </>
   );
 };

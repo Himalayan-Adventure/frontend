@@ -17,7 +17,7 @@ import Image from "next/image";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { m } from "framer-motion";
 import { socialIcons } from "@/config/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,6 +37,8 @@ import { ChooseAccType } from "../auth/choose-acc-type";
 import { LoginCard } from "../auth/login";
 import { RegisterCard } from "../auth/register";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const contacts = [
     {
       name: "Reach Us",
@@ -108,19 +110,29 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
             //       <DropdownMenuItem>
             <span className="flex flex-col items-stretch gap-y-1">
               <Dialog>
-                <DialogTrigger className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white">
+                <DialogTrigger
+                  className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white"
+                  onClick={() => setRegisterDialogOpen(true)}
+                >
                   <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} />
                   <p className="font-semibold">Register</p>
                 </DialogTrigger>
-                <RegisterCard />
+                {registerDialogOpen && (
+                  <RegisterCard setIsOpen={setRegisterDialogOpen} />
+                )}
               </Dialog>
 
               <Dialog>
-                <DialogTrigger className="flex items-center justify-center rounded-full bg-primary px-4 py-1 text-white">
+                <DialogTrigger
+                  className="flex items-center justify-center rounded-full bg-primary px-4 py-1 text-white"
+                  onClick={() => setLoginDialogOpen(true)}
+                >
                   <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
                   <p className="font-semibold">Login</p>
                 </DialogTrigger>
-                <LoginCard />
+                {loginDialogOpen && (
+                  <LoginCard setIsOpen={setLoginDialogOpen} />
+                )}
               </Dialog>
             </span>
           ) : (
