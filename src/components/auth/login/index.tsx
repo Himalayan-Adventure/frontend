@@ -25,6 +25,7 @@ import { LoginFormSchema, TLoginForm } from "@/validators/login-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { login } from "@/server/login-user";
 export const LoginCard = ({
   setIsOpen,
 }: {
@@ -39,10 +40,20 @@ export const LoginCard = ({
       password: "",
     },
   });
-  function onSubmit(values: TLoginForm) {
-    toast.success("Successfully logged in!");
-    router.refresh();
-    setIsOpen(false);
+  async function onSubmit(values: TLoginForm) {
+    const payload = form.getValues();
+    const res = await login({
+      email: payload.email,
+      password: payload.password,
+    });
+    if (res.status === 200) {
+      toast.success("Successfully logged in!");
+      setIsOpen(false);
+      router.refresh();
+    } else {
+      console.log(res.error);
+      toast.error(`${res.error}`);
+    }
   }
   return (
     <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">

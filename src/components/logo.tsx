@@ -15,7 +15,7 @@ export default function Logo({
   theme?: "light" | "dark";
 }): JSX.Element {
   return (
-    <Link href={"/"}>
+    <Link href={"/"} className="block w-fit">
       <Image
         src={theme === "dark" ? logo : logoLight}
         alt="logo"

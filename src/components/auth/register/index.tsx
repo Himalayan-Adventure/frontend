@@ -27,6 +27,7 @@ import Link from "next/link";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { register } from "@/server/register-user";
 export const RegisterCard = ({
   setIsOpen,
 }: {
@@ -43,9 +44,21 @@ export const RegisterCard = ({
       confirmPassword: "",
     },
   });
-  function onSubmit(values: TRegisterForm) {
-    toast.success("Successfully registered");
-    setIsOpen(false);
+  async function onSubmit(values: TRegisterForm) {
+    const payload = form.getValues();
+    const res = await register({
+      username: payload.username,
+      email: payload.email,
+      password: payload.password,
+      number: payload.number,
+    });
+    if (res.status === 200) {
+      toast.success("Successfully registered!");
+      setIsOpen(false);
+    } else {
+      console.log(res.error);
+      toast.error(`${res.error}`);
+    }
     router.refresh();
   }
   const [showPassword, setShowPassword] = useState(false);
@@ -194,7 +207,7 @@ export const RegisterCard = ({
               />
               <Text variant="text-sm" className="text-center text-xs">
                 By creating an account or signing you agree to our{" "}
-                <Link href="/" className="font-bold underline">
+                <Link href="/" className="w-fit font-bold underline">
                   Terms and Conditions
                 </Link>
               </Text>
