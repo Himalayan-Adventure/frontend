@@ -28,6 +28,8 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { register } from "@/server/register-user";
+import { Checkbox } from "@/components/ui/checkbox";
+import { CheckedState } from "@radix-ui/react-checkbox";
 export const RegisterCard = ({
   setIsOpen,
 }: {
@@ -44,6 +46,7 @@ export const RegisterCard = ({
       confirmPassword: "",
     },
   });
+  const [termsChecked, setTermsChecked] = useState<CheckedState>(false);
   async function onSubmit(values: TRegisterForm) {
     const payload = form.getValues();
     const res = await register({
@@ -205,16 +208,31 @@ export const RegisterCard = ({
                   </FormItem>
                 )}
               />
-              <Text variant="text-sm" className="text-center text-xs">
+              <Text variant="text-sm" className="text-center text-sm">
                 By creating an account or signing you agree to our{" "}
                 <Link href="/" className="w-fit font-bold underline">
                   Terms and Conditions
                 </Link>
               </Text>
 
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={termsChecked}
+                  onCheckedChange={(e) => setTermsChecked(e)}
+                  id="terms"
+                  className="h-5 w-5 rounded-full"
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  I accept the terms and privacy policy
+                </label>
+              </div>
               <div className="mt-8 flex flex-row justify-center sm:justify-center">
                 <Button
                   type="submit"
+                  disabled={!termsChecked || !form.formState.isValid}
                   className="font-poppins w-full self-end bg-foreground px-10 py-8 font-bold sm:py-6"
                 >
                   Login

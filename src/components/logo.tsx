@@ -16,6 +16,7 @@ export default function Logo({
 }): JSX.Element {
   return (
     <Link href={"/"} className="block w-fit">
+      <p className="sr-only">Himalayan Adventures logo</p>
       <Image
         src={theme === "dark" ? logo : logoLight}
         alt="logo"
