@@ -65,26 +65,22 @@ export const LoginCard = ({
         !forgotPwd
           ? "h-auto w-[95vw] md:w-fit"
           : "h-fit w-[95vw] !pt-12 sm:h-fit",
-        "[&>*]:font-poppins !flex flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:p-8 md:px-16 md:py-12",
+        "[&>*]:font-poppins !flex flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:p-8 md:px-20 md:py-12",
       )}
     >
       <DialogClose onClick={() => setIsOpen(false)} />
       <div>
-        <Logo theme="light" className="h-12 object-cover" />
-        {/* <DialogClose className="top-0" /> */}
-        {/* <span className="absolute left-4 top-4 cursor-pointer sm:left-8"> */}
-        {/*   <ArrowLeft strokeWidth={3} /> */}
-        {/* </span> */}
-        <div className="my-4 [&>*]:text-neutral-900">
-          <DialogTitle>
-            <Text
-              variant="display-sm"
-              className="font-poppins text-left !text-xl font-bold capitalize sm:!text-2xl"
-            >
-              {!forgotPwd ? "Login" : "Forgot Password"}
-            </Text>
-          </DialogTitle>
-        </div>
+        {/* <Logo theme="light" className="h-12 object-cover" /> */}
+        {/* <div className="my-4 [&>*]:text-neutral-900"> */}
+        {/*   <DialogTitle> */}
+        {/*     <Text */}
+        {/*       variant="display-sm" */}
+        {/*       className="font-poppins text-left !text-xl font-bold capitalize sm:!text-2xl" */}
+        {/*     > */}
+        {/*       {!forgotPwd ? "Login" : "Forgot Password"} */}
+        {/*     </Text> */}
+        {/*   </DialogTitle> */}
+        {/* </div> */}
         {!forgotPwd ? (
           <LoginForm setIsOpen={setIsOpen} setForgotPwd={setForgotPwd} />
         ) : (

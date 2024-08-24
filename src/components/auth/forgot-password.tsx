@@ -9,6 +9,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+
 import {
   Form,
   FormControl,
@@ -26,10 +27,36 @@ import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import Logo from "../logo";
+import { OtpForm } from "./opt-form";
 export const ForgotPasswordDialog = ({
   setForgotPwd,
 }: {
   setForgotPwd: React.Dispatch<SetStateAction<boolean>>;
+}) => {
+  const [curStep, setCurStep] = useState(0);
+  return (
+    <>
+      <span
+        className="absolute left-4 top-4 cursor-pointer sm:left-8"
+        onClick={() => setForgotPwd(false)}
+      >
+        <ArrowLeft strokeWidth={3} />
+      </span>
+
+      <Logo theme="light" className="h-12 object-cover" />
+      {curStep === 0 ? (
+        <ForgotPwdForm setCurStep={setCurStep} />
+      ) : (
+        <OtpForm setCurStep={setCurStep} />
+      )}
+    </>
+  );
+};
+const ForgotPwdForm = ({
+  setCurStep,
+}: {
+  setCurStep: React.Dispatch<SetStateAction<number>>;
 }) => {
   const [method, setMethod] = useState<"email" | "number">("email");
 
@@ -46,22 +73,26 @@ export const ForgotPasswordDialog = ({
   });
   function onEmailSubmit() {
     const payload = emailForm.getValues();
+    setCurStep(1);
     toast.success(`Email submitted`);
   }
 
   function onNumberSubmit() {
     const payload = numberForm.getValues();
+    setCurStep(1);
     toast.success(`Number submitted`);
   }
   return (
     <>
-      <span
-        className="absolute left-4 top-4 cursor-pointer sm:left-8"
-        onClick={() => setForgotPwd(false)}
-      >
-        <ArrowLeft strokeWidth={3} />
-      </span>
-      <DialogHeader className="sm:mt-none space-y-2 sm:space-y-4 [&>*]:text-neutral-900">
+      <DialogHeader className="mt-4 space-y-1 [&>*]:text-neutral-900">
+        <DialogTitle>
+          <Text
+            variant="display-sm"
+            className="font-poppins text-left !text-xl font-bold capitalize sm:!text-2xl"
+          >
+            Forgot Password
+          </Text>
+        </DialogTitle>
         <DialogDescription className="text-left font-semibold">
           Please enter your {method}
         </DialogDescription>
@@ -132,6 +163,11 @@ export const ForgotPasswordDialog = ({
       </div>
       <DialogFooter className="mt-8 flex-row justify-start sm:justify-start">
         <Button
+          disabled={
+            method === "email"
+              ? !emailForm.formState.isValid
+              : !numberForm.formState.isValid
+          }
           type="submit"
           className="font-poppins w-full self-end bg-foreground px-10 py-3 font-bold sm:py-6"
         >
