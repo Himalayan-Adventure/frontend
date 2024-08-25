@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { FaRegUser as UserIcon } from "react-icons/fa";
 import { Text } from "@/components/ui/text";

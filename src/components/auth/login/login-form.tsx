@@ -124,7 +124,7 @@ export const LoginForm = ({
             )}
           />
 
-          <div className="flex flex-col justify-center sm:justify-center">
+          <div className="flex flex-col justify-center gap-y-2 sm:justify-center">
             <Button
               type="submit"
               disabled={!form.formState.isValid}
@@ -132,7 +132,11 @@ export const LoginForm = ({
             >
               Login
             </Button>
-            <Text className="text-md" bold>
+            <Text
+              variant="text-sm"
+              className="cursor-pointer text-center hover:underline"
+              bold
+            >
               Not a user? Register!
             </Text>
           </div>

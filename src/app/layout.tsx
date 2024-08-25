@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 const overpass = Overpass({ subsets: ["latin"], variable: "--font-overpass" });
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -33,7 +34,9 @@ export default function RootLayout({
         )}
       >
         <Toaster richColors />
-        <Navbar />
+        <Suspense>
+          <Navbar />
+        </Suspense>
         {children}
         <Footer />
       </body>

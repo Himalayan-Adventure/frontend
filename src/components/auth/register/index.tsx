@@ -68,8 +68,7 @@ export const RegisterCard = ({
   const [showConfPassword, setShowConfPassword] = useState(false);
   return (
     <>
-      <DialogOverlay onClick={() => setIsOpen(false)} />
-      <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between overflow-auto !rounded-2xl p-4 sm:h-fit sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 lg:w-fit">
+      <DialogContent className="[&>*]:font-poppins !flex h-auto w-full max-w-none flex-col justify-between overflow-auto !rounded-2xl p-4 sm:h-fit sm:w-[90vw] sm:max-w-lg sm:p-8 md:max-h-[95vh] md:w-[90vw] md:px-16 md:py-12 lg:w-fit">
         <div>
           <Logo theme="light" className="h-12 object-cover" />
           {/* <DialogClose className="top-0" /> */}
@@ -85,7 +84,10 @@ export const RegisterCard = ({
             </Text>
           </div>
           <Form {...form}>
-            <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+              className="space-y-3 md:space-y-4"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
               <FormField
                 control={form.control}
                 name="username"
@@ -208,35 +210,48 @@ export const RegisterCard = ({
                   </FormItem>
                 )}
               />
-              <Text variant="text-sm" className="text-center text-sm">
-                By creating an account or signing you agree to our{" "}
-                <Link href="/" className="w-fit font-bold underline">
-                  Terms and Conditions
-                </Link>
-              </Text>
+              <div className="space-y-6">
+                <Text
+                  variant="text-sm"
+                  className="text-center text-xs sm:text-sm"
+                >
+                  By creating an account or signing you agree to our{" "}
+                  <Link href="/" className="w-fit font-bold underline">
+                    Terms and Conditions
+                  </Link>
+                </Text>
 
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  checked={termsChecked}
-                  onCheckedChange={(e) => setTermsChecked(e)}
-                  id="terms"
-                  className="h-5 w-5 rounded-full"
-                />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  I accept the terms and privacy policy
-                </label>
-              </div>
-              <div className="mt-8 flex flex-row justify-center sm:justify-center">
-                <Button
-                  type="submit"
-                  disabled={!termsChecked || !form.formState.isValid}
-                  className="font-poppins w-full self-end bg-foreground px-10 py-8 font-bold sm:py-6"
-                >
-                  Login
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={termsChecked}
+                    onCheckedChange={(e) => setTermsChecked(e)}
+                    id="terms"
+                    className="h-5 w-5 rounded-full"
+                  />
+                  <label
+                    htmlFor="terms"
+                    className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sm:text-sm"
+                  >
+                    I accept the terms and privacy policy
+                  </label>
+                </div>
+                <div className="mt-8 flex flex-col justify-center gap-y-2 sm:justify-center">
+                  <Button
+                    type="submit"
+                    disabled={!termsChecked || !form.formState.isValid}
+                    className="font-poppins w-full self-end bg-foreground px-10 py-4 font-bold sm:py-6"
+                  >
+                    Login
+                  </Button>
+
+                  <Text
+                    variant="text-sm"
+                    className="cursor-pointer text-center hover:underline"
+                    bold
+                  >
+                    Already a user? Login!
+                  </Text>
+                </div>
               </div>
             </form>
           </Form>
