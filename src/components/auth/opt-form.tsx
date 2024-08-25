@@ -41,23 +41,19 @@ export const OtpForm = ({
             Enter Code
           </Text>
         </DialogTitle>
-        <DialogDescription className="text-left font-semibold">
+        <DialogDescription className="text-left text-[13px] font-semibold">
           We&apos;ve sent an activation code to your registered email and mobile
           number
         </DialogDescription>
       </DialogHeader>
       <div className="mt-4 flex flex-col gap-x-10 gap-y-4">
         <InputOTP maxLength={6}>
-          <InputOTPGroup>
+          <InputOTPGroup className="justify-between gap-x-2">
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />
             <InputOTPSlot index={2} />
-          </InputOTPGroup>
-          <InputOTPSeparator />
-          <InputOTPGroup>
             <InputOTPSlot index={3} />
             <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
           </InputOTPGroup>
         </InputOTP>
       </div>
@@ -66,7 +62,7 @@ export const OtpForm = ({
           type="submit"
           className="font-poppins w-full self-end bg-foreground px-10 py-3 font-bold sm:py-6"
         >
-          Continue
+          Submit
         </Button>
       </DialogFooter>
     </>

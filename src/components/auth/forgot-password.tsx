@@ -29,6 +29,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import Logo from "../logo";
 import { OtpForm } from "./opt-form";
+import {
+  ForgotPwdEmailFormSchema,
+  ForgotPwdNumberFormSchema,
+  TForgotPwdEmailInput,
+  TForgotPwdNumberInput,
+} from "@/validators/forgot-password";
+import { zodResolver } from "@hookform/resolvers/zod";
 export const ForgotPasswordDialog = ({
   setForgotPwd,
 }: {
@@ -39,7 +46,7 @@ export const ForgotPasswordDialog = ({
     <>
       <span
         className="absolute left-4 top-4 cursor-pointer sm:left-8"
-        onClick={() => setForgotPwd(false)}
+        onClick={() => (curStep === 0 ? setForgotPwd(false) : setCurStep(0))}
       >
         <ArrowLeft strokeWidth={3} />
       </span>
@@ -60,13 +67,15 @@ const ForgotPwdForm = ({
 }) => {
   const [method, setMethod] = useState<"email" | "number">("email");
 
-  const emailForm = useForm<{ email: string }>({
+  const emailForm = useForm<TForgotPwdEmailInput>({
+    resolver: zodResolver(ForgotPwdEmailFormSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const numberForm = useForm<{ number: string }>({
+  const numberForm = useForm<TForgotPwdNumberInput>({
+    resolver: zodResolver(ForgotPwdNumberFormSchema),
     defaultValues: {
       number: "",
     },
@@ -93,7 +102,7 @@ const ForgotPwdForm = ({
             Forgot Password
           </Text>
         </DialogTitle>
-        <DialogDescription className="text-left font-semibold">
+        <DialogDescription className="text-left text-[13px] font-semibold">
           Please enter your {method}
         </DialogDescription>
       </DialogHeader>
@@ -109,11 +118,11 @@ const ForgotPwdForm = ({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    {" "}
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input placeholder="john.doe@email.com" {...field} />
                     </FormControl>
-
                     <p
                       className="w-fit cursor-pointer hover:underline"
                       onClick={() => setMethod("number")}
@@ -124,6 +133,16 @@ const ForgotPwdForm = ({
                   </FormItem>
                 )}
               />
+
+              <DialogFooter className="mt-8 flex-row justify-start sm:justify-start">
+                <Button
+                  disabled={!emailForm.formState.isValid}
+                  type="submit"
+                  className="font-poppins w-full self-end bg-foreground px-10 py-3 font-bold sm:py-6"
+                >
+                  Continue
+                </Button>
+              </DialogFooter>
             </form>
           </Form>
         ) : (
@@ -157,23 +176,20 @@ const ForgotPwdForm = ({
                   </FormItem>
                 )}
               />
+
+              <DialogFooter className="mt-8 flex-row justify-start sm:justify-start">
+                <Button
+                  disabled={!numberForm.formState.isValid}
+                  type="submit"
+                  className="font-poppins w-full self-end bg-foreground px-10 py-3 font-bold sm:py-6"
+                >
+                  Continue
+                </Button>
+              </DialogFooter>
             </form>
           </Form>
         )}
       </div>
-      <DialogFooter className="mt-8 flex-row justify-start sm:justify-start">
-        <Button
-          disabled={
-            method === "email"
-              ? !emailForm.formState.isValid
-              : !numberForm.formState.isValid
-          }
-          type="submit"
-          className="font-poppins w-full self-end bg-foreground px-10 py-3 font-bold sm:py-6"
-        >
-          Continue
-        </Button>
-      </DialogFooter>
     </>
   );
 };
