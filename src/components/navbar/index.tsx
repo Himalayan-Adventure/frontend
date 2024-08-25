@@ -10,11 +10,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { LazyMotion, m, domMax, AnimatePresence } from "framer-motion";
 export const Navbar = () => {
-  const [scrollY, setScrollY] = useState(0);
+  const [scrollY, setScrollY] = useState(window.scrollY || 0);
+  const scrollFn = (e: Event) => {
+    setScrollY(window.scrollY);
+  };
+
   useEffect(() => {
-    const scrollFn = (e: Event) => {
-      setScrollY(window.scrollY);
-    };
     window.addEventListener("scroll", scrollFn);
     return () => window.removeEventListener("scroll", scrollFn);
   }, []);
@@ -75,7 +76,6 @@ const Navlinks = ({ scrollY }: { scrollY: number }) => {
   // for handling navlinks overflow in mobile
   const containerRef = useRef<HTMLDivElement>(null);
   const overflowDir = useOverflowDetection(containerRef);
-  console.log(pathname);
   return (
     <m.nav
       initial={{ opacity: 1, y: 0 }}

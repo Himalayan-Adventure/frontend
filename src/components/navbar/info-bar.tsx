@@ -93,21 +93,6 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
             <p className="text-base leading-none">Plan with us</p>
           </Button>
           {!user ? (
-            // <DropdownMenu>
-            //   <DropdownMenuTrigger className="group h-full rounded-full bg-background p-2 transition-all ease-in-out hover:bg-primary">
-            //     <User className="size-6 text-primary transition-all ease-in-out group-hover:text-background" />
-            //   </DropdownMenuTrigger>
-            //   <DropdownMenuContent side="bottom">
-            //     <DropdownMenuLabel>Not signed in</DropdownMenuLabel>
-            //     <DropdownMenuSeparator />
-            //
-            //     <DropdownMenuGroup>
-            //       <DropdownMenuItem>
-            //         <UserCheck className="mr-2 h-4 w-4" />
-            //         <span>Login</span>
-            //       </DropdownMenuItem>
-            //
-            //       <DropdownMenuItem>
             <span className="flex flex-col items-stretch gap-y-1">
               <Dialog>
                 <DialogTrigger
@@ -136,10 +121,6 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               </Dialog>
             </span>
           ) : (
-            //       </DropdownMenuItem>
-            //     </DropdownMenuGroup>
-            //   </DropdownMenuContent>
-            // </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
@@ -215,24 +196,58 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   </Link>
                 ))}
               </div>
-              <span className="flex items-start gap-x-4">
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <span className="flex flex-col items-start">
-                  <Text variant="text-md" className="max-w-60 truncate" medium>
-                    John Doe
-                  </Text>
-                  <Text
-                    variant="text-sm"
-                    className="max-w-60 truncate text-gray-400"
-                    medium
-                  >
-                    xxx.xxx@gmail.com
-                  </Text>
+              {user ? (
+                <span className="flex items-start gap-x-4">
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <span className="flex flex-col items-start">
+                    <Text
+                      variant="text-md"
+                      className="max-w-60 truncate"
+                      medium
+                    >
+                      John Doe
+                    </Text>
+                    <Text
+                      variant="text-sm"
+                      className="max-w-60 truncate text-gray-400"
+                      medium
+                    >
+                      xxx.xxx@gmail.com
+                    </Text>
+                  </span>
                 </span>
-              </span>
+              ) : (
+                <span className="flex items-stretch gap-x-3">
+                  <Dialog>
+                    <DialogTrigger
+                      className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white"
+                      onClick={() => setRegisterDialogOpen(true)}
+                    >
+                      <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} />
+                      <p className="font-semibold">Register</p>
+                    </DialogTrigger>
+                    {registerDialogOpen && (
+                      <RegisterCard setIsOpen={setRegisterDialogOpen} />
+                    )}
+                  </Dialog>
+
+                  <Dialog>
+                    <DialogTrigger
+                      className="flex items-center justify-center rounded-full bg-primary px-4 py-1 text-white"
+                      onClick={() => setLoginDialogOpen(true)}
+                    >
+                      <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
+                      <p className="font-semibold">Login</p>
+                    </DialogTrigger>
+                    {loginDialogOpen && (
+                      <LoginCard setIsOpen={setLoginDialogOpen} />
+                    )}
+                  </Dialog>
+                </span>
+              )}
             </span>
           </DrawerContent>
         </Drawer>

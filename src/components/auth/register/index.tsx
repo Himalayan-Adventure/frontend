@@ -69,7 +69,7 @@ export const RegisterCard = ({
   return (
     <>
       <DialogOverlay onClick={() => setIsOpen(false)} />
-      <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
+      <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between overflow-auto !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
         <div>
           <Logo theme="light" className="h-12 object-cover" />
           {/* <DialogClose className="top-0" /> */}
