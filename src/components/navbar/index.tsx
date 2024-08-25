@@ -4,13 +4,19 @@ import { InfoBar } from "./info-bar";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components/ui/text";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { LazyMotion, m, domMax, AnimatePresence } from "framer-motion";
 export const Navbar = () => {
-  const [scrollY, setScrollY] = useState(window.scrollY || 0);
+  const [scrollY, setScrollY] = useState(0);
+
+  useLayoutEffect(() => {
+    if (window) {
+      setScrollY(window.scrollY);
+    }
+  }, []);
   const scrollFn = (e: Event) => {
     setScrollY(window.scrollY);
   };

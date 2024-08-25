@@ -4,7 +4,7 @@ export const RegisterFormSchema = z
   .object({
     username: z.string().min(1, { message: "Please enter a name" }),
     email: z.string().email(),
-    number: z
+    phone: z
       .string()
       .min(9)
       .regex(
@@ -35,7 +35,7 @@ export type TRegisterForm = z.infer<typeof RegisterFormSchema>;
 export const RegisterPayloadSchema = z.object({
   username: z.string().min(1, { message: "Please enter a name" }),
   email: z.string().email(),
-  number: z
+  phone: z
     .string()
     .min(9)
     .regex(

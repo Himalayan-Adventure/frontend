@@ -41,7 +41,7 @@ export const RegisterCard = ({
     defaultValues: {
       username: "",
       email: "",
-      number: "",
+      phone: "",
       password: "",
       confirmPassword: "",
     },
@@ -53,7 +53,7 @@ export const RegisterCard = ({
       username: payload.username,
       email: payload.email,
       password: payload.password,
-      number: payload.number,
+      phone: payload.phone,
     });
     if (res.status === 200) {
       toast.success("Successfully registered!");
@@ -69,7 +69,7 @@ export const RegisterCard = ({
   return (
     <>
       <DialogOverlay onClick={() => setIsOpen(false)} />
-      <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between overflow-auto !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 xl:w-fit">
+      <DialogContent className="[&>*]:font-poppins !flex h-full w-full max-w-none flex-col justify-between overflow-auto !rounded-2xl p-4 sm:h-fit sm:w-[90vw] sm:p-8 md:w-[90vw] md:px-16 md:py-12 lg:w-fit">
         <div>
           <Logo theme="light" className="h-12 object-cover" />
           {/* <DialogClose className="top-0" /> */}
@@ -114,7 +114,7 @@ export const RegisterCard = ({
               />
               <FormField
                 control={form.control}
-                name="number"
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Phone</FormLabel>
