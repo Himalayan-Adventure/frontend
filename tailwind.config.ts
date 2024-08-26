@@ -25,6 +25,7 @@ const config = {
       "8xl": ["96px", "1"],
       "9xl": ["128px", "1"],
     },
+
     container: {
       center: true,
       padding: "2rem",
@@ -33,6 +34,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        overpass: ["var(--font-overpass)"],
+        poppins: ["var(--font-poppins)"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

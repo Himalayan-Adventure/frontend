@@ -19,14 +19,10 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { login } from "@/server/login-user";
 import Logo from "@/components/logo";
-export const LoginForm = ({
-  setIsOpen,
-  setForgotPwd,
-}: {
-  setIsOpen: React.Dispatch<SetStateAction<boolean>>;
-  setForgotPwd: React.Dispatch<SetStateAction<boolean>>;
-}) => {
+import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
+export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { type, setType } = useCurrentAuthDialog();
   const router = useRouter();
   const form = useForm<TLoginForm>({
     resolver: zodResolver(LoginFormSchema),
@@ -43,21 +39,19 @@ export const LoginForm = ({
     });
     if (res.status === 200) {
       toast.success("Successfully logged in!");
-      setIsOpen(false);
       router.refresh();
     } else {
-      console.log(res.error);
-      toast.error(`${res.error}`);
+      console.log(res?.error?.error?.message);
+      toast.error(`${res?.error?.error?.message}`);
     }
   }
   return (
     <>
-      <Logo theme="light" className="h-12 object-cover" />
       <div className="my-4 [&>*]:text-neutral-900">
         <DialogTitle>
           <Text
             variant="display-sm"
-            className="font-poppins text-left !text-xl font-bold capitalize sm:!text-2xl"
+            className="text-left font-poppins !text-xl font-bold capitalize sm:!text-2xl"
           >
             Login
           </Text>
@@ -112,7 +106,7 @@ export const LoginForm = ({
                       </div>
                       <p
                         className="relative -bottom-2 w-fit cursor-pointer text-xs hover:underline"
-                        onClick={() => setForgotPwd(true)}
+                        onClick={() => setType("forgot-pwd")}
                       >
                         Forgot password?
                       </p>
@@ -128,13 +122,14 @@ export const LoginForm = ({
             <Button
               type="submit"
               disabled={!form.formState.isValid}
-              className="font-poppins w-full self-end bg-foreground px-10 py-6 font-bold"
+              className="w-full self-end bg-foreground px-10 py-6 font-poppins font-bold"
             >
               Login
             </Button>
             <Text
               variant="text-sm"
               className="cursor-pointer text-center hover:underline"
+              onClick={() => setType("register")}
               bold
             >
               Not a user? Register!

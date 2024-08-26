@@ -1,19 +1,14 @@
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
   DialogDescription,
-  DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,13 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "../ui/phone-input";
 import { Text } from "../ui/text";
-import { SetStateAction, useState } from "react";
-import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import Logo from "../logo";
-import { OtpForm } from "./opt-form";
 import {
   ForgotPwdEmailFormSchema,
   ForgotPwdNumberFormSchema,
@@ -36,37 +27,10 @@ import {
   TForgotPwdNumberInput,
 } from "@/validators/forgot-password";
 import { zodResolver } from "@hookform/resolvers/zod";
-export const ForgotPasswordDialog = ({
-  setForgotPwd,
-}: {
-  setForgotPwd: React.Dispatch<SetStateAction<boolean>>;
-}) => {
-  const [curStep, setCurStep] = useState(0);
-  return (
-    <>
-      <span
-        className="absolute left-4 top-4 cursor-pointer sm:left-8"
-        onClick={() => (curStep === 0 ? setForgotPwd(false) : setCurStep(0))}
-      >
-        <ArrowLeft strokeWidth={3} />
-      </span>
-
-      <Logo theme="light" className="h-12 object-cover" />
-      {curStep === 0 ? (
-        <ForgotPwdForm setCurStep={setCurStep} />
-      ) : (
-        <OtpForm setCurStep={setCurStep} />
-      )}
-    </>
-  );
-};
-const ForgotPwdForm = ({
-  setCurStep,
-}: {
-  setCurStep: React.Dispatch<SetStateAction<number>>;
-}) => {
+import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
+export const ForgotPasswordDialog = () => {
   const [method, setMethod] = useState<"email" | "number">("email");
-
+  const { setType } = useCurrentAuthDialog();
   const emailForm = useForm<TForgotPwdEmailInput>({
     resolver: zodResolver(ForgotPwdEmailFormSchema),
     defaultValues: {
@@ -82,13 +46,13 @@ const ForgotPwdForm = ({
   });
   function onEmailSubmit() {
     const payload = emailForm.getValues();
-    setCurStep(1);
+    setType("otp");
     toast.success(`Email submitted`);
   }
 
   function onNumberSubmit() {
     const payload = numberForm.getValues();
-    setCurStep(1);
+    setType("otp");
     toast.success(`Number submitted`);
   }
   return (
@@ -97,7 +61,7 @@ const ForgotPwdForm = ({
         <DialogTitle>
           <Text
             variant="display-sm"
-            className="font-poppins text-left !text-xl font-bold capitalize sm:!text-2xl"
+            className="text-left font-poppins !text-xl font-bold capitalize sm:!text-2xl"
           >
             Forgot Password
           </Text>
@@ -138,7 +102,7 @@ const ForgotPwdForm = ({
                 <Button
                   disabled={!emailForm.formState.isValid}
                   type="submit"
-                  className="font-poppins w-full self-end bg-foreground px-10 py-3 font-bold sm:py-6"
+                  className="w-full self-end bg-foreground px-10 py-3 font-poppins font-bold sm:py-6"
                 >
                   Continue
                 </Button>
@@ -179,9 +143,9 @@ const ForgotPwdForm = ({
 
               <DialogFooter className="mt-8 flex-row justify-start sm:justify-start">
                 <Button
-                  disabled={!numberForm.formState.isValid}
+                  // disabled={!numberForm.formState.isValid}
                   type="submit"
-                  className="font-poppins w-full self-end bg-foreground px-10 py-3 font-bold sm:py-6"
+                  className="w-full self-end bg-foreground px-10 py-3 font-poppins font-bold sm:py-6"
                 >
                   Continue
                 </Button>

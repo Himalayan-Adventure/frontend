@@ -34,10 +34,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import { ChooseAccType } from "../auth/choose-acc-type";
-import { LoginCard } from "../auth/login";
-import { RegisterCard } from "../auth/register";
+import { AuthCard } from "../auth";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
-  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const contacts = [
     {
@@ -88,36 +87,34 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
             </div>
           ))}
         </span>
-        <span className="hidden items-center gap-x-7 lg:flex">
+        <span className="hidden items-stretch gap-x-3 lg:flex">
           <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 font-semibold capitalize text-gray-50">
             <p className="text-base leading-none">Plan with us</p>
           </Button>
           {!user ? (
-            <span className="flex flex-col items-stretch gap-y-1">
-              <Dialog>
-                <DialogTrigger
-                  className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white"
-                  onClick={() => setRegisterDialogOpen(true)}
-                >
-                  <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} />
-                  <p className="font-semibold">Register</p>
-                </DialogTrigger>
-                {registerDialogOpen && (
-                  <RegisterCard setIsOpen={setRegisterDialogOpen} />
-                )}
-              </Dialog>
+            <span className="relative flex h-full flex-col items-stretch gap-y-1">
+              {/* <Dialog> */}
+              {/*   <DialogTrigger */}
+              {/*     className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white" */}
+              {/*     onClick={() => setRegisterDialogOpen(true)} */}
+              {/*   > */}
+              {/*     <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} /> */}
+              {/*     <p className="font-semibold">Register</p> */}
+              {/*   </DialogTrigger> */}
+              {/*   {registerDialogOpen && ( */}
+              {/*     <RegisterCard setIsOpen={setRegisterDialogOpen} /> */}
+              {/*   )} */}
+              {/* </Dialog> */}
 
               <Dialog>
                 <DialogTrigger
-                  className="flex items-center justify-center rounded-full bg-primary px-4 py-1 text-white"
-                  onClick={() => setLoginDialogOpen(true)}
+                  className="flex h-10 items-center justify-center rounded-full border border-primary bg-primary px-8 py-1 text-white transition-all ease-in-out hover:bg-transparent hover:text-primary"
+                  onClick={() => setAuthDialogOpen(true)}
                 >
                   <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
                   <p className="font-semibold">Login</p>
                 </DialogTrigger>
-                {loginDialogOpen && (
-                  <LoginCard setIsOpen={setLoginDialogOpen} />
-                )}
+                {authDialogOpen && <AuthCard setIsOpen={setAuthDialogOpen} />}
               </Dialog>
             </span>
           ) : (
@@ -221,29 +218,29 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                 </span>
               ) : (
                 <span className="flex items-stretch gap-x-3">
-                  <Dialog>
-                    <DialogTrigger
-                      className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white"
-                      onClick={() => setRegisterDialogOpen(true)}
-                    >
-                      <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} />
-                      <p className="font-semibold">Register</p>
-                    </DialogTrigger>
-                    {registerDialogOpen && (
-                      <RegisterCard setIsOpen={setRegisterDialogOpen} />
-                    )}
-                  </Dialog>
+                  {/* <Dialog> */}
+                  {/*   <DialogTrigger */}
+                  {/*     className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white" */}
+                  {/*     onClick={() => setRegisterDialogOpen(true)} */}
+                  {/*   > */}
+                  {/*     <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} /> */}
+                  {/*     <p className="font-semibold">Register</p> */}
+                  {/*   </DialogTrigger> */}
+                  {/*   {registerDialogOpen && ( */}
+                  {/*     <RegisterCard setIsOpen={setRegisterDialogOpen} /> */}
+                  {/*   )} */}
+                  {/* </Dialog> */}
 
                   <Dialog>
                     <DialogTrigger
                       className="flex items-center justify-center rounded-full bg-primary px-4 py-1 text-white"
-                      onClick={() => setLoginDialogOpen(true)}
+                      onClick={() => setAuthDialogOpen(true)}
                     >
                       <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
                       <p className="font-semibold">Login</p>
                     </DialogTrigger>
-                    {loginDialogOpen && (
-                      <LoginCard setIsOpen={setLoginDialogOpen} />
+                    {authDialogOpen && (
+                      <AuthCard setIsOpen={setAuthDialogOpen} />
                     )}
                   </Dialog>
                 </span>

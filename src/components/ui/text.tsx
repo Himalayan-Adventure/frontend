@@ -8,7 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority";
   * font-weight shall be passed as a boolean props on the JSX. e.g., <Text variant="display-lg" semibold></Text>
 */
 
-const textVariants = cva("font-medium whitespace-normal font-sans", {
+const textVariants = cva("font-medium whitespace-normal", {
   variants: {
     /**
      * Typography variants for the Text component.

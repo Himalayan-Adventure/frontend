@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { InfoBar } from "./info-bar";
 import { usePathname, useRouter } from "next/navigation";
