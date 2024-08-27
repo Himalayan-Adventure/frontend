@@ -33,7 +33,7 @@ import { CheckedState } from "@radix-ui/react-checkbox";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 export const RegisterCard = () => {
   const router = useRouter();
-  const { setType } = useCurrentAuthDialog();
+  const { setType, setDialogOpen } = useCurrentAuthDialog();
   const form = useForm<TRegisterForm>({
     resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
@@ -55,6 +55,9 @@ export const RegisterCard = () => {
     });
     if (res.status === 200) {
       toast.success("Successfully registered!");
+      router.refresh();
+      // setDialogOpen(false);
+      router.push("/");
     } else {
       console.log(res?.error?.error?.message);
       toast.error(`${res?.error?.error?.message}`);

@@ -22,7 +22,7 @@ import Logo from "@/components/logo";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { type, setType } = useCurrentAuthDialog();
+  const { type, setType, setDialogOpen } = useCurrentAuthDialog();
   const router = useRouter();
   const form = useForm<TLoginForm>({
     resolver: zodResolver(LoginFormSchema),
@@ -40,6 +40,8 @@ export const LoginForm = () => {
     if (res.status === 200) {
       toast.success("Successfully logged in!");
       router.refresh();
+      router.push("/");
+      // setDialogOpen(false);
     } else {
       console.log(res?.error?.error?.message);
       toast.error(`${res?.error?.error?.message}`);

@@ -35,8 +35,10 @@ import {
 import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import { ChooseAccType } from "../auth/choose-acc-type";
 import { AuthCard } from "../auth";
+import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const { dialogOpen, setDialogOpen } = useCurrentAuthDialog();
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const contacts = [
     {
@@ -109,12 +111,12 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               <Dialog>
                 <DialogTrigger
                   className="flex h-10 items-center justify-center rounded-full border border-primary bg-primary px-8 py-1 text-white transition-all ease-in-out hover:bg-transparent hover:text-primary"
-                  onClick={() => setAuthDialogOpen(true)}
+                  onClick={() => setDialogOpen(true)}
                 >
                   <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
                   <p className="font-semibold">Login</p>
                 </DialogTrigger>
-                {authDialogOpen && <AuthCard setIsOpen={setAuthDialogOpen} />}
+                {dialogOpen && <AuthCard />}
               </Dialog>
             </span>
           ) : (
@@ -173,26 +175,10 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               ))}
             </div>
 
-            <span className="flex flex-col items-start gap-y-7 py-5 lg:hidden">
+            <span className="flex flex-col items-start gap-3 py-5 lg:hidden">
               <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">
                 Plan with us
               </Button>
-
-              <div className="flex flex-row justify-center gap-x-2 brightness-200">
-                {socialIcons.map((item) => (
-                  <Link
-                    key={`social-link-${item.name}`}
-                    href={item.href}
-                    target="_blank"
-                  >
-                    <Image
-                      src={item.icon}
-                      alt={`${item.name} Icon`}
-                      className="h-auto w-12"
-                    />
-                  </Link>
-                ))}
-              </div>
               {user ? (
                 <span className="flex items-start gap-x-4">
                   <Avatar>
@@ -233,18 +219,32 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
 
                   <Dialog>
                     <DialogTrigger
-                      className="flex items-center justify-center rounded-full bg-primary px-4 py-1 text-white"
-                      onClick={() => setAuthDialogOpen(true)}
+                      className="flex h-10 items-center justify-center rounded-full bg-primary px-10 py-3 text-white"
+                      onClick={() => setDialogOpen(true)}
                     >
                       <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
                       <p className="font-semibold">Login</p>
                     </DialogTrigger>
-                    {authDialogOpen && (
-                      <AuthCard setIsOpen={setAuthDialogOpen} />
-                    )}
+                    {dialogOpen && <AuthCard />}
                   </Dialog>
                 </span>
               )}
+
+              <div className="flex flex-row justify-center gap-x-2 brightness-200">
+                {socialIcons.map((item) => (
+                  <Link
+                    key={`social-link-${item.name}`}
+                    href={item.href}
+                    target="_blank"
+                  >
+                    <Image
+                      src={item.icon}
+                      alt={`${item.name} Icon`}
+                      className="h-auto w-12"
+                    />
+                  </Link>
+                ))}
+              </div>
             </span>
           </DrawerContent>
         </Drawer>

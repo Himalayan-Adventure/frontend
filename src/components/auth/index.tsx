@@ -12,12 +12,8 @@ import { RegisterCard } from "./register-form";
 import { OtpForm } from "./opt-form";
 import Logo from "@/components/logo";
 import { ArrowLeft } from "lucide-react";
-export const AuthCard = ({
-  setIsOpen,
-}: {
-  setIsOpen: React.Dispatch<SetStateAction<boolean>>;
-}) => {
-  const { type, setType } = useCurrentAuthDialog();
+export const AuthCard = ({}: {}) => {
+  const { type, setType, setDialogOpen } = useCurrentAuthDialog();
 
   const typeMap: { [key in TAuthDialogType]: React.ReactNode } = {
     login: <LoginForm />,
@@ -48,9 +44,9 @@ export const AuthCard = ({
         <ArrowLeft strokeWidth={3} />
       </span>
 
-      <DialogClose onClick={() => setIsOpen(false)} />
+      <DialogClose onClick={() => setDialogOpen(false)} />
 
-      <Logo theme="light" className="h-12 object-cover" />
+      <Logo theme="light" className="h-auto w-36 object-contain" />
       <div>{typeMap[type] || [typeMap.login]}</div>
     </DialogContent>
   );
