@@ -36,7 +36,9 @@ const FeatureItem = ({ src, alt, text }: any) => (
       alt={alt}
       className="mb-2 h-12 w-12 object-cover lg:h-24 lg:w-24"
     />
-    <h3 className="text-sm font-semibold md:text-lg">{text}</h3>
+    <h3 className="text-center text-sm font-semibold md:text-left md:text-lg">
+      {text}
+    </h3>
   </div>
 );
 
@@ -60,7 +62,7 @@ export default function WhyUs() {
         <div className="container py-8 lg:py-16">
           <div className="relative z-10 max-w-md text-white lg:text-center">
             <h1 className="comp-heading mb-6">Why Us?</h1>
-            <p className="mb-8 text-lg lg:text-2xl">
+            <p className="mb-8 text-sm md:text-lg lg:text-2xl">
               "Choose us for unparalleled expedition experiences. With seasoned
               guides, decades of experience, and unwavering reliability, we
               offer credible adventures. Count on our dedicated customer support

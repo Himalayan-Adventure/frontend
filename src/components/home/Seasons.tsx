@@ -29,10 +29,12 @@ export default function Seasons() {
                   alt={season.name}
                   width={150}
                   height={150}
-                  className="object-cover"
+                  className="w-16 object-cover md:w-auto"
                 />
               </div>
-              <p className="text-lg font-semibold lg:text-2xl">{season.name}</p>
+              <p className="text-sm font-semibold md:text-lg lg:text-2xl">
+                {season.name}
+              </p>
             </div>
           ))}
         </div>

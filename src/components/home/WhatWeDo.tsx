@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
-import Image from "next/image"; 
+import Image from "next/image";
 import Link from "next/link";
 
 export default function WhatWeDo() {
@@ -29,7 +29,7 @@ export default function WhatWeDo() {
           <p className="flex justify-center lg:justify-start">
             <Link
               href="/learn-more"
-              className="inline-block rounded-full border border-black px-4 py-2 font-semibold text-black transition"
+              className="inline-block rounded-full border border-black px-4 py-2 text-sm font-semibold text-black transition md:text-base"
             >
               Learn More
             </Link>

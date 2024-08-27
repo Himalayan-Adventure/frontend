@@ -79,11 +79,11 @@
 }
 
 .comp-heading {
-  @apply text-2xl lg:text-5xl font-[600]
+  @apply text-lg md:text-2xl lg:text-5xl font-[600]
 }
 
 .comp-subheading {
-  @apply text-lg text-gray-700 lg:text-2xl
+  @apply text-sm md:text-lg text-gray-700 lg:text-2xl
 }
 
 
