@@ -1,6 +1,6 @@
 {
   "name": "himalayan-adventure-frontend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
+    "embla-carousel-react": "^8.1.8",
     "framer-motion": "^11.3.24",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.427.0",
@@ -53,6 +54,8 @@
     "husky": "^9.1.4",
     "lint-staged": "^15.2.8",
     "postcss": "^8",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
