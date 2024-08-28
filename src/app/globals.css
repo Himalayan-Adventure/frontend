@@ -79,11 +79,9 @@
 }
 
 .comp-heading {
-  @apply text-lg md:text-2xl lg:text-5xl font-[600]
+  @apply text-lg font-[600] tracking-tight md:text-2xl lg:text-5xl;
 }
 
 .comp-subheading {
-  @apply text-sm md:text-lg text-gray-700 lg:text-2xl
+  @apply text-sm text-gray-700 md:text-lg lg:text-2xl;
 }
-
-

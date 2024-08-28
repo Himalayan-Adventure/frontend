@@ -20,7 +20,7 @@ export default function FirstPart() {
           <Image
             src={footerBgImage}
             alt="Footer background image"
-            className="-z-10 min-h-screen w-full lg:h-auto"
+            className="-z-10 min-h-screen w-full object-cover lg:h-auto"
           />
         </div>
         <div className="container absolute inset-0 z-0 flex flex-col justify-end divide-y-2 pt-4 text-white lg:pt-8">

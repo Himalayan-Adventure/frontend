@@ -36,12 +36,12 @@ export default function Services() {
         {/* services Grid */}
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3 lg:mt-16">
           {services.map((svc, index) => (
-            <div key={index} className="">
+            <div key={index} className="space-y-4 lg:space-y-8">
               <div className="group relative">
                 <Image
                   src={svc.image}
                   alt={svc.name}
-                  className="w-full rounded-2xl border border-gray-600 object-cover grayscale transition duration-300 lg:h-80"
+                  className="max-h-96 w-full rounded-2xl border border-gray-600 object-cover brightness-75 grayscale transition duration-300 lg:h-80"
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 flex items-end rounded-2xl bg-black bg-opacity-40">
@@ -50,8 +50,8 @@ export default function Services() {
                   </h2>
                 </div>
               </div>
-              <div className="py-4 text-center">
-                <Button className="w-auto rounded-full border border-black bg-transparent px-12 text-sm">
+              <div className="text-center">
+                <Button className="w-auto rounded-full border border-black bg-transparent px-12 text-sm text-black">
                   Book Now
                 </Button>
               </div>
