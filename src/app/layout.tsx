@@ -1,10 +1,22 @@
 import type { Metadata } from "next";
-import { Overpass } from "next/font/google";
+import { Overpass, Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
-const overpass = Overpass({ subsets: ["latin"], variable: "--font-overpass" });
+import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
+const overpass = Overpass({
+  subsets: ["latin"],
+  variable: "--font-overpass",
+  display: "swap",
+});
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Himalayan Adventure",
@@ -20,11 +32,15 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "font-overpass min-h-screen bg-background antialiased",
-          overpass.className,
+          `font-overpass min-h-screen bg-background antialiased`,
+          overpass.variable,
+          poppins.variable,
         )}
       >
-        <Navbar />
+        <Toaster richColors />
+        <Suspense>
+          <Navbar />
+        </Suspense>
         {children}
         <Footer />
       </body>

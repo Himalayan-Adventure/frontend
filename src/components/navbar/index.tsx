@@ -1,20 +1,28 @@
 "use client";
+
 import Link from "next/link";
 import { InfoBar } from "./info-bar";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components/ui/text";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { LazyMotion, m, domMax, AnimatePresence } from "framer-motion";
 export const Navbar = () => {
   const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const scrollFn = (e: Event) => {
+
+  useLayoutEffect(() => {
+    if (window) {
       setScrollY(window.scrollY);
-    };
+    }
+  }, []);
+  const scrollFn = (e: Event) => {
+    setScrollY(window.scrollY);
+  };
+
+  useEffect(() => {
     window.addEventListener("scroll", scrollFn);
     return () => window.removeEventListener("scroll", scrollFn);
   }, []);
@@ -75,7 +83,6 @@ const Navlinks = ({ scrollY }: { scrollY: number }) => {
   // for handling navlinks overflow in mobile
   const containerRef = useRef<HTMLDivElement>(null);
   const overflowDir = useOverflowDetection(containerRef);
-  console.log(pathname);
   return (
     <m.nav
       initial={{ opacity: 1, y: 0 }}

@@ -27,7 +27,7 @@ export default function ExplorePackages() {
       <div className="container">
         {/* Heading */}
         <div className="flex lg:justify-center lg:text-center">
-          <div className="lg:max-w-2xl">
+          <div className="lg:max-w-4xl">
             <h1 className="comp-heading">Explore Packages</h1>
             <p className="comp-subheading mt-2 lg:mt-4">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -44,14 +44,14 @@ export default function ExplorePackages() {
               <Image
                 src={pkg.image}
                 alt={pkg.name}
-                className="h-60 w-full rounded-2xl border border-gray-600 object-cover lg:h-96"
+                className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-none"
               />
               <div className="py-2 text-center">
                 <h2 className="mb-2 text-base font-semibold lg:text-xl">
                   {pkg.name}
                 </h2>
                 <div className="flex flex-col items-center space-y-3">
-                  <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs md:text-sm lg:px-12 lg:py-2">
+                  <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
                     Inquire
                   </Button>
                   <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">

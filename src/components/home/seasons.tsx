@@ -20,10 +20,10 @@ export default function Seasons() {
           the year. Explore the perfect getaways for spring, summer, fall, and
           winter.
         </p>
-        <div className="mt-4 flex flex-wrap gap-4 lg:mt-8">
+        <div className="mt-4 flex flex-wrap justify-around gap-1 sm:justify-start sm:gap-2 md:gap-4 lg:mt-8">
           {seasons.map((season) => (
             <div key={season.name} className="flex flex-col">
-              <div className="flex h-24 w-24 items-center overflow-hidden lg:h-40 lg:w-52">
+              <div className="flex h-16 w-16 items-center overflow-hidden sm:h-24 sm:w-24 lg:h-40 lg:w-52">
                 <Image
                   src={season.imageSrc}
                   alt={season.name}
