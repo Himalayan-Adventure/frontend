@@ -27,7 +27,7 @@ import Link from "next/link";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { register } from "@/server/register-user";
+import { register } from "@/server/auth/register-user";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
