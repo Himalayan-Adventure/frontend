@@ -9,7 +9,7 @@ const CloudImage = ({ src, alt, position }: any) => (
   </div>
 );
 
-export default function CTA() {
+export default function BookAppointment() {
   return (
     <section
       className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat lg:my-16 lg:min-h-[80vh]"

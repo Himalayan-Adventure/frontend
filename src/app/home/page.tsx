@@ -8,27 +8,30 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { socialIcons } from "@/config/constants";
-import WhatWeDo from "@/components/home/WhatWeDo";
-import Seasons from "@/components/home/Seasons";
-import HomeCarousel from "@/components/home/Carousel";
-import WhyUs from "@/components/home/WhyUs";
-import ExplorePackages from "@/components/home/ExplorePackages";
-import Services from "@/components/home/Services";
-import CTA from "@/components/home/CTA";
-import PopularDestinations from "@/components/home/PopularDestinations";
-import Testimonials from "@/components/home/Testimonials";
+import WhatWeDo from "@/components/home/what-we-do";
+import Seasons from "@/components/home/seasons";
+import HomeCarousel from "@/components/home/carousel";
+import WhyUs from "@/components/home/why-us";
+import ExplorePackages from "@/components/home/explore-packages";
+import Services from "@/components/home/services";
+import PopularDestinations from "@/components/home/popular-destinations";
+import Testimonials from "@/components/home/testimonials";
+import BookAppointment from "@/components/home/book-appointment";
 export default function Home() {
   return (
     <main>
-      <section className="flex h-[80vh] flex-col overflow-hidden">
+      {/*
+       Hero section
+      */}
+      <section className="flex h-[calc(50dvh-var(--navbar-height))] flex-col sm:h-[80vh] sm:overflow-hidden">
         {/*
         overlay images
       */}
-        <div className="absolute left-0 top-0 h-[50vh] w-full overflow-hidden sm:h-screen">
+        <div className="absolute left-0 top-0 h-[50dvh] w-full sm:h-screen sm:overflow-hidden">
           <Image
             src={bgImage}
             alt="Home horizon image"
-            className="absolute left-0 top-0 h-screen w-full"
+            className="absolute left-0 top-0 h-full w-full sm:h-screen"
           />
           <Image
             src={climberImage}
@@ -43,14 +46,14 @@ export default function Home() {
           <Image
             src={cloudImage}
             alt="Cloud Image"
-            className="absolute bottom-0 left-0 h-1/2 object-cover md:-bottom-10 md:h-[60vh]"
+            className="absolute bottom-0 left-0 h-1/2 object-cover mix-blend-hard-light sm:bottom-0 sm:mix-blend-normal md:-bottom-10 md:h-[60vh]"
           />
         </div>
 
         {/*
         Social icons
       */}
-        <aside className="absolute right-2 top-1/2 hidden h-screen -translate-y-1/2 flex-col justify-center gap-y-2 lg:flex">
+        <aside className="absolute right-2 top-1/2 z-20 hidden h-screen -translate-y-1/2 flex-col justify-center gap-y-2 lg:flex">
           {socialIcons.map((item) => (
             <Link
               key={`social-link-${item.name}`}
@@ -65,14 +68,14 @@ export default function Home() {
             </Link>
           ))}
         </aside>
-        <header className="relative top-[calc(var(--navbar-height)+2em)] z-10 flex flex-col items-center gap-y-10 text-white">
+        <header className="container relative top-5 z-10 flex flex-col gap-y-4 text-white sm:top-[calc(var(--navbar-height)+2em)] sm:items-center sm:gap-y-10">
           <Text
             variant="display-lg"
-            className="text-lg font-black capitalize tracking-wide md:text-2xl lg:text-4xl 2xl:text-[50px]"
+            className="text-left text-lg font-black capitalize tracking-wide sm:text-center md:text-2xl lg:text-4xl 2xl:text-[50px]"
           >
             Not sure where to go? Perfect.
           </Text>
-          <Button className="flex items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white md:px-10 md:py-8">
+          <Button className="flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white sm:w-auto md:px-10 md:py-8">
             <Search />
             <Text variant="text-md" bold>
               Find your Adventure
@@ -86,7 +89,7 @@ export default function Home() {
       <WhyUs />
       <ExplorePackages />
       <Services />
-      <CTA />
+      <BookAppointment />
       <PopularDestinations />
       <Testimonials />
     </main>

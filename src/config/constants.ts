@@ -1,7 +1,7 @@
-import fbIcon from "/public/icons/Facebook.png";
-import WhatsAppIcon from "/public/icons/WhatsApp.png";
-import MessagesIcon from "/public/icons/Messages.png";
-import IgImage from "/public/icons/Instagram.png";
+import fbIcon from "/public/icons/facebook-bw.png";
+import WhatsAppIcon from "/public/icons/whatsApp-bw.png";
+import MessagesIcon from "/public/icons/messages-bw.png";
+import IgImage from "/public/icons/instagram-bw.png";
 export const socialIcons = [
   {
     name: "Facebook",

@@ -6,7 +6,7 @@ export default function UsefulLinksSection() {
     { href: "#", src: "/icons/facebook.png", alt: "Facebook" },
     { href: "#", src: "/icons/instagram.png", alt: "Instagram" },
     { href: "#", src: "/icons/twitter.png", alt: "Twitter" },
-    { href: "#", src: "/icons/whatsapp.png", alt: "WhatsApp" },
+    { href: "#", src: "/icons/whatsApp.png", alt: "WhatsApp" },
     { href: "#", src: "/icons/youtube.png", alt: "YouTube" },
   ];
 
