@@ -2,12 +2,16 @@
 
 import { axiosInstance } from "@/lib/server-axios-instance";
 import { ApiPackagePackage } from "@/types/contentTypes";
-import { APIResponseCollection, APIResponseData } from "@/types/types";
+import {
+  APIResponse,
+  APIResponseCollection,
+  APIResponseData,
+} from "@/types/types";
 import { AxiosResponse, type AxiosError } from "axios";
-export const getPackages = async () => {
+export const getSinglePackage = async (id: number) => {
   try {
-    const res: AxiosResponse<APIResponseCollection<"api::package.package">> =
-      await axiosInstance.get("api/packages?populate=*");
+    const res: AxiosResponse<APIResponse<"api::package.package">> =
+      await axiosInstance.get(`api/packages/${id}?populate=*`);
 
     return {
       data: res.data,
