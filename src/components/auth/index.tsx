@@ -28,7 +28,7 @@ export const AuthCard = ({}: {}) => {
         type === "forgot-pwd" || type === "otp"
           ? "h-fit w-[95vw] !pt-12 sm:h-fit"
           : "h-auto w-[95vw] md:w-fit",
-        "!flex flex-col justify-between !rounded-2xl p-4 font-poppins sm:h-auto sm:p-8 md:px-20 md:py-12",
+        "!flex max-h-screen flex-col justify-between overflow-auto !rounded-2xl p-4 font-poppins sm:h-auto sm:p-8 md:px-20 md:py-12",
       )}
     >
       {/* Back button*/}
