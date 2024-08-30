@@ -1,13 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+import Link from "next/link";
 import { useState } from "react";
+import { AiOutlineClose } from "react-icons/ai";
 import { BsBarChartFill } from "react-icons/bs";
 import { FaMountain, FaRegSnowflake, FaStar } from "react-icons/fa";
+import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
-import { AiOutlineClose } from "react-icons/ai"; // Import close icon
-import { IoHeartOutline, IoHeartSharp } from "react-icons/io5"; // Import heart icons
-import Link from "next/link";
+
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 const PackageCard = ({ pkg }: any) => {
   const [isFavorited, setIsFavorited] = useState(false);
@@ -24,12 +32,28 @@ const PackageCard = ({ pkg }: any) => {
   return (
     <div className="transform cursor-pointer overflow-hidden rounded-xl bg-white p-4 shadow-xl shadow-gray-500 transition-transform">
       <div className="relative">
-        <img
-          src={pkg?.image}
-          alt={pkg?.title}
-          className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
-        />
-        <div className="absolute top-0 flex h-12 w-full items-end justify-end p-2">
+        <Swiper
+          spaceBetween={30}
+          centeredSlides={true}
+          autoplay={false}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={false}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {pkg?.images?.map((image: string, index: number) => (
+            <SwiperSlide key={index}>
+              <img
+                src={image}
+                alt={pkg?.title}
+                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <div className="absolute top-0 z-10 flex h-12 w-full items-end justify-end p-2">
           <button onClick={toggleFavorite} aria-label="Favorite">
             {isFavorited ? (
               <IoHeartSharp size={24} className="text-primary" />
@@ -46,18 +70,19 @@ const PackageCard = ({ pkg }: any) => {
           </div>
           <div>
             <p className="text-lg font-medium text-primary">{pkg?.title}</p>
-            <p className="mb-2 text-sm font-light">Host: {pkg?.host}</p>
-            <button
-              className="font-extrabold text-primary"
-              onClick={toggleOverlay}
-            >
+            <p className="mb-2 text-sm font-light md:text-[16px]">
+              Host: {pkg?.host}
+            </p>
+            <button className="font-[900] text-primary" onClick={toggleOverlay}>
               Get Quote
             </button>
           </div>
         </div>
 
+        {/* detail overlay  */}
+
         {isOverlayVisible && (
-          <div className="absolute inset-0 flex flex-col justify-between overflow-auto rounded rounded-es-3xl rounded-se-3xl bg-black bg-opacity-70 p-4 text-white">
+          <div className="absolute inset-0 z-50 flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white">
             <div className="flex justify-end">
               <button
                 onClick={toggleOverlay}
