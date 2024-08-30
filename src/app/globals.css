@@ -85,3 +85,7 @@
 .comp-subheading {
   @apply text-sm text-gray-700 md:text-lg lg:text-2xl;
 }
+
+.swiper-pagination-bullet-active {
+  background: hsl(var(--primary)) !important;
+}
