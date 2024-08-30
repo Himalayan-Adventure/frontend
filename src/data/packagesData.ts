@@ -1,5 +1,6 @@
 export const packages = [
     {
+      id: 1,
       title: "Everest Expedition, Nepal",
       host: "Himalayan Adventure",
       rating: 5.0,
@@ -15,6 +16,7 @@ export const packages = [
       season: "Winter (October - December)",
     },
     {
+      id: 2,
       title: "Cultural Tour, Japan",
       host: "Nippon Travels",
       rating: 4.5,
@@ -30,6 +32,7 @@ export const packages = [
       season: "Spring (March - May)",
     },
     {
+      id: 3,
       title: "Luxury Cruise, Mediterranean",
       host: "Sea Voyages",
       rating: 4.8,
@@ -45,6 +48,7 @@ export const packages = [
       season: "Summer (June - August)",
     },
     {
+      id: 4,
       title: "Safari Adventure, Kenya",
       host: "Wildlife Safaris",
       rating: 4.9,
@@ -60,6 +64,7 @@ export const packages = [
       season: "Autumn (September - November)",
     },
     {
+      id: 5,
       title: "Cultural Heritage Tour, India",
       host: "Incredible India",
       rating: 4.7,
@@ -75,6 +80,7 @@ export const packages = [
       season: "Winter (December - February)",
     },
     {
+      id: 6,
       title: "Luxury Desert Safari, UAE",
       host: "Desert Luxury",
       rating: 4.6,
@@ -90,6 +96,7 @@ export const packages = [
       season: "Winter (October - December)",
     },
     {
+      id: 7,
       title: "Amazon Rainforest Expedition, Brazil",
       host: "Eco Expeditions",
       rating: 4.8,
@@ -105,6 +112,7 @@ export const packages = [
       season: "Spring (April - June)",
     },
     {
+      id: 8,
       title: "Cultural Exploration, Egypt",
       host: "Pyramids Tours",
       rating: 4.9,

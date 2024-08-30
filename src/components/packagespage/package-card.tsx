@@ -7,6 +7,7 @@ import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai"; // Import close icon
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5"; // Import heart icons
+import Link from "next/link";
 
 const PackageCard = ({ pkg }: any) => {
   const [isFavorited, setIsFavorited] = useState(false);
@@ -126,9 +127,12 @@ const PackageCard = ({ pkg }: any) => {
             <hr className="mt-2" />
 
             <div className="flex w-full justify-center">
-              <button className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500">
+              <Link
+                href={`packages/${pkg?.id}`}
+                className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
+              >
                 View Details
-              </button>
+              </Link>
             </div>
           </div>
         )}

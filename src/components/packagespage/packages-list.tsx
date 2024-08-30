@@ -1,16 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState } from "react";
-import PackageCard from "./PackageCard";
+import PackageCard from "./package-card";
 import { packages } from "@/data/packagesData";
 import { FaIcons } from "react-icons/fa"; // Import any icon from react-icons
 
 export default function PackagesList() {
   const categories = [
-    { name: "All", icon: <FaIcons /> },
-    { name: "Adventure", icon: <FaIcons /> },
-    { name: "Cultural", icon: <FaIcons /> },
-    { name: "Luxury", icon: <FaIcons /> },
+    { name: "All", icon: <FaIcons size={12} /> },
+    { name: "Adventure", icon: <FaIcons size={12} /> },
+    { name: "Cultural", icon: <FaIcons size={12} /> },
+    { name: "Luxury", icon: <FaIcons size={12} /> },
   ];
 
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -22,12 +22,12 @@ export default function PackagesList() {
 
   return (
     <section className="container relative">
-      <div className="ite mb-6 flex space-x-4">
+      <div className="ite mb-6 flex flex-wrap space-x-2 lg:space-x-4">
         {categories.map((category, index) => (
           <button
             key={index}
             onClick={() => setSelectedCategory(category.name)}
-            className={`mx-4 flex flex-col items-center space-x-2 border-b-2 py-2 font-extrabold ${
+            className={`mx-4 flex flex-col items-center space-x-2 border-b-2 py-2 text-sm font-extrabold md:text-base ${
               selectedCategory === category.name
                 ? "border-b-2 border-primary text-primary"
                 : "border-transparent text-gray-600"
