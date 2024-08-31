@@ -7,31 +7,75 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { BsBarChartFill } from "react-icons/bs";
-import { FaMountain, FaRegSnowflake, FaStar } from "react-icons/fa";
+import { BsBarChartFill, BsCloudHail } from "react-icons/bs";
+import {
+  FaCanadianMapleLeaf,
+  FaMountain,
+  FaRegSnowflake,
+  FaRegSun,
+  FaStar,
+} from "react-icons/fa";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
 
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { APIResponse, APIResponseData } from "@/types/types";
+import { ApiPackagePackage } from "@/types/contentTypes";
+import { randomInt } from "crypto";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
-const PackageCard = ({ pkg }: any) => {
+const PackageCard = ({
+  pkg,
+  variant = "default",
+}: {
+  pkg: APIResponseData<"api::package.package">;
+
+  variant?: "home" | "default";
+}) => {
+  console.log(pkg);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const attr = pkg.attributes as any;
+  console.log(attr);
 
+  const seasonMap: { [key: string]: any } = {
+    winter: <FaRegSnowflake />,
+    summer: <FaRegSun />,
+    monsoon: <BsCloudHail />,
+    autumn: <FaCanadianMapleLeaf />,
+  };
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
   };
 
   const toggleOverlay = () => {
+    0;
     setIsOverlayVisible(!isOverlayVisible);
   };
-
+  const cardRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleMouseLeave = () => {
+      setIsOverlayVisible(false);
+    };
+    if (cardRef?.current) {
+      cardRef.current.addEventListener("mouseleave", handleMouseLeave);
+    }
+    return () =>
+      cardRef?.current?.removeEventListener("mouseleave", handleMouseLeave);
+  });
   return (
-    <div className="transform cursor-pointer overflow-hidden rounded-xl bg-white p-4 shadow-xl shadow-gray-500 transition-transform">
-      <div className="relative">
+    <div
+      ref={cardRef}
+      className={cn(
+        variant == "default" ? "bg-white shadow-xl shadow-gray-500" : "",
+        "transform cursor-pointer overflow-hidden rounded-xl p-4 transition-transform",
+      )}
+    >
+      <div className="relative h-full">
         <Swiper
           spaceBetween={30}
           centeredSlides={true}
@@ -43,11 +87,12 @@ const PackageCard = ({ pkg }: any) => {
           modules={[Autoplay, Pagination, Navigation]}
           className="mySwiper"
         >
-          {pkg?.images?.map((image: string, index: number) => (
+          {/*@ts-ignore*/}
+          {attr?.image?.data?.map((image: any, index: number) => (
             <SwiperSlide key={index}>
               <img
-                src={image}
-                alt={pkg?.title}
+                src={image.attributes.url}
+                alt={image.attributes.name}
                 className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
               />
             </SwiperSlide>
@@ -65,102 +110,104 @@ const PackageCard = ({ pkg }: any) => {
         <div className="py-2">
           <div className="flex w-full justify-end">
             <p className="flex items-center space-x-1 text-sm">
-              <FaStar className="text-primary" /> <span>{pkg?.rating}</span>
+              <FaStar className="text-primary" /> <span>5</span>
             </p>
           </div>
           <div>
-            <p className="text-lg font-medium text-primary">{pkg?.title}</p>
-            <p className="mb-2 text-sm font-light md:text-[16px]">
-              Host: {pkg?.host}
-            </p>
-            <button className="font-[900] text-primary" onClick={toggleOverlay}>
+            <p className="text-lg font-medium text-primary">{attr?.name}</p>
+            {attr?.hostname && (
+              <p className="mb-2 text-sm font-light md:text-[16px]">
+                Host: {attr.hostname}
+              </p>
+            )}
+            <Button
+              variant="ghost"
+              className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
+              onClick={toggleOverlay}
+            >
               Get Quote
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* detail overlay  */}
 
-        {isOverlayVisible && (
-          <div className="absolute inset-0 z-50 flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white">
-            <div className="flex justify-end">
-              <button
-                onClick={toggleOverlay}
-                className="text-white hover:text-gray-400"
-              >
-                <AiOutlineClose size={16} />
-              </button>
-            </div>
-            <div>
-              <div className="flex items-center justify-between">
-                <p className="text-lg font-bold">Departure</p>
-                <p className="flex items-center space-x-1 text-sm">
-                  <span>
-                    <LuStar className="text-primary" />
-                  </span>
-                  <span>{pkg?.rating}</span>
-                  <span className="text-xl text-gray-400">·&nbsp;</span>
-                  <a href="#" className="underline">
-                    7 reviews
-                  </a>
-                </p>
-              </div>
-              <div className="my-2 rounded bg-white p-2">
-                {pkg?.departureDates.map((date: string, index: number) => (
-                  <div
-                    key={index}
-                    className="mt-2 flex items-end justify-between"
-                  >
-                    <div className="text-black">
-                      <p className="text-[8px]">Date</p>
-                      <p className="text-[11px] text-gray-700">{date}</p>
-                    </div>
-                    <div>
-                      <button className="rounded-full bg-black px-2 py-1 text-[9px] text-white">
-                        Book Now
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
-                Get Quote
-              </button>
-            </div>
-            <div className="mt-4 space-y-2">
-              <p className="mb-4 text-center text-sm">
-                You won’t be charged yet
-              </p>
-              <p className="flex items-center space-x-2 text-sm font-medium">
-                <FaRegSnowflake size={20} />
-                <span>Winter: {pkg?.season}</span>
-              </p>
-              <p className="flex items-center space-x-2 text-sm font-medium">
-                <MdTimelapse size={20} />
-                <span>Duration: {pkg?.duration}</span>
-              </p>
-              <p className="flex items-center space-x-2 text-sm font-medium">
-                <BsBarChartFill size={20} />
-                <span>Grade: {pkg?.grade}</span>
-              </p>
-              <p className="flex items-center space-x-2 text-sm font-medium">
-                <FaMountain size={20} />
-                <span>Max Altitude: {pkg?.maxAltitude}</span>
-              </p>
-            </div>
-
-            <hr className="mt-2" />
-
-            <div className="flex w-full justify-center">
-              <Link
-                href={`packages/${pkg?.id}`}
-                className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
-              >
-                View Details
-              </Link>
-            </div>
+        <div
+          className={cn(
+            isOverlayVisible ? "opacity-1 z-50" : "-z-50 opacity-0",
+            "absolute inset-0 flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white transition-all ease-in-out",
+          )}
+        >
+          <div className="absolute right-0 top-0 hidden -translate-y-1/2 translate-x-1/2 justify-end bg-black/40">
+            <button
+              onClick={toggleOverlay}
+              className="text-white hover:text-gray-400"
+            >
+              <AiOutlineClose size={16} />
+            </button>
           </div>
-        )}
+          <div>
+            <div className="flex items-center justify-between">
+              <p className="text-lg font-bold">Departure</p>
+              <p className="flex items-center space-x-1 text-sm">
+                <span>
+                  <LuStar className="text-primary" />
+                </span>
+                <span>{Math.floor(Math.random() * 5)}</span>
+                <span className="text-xl text-gray-400">·&nbsp;</span>
+                <a href="#" className="underline">
+                  {Math.floor(Math.random() * 100)} reviews
+                </a>
+              </p>
+            </div>
+            <div className="my-2 rounded bg-white p-2">
+              <div className="mt-2 flex items-center justify-between">
+                <div className="">
+                  <p className="text-xs text-black">Date</p>
+                  <p className="text-sm text-gray-500">{attr?.departure}</p>
+                </div>
+                <Button className="rounded-full bg-black px-2 py-1 text-xs text-white">
+                  Book Now
+                </Button>
+              </div>
+            </div>
+            <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
+              Get Quote
+            </button>
+          </div>
+          <div className="mt-4 space-y-2">
+            <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
+            <p className="flex items-center space-x-2 text-sm font-medium">
+              {seasonMap[attr?.season]}
+              <span className="capitalize">
+                {attr?.season}: (October-December)
+              </span>
+            </p>
+            <p className="flex items-center space-x-2 text-sm font-medium">
+              <MdTimelapse size={20} />
+              <span>Duration: {attr?.duration}</span>
+            </p>
+            <p className="flex items-center space-x-2 text-sm font-medium">
+              <BsBarChartFill size={20} />
+              <span>Grade: {attr?.grade}</span>
+            </p>
+            <p className="flex items-center space-x-2 text-sm font-medium">
+              <FaMountain size={20} />
+              <span>Max Altitude: {attr?.altitude}</span>
+            </p>
+          </div>
+
+          <hr className="mx-auto mt-2 w-[90%]" />
+
+          <div className="flex w-full justify-center">
+            <Link
+              href={`packages/${pkg?.id}`}
+              className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
+            >
+              View Details
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

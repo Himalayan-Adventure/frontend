@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable react/no-unescaped-entities */
 import Image from "next/image";
 import React from "react";
@@ -5,7 +6,7 @@ import experience from "/public/images/whyus/experience.png";
 import guide from "/public/images/whyus/guides.png";
 import reliable from "/public/images/whyus/reliable.png";
 import support from "/public/images/whyus/support.png";
-
+import { m, domMax, LazyMotion } from "framer-motion";
 const features = [
   {
     src: experience,
@@ -50,7 +51,7 @@ const CloudImage = ({ src, alt, position }: any) => (
 
 export default function WhyUs() {
   return (
-    <>
+    <LazyMotion features={domMax}>
       <section
         className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat lg:my-16 lg:min-h-[80vh]"
         style={{
@@ -59,7 +60,13 @@ export default function WhyUs() {
         }}
       >
         <div className="from-gray absolute top-0 h-20 w-full bg-gradient-to-b"></div>
-        <div className="container py-8 lg:py-16">
+        <m.div
+          initial={{ opacity: 0, x: "-10%" }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: "some" }}
+          transition={{ duration: 0.5 }}
+          className="container py-8 lg:py-16"
+        >
           <div className="relative z-10 max-w-md text-white md:max-w-lg lg:text-center">
             <h1 className="comp-heading mb-6">Why Us?</h1>
             <p className="mb-8 text-balance text-sm md:text-lg lg:text-2xl">
@@ -69,7 +76,7 @@ export default function WhyUs() {
               for a journey of a lifetime."
             </p>
           </div>
-        </div>
+        </m.div>
 
         <CloudImage
           src="/images/cloudup.png"
@@ -100,6 +107,6 @@ export default function WhyUs() {
           </div>
         </div>
       </section>
-    </>
+    </LazyMotion>
   );
 }

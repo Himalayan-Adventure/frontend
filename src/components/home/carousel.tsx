@@ -7,13 +7,32 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { APIResponseCollection } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { m, domMax, LazyMotion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
+import PackageCard from "../packagespage/package-card";
 
 export default function HomeCarousel() {
   const [favorites, setFavorites] = useState<number[]>([]);
-
+  const { data, isFetching, status, error } = useQuery<
+    APIResponseCollection<"api::packages.packages">
+  >({
+    queryKey: ["packages"],
+    queryFn: async () => {
+      try {
+        const data = await axios.get(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate=*`,
+        );
+        return data.data;
+      } catch (error) {
+        console.error("Error fetching", error);
+      }
+    },
+  });
   const toggleFavorite = (index: number) => {
     setFavorites((prevFavorites) =>
       prevFavorites.includes(index)
@@ -56,63 +75,39 @@ export default function HomeCarousel() {
     },
   ];
 
+  if (status === "pending") {
+    return <span>Loading...</span>;
+  }
+  if (status === "error") {
+    return <></>;
+  }
+
   return (
-    <section className="container flex justify-center py-8 lg:py-16">
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full"
+    <LazyMotion features={domMax}>
+      <m.section
+        initial={{ opacity: 0, y: "-10%" }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.8 }}
+        transition={{ duration: 0.5 }}
+        className="container flex justify-center py-8 lg:py-16"
       >
-        <CarouselContent>
-          {cardsData.map((card, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <div className="relative p-4">
-                <Card className="relative border-none shadow-none">
-                  <Image
-                    src={card.image}
-                    alt={card.title}
-                    className="rounded-2xl object-cover"
-                    width={500}
-                    height={800}
-                  />
-                  {/* Favorite Button */}
-                  <div className="absolute right-4 top-4">
-                    <button
-                      onClick={() => toggleFavorite(index)}
-                      className="text-white"
-                    >
-                      {favorites.includes(index) ? (
-                        <FaHeart size={24} />
-                      ) : (
-                        <FaRegHeart size={24} />
-                      )}
-                    </button>
-                  </div>
-                </Card>
-                <div className="mt-2">
-                  <div className="flex justify-between">
-                    <p className="font-semibold text-primary">{card.title}</p>
-                    <p className="flex items-center space-x-1 text-sm text-primary">
-                      <FaStar />
-                      <span>{card.rating}</span>
-                    </p>
-                  </div>
-                  <p className="text-sm text-gray-600">Host: {card.host}</p>
-                  <a
-                    href="#"
-                    className="text-sm font-bold text-orange-500 text-primary underline"
-                  >
-                    Get Quote
-                  </a>
-                </div>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-    </section>
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="w-full"
+        >
+          <CarouselContent>
+            {data?.data.map((pkg, index) => (
+              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4">
+                <PackageCard pkg={pkg} variant="home" />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </m.section>
+    </LazyMotion>
   );
 }

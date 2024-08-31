@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
+import Providers from "@/providers";
 const overpass = Overpass({
   subsets: ["latin"],
   variable: "--font-overpass",
@@ -32,17 +33,19 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          `font-overpass min-h-screen bg-background antialiased`,
+          `min-h-screen bg-background font-overpass antialiased`,
           overpass.variable,
           poppins.variable,
         )}
       >
         <Toaster richColors />
-        <Suspense>
-          <Navbar />
-        </Suspense>
-        {children}
-        <Footer />
+        <Providers>
+          <Suspense>
+            <Navbar />
+          </Suspense>
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

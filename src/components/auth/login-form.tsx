@@ -17,7 +17,7 @@ import { LoginFormSchema, TLoginForm } from "@/validators/login-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { login } from "@/server/login-user";
+import { login } from "@/server/auth/login-user";
 import Logo from "@/components/logo";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 export const LoginForm = () => {
