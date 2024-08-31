@@ -56,7 +56,7 @@ export default function PackagesList() {
           <button
             key={index}
             onClick={() => setSelectedCategory(category.name)}
-            className={`mx-4 flex flex-col items-center space-x-2 border-b-2 py-2 text-sm font-extrabold md:text-base ${
+            className={`mx-4 flex cursor-pointer flex-col items-center space-x-2 border-b-2 py-2 text-sm font-extrabold md:text-base ${
               selectedCategory === category.name
                 ? "border-b-2 border-primary text-primary"
                 : "border-transparent text-gray-600"

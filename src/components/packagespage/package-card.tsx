@@ -75,7 +75,7 @@ const PackageCard = ({
         "transform cursor-pointer overflow-hidden rounded-xl p-4 transition-transform",
       )}
     >
-      <div className="relative">
+      <div className="relative h-full">
         <Swiper
           spaceBetween={30}
           centeredSlides={true}
@@ -138,7 +138,7 @@ const PackageCard = ({
             "absolute inset-0 flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white transition-all ease-in-out",
           )}
         >
-          <div className="flex justify-end">
+          <div className="absolute right-0 top-0 hidden -translate-y-1/2 translate-x-1/2 justify-end bg-black/40">
             <button
               onClick={toggleOverlay}
               className="text-white hover:text-gray-400"
@@ -161,16 +161,14 @@ const PackageCard = ({
               </p>
             </div>
             <div className="my-2 rounded bg-white p-2">
-              <div className="mt-2 flex items-end justify-between">
-                <div className="text-black">
-                  <p className="text-[8px]">Date</p>
-                  <p className="text-[11px] text-gray-700">{attr?.departure}</p>
+              <div className="mt-2 flex items-center justify-between">
+                <div className="">
+                  <p className="text-xs text-black">Date</p>
+                  <p className="text-sm text-gray-500">{attr?.departure}</p>
                 </div>
-                <div>
-                  <button className="rounded-full bg-black px-2 py-1 text-[9px] text-white">
-                    Book Now
-                  </button>
-                </div>
+                <Button className="rounded-full bg-black px-2 py-1 text-xs text-white">
+                  Book Now
+                </Button>
               </div>
             </div>
             <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
@@ -199,7 +197,7 @@ const PackageCard = ({
             </p>
           </div>
 
-          <hr className="mt-2" />
+          <hr className="mx-auto mt-2 w-[90%]" />
 
           <div className="flex w-full justify-center">
             <Link
