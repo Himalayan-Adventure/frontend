@@ -9,12 +9,7 @@ export default function WhatWeDo() {
   const scrollRef = useRef(null);
   return (
     <LazyMotion features={domMax}>
-      <m.section
-        className="container py-8 lg:py-16"
-        // initial={{ opacity: 0, y: "-20%" }}
-        // whileInView={{ opacity: 1, y: 0 }}
-        // viewport={{ once: true, margin: "-200px" }}
-      >
+      <section className="container overflow-hidden py-8 lg:py-16">
         <div className="grid items-center gap-4 lg:grid-cols-2 lg:gap-8">
           {/* Image Section */}
           <m.div
@@ -36,7 +31,7 @@ export default function WhatWeDo() {
           <m.div
             initial={{ opacity: 0, x: "10%" }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: "all" }}
+            viewport={{ once: true, amount: "some" }}
             transition={{ duration: 0.5 }}
             className="flex flex-col justify-center text-center lg:text-left"
           >
@@ -47,17 +42,17 @@ export default function WhatWeDo() {
               expert guides lead you through nature's wonders, ensuring safety
               and satisfaction every step of the way."
             </p>
-            <p className="flex justify-center lg:justify-start">
+            <p className="flex w-fit justify-center lg:justify-start">
               <Link
                 href="/learn-more"
-                className="inline-block rounded-full border border-black px-4 py-2 text-sm font-semibold text-black transition md:text-base"
+                className="inline-block w-fit rounded-full border border-black px-4 py-2 text-sm font-semibold text-black transition md:text-base"
               >
                 Learn More
               </Link>
             </p>
           </m.div>
         </div>
-      </m.section>
+      </section>
     </LazyMotion>
   );
 }

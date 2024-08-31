@@ -30,8 +30,11 @@ import { Button } from "../ui/button";
 
 const PackageCard = ({
   pkg,
+  variant = "default",
 }: {
   pkg: APIResponseData<"api::package.package">;
+
+  variant?: "home" | "default";
 }) => {
   console.log(pkg);
   const [isFavorited, setIsFavorited] = useState(false);
@@ -50,6 +53,7 @@ const PackageCard = ({
   };
 
   const toggleOverlay = () => {
+    0;
     setIsOverlayVisible(!isOverlayVisible);
   };
   const cardRef = useRef<HTMLDivElement>(null);
@@ -66,7 +70,10 @@ const PackageCard = ({
   return (
     <div
       ref={cardRef}
-      className="transform cursor-pointer overflow-hidden rounded-xl bg-white p-4 shadow-xl shadow-gray-500 transition-transform"
+      className={cn(
+        variant == "default" ? "bg-white shadow-xl shadow-gray-500" : "",
+        "transform cursor-pointer overflow-hidden rounded-xl p-4 transition-transform",
+      )}
     >
       <div className="relative">
         <Swiper
