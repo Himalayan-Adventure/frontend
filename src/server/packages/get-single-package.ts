@@ -14,7 +14,7 @@ export const getSinglePackage = async (id: number) => {
       await axiosInstance.get(`api/packages/${id}?populate=*`);
 
     return {
-      data: res.data,
+      data: res.data.data,
       status: res.status,
     };
   } catch (error: AxiosError | any) {
