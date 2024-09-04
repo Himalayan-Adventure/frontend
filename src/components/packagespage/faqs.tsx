@@ -41,7 +41,7 @@ export default function Faqs() {
                 className="flex w-full items-center justify-between bg-gray-800 p-4 text-left font-semibold text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
                 onClick={() => toggleFaq(index)}
               >
-                <span>Q. {faq.question}</span>
+                <span className="text-sm md:text-base">Q. {faq.question}</span>
                 <span>{openIndex === index ? "−" : "+"}</span>
               </button>
               <div
@@ -52,7 +52,7 @@ export default function Faqs() {
                 } overflow-hidden`}
               >
                 <div className="bg-white p-4 text-gray-700">
-                  <p>{faq.answer}</p>
+                  <p className="text-sm md:text-base">{faq.answer}</p>
                 </div>
               </div>
             </div>

@@ -54,7 +54,7 @@ export default function InfoTabs() {
               <span className="text-yellow-500">
                 <IoCheckmarkCircleOutline className="text-primary lg:text-2xl" />
               </span>
-              <span className="text-gray-700">{item}</span>
+              <span className="text-gray-700 text-sm md:text-base">{item}</span>
             </li>
           ))}
         </ul>

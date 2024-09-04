@@ -12,8 +12,8 @@ export default function HostedBy() {
           Package Hosted by Piioneer Adventure
         </h1>
         <div className="flex flex-col md:flex-row md:items-center gap-4 text-base md:gap-8 lg:gap-12">
-          <h2>5 Climbers Booked</h2>
-          <ul className="flex list-disc space-x-8 text-sm md:text-base">
+          <h2 className="text-sm md:text-base">5 Climbers Booked</h2>
+          <ul className="ml-2 md:ml-0 flex list-disc space-x-8 text-xs md:text-sm lg:text-base">
             <li>2 leaders</li>
             <li>Fixed Departure</li>
             <li>Season: Autumn</li>

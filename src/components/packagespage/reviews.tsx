@@ -94,15 +94,15 @@ export default function Reviews() {
               key={index}
               className="flex items-center justify-between space-x-4"
             >
-              <p>{rating.label}</p>
+              <p className="text-sm md:text-base">{rating.label}</p>
               <div className="flex items-center space-x-2">
-                <div className="h-2 w-24 overflow-hidden rounded-full bg-gray-300">
+                <div className="h-1 w-16 md:w-24 overflow-hidden bg-gray-300">
                   <div
                     className="h-full bg-black"
                     style={{ width: `${(rating.score / 5) * 100}%` }}
                   />
                 </div>
-                <p>{rating.score.toFixed(1)}</p>
+                <p className="text-sm md:text-base">{rating.score.toFixed(1)}</p>
               </div>
             </div>
           ))}
@@ -144,7 +144,7 @@ export default function Reviews() {
         </div>
 
         <button
-          className="mt-6 block rounded-lg border border-black px-4 py-2 text-black hover:bg-gray-200"
+          className="mt-6 block rounded-lg border border-black px-4 py-2 text-black hover:bg-gray-200 text-sm md:text-base"
           onClick={() => setShowMoreReviews(!showMoreReviews)}
         >
           {showMoreReviews

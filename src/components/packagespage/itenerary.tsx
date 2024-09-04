@@ -48,12 +48,12 @@ export default function Itinerary() {
         <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
           Itinerary
         </h1>
-        <button className="rounded border border-black px-4 py-2 text-black transition hover:bg-gray-200">
+        <button className="rounded border border-black px-4 py-2 text-black transition hover:bg-gray-200 text-sm md:text-base">
           Download Pdf
         </button>
       </div>
       <div className="mt-4">
-        <p className="text-lg text-gray-600 lg:text-xl">
+        <p className="text-base text-gray-600 lg:text-xl">
           <span className="font-bold">Weeks</span> ({itineraryData.length})
         </p>
         <div className="ml-4 mt-4 space-y-6 border-l">
@@ -85,7 +85,7 @@ export default function Itinerary() {
                     style={{ height: "0px" }}
                   >
                     {item.days.map((day, dayIndex) => (
-                      <p key={dayIndex} className="mt-2">
+                      <p key={dayIndex} className="mt-2 text-xs md:text-sm lg:text-base">
                         {day}
                       </p>
                     ))}

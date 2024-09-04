@@ -23,17 +23,17 @@ export default function Gallery() {
     },
   ];
   return (
-    <div className="relative grid grid-cols-3 gap-4 lg:gap-8">
+    <div className="relative grid grid-cols-3 gap-2 md:gap-4 lg:gap-8">
       {/* Main Image */}
       <div className="col-span-3">
         <div
-          className="rounded-lg border bg-white p-2 lg:p-4"
+          className="rounded-lg border bg-white p-1 md:p-2 lg:p-4"
           style={{ boxShadow: "0px 4px 12px 4px rgba(0, 0, 0, 0.3)" }}
         >
           <img
             src={images?.[0]?.src}
             alt="Main"
-            className="lg:max-h-96 object-cover grayscale lg:w-full"
+            className="object-cover grayscale lg:max-h-96 lg:w-full"
           />
         </div>
       </div>
@@ -42,7 +42,7 @@ export default function Gallery() {
       {images?.slice(1)?.map((img, index) => (
         <div className="col-span-1" key={index}>
           <div
-            className="rounded-lg bg-white p-2 shadow-xl lg:p-4"
+            className="rounded-lg bg-white p-1 shadow-xl md:p-2 lg:p-4"
             style={{ boxShadow: "0px 4px 12px 4px rgba(0, 0, 0, 0.3)" }}
           >
             <img

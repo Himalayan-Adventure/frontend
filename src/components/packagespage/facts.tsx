@@ -119,18 +119,23 @@ export default function BookAppointment() {
       <div className="container py-8 lg:py-16">
         <div className="relative text-white">
           <h1 className="text-lg md:text-xl lg:text-2xl">Facts of the Trip</h1>
-          <div className="mt-8 grid grid-cols-1 gap-x-8 lg:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-x-8 lg:mt-8 lg:grid-cols-2">
             <div>
               {factsLeft.map((fact, index) => (
-                <div key={index} className="mb-4 flex items-center space-x-3">
-                  <p className="text-sm font-semibold md:text-base">
+                <div
+                  key={index}
+                  className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
+                >
+                  <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base">
                     {fact.label}
                   </p>
 
-                  <div className="flex items-center space-x-1">
-                    <span className="text-primary">{fact.icon}</span>
+                  <div className="col-span-2 flex items-center space-x-1">
+                    <span className="">{fact.icon}</span>
 
-                    <p className="text-sm md:text-base">{fact.value}</p>
+                    <p className="text-xs md:text-sm lg:text-base">
+                      {fact.value}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -139,16 +144,18 @@ export default function BookAppointment() {
               {factsRight.map((fact, index) => (
                 <div
                   key={index}
-                  className="mb-4 flex items-center space-x-2 md:space-x-3"
+                  className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
                 >
-                  <p className="text-sm font-semibold md:text-base">
+                  <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base">
                     {fact.label}
                   </p>
 
-                  <div className="flex items-center space-x-1">
+                  <div className="col-span-2 flex items-center space-x-1">
                     <span className="text-primary">{fact.icon}</span>
 
-                    <p className="text-sm md:text-base">{fact.value}</p>
+                    <p className="text-xs md:text-sm lg:text-base">
+                      {fact.value}
+                    </p>
                   </div>
                 </div>
               ))}
