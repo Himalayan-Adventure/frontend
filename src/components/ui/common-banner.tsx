@@ -19,15 +19,13 @@ const CommonBanner: React.FC<CommonBannerProps> = ({
           alt="Background Image"
           objectFit="cover"
           quality={100}
-          className="h-96 object-cover lg:h-auto"
+          className="h-full object-cover lg:h-auto"
         />
-        <div className="container absolute inset-0 flex flex-col justify-center space-y-3 lg:space-y-6 text-white">
-          <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px] -mt-52 lg:-mt-24">
+        <div className="container absolute inset-0 flex flex-col justify-center space-y-3 text-white lg:space-y-6">
+          <h1 className="-mt-52 text-2xl font-bold md:text-4xl lg:-mt-24 lg:text-[55px]">
             {title}
           </h1>
-          <p className="max-w-xl text-sm md:text-[16px]">
-            {subtitle}
-          </p>
+          <p className="max-w-xl text-sm md:text-[16px]">{subtitle}</p>
         </div>
       </div>
     </section>
