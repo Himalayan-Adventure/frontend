@@ -8,7 +8,7 @@ import {
   APIResponseData,
 } from "@/types/types";
 import { AxiosResponse, type AxiosError } from "axios";
-export const getSinglePackage = async (id: number) => {
+export const getSinglePackage = async (id: string) => {
   try {
     const res: AxiosResponse<APIResponse<"api::package.package">> =
       await axiosInstance.get(`api/packages/${id}?populate=*`);

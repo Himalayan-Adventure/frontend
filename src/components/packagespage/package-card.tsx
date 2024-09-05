@@ -112,12 +112,14 @@ const PackageCard = ({
             </p>
           </div>
           <div>
-            <p className="text-lg font-medium text-primary">{attr?.name}</p>
-            {attr?.hostname && (
-              <p className="mb-2 text-sm font-light md:text-[16px]">
-                Host: {attr.hostname}
-              </p>
-            )}
+            <Link href={`/packages/${pkg.id}`}>
+              <p className="text-lg font-medium text-primary">{attr?.name}</p>
+              {attr?.hostname && (
+                <p className="mb-2 text-sm font-light md:text-[16px]">
+                  Host: {attr.hostname}
+                </p>
+              )}
+            </Link>
             <Button
               variant="ghost"
               className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"

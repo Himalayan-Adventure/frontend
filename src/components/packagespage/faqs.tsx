@@ -1,28 +1,28 @@
 "use client";
 import React, { useState } from "react";
-
-export default function Faqs() {
-  const faqsData = [
-    {
-      question: "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-               Morbi vestibulum ornare lectus nec commodo. 
-               Aenean non augue sagittis nibh suscipit porttitor. 
-               Sed feugiat diam ac ex suscipit, tincidunt dignissim eros laoreet. 
-               Integer dictum, ligula quis sodales gravida, orci ante faucibus magna, sed cursus enim neque vitae dolor.`,
-    },
-    {
-      question: "Vestibulum Ornare Lectus Nec Commodo Aenean Non Augue",
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-               Morbi vestibulum ornare lectus nec commodo.`,
-    },
-    {
-      question: "Sagittis Nibh Suscipit Porttitor Sed Feugiat Diam",
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-               Morbi vestibulum ornare lectus nec commodo. 
-               Aenean non augue sagittis nibh suscipit porttitor.`,
-    },
-  ];
+type TFAQProps = { id: number; question: string; answer: string };
+export default function Faqs({ data }: { data: TFAQProps[] }) {
+  // const faqsData = [
+  //   {
+  //     question: "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
+  //     answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  //              Morbi vestibulum ornare lectus nec commodo.
+  //              Aenean non augue sagittis nibh suscipit porttitor.
+  //              Sed feugiat diam ac ex suscipit, tincidunt dignissim eros laoreet.
+  //              Integer dictum, ligula quis sodales gravida, orci ante faucibus magna, sed cursus enim neque vitae dolor.`,
+  //   },
+  //   {
+  //     question: "Vestibulum Ornare Lectus Nec Commodo Aenean Non Augue",
+  //     answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  //              Morbi vestibulum ornare lectus nec commodo.`,
+  //   },
+  //   {
+  //     question: "Sagittis Nibh Suscipit Porttitor Sed Feugiat Diam",
+  //     answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  //              Morbi vestibulum ornare lectus nec commodo.
+  //              Aenean non augue sagittis nibh suscipit porttitor.`,
+  //   },
+  // ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -35,7 +35,7 @@ export default function Faqs() {
       <div className="max-w-3xl">
         <h2 className="text-lg font-semibold md:text-xl lg:text-2xl">FAQ</h2>
         <div className="mt-4 space-y-4">
-          {faqsData.map((faq, index) => (
+          {data?.map((faq, index) => (
             <div key={index} className="overflow-hidden">
               <button
                 className="flex w-full items-center justify-between bg-gray-800 p-4 text-left font-semibold text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
