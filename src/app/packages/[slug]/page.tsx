@@ -15,7 +15,7 @@ import ThingsToKnow from "@/components/packagespage/things-to-know";
 import CommonBanner from "@/components/ui/common-banner";
 import bgImage from "/public/images/packageBanner.png";
 import { getSinglePackage } from "@/server/packages/get-single-package";
-import { Text } from "@/components/ui/text";
+import { TDepartureData } from "@/types/packages/departure";
 
 interface Params {
   slug: string;
@@ -32,16 +32,22 @@ export default async function PackageDetail({ params }: { params: Params }) {
     );
   }
   const pkg: any = data.data?.attributes;
-  console.log(pkg.faq);
-  const images: GalleryImageProp[] = pkg.image.data.map((image: any) => {
+  const images: GalleryImageProp[] = pkg?.image?.data?.map((image: any) => {
     return {
       src: image.attributes.url,
-      alt: image.attributes.alternativeText || image.attributes.name,
-      height: image.attributes.height,
-      width: image.attributes.width,
+      alt: image.attributes?.alternativeText || image.attributes.name,
+      height: image.attributes?.height,
+      width: image.attributes?.width,
     };
   });
-  console.log(images);
+  const departureData: TDepartureData = {
+    date: pkg.date,
+    departure: pkg.departure,
+    grade: pkg.grade,
+    altitude: pkg.altitude,
+    duration: pkg.duration,
+    season: pkg.season,
+  };
 
   return (
     <main>
@@ -69,27 +75,28 @@ export default async function PackageDetail({ params }: { params: Params }) {
                 {/* Host Logo  */}
                 <p className="sr-only">{pkg.hostname}</p>
                 <Image
-                  src={pkg.host.data.attributes.url}
+                  src={pkg?.host?.data?.attributes?.url}
                   alt="host logo"
                   priority
                   className="w-28 md:w-40"
-                  width={pkg.host.data.attributes.width}
-                  height={pkg.host.data.attributes.height}
+                  width={pkg?.host?.data?.attributes?.width}
+                  height={pkg?.host?.data?.attributes?.height}
                 />
               </div>
             </div>
-            <About desc={pkg.description} />
+            <About desc={pkg?.description} />
             <Itenerary />
             <InfoTabs />
           </div>
           <div className="space-y-8 lg:col-span-1">
             <Map location={pkg.name} />
-            <Departure />
+            {/* Dpeparture*/}
+            <Departure type={"default"} data={departureData} />
           </div>
         </div>
       </section>
       <Facts />
-      <Faqs data={pkg.faq} />
+      <Faqs data={pkg?.faq} />
       <Offers />
       <Reviews />
       <SimilarPackages />

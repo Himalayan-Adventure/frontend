@@ -47,6 +47,7 @@
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.1",
+    "words-to-numbers": "^1.5.1",
     "zod": "^3.23.8",
     "zustand": "^4.5.5"
   },

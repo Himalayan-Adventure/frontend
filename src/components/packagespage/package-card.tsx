@@ -20,11 +20,14 @@ import {
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
+import wordsToNumbers from "words-to-numbers";
 
 import { cn } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "../ui/button";
+import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
+import { TDepartureData } from "@/types/packages/departure";
 
 const PackageCard = ({
   pkg,
@@ -40,12 +43,6 @@ const PackageCard = ({
   const attr = pkg.attributes as any;
   console.log(attr);
 
-  const seasonMap: { [key: string]: any } = {
-    winter: <FaRegSnowflake />,
-    summer: <FaRegSun />,
-    monsoon: <BsCloudHail />,
-    autumn: <FaCanadianMapleLeaf />,
-  };
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
   };
@@ -178,14 +175,14 @@ const PackageCard = ({
           <div className="mt-4 space-y-2">
             <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
             <p className="flex items-center space-x-2 text-sm font-medium">
-              {seasonMap[attr?.season]}
+              {seasonIconMap[attr?.season]}
               <span className="capitalize">
-                {attr?.season}: (October-December)
+                {attr?.season}: ({seasonMonthMap[attr.season]})
               </span>
             </p>
             <p className="flex items-center space-x-2 text-sm font-medium">
               <MdTimelapse size={20} />
-              <span>Duration: {attr?.duration}</span>
+              <span>Duration: {wordsToNumbers(attr?.duration)}</span>
             </p>
             <p className="flex items-center space-x-2 text-sm font-medium">
               <BsBarChartFill size={20} />
@@ -193,7 +190,7 @@ const PackageCard = ({
             </p>
             <p className="flex items-center space-x-2 text-sm font-medium">
               <FaMountain size={20} />
-              <span>Max Altitude: {attr?.altitude}</span>
+              <span>Max Altitude: {wordsToNumbers(attr?.altitude)}</span>
             </p>
           </div>
 
