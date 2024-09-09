@@ -7,6 +7,8 @@ import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 import Providers from "@/providers";
+import { siteConfig } from "@/config/site-config";
+import { AppProgressBar } from "@/components/ui/app-progress-bar";
 const overpass = Overpass({
   subsets: ["latin"],
   variable: "--font-overpass",
@@ -20,8 +22,16 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Himalayan Adventure",
-  description: "Find your Adventure",
+  title: {
+    default: siteConfig.siteName,
+    template: `%s - ${siteConfig.siteName}`,
+  },
+  description: siteConfig.siteDescription,
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -38,6 +48,9 @@ export default function RootLayout({
           poppins.variable,
         )}
       >
+        <Suspense>
+          <AppProgressBar />
+        </Suspense>
         <Toaster richColors />
         <Providers>
           <Suspense>
