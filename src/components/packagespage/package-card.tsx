@@ -21,11 +21,9 @@ import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
 
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { APIResponse, APIResponseData } from "@/types/types";
-import { ApiPackagePackage } from "@/types/contentTypes";
-import { randomInt } from "crypto";
 import { cn } from "@/lib/utils";
+import { APIResponseData } from "@/types/types";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "../ui/button";
 
 const PackageCard = ({

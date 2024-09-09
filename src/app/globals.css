@@ -96,3 +96,7 @@
   border: 1px solid #8b96a5 !important;
   opacity: 1 !important;
 }
+
+.swiper-slide {
+  width: 100% !important;
+}
