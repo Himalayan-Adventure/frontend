@@ -20,11 +20,14 @@ import {
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
+import wordsToNumbers from "words-to-numbers";
 
 import { cn } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "../ui/button";
+import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
+import { TDepartureData } from "@/types/packages/departure";
 
 const PackageCard = ({
   pkg,
@@ -32,20 +35,12 @@ const PackageCard = ({
 }: {
   pkg: APIResponseData<"api::package.package">;
 
-  variant?: "home" | "default";
+  variant?: "home" | "default" | "similar";
 }) => {
-  console.log(pkg);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const attr = pkg.attributes as any;
-  console.log(attr);
+  const attr = pkg.attributes;
 
-  const seasonMap: { [key: string]: any } = {
-    winter: <FaRegSnowflake />,
-    summer: <FaRegSun />,
-    monsoon: <BsCloudHail />,
-    autumn: <FaCanadianMapleLeaf />,
-  };
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
   };
@@ -105,27 +100,56 @@ const PackageCard = ({
             )}
           </button>
         </div>
+
         <div className="py-2">
+          {variant !== "similar" ? (
+<>
           <div className="flex w-full justify-end">
             <p className="flex items-center space-x-1 text-sm">
               <FaStar className="text-primary" /> <span>5</span>
             </p>
           </div>
-          <div>
-            <p className="text-lg font-medium text-primary">{attr?.name}</p>
-            {attr?.hostname && (
-              <p className="mb-2 text-sm font-light md:text-[16px]">
-                Host: {attr.hostname}
+            <div>
+              <Link href={`/packages/${pkg.id}`}>
+                <p className="text-lg font-medium text-primary">{attr?.name}</p>
+
+                {attr?.hostname && (
+                  <p className="mb-2 text-sm font-light md:text-[16px]">
+                    Host: {attr.hostname}
+                  </p>
+                )}
+              </Link>
+              <Button
+                variant="ghost"
+                className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
+                onClick={toggleOverlay}
+              >
+                Get Quote
+              </Button>
+            </div>
+            </>
+          ) : (
+            <div className="pt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <h1 className="text-sm font-semibold text-primary">
+                  {attr?.name}
+                </h1>
+                <div className="flex items-center text-primary">
+                  <FaStar />
+                  <p className="ml-1 text-sm">4.5</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600">Beach and ocean views</p>
+              <p className="text-sm text-gray-600">
+                6 - 21 Sep. · Individual Host
               </p>
-            )}
-            <Button
-              variant="ghost"
-              className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
-              onClick={toggleOverlay}
-            >
-              Get Quote
-            </Button>
-          </div>
+
+              <p className="mt-2 text-lg font-[900] text-primary underline">
+                Rs. 40000
+              </p>
+            </div>
+          )}
         </div>
 
         {/* detail overlay  */}
@@ -176,23 +200,27 @@ const PackageCard = ({
           <div className="mt-4 space-y-2">
             <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
             <p className="flex items-center space-x-2 text-sm font-medium">
-              {seasonMap[attr?.season]}
+              {seasonIconMap?.[attr?.season || "winter"]}
               <span className="capitalize">
-                {attr?.season}: (October-December)
+                {attr?.season}: ({seasonMonthMap[attr?.season || "winter"]})
               </span>
             </p>
-            <p className="flex items-center space-x-2 text-sm font-medium">
-              <MdTimelapse size={20} />
-              <span>Duration: {attr?.duration}</span>
-            </p>
+            {attr.duration && (
+              <p className="flex items-center space-x-2 text-sm font-medium">
+                <MdTimelapse size={20} />
+                <span>Duration: {wordsToNumbers(attr?.duration)}</span>
+              </p>
+            )}
             <p className="flex items-center space-x-2 text-sm font-medium">
               <BsBarChartFill size={20} />
-              <span>Grade: {attr?.grade}</span>
+              <span>Grade: {attr.grade}</span>
             </p>
-            <p className="flex items-center space-x-2 text-sm font-medium">
-              <FaMountain size={20} />
-              <span>Max Altitude: {attr?.altitude}</span>
-            </p>
+            {attr.altitude && (
+              <p className="flex items-center space-x-2 text-sm font-medium">
+                <FaMountain size={20} />
+                <span>Max Altitude: {wordsToNumbers(attr?.altitude)}</span>
+              </p>
+            )}
           </div>
 
           <hr className="mx-auto mt-2 w-[90%]" />

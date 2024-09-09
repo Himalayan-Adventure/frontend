@@ -11,6 +11,12 @@ import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { useState } from "react";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
+import { APIResponseCollection } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { PackageCardSkeleton } from "./package-card-skeleton";
+import { Text } from "../ui/text";
+import PackageCard from "./package-card";
 
 const packages = [
   {
@@ -54,6 +60,27 @@ const packages = [
 ];
 
 const SimilarPackages = () => {
+  const { data, isFetching, status, error } = useQuery<
+    APIResponseCollection<"api::package.package">
+  >({
+    queryKey: ["packages"],
+    queryFn: async () => {
+      try {
+        const data = await axios.get(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate=*`,
+        );
+        return data.data;
+      } catch (error) {
+        console.error("Error fetching", error);
+      }
+    },
+  });
+  if (isFetching) {
+    return <PackageCardSkeleton />;
+  }
+  if (error) {
+    return <></>;
+  }
   return (
     <section className="container py-4 lg:py-8">
       <div>
@@ -61,78 +88,18 @@ const SimilarPackages = () => {
           Similar Packages
         </h2>
         <div className="grid w-full gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          {packages.map((pkg) => (
-            <Card key={pkg.id} {...pkg} />
-          ))}
+          {data?.data && data.data.length > 0 ? (
+            data.data
+              ?.slice(0, 4)
+              ?.map((pkg, index) => (
+                <PackageCard key={index} pkg={pkg} variant="similar" />
+              ))
+          ) : (
+            <span>No packages are available</span>
+          )}
         </div>
       </div>
     </section>
-  );
-};
-
-const Card = ({ name, views, date, price, rating, imageUrl, images }: any) => {
-  const [isFavorited, setIsFavorited] = useState(false);
-  const toggleFavorite = () => {
-    setIsFavorited(!isFavorited);
-  };
-
-  return (
-    <div className="w-full">
-      {/* Image slider section with favorite button */}
-      <div className="relative w-full overflow-hidden">
-        <div className="overflow-hidden">
-          <Swiper
-            spaceBetween={30}
-            centeredSlides={true}
-            autoplay={false}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={false}
-            modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper"
-          >
-            {/*@ts-ignore*/}
-            {images?.map((image: any, index: number) => (
-              <SwiperSlide key={index} className="w-60">
-                <img
-                  src={image?.url}
-                  alt={image?.name}
-                  className="max-h-60 w-full rounded-xl object-cover grayscale"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-        <div className="absolute top-0 z-10 flex h-12 w-full items-end justify-end p-2">
-          <button onClick={toggleFavorite} aria-label="Favorite">
-            {isFavorited ? (
-              <IoHeartSharp size={24} className="text-primary" />
-            ) : (
-              <IoHeartOutline size={24} className="text-white" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Package Details */}
-      <div className="pt-4">
-        <div className="mb-2 flex items-center justify-between">
-          <h1 className="text-sm font-semibold text-primary">{name}</h1>
-          <div className="flex items-center text-primary">
-            <FaStar />
-            <p className="ml-1 text-sm">{rating}</p>
-          </div>
-        </div>
-
-        <p className="text-sm text-gray-600">{views}</p>
-        <p className="text-sm text-gray-600">{date}</p>
-
-        <p className="mt-2 text-lg font-[900] text-primary underline">
-          {price}
-        </p>
-      </div>
-    </div>
   );
 };
 
