@@ -20,7 +20,7 @@ export default function Gallery({ images }: { images: GalleryImageProp[] }) {
           <Image
             src={images?.[0]?.src}
             alt="Main"
-            className="object-cover grayscale lg:max-h-96 lg:w-full"
+            className="w-full object-cover grayscale lg:max-h-96"
             height={images?.[0]?.height}
             width={images?.[0]?.width}
           />
