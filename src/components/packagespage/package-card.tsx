@@ -103,33 +103,35 @@ const PackageCard = ({
 
         <div className="py-2">
           {variant !== "similar" ? (
-<>
-          <div className="flex w-full justify-end">
-            <p className="flex items-center space-x-1 text-sm">
-              <FaStar className="text-primary" /> <span>5</span>
-            </p>
-          </div>
-            <div>
-              <Link href={`/packages/${pkg.id}`}>
-                <p className="text-lg font-medium text-primary">{attr?.name}</p>
-
-                {attr?.hostname && (
-                  <p className="mb-2 text-sm font-light md:text-[16px]">
-                    Host: {attr.hostname}
+            <>
+              <div className="flex w-full justify-end">
+                <p className="flex items-center space-x-1 text-sm">
+                  <FaStar className="text-primary" /> <span>5</span>
+                </p>
+              </div>
+              <div>
+                <Link href={`/packages/${pkg.id}`}>
+                  <p className="text-lg font-medium text-primary">
+                    {attr?.name}
                   </p>
-                )}
-              </Link>
-              <Button
-                variant="ghost"
-                className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
-                onClick={toggleOverlay}
-              >
-                Get Quote
-              </Button>
-            </div>
+
+                  {attr?.hostname && (
+                    <p className="mb-2 text-sm font-light md:text-[16px]">
+                      Host: {attr.hostname}
+                    </p>
+                  )}
+                </Link>
+                <Button
+                  variant="ghost"
+                  className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
+                  onClick={toggleOverlay}
+                >
+                  Get Quote
+                </Button>
+              </div>
             </>
           ) : (
-            <div className="pt-4">
+            <Link href={`/packages/${pkg.id}`} className="pt-4">
               <div className="mb-2 flex items-center justify-between">
                 <h1 className="text-sm font-semibold text-primary">
                   {attr?.name}
@@ -148,7 +150,7 @@ const PackageCard = ({
               <p className="mt-2 text-lg font-[900] text-primary underline">
                 Rs. 40000
               </p>
-            </div>
+            </Link>
           )}
         </div>
 
