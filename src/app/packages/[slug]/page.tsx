@@ -31,23 +31,27 @@ export default async function PackageDetail({ params }: { params: Params }) {
       </div>
     );
   }
-  const pkg: any = data.data?.attributes;
-  const images: GalleryImageProp[] = pkg?.image?.data?.map((image: any) => {
-    return {
-      src: image.attributes.url,
-      alt: image.attributes?.alternativeText || image.attributes.name,
-      height: image.attributes?.height,
-      width: image.attributes?.width,
-    };
-  });
+
+  const pkg = data.data?.attributes;
+  const images: GalleryImageProp[] | null = pkg?.image
+    ? pkg?.image.data?.map((image) => ({
+        src: image.attributes.url,
+        alt: image.attributes?.alternativeText || image.attributes.name,
+        height: image.attributes.height || 400,
+        width: image.attributes?.width || 400,
+      }))
+    : [];
   const departureData: TDepartureData = {
-    date: pkg.date,
-    departure: pkg.departure,
-    grade: pkg.grade,
-    altitude: pkg.altitude,
-    duration: pkg.duration,
-    season: pkg.season,
+    date: pkg?.date as string,
+    departure: pkg?.departure as string,
+    grade: pkg?.grade || "",
+    altitude: pkg?.altitude || "",
+    duration: pkg?.duration || "",
+    season: pkg?.season || "",
   };
+  if (!pkg) {
+    return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
+  }
 
   return (
     <main>
@@ -74,14 +78,16 @@ export default async function PackageDetail({ params }: { params: Params }) {
               <div>
                 {/* Host Logo  */}
                 <p className="sr-only">{pkg.hostname}</p>
-                <Image
-                  src={pkg?.host?.data?.attributes?.url}
-                  alt="host logo"
-                  priority
-                  className="w-28 md:w-40"
-                  width={pkg?.host?.data?.attributes?.width}
-                  height={pkg?.host?.data?.attributes?.height}
-                />
+                {pkg?.host && (
+                  <Image
+                    src={pkg?.host?.data?.attributes?.url}
+                    alt="host logo"
+                    priority
+                    className="w-28 md:w-40"
+                    width={pkg?.host?.data?.attributes?.width}
+                    height={pkg?.host?.data?.attributes?.height}
+                  />
+                )}
               </div>
             </div>
             <About desc={pkg?.description} />
@@ -96,7 +102,15 @@ export default async function PackageDetail({ params }: { params: Params }) {
         </div>
       </section>
       <Facts />
-      <Faqs data={pkg?.faq} />
+      {pkg.faq && (
+        <Faqs
+          data={pkg?.faq.map((i, index) => ({
+            id: `${index}-faq-${pkg?.faq?.id}`,
+            answer: i.answer || "",
+            question: i.question || "",
+          }))}
+        />
+      )}
       <Offers />
       <Reviews />
       <SimilarPackages />

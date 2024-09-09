@@ -4,14 +4,16 @@ import React, { useState } from "react";
 import PackageCard from "./package-card";
 import { packages } from "@/data/packagesData";
 import { FaIcons } from "react-icons/fa"; // Import any icon from react-icons
+import { Text } from "../ui/text";
 import { getPackages } from "@/server/packages/get-packages";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { APIResponseCollection } from "@/types/types";
+import { PackageCardSkeleton } from "./package-card-skeleton";
 
 export default function PackagesList() {
   const { data, isFetching, status, error } = useQuery<
-    APIResponseCollection<"api::packages.packages">
+    APIResponseCollection<"api::package.package">
   >({
     queryKey: ["packages"],
     queryFn: async () => {
@@ -36,11 +38,11 @@ export default function PackagesList() {
           ?.filter((pkg) => pkg.attributes?.type === selectedCategory);
 
   if (status === "pending") {
-    return <span>Loading...</span>;
+    return <PackageCardSkeleton />;
   }
 
   if (status === "error") {
-    return <span>Error: {error.message}</span>;
+    return <Text variant="display-md">No packages found</Text>;
   }
   const categories = [
     { name: "All", icon: <FaIcons size={12} /> },

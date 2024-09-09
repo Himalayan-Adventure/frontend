@@ -1,29 +1,7 @@
 "use client";
 import React, { useState } from "react";
-type TFAQProps = { id: number; question: string; answer: string };
+type TFAQProps = { id: string; question: string; answer: string };
 export default function Faqs({ data }: { data: TFAQProps[] }) {
-  // const faqsData = [
-  //   {
-  //     question: "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
-  //     answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  //              Morbi vestibulum ornare lectus nec commodo.
-  //              Aenean non augue sagittis nibh suscipit porttitor.
-  //              Sed feugiat diam ac ex suscipit, tincidunt dignissim eros laoreet.
-  //              Integer dictum, ligula quis sodales gravida, orci ante faucibus magna, sed cursus enim neque vitae dolor.`,
-  //   },
-  //   {
-  //     question: "Vestibulum Ornare Lectus Nec Commodo Aenean Non Augue",
-  //     answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  //              Morbi vestibulum ornare lectus nec commodo.`,
-  //   },
-  //   {
-  //     question: "Sagittis Nibh Suscipit Porttitor Sed Feugiat Diam",
-  //     answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  //              Morbi vestibulum ornare lectus nec commodo.
-  //              Aenean non augue sagittis nibh suscipit porttitor.`,
-  //   },
-  // ];
-
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {

@@ -37,11 +37,9 @@ const PackageCard = ({
 
   variant?: "home" | "default";
 }) => {
-  console.log(pkg);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const attr = pkg.attributes as any;
-  console.log(attr);
+  const attr = pkg.attributes;
 
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
@@ -175,23 +173,27 @@ const PackageCard = ({
           <div className="mt-4 space-y-2">
             <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
             <p className="flex items-center space-x-2 text-sm font-medium">
-              {seasonIconMap[attr?.season]}
+              {seasonIconMap?.[attr?.season || "winter"]}
               <span className="capitalize">
-                {attr?.season}: ({seasonMonthMap[attr.season]})
+                {attr?.season}: ({seasonMonthMap[attr?.season || "winter"]})
               </span>
             </p>
-            <p className="flex items-center space-x-2 text-sm font-medium">
-              <MdTimelapse size={20} />
-              <span>Duration: {wordsToNumbers(attr?.duration)}</span>
-            </p>
+            {attr.duration && (
+              <p className="flex items-center space-x-2 text-sm font-medium">
+                <MdTimelapse size={20} />
+                <span>Duration: {wordsToNumbers(attr?.duration)}</span>
+              </p>
+            )}
             <p className="flex items-center space-x-2 text-sm font-medium">
               <BsBarChartFill size={20} />
-              <span>Grade: {attr?.grade}</span>
+              <span>Grade: {attr.grade}</span>
             </p>
-            <p className="flex items-center space-x-2 text-sm font-medium">
-              <FaMountain size={20} />
-              <span>Max Altitude: {wordsToNumbers(attr?.altitude)}</span>
-            </p>
+            {attr.altitude && (
+              <p className="flex items-center space-x-2 text-sm font-medium">
+                <FaMountain size={20} />
+                <span>Max Altitude: {wordsToNumbers(attr?.altitude)}</span>
+              </p>
+            )}
           </div>
 
           <hr className="mx-auto mt-2 w-[90%]" />

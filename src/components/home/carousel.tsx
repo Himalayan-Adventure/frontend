@@ -15,11 +15,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import PackageCard from "../packagespage/package-card";
+import { Skeleton } from "../ui/skeleton";
+import { PackageCardSkeleton } from "../packagespage/package-card-skeleton";
+import { Text } from "../ui/text";
 
 export default function HomeCarousel() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const { data, isFetching, status, error } = useQuery<
-    APIResponseCollection<"api::packages.packages">
+    APIResponseCollection<"api::package.package">
   >({
     queryKey: ["packages"],
     queryFn: async () => {
@@ -41,47 +44,13 @@ export default function HomeCarousel() {
     );
   };
 
-  const cardsData = [
-    {
-      title: "Everest Expedition, Nepal",
-      host: "Pioneer Adventure",
-      rating: 5.0,
-      image: "/images/carouselA.png",
-    },
-
-    {
-      title: "Everest Expedition, Nepal",
-      host: "Pioneer Adventure",
-      rating: 5.0,
-      image: "/images/carouselA.png",
-    },
-    {
-      title: "Everest Expedition, Nepal",
-      host: "Pioneer Adventure",
-      rating: 5.0,
-      image: "/images/carouselA.png",
-    },
-    {
-      title: "Everest Expedition, Nepal",
-      host: "Pioneer Adventure",
-      rating: 5.0,
-      image: "/images/carouselA.png",
-    },
-    {
-      title: "Everest Expedition, Nepal",
-      host: "Pioneer Adventure",
-      rating: 5.0,
-      image: "/images/carouselA.png",
-    },
-  ];
-
   if (status === "pending") {
-    return <span>Loading...</span>;
-  }
-  if (status === "error") {
-    return <></>;
+    return <PackageCardSkeleton />;
   }
 
+  if (status === "error") {
+    return <Text variant="display-md">No packages found</Text>;
+  }
   return (
     <LazyMotion features={domMax}>
       <m.section
