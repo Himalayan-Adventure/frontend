@@ -59,7 +59,7 @@ export default function ThingsToKnow() {
   return (
     <section className="container py-4 lg:py-8">
       <h2 className="mb-6 text-2xl font-semibold">Things to know</h2>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 text-sm md:text-base">
         {thingsToKnowItems.map(({ title, items }, index) => (
           <div key={index}>
             <h3 className="mb-4 font-semibold">{title}</h3>

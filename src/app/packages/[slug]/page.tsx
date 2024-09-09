@@ -16,6 +16,9 @@ import CommonBanner from "@/components/ui/common-banner";
 import bgImage from "/public/images/packageBanner.png";
 import { getSinglePackage } from "@/server/packages/get-single-package";
 import { TDepartureData } from "@/types/packages/departure";
+import HostInfo from "@/components/packagespage/host-info";
+import { FaFlag } from "react-icons/fa";
+import Link from "next/link";
 
 interface Params {
   slug: string;
@@ -114,6 +117,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
       <Offers />
       <Reviews />
       <SimilarPackages />
+      <HostInfo />
       <ThingsToKnow />
     </main>
   );
