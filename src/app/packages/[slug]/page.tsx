@@ -63,7 +63,10 @@ export default async function PackageDetail({ params }: { params: Params }) {
         <div className="grid gap-x-4 space-y-8 md:gap-x-8 lg:grid-cols-3 lg:gap-x-24 lg:space-y-0">
           <div className="relative space-y-8 lg:col-span-2">
             <Gallery images={images} />
-
+            <div className="space-y-8 lg:col-span-1 lg:hidden">
+              <Map location={pkg.name} />
+              <Departure type={"default"} data={departureData} />
+            </div>
             <div className="flex flex-wrap items-center justify-between gap-4 lg:gap-8">
               <div className="space-y-2">
                 <h1 className="text-sm md:text-lg">
@@ -83,12 +86,12 @@ export default async function PackageDetail({ params }: { params: Params }) {
                 <p className="sr-only">{pkg.hostname}</p>
                 {pkg?.host && (
                   <Image
-                    src={pkg?.host?.data?.attributes?.url}
+                    src={pkg?.host?.data?.attributes?.url || "/logo.png"}
                     alt="host logo"
                     priority
                     className="w-28 md:w-40"
-                    width={pkg?.host?.data?.attributes?.width}
-                    height={pkg?.host?.data?.attributes?.height}
+                    width={pkg?.host?.data?.attributes?.width || 400}
+                    height={pkg?.host?.data?.attributes?.height || 400}
                   />
                 )}
               </div>
@@ -97,9 +100,8 @@ export default async function PackageDetail({ params }: { params: Params }) {
             <Itenerary />
             <InfoTabs />
           </div>
-          <div className="space-y-8 lg:col-span-1">
+          <div className="hidden space-y-8 lg:col-span-1 lg:block">
             <Map location={pkg.name} />
-            {/* Dpeparture*/}
             <Departure type={"default"} data={departureData} />
           </div>
         </div>

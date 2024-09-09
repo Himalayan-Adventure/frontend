@@ -94,12 +94,15 @@ export default function Departure({
       </div>
 
       {type === "default" && (
-        <div className="z-10 mx-auto hidden w-fit gap-x-2 underline lg:flex">
+        <Link
+          href="#"
+          className="z-10 mx-auto hidden w-fit gap-x-2 underline lg:flex"
+        >
           <Flag size={16} />
           <Text variant="text-sm" className="w-fit text-sm">
             Report this listing
           </Text>
-        </div>
+        </Link>
       )}
     </div>
   );
