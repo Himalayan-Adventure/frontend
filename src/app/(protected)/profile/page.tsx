@@ -17,6 +17,8 @@ import { useState } from "react";
 import { AboutCard } from "./about-card";
 import { ResumeCard } from "./resume-card";
 import { BlogCards } from "./blog";
+import {ContactCard }from "./contact-card";
+import { WorkCards } from "./work-card";
 export default function ProfilePage() {
   const [hideTabs, setHideTabs] = useState(false);
   const tabsTriggers = [
@@ -91,6 +93,14 @@ export default function ProfilePage() {
 
         <TabsContent value="blog" className="mt-0">
           <BlogCards/>
+        </TabsContent>
+
+        <TabsContent value="contact" className="mt-0">
+          <ContactCard/>
+        </TabsContent>
+
+        <TabsContent value="work" className="mt-0">
+          <WorkCards/>
         </TabsContent>
       </Tabs>
     </section>
