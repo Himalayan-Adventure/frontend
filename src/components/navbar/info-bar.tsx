@@ -90,9 +90,11 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           ))}
         </span>
         <span className="hidden items-stretch gap-x-3 lg:flex">
-          <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 font-semibold capitalize text-gray-50">
-            <p className="text-base leading-none">Plan with us</p>
-          </Button>
+          <Link href='/plan-with-us'>
+            <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 font-semibold capitalize text-gray-50">
+              <p className="text-base leading-none">Plan with us</p>
+            </Button>
+          </Link>
           {!user ? (
             <span className="relative flex h-full flex-col items-stretch gap-y-1">
               {/* <Dialog> */}
