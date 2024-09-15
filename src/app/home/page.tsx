@@ -8,6 +8,7 @@ import PopularDestinations from "@/components/home/popular-destinations";
 import Testimonials from "@/components/home/testimonials";
 import BookAppointment from "@/components/home/book-appointment";
 import { HeroSection } from "@/components/home/hero-section";
+
 export default function Home() {
   return (
     <main>
