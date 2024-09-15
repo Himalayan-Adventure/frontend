@@ -1,10 +1,16 @@
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { Mail, MapPin, Phone, UserRound } from "lucide-react";
+import { BookOpenText, Circle, Dot, FileSearch, Mail, MapPin, Pen, Phone, Plane, UserRound } from "lucide-react";
 import { Text } from "@/components/ui/text";
 import { MdPhone } from "react-icons/md";
 import Link from "next/link";
 import { AiFillBehanceCircle } from "react-icons/ai";
 import { PiBasketballThin } from "react-icons/pi";
+import { IoLogoFigma } from "react-icons/io5";
+import {
+  SiAdobeillustrator,
+  SiAdobephotoshop,
+  SiAdobexd,
+} from "react-icons/si";
 export const ResumeCard = () => {
   const resumeData = {
     name: "Andrey Rublev",
@@ -51,10 +57,22 @@ export const ResumeCard = () => {
     behance: <AiFillBehanceCircle size={24} />,
     dribbble: <PiBasketballThin size={24} className="rotate-[45deg]" />,
   };
+  const technicalSkillconMap: { [key: string]: React.ReactNode } = {
+    Figma: <IoLogoFigma size={24} />,
+    "Adobe XD": <SiAdobexd size={24} />,
+    "Adobe Photoshop": <SiAdobephotoshop size={24} />,
+    "Adobe Illustrator": <SiAdobeillustrator size={24} />,
+  };
+  const InterestslconMap: { [key: string]: React.ReactNode } = {
+    "Research": <FileSearch size={24}/>,
+    "Travel": <Plane size={24}/>,
+    "Reading": <BookOpenText size={24} />,
+    "Writing": <Pen size={24} />,
+  };
 
   return (
     <div className="rounded-xl bg-white px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl space-y-6">
+      <div className="mx-auto max-w-3xl space-y-8">
         {/* Header */}
         <div className="relative w-fit">
           <h1 className="w-fit text-3xl font-bold text-foreground">Resume</h1>
@@ -63,7 +81,7 @@ export const ResumeCard = () => {
 
         {/* User details */}
         <div>
-          <Text variant="text-xl" className="text-2xl font-semibold">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Andrey Rublev
           </Text>
           <Text variant="text-lg" className="text-primary">
@@ -73,7 +91,7 @@ export const ResumeCard = () => {
 
         {/* Contact details */}
         <div className="space-y-3">
-          <Text variant="text-xl" className="text-2xl font-semibold">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Contact
           </Text>
           <div className="space-y-2">
@@ -98,7 +116,7 @@ export const ResumeCard = () => {
 
         {/* Portfolio details */}
         <div className="space-y-3">
-          <Text variant="text-xl" className="text-2xl font-semibold">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Portfolio
           </Text>
           <div className="space-y-2">
@@ -115,7 +133,7 @@ export const ResumeCard = () => {
 
         {/* Education details */}
         <div className="space-y-3">
-          <Text variant="text-xl" className="text-2xl font-semibold">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Education
           </Text>
           <div className="space-y-2">
@@ -138,16 +156,85 @@ export const ResumeCard = () => {
 
         {/* Hard details */}
         <div className="space-y-3">
-          <Text variant="text-xl" className="text-2xl font-semibold">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Hard Skills
           </Text>
           <div className="space-y-2">
             {resumeData.hardSkills.map((skill) => (
               <Text
                 variant="text-lg"
+                key={`hardskill-${skill}`}
                 className="whitespace-nowrap first-letter:capitalize"
               >
                 {skill}
+              </Text>
+            ))}
+          </div>
+        </div>
+
+        {/* Technical skills */}
+        <div className="space-y-3">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
+            Technical Skills
+          </Text>
+          <div className="space-y-5">
+            {resumeData.technicalSkill.map(({ skillLevel, skillName }) => (
+              <div key={`technical-skill-${skillName}`} className="space-y-2">
+                <span className="flex items-center gap-x-4">
+                  {technicalSkillconMap[skillName]}
+                  <Text
+                    variant="text-lg"
+                    className="whitespace-nowrap first-letter:capitalize"
+                  >
+                    {skillName}
+                  </Text>
+                </span>
+                <div className="relative w-80">
+                  <Separator className="realtive h-1 w-full bg-black" />
+                  <Circle
+                    fill="#000"
+                    size={14}
+                    className="absolute top-1/2 -translate-y-1/2"
+                    style={{ left: `${skillLevel}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Languages*/}
+        <div className="space-y-3">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
+            Languages
+          </Text>
+          <div className="space-y-2">
+            {resumeData.languages.map((lang) => (
+              <Text
+                variant="text-lg"
+                key={`languages-${lang}`}
+                className="whitespace-nowrap first-letter:capitalize"
+              >
+                {lang}
+              </Text>
+            ))}
+          </div>
+        </div>
+
+        {/* Interests */}
+        <div className="space-y-3">
+          <Text variant="text-xl" className="font-semibold lg:text-2xl">
+            Interests
+          </Text>
+          <div className="flex items-center gap-x-2">
+            {resumeData.interests.map((lang) => (
+              <Text
+                variant="text-md"
+                key={`languages-${lang}`}
+                className="whitespace-nowrap first-letter:capitalize grid place-items-center"
+              >
+                {InterestslconMap[lang]}
+                {lang}
               </Text>
             ))}
           </div>
@@ -157,47 +244,7 @@ export const ResumeCard = () => {
   );
 };
 
-const ServiceItem = ({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) => {
-  return (
-    <div className="flex flex-col items-center space-x-4 text-center">
-      <div className="flex-shrink-0">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-white">
-          <UserRound />
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-        <p className="mt-2 text-gray-500">{description}</p>
-      </div>
-    </div>
-  );
-};
 
-const MyServices = () => {
-  return (
-    <div className="bg-white px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
-        <h2 className="text-2xl font-bold text-gray-900">My Services</h2>
-        <div className="mt-12 flex items-start divide-x-2">
-          <ServiceItem
-            title="Lorem Ipsum"
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. endent. Present tempus turpis mi, sed aliquet lectus dapibus in."
-          />
-          <ServiceItem
-            title="Lorem Ipsum"
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. endent. Present tempus turpis mi, sed aliquet lectus dapibus in."
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const LinkWithIcon = ({
   href,

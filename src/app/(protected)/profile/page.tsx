@@ -16,6 +16,7 @@ import { socialIcons } from "@/config/constants";
 import { useState } from "react";
 import { AboutCard } from "./about-card";
 import { ResumeCard } from "./resume-card";
+import { BlogCards } from "./blog";
 export default function ProfilePage() {
   const [hideTabs, setHideTabs] = useState(false);
   const tabsTriggers = [
@@ -48,7 +49,7 @@ export default function ProfilePage() {
         className="relative z-10 flex flex-row items-stretch gap-x-10"
       >
         <TabsList className="flex h-fit flex-row bg-transparent gap-x-10 items-stretch">
-          <div className="flex h-fit flex-col gap-y-4 bg-white">
+          <div className="flex h-fit flex-col gap-y-4">
             <Button
               className="rouned-2xl flex h-fit w-full flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary"
               onClick={() => setHideTabs(!hideTabs)}
@@ -86,6 +87,10 @@ export default function ProfilePage() {
 
         <TabsContent value="resume" className="mt-0">
           <ResumeCard />
+        </TabsContent>
+
+        <TabsContent value="blog" className="mt-0">
+          <BlogCards/>
         </TabsContent>
       </Tabs>
     </section>
