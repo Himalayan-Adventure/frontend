@@ -1,18 +1,23 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { Text } from "@/components/ui/text";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AtSign, Briefcase, FileText, Link, UserRound } from "lucide-react";
+import { AtSign, Briefcase, FileText, UserRound } from "lucide-react";
 import { IoReorderTwoSharp as Menu } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { BsCardText } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import Image from "next/image";
 import User from "/public/images/user.png";
 import CommonBanner from "@/components/ui/common-banner";
-
 import bgImage from "/public/images/packagesBanner.png";
 import { socialIcons } from "@/config/constants";
+import { useState } from "react";
+import { AboutCard } from "./about-card";
+import { ResumeCard } from "./resume-card";
 export default function ProfilePage() {
+  const [hideTabs, setHideTabs] = useState(false);
   const tabsTriggers = [
     {
       icon: <FaRegUser className="size-6 md:size-8" />,
@@ -40,36 +45,47 @@ export default function ProfilePage() {
       <CommonBanner title="Profile" bgImage={bgImage} />
       <Tabs
         defaultValue="about"
-        className="relative z-50 flex flex-row items-stretch gap-x-10"
+        className="relative z-10 flex flex-row items-stretch gap-x-10"
       >
-        <TabsList className="flex h-fit flex-col gap-y-4 bg-white">
-          <Button className="rouned-2xl flex h-fit w-full flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary">
-            <Menu className="size-10" />
-          </Button>
-          <div className="flex h-fit flex-col gap-y-2 rounded-xl bg-white py-4 shadow-2xl">
-            {tabsTriggers.map((tab) => (
-              <TabsTrigger
-                key={`tab-${tab.name}`}
-                value={tab.name}
-                className="capitalize data-[state=active]:!text-primary"
-                asChild
-              >
-                <Button className="flex h-fit w-full flex-col items-center gap-y-1 bg-white p-4 text-black hover:bg-white hover:text-primary">
-                  {tab.icon}
-
-                  <Text variant="text-lg">{tab.name}</Text>
-                </Button>
-              </TabsTrigger>
-            ))}
+        <TabsList className="flex h-fit flex-row bg-transparent gap-x-10 items-stretch">
+          <div className="flex h-fit flex-col gap-y-4 bg-white">
+            <Button
+              className="rouned-2xl flex h-fit w-full flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary"
+              onClick={() => setHideTabs(!hideTabs)}
+            >
+              <Menu className="size-10" />
+            </Button>
+            <div
+              className={cn(
+                hideTabs ? "scale-y-0" : "scale-y-100",
+                "flex h-fit origin-top flex-col gap-y-2 rounded-xl bg-white py-4 shadow-2xl transition-transform ease-out",
+              )}
+            >
+              {tabsTriggers.map((tab) => (
+                <TabsTrigger
+                  key={`tab-${tab.name}`}
+                  value={tab.name}
+                  className="capitalize data-[state=active]:!text-primary"
+                  asChild
+                >
+                  <Button className="flex h-fit w-full flex-col items-center gap-y-1 bg-white p-4 text-black hover:bg-white hover:text-primary">
+                    {tab.icon}
+                    <Text variant="text-lg">{tab.name}</Text>
+                  </Button>
+                </TabsTrigger>
+              ))}
+            </div>
           </div>
+
+          <ProfileCard />
         </TabsList>
-        <ProfileCard />
 
-        <TabsContent value="about">
-          <div>
-            <AboutSection />
-            <MyServices />
-          </div>
+        <TabsContent value="about" className="mt-0">
+          <AboutCard />
+        </TabsContent>
+
+        <TabsContent value="resume" className="mt-0">
+          <ResumeCard />
         </TabsContent>
       </Tabs>
     </section>
@@ -95,16 +111,13 @@ const ProfileCard = () => {
           <p className="mb-4 text-primary">Lorem Ipsum</p>
           <div className="mb-6 flex justify-center space-x-4">
             <aside className="flex items-center justify-center gap-x-2">
-              {socialIcons.map((item) => (
-                <Link
-                  key={`social-link-${item.name}`}
-                  href={item.href}
-                  target="_blank"
-                >
+              {socialIcons.map(({ href, icon, name }) => (
+                <Link key={`social-link-${name}`} href={href} target="_blank">
                   <Image
-                    src={item.icon}
-                    alt={`${item.name} Icon`}
-                    className="h-auto w-12"
+                    key={`social-link-${name}`}
+                    src={icon}
+                    alt={`${name}-Icon`}
+                    className="h-auto w-12 contrast-0"
                   />
                 </Link>
               ))}
@@ -118,65 +131,6 @@ const ProfileCard = () => {
               Contact Me
             </Button>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-const AboutSection = () => {
-  return (
-    <div className="bg-white px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="text-3xl font-bold text-gray-900">About</h1>
-        <p className="mt-4 text-gray-500">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac
-          porta odio. Morbi imperdiet ligula eu nisl viverra, et idareet erat
-          faucibus. In a velit at neque tincidunt elementum. Maecenas ultrices
-          sollicitudin quam at hendrerit. Praesent tempus turpis mi, sed aliquet
-          lectus dapibus in. Interdum et malesuada fames ac ante ipsum primis in
-          faucibus.
-        </p>
-      </div>
-    </div>
-  );
-};
-
-const ServiceItem = ({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) => {
-  return (
-    <div className="flex flex-col items-center space-x-4 text-center">
-      <div className="flex-shrink-0">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-white">
-          <UserRound />
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-        <p className="mt-2 text-gray-500">{description}</p>
-      </div>
-    </div>
-  );
-};
-
-const MyServices = () => {
-  return (
-    <div className="bg-white px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
-        <h2 className="text-2xl font-bold text-gray-900">My Services</h2>
-        <div className="mt-12 flex items-start divide-x-2">
-          <ServiceItem
-            title="Lorem Ipsum"
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. endent. Present tempus turpis mi, sed aliquet lectus dapibus in."
-          />
-          <ServiceItem
-            title="Lorem Ipsum"
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. endent. Present tempus turpis mi, sed aliquet lectus dapibus in."
-          />
         </div>
       </div>
     </div>

@@ -13,7 +13,6 @@ export default function Home() {
     <main>
       <HeroSection />
       <WhatWeDo />
-      <Seasons />
       <HomeCarousel />
       <WhyUs />
       <ExplorePackages />
