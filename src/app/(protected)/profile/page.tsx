@@ -48,12 +48,12 @@ export default function ProfilePage() {
       <CommonBanner title="Profile" bgImage={bgImage} />
       <Tabs
         defaultValue="about"
-        className="relative z-10 flex flex-row items-stretch gap-x-10"
+        className="relative z-10 flex flex-col lg:flex-row gap-y-10 items-stretch gap-x-10"
       >
-        <TabsList className="flex h-fit flex-row bg-transparent gap-x-10 items-stretch">
-          <div className="flex h-fit flex-col gap-y-4">
+        <TabsList className="flex md:w-fit w-full h-fit flex-col gap-y-10 md:flex-row bg-transparent gap-x-10 items-stretch">
+          <div className="flex md:h-fit md:flex-col gap-2 md:gap-4 items-stretch">
             <Button
-              className="rouned-2xl flex h-fit w-full flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary"
+              className="rouned-2xl w-fit hidden md:flex h-fit md:w-full flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary"
               onClick={() => setHideTabs(!hideTabs)}
             >
               <Menu className="size-10" />
@@ -61,7 +61,7 @@ export default function ProfilePage() {
             <div
               className={cn(
                 hideTabs ? "scale-y-0" : "scale-y-100",
-                "flex h-fit origin-top flex-col gap-y-2 rounded-xl bg-white py-4 shadow-2xl transition-transform ease-out",
+                "flex flex-row w-full md:w-fit h-fit origin-top md:flex-col gap-y-2 rounded-xl bg-white py-4 shadow-2xl transition-transform ease-out overflow-x-scroll hide-scrollbar",
               )}
             >
               {tabsTriggers.map((tab) => (
@@ -71,9 +71,9 @@ export default function ProfilePage() {
                   className="capitalize data-[state=active]:!text-primary"
                   asChild
                 >
-                  <Button className="flex h-fit w-full flex-col items-center gap-y-1 bg-white p-4 text-black hover:bg-white hover:text-primary">
+                  <Button className="flex h-fit w-full flex-col items-center gap-y-1 bg-white md:p-4 text-black hover:bg-white hover:text-primary">
                     {tab.icon}
-                    <Text variant="text-lg">{tab.name}</Text>
+                    <Text variant="text-lg" className="text-sm md:text-base lg:text-lg">{tab.name}</Text>
                   </Button>
                 </TabsTrigger>
               ))}
@@ -109,7 +109,7 @@ export default function ProfilePage() {
 
 const ProfileCard = () => {
   return (
-    <div className="relative aspect-square min-w-[300px] max-w-sm overflow-hidden rounded-xl bg-black text-white shadow-lg">
+    <div className="relative h-[600px] md:h-auto md:aspect-square w-full md:w-auto min-w-[300px] md:max-w-sm overflow-hidden rounded-xl bg-black text-white shadow-lg">
       <div className="relative h-full w-full">
         <Image
           src={User}

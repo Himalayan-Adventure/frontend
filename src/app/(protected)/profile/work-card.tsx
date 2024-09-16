@@ -81,8 +81,8 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
   return (
     <article
       className={cn(
-        index % 2 === 0 ? "flex-row" : "flex-row-reverse",
-        "relative flex min-h-96 items-center",
+        index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse",
+        "relative flex flex-col min-h-96 md:items-center gap-y-3",
       )}
     >
       <Image
@@ -96,13 +96,13 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
       />
       <div
         className={cn(
-          index % 2 === 0 ? "-left-1/4" : "-right-1/4",
+          index % 2 === 0 ? "md:-left-1/4" : "md:-right-1/4",
           "relative z-10 block basis-1/3 rounded-3xl bg-black/70 py-5 text-white",
         )}
       >
         {/* Title */}
         <div className="space-y-4">
-          <div className="w-full space-y-1 [&>p]:px-16 [&>p]:text-left">
+          <div className="w-full space-y-1 md:[&>p]:px-16 px-4  [&>p]:text-left">
             <Text variant="text-xs" className="text-[10px] uppercase">
               {work.date}
             </Text>
@@ -114,7 +114,7 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
         </div>
 
         {/* Description */}
-        <div className="flex w-full flex-col space-y-4 px-16">
+        <div className="flex w-full flex-col space-y-4 md:px-16 px-4 ">
           <Text
             variant="text-xs"
             className={cn(

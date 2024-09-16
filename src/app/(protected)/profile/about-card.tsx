@@ -54,7 +54,7 @@ const MyServices = () => {
     <div className="bg-white px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <h2 className="text-2xl font-bold text-gray-900">My Services</h2>
-        <div className="mt-12 flex items-start divide-x-2">
+        <div className="mt-12 flex flex-col md:flex-row items-start md:divide-x-2 space-y-4">
           <ServiceItem
             title="Lorem Ipsum"
             description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. endent. Present tempus turpis mi, sed aliquet lectus dapibus in."
