@@ -85,9 +85,9 @@ export default function ProfilePage() {
                 />
               </div>
             ) : null}
-            <div className="flex items-stretch gap-2 md:h-fit md:flex-col md:gap-4">
+            <div className="flex items-stretch gap-2 md:h-fit md:flex-col md:gap-4 md:max-w-28">
               <Button
-                className="rouned-2xl flex h-auto w-fit flex-col items-center gap-y-1 bg-white text-black shadow-2xl hover:bg-white hover:text-primary md:h-fit md:w-full md:p-5"
+                className="rouned-2xl flex h-auto w-fit flex-col items-center gap-y-1 bg-white text-black shadow-2xl hover:bg-white hover:text-primary p-5 md:h-fit md:p-8 lg:p-6 md:w-full"
                 onClick={() => setHideTabs(!hideTabs)}
               >
                 <Menu className="size-5 md:size-10" />
@@ -96,7 +96,7 @@ export default function ProfilePage() {
                 ref={containerRef}
                 className={cn(
                   hideTabs ? "scale-y-0" : "scale-y-100",
-                  "hide-scrollbar relative flex h-fit w-full origin-top flex-row gap-y-2 overflow-x-scroll rounded-xl bg-white shadow-2xl transition-transform ease-out md:w-fit md:flex-col md:py-4",
+                  "hide-scrollbar relative flex h-fit w-full origin-top flex-row gap-y-2 overflow-x-scroll rounded-xl bg-white shadow-2xl transition-transform ease-out md:w-full md:flex-col md:py-4",
                 )}
               >
                 {tabsTriggers.map((tab) => (
@@ -165,7 +165,7 @@ export default function ProfilePage() {
 
 const ProfileCard = () => {
   return (
-    <div className="relative h-[600px] w-full min-w-[300px] overflow-hidden rounded-xl bg-black text-white shadow-lg md:aspect-square md:h-auto md:w-auto md:max-w-sm">
+    <div className="relative h-[600px] w-full sm:min-w-[300px] overflow-hidden rounded-xl bg-black text-white shadow-lg md:aspect-square md:h-auto md:w-auto md:max-w-sm">
       <div className="relative h-full w-full">
         <Image
           src={User}
@@ -175,7 +175,7 @@ const ProfileCard = () => {
         <div className="absolute inset-0 h-full w-full bg-black [clip-path:polygon(50%_70%,_100%_50%,_100%_100%,_0_100%,_0%_50%)]"></div>
       </div>
       <div className="absolute left-0 top-2/3 z-10 w-full">
-        <div className="p-6 text-center">
+        <div className="p-1 md:p-6 text-center">
           <Text variant="text-xl" className="mb-2 text-2xl font-bold">
             Andrey Rublev
           </Text>
@@ -195,7 +195,7 @@ const ProfileCard = () => {
             </aside>
           </div>
           <div className="flex justify-between uppercase">
-            <Button className="rounded-md bg-transparent px-4 py-2 uppercase">
+            <Button className="rounded-md px-2 py-1 bg-transparent md:px-4 md:py-2 uppercase">
               Download CV
             </Button>
             <Button className="rounded-md bg-transparent px-4 py-2 uppercase text-white">

@@ -1,5 +1,16 @@
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { BookOpenText, Circle, Dot, FileSearch, Mail, MapPin, Pen, Phone, Plane, UserRound } from "lucide-react";
+import {
+  BookOpenText,
+  Circle,
+  Dot,
+  FileSearch,
+  Mail,
+  MapPin,
+  Pen,
+  Phone,
+  Plane,
+  UserRound,
+} from "lucide-react";
 import { Text } from "@/components/ui/text";
 import { MdPhone } from "react-icons/md";
 import Link from "next/link";
@@ -64,10 +75,10 @@ export const ResumeCard = () => {
     "Adobe Illustrator": <SiAdobeillustrator size={24} />,
   };
   const InterestslconMap: { [key: string]: React.ReactNode } = {
-    "Research": <FileSearch size={24}/>,
-    "Travel": <Plane size={24}/>,
-    "Reading": <BookOpenText size={24} />,
-    "Writing": <Pen size={24} />,
+    Research: <FileSearch size={24} />,
+    Travel: <Plane size={24} />,
+    Reading: <BookOpenText size={24} />,
+    Writing: <Pen size={24} />,
   };
 
   return (
@@ -141,12 +152,15 @@ export const ResumeCard = () => {
               <span key={`education-${key}`} className="flex items-start">
                 <Text
                   variant="text-lg"
-                  className="whitespace-nowrap first-letter:capitalize"
+                  className="whitespace-nowrap text-sm first-letter:capitalize md:text-base lg:text-lg"
                 >
                   {key}:&nbsp;
                 </Text>
 
-                <Text variant="text-lg" className="first-letter:capitalize">
+                <Text
+                  variant="text-lg"
+                  className="text-sm first-letter:capitalize md:text-base lg:text-lg"
+                >
                   {value}
                 </Text>
               </span>
@@ -231,7 +245,7 @@ export const ResumeCard = () => {
               <Text
                 variant="text-md"
                 key={`languages-${lang}`}
-                className="whitespace-nowrap first-letter:capitalize grid place-items-center"
+                className="grid place-items-center whitespace-nowrap first-letter:capitalize"
               >
                 {InterestslconMap[lang]}
                 {lang}
@@ -244,8 +258,6 @@ export const ResumeCard = () => {
   );
 };
 
-
-
 const LinkWithIcon = ({
   href,
   icon,
@@ -257,8 +269,8 @@ const LinkWithIcon = ({
 }) => {
   return (
     <Link href={href} target="_blank" className="flex items-center gap-x-2">
-      {icon}
-      <Text variant="text-lg" className="sm:text-md text-sm md:text-lg">
+      <span className="min-w-6 h-fit">{icon}</span>
+      <Text variant="text-lg" className="block text-sm sm:text-base md:text-lg whitespace-normal break-all">
         {name}
       </Text>
     </Link>

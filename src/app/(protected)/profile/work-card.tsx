@@ -42,7 +42,7 @@ export const WorkCards = () => {
 
   const [limit, setLimit] = useState(6);
   return (
-    <div className="rounded-xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="rounded-xl px-4 py-8 sm:px-6 lg:px-8 @container">
       <div className="mx-auto max-w-6xl space-y-8">
         {/* Header */}
         <div className="relative w-fit">
@@ -81,8 +81,8 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
   return (
     <article
       className={cn(
-        index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse",
-        "relative flex flex-col min-h-96 md:items-center gap-y-3",
+        index % 2 === 0 ? "@lg:flex-row" : "@lg:flex-row-reverse",
+        "relative flex flex-col min-h-96 @lg:items-center gap-y-3",
       )}
     >
       <Image
@@ -96,7 +96,7 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
       />
       <div
         className={cn(
-          index % 2 === 0 ? "md:-left-1/4" : "md:-right-1/4",
+          index % 2 === 0 ? "@lg:-left-1/4" : "@lg:-right-1/4",
           "relative z-10 block basis-1/3 rounded-3xl bg-black/70 py-5 text-white",
         )}
       >
@@ -114,7 +114,7 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
         </div>
 
         {/* Description */}
-        <div className="flex w-full flex-col space-y-4 md:px-16 px-4 ">
+        <div className="flex w-full flex-col space-y-4 @lg:px-16 px-4 ">
           <Text
             variant="text-xs"
             className={cn(
