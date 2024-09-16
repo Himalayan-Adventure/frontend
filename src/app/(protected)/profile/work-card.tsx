@@ -127,7 +127,7 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
             className="w-fit self-end rounded-none bg-black uppercase"
             onClick={() => setShowMore(!showMore)}
           >
-            Read more
+            {!showMore?'Read more':'Read less'}
           </Button>
         </div>
       </div>
