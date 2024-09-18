@@ -2,7 +2,8 @@ import fbIcon from "/public/icons/facebook-bw.png";
 import WhatsAppIcon from "/public/icons/whatsApp-bw.png";
 import MessagesIcon from "/public/icons/messages-bw.png";
 import IgImage from "/public/icons/instagram-bw.png";
-export const socialIcons = [
+import { StaticImageData } from "next/image";
+export const socialIcons:{name:string, href:string, icon:StaticImageData}[] = [
   {
     name: "Facebook",
     href: "https://facebook.com",

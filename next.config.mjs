@@ -7,6 +7,15 @@ const nextConfig = {
         hostname: "**.cloudinary.com",
         port: "",
       },
+      {
+        protocol:"https",
+        hostname:"fastly.picsum.photos",
+      },
+
+      {
+        protocol:"https",
+        hostname:"unsplash.it",
+      },
     ],
   },
 };
