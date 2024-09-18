@@ -72,7 +72,7 @@ export default function ProfilePage() {
         <TabsList className="flex h-fit w-full flex-col items-stretch gap-x-10 gap-y-10 bg-transparent md:w-fit md:flex-row">
           <div className="relative w-full">
             {overflowDir === "left" || overflowDir === "both" ? (
-              <div className="absolute left-0 top-1/2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/20 shadow-lg shadow-white/10 lg:hidden">
+              <div className="absolute left-0 top-1/2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/40 shadow-lg shadow-white/10 lg:hidden">
                 <ChevronLeft
                   className="animate-chevron-left absolute text-xl text-white"
                   onClick={() =>
@@ -121,7 +121,7 @@ export default function ProfilePage() {
             </div>
 
             {overflowDir === "right" || overflowDir === "both" ? (
-              <div className="absolute right-0 top-1/2 z-10 grid aspect-square h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/20 shadow-xl shadow-white/10 lg:hidden">
+              <div className="absolute right-0 top-1/2 z-10 grid aspect-square h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/40 shadow-xl shadow-white/10 lg:hidden">
                 <ChevronRight
                   className="animate-chevron-right absolute text-xl text-white"
                   onClick={() =>
@@ -155,7 +155,7 @@ export default function ProfilePage() {
           <ContactCard />
         </TabsContent>
 
-        <TabsContent value="work" className="mt-0">
+        <TabsContent value="work" className="mt-0 @container w-full">
           <WorkCards />
         </TabsContent>
       </Tabs>

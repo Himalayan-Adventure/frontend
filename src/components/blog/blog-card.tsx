@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 export default function BlogCard({ blog }: { blog: any }) {
   return (
     <article className="group flex w-full flex-col items-start justify-center gap-y-4 rounded-xl border p-4 pb-2">
-      {/* xl:w-[24.5rem] */}
       <Link
         href={`/blog/${blog.slug}`}
         target="_blank"
@@ -53,13 +52,13 @@ export default function BlogCard({ blog }: { blog: any }) {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
-          <Text variant="text-sm" className="text-gray-500">
+          <Text variant="text-sm" className="text-gray-500 line-clamp-1">
             {blog?.author_name}
           </Text>
           <Text as="span" variant="text-md" className="text-gray-500" bold>
             ·
           </Text>
-          <Text variant="text-sm" className="text-gray-500">
+          <Text variant="text-sm" className="text-gray-500 line-clamp-1">
             {blog?.createdAt}
           </Text>
         </div>
