@@ -27,7 +27,29 @@ import { BlogCards } from "./blog";
 import { ContactCard } from "./contact-card";
 import { WorkCards } from "./work-card";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
+import { useQuery } from "@tanstack/react-query";
+import { TUser } from "@/types/auth";
+import axios from "axios";
 export default function ProfilePage() {
+  const { data: user, isPending } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get<TUser>("/api/me");
+
+        if (!res?.data) {
+          return null;
+        }
+        console.log(res.data);
+
+        return res.data;
+      } catch (error) {
+        console.error("Error fetching user data", error);
+        return null;
+      }
+    },
+    retry: 1,
+  });
   const [hideTabs, setHideTabs] = useState(false);
   const tabsTriggers = [
     {
@@ -85,9 +107,9 @@ export default function ProfilePage() {
                 />
               </div>
             ) : null}
-            <div className="flex items-stretch gap-2 md:h-fit md:flex-col md:gap-4 md:max-w-28">
+            <div className="flex items-stretch gap-2 md:h-fit md:max-w-28 md:flex-col md:gap-4">
               <Button
-                className="rouned-2xl flex h-auto w-fit flex-col items-center gap-y-1 bg-white text-black shadow-2xl hover:bg-white hover:text-primary p-5 md:h-fit md:p-8 lg:p-6 md:w-full"
+                className="rouned-2xl flex h-auto w-fit flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary md:h-fit md:w-full md:p-8 lg:p-6"
                 onClick={() => setHideTabs(!hideTabs)}
               >
                 <Menu className="size-5 md:size-10" />
@@ -136,7 +158,11 @@ export default function ProfilePage() {
             ) : null}
           </div>
 
-          <ProfileCard />
+          {isPending ? (
+            <Text variant="text-lg">Loading...</Text>
+          ) : (
+            <ProfileCard user={user || null} />
+          )}
         </TabsList>
 
         <TabsContent value="about" className="mt-0">
@@ -144,7 +170,7 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="resume" className="mt-0">
-          <ResumeCard />
+          {user && <ResumeCard user={user} />}
         </TabsContent>
 
         <TabsContent value="blog" className="mt-0">
@@ -152,10 +178,10 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="contact" className="mt-0">
-          <ContactCard />
+          {user && <ContactCard user={user}/>}
         </TabsContent>
 
-        <TabsContent value="work" className="mt-0 @container w-full">
+        <TabsContent value="work" className="mt-0 w-full @container">
           <WorkCards />
         </TabsContent>
       </Tabs>
@@ -163,9 +189,9 @@ export default function ProfilePage() {
   );
 }
 
-const ProfileCard = () => {
+const ProfileCard = ({ user }: { user: TUser | null }) => {
   return (
-    <div className="relative h-[600px] w-full sm:min-w-[300px] overflow-hidden rounded-xl bg-black text-white shadow-lg md:aspect-square md:h-auto md:w-auto md:max-w-sm">
+    <div className="relative h-[600px] w-full overflow-hidden rounded-xl bg-black text-white shadow-lg sm:min-w-[300px] md:aspect-square md:h-auto md:w-auto md:max-w-sm">
       <div className="relative h-full w-full">
         <Image
           src={User}
@@ -175,11 +201,14 @@ const ProfileCard = () => {
         <div className="absolute inset-0 h-full w-full bg-black [clip-path:polygon(50%_70%,_100%_50%,_100%_100%,_0_100%,_0%_50%)]"></div>
       </div>
       <div className="absolute left-0 top-2/3 z-10 w-full">
-        <div className="p-1 md:p-6 text-center">
-          <Text variant="text-xl" className="mb-2 text-2xl font-bold">
-            Andrey Rublev
+        <div className="p-1 text-center md:p-6">
+          <Text
+            variant="text-xl"
+            className="mb-2 text-2xl font-bold capitalize"
+          >
+            {user?.username}
           </Text>
-          <p className="mb-4 text-primary">Lorem Ipsum</p>
+          <p className="mb-4 text-primary">{user?.email}</p>
           <div className="mb-6 flex justify-center space-x-4">
             <aside className="flex items-center justify-center gap-x-2">
               {socialIcons.map(({ href, icon, name }) => (
@@ -195,7 +224,7 @@ const ProfileCard = () => {
             </aside>
           </div>
           <div className="flex justify-between uppercase">
-            <Button className="rounded-md px-2 py-1 bg-transparent md:px-4 md:py-2 uppercase">
+            <Button className="rounded-md bg-transparent px-2 py-1 uppercase md:px-4 md:py-2">
               Download CV
             </Button>
             <Button className="rounded-md bg-transparent px-4 py-2 uppercase text-white">

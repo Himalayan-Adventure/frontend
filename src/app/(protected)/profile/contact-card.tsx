@@ -6,30 +6,30 @@ interface ContactInfo {
 }
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Text } from "@/components/ui/text";
+import { TUser } from "@/types/auth";
 interface ContactData {
   info: ContactInfo[];
   personalInfo: ContactInfo[];
 }
 
-const contactData: ContactData = {
-  info: [
-    { label: "Phone", value: "98765432222" },
-    { label: "Email", value: "abc@gmail.com" },
-    { label: "Birthday", value: "24th July,1998" },
-    { label: "Address", value: "Kathmandu, Nepal" },
-    { label: "Gender", value: "Female" },
-    { label: "Reports to", value: "Lorem Ipsum" },
-  ],
-  personalInfo: [
-    { label: "Citizenship No.", value: "12xxxxxxxxxxxx" },
-    { label: "Phone", value: "986237232" },
-    { label: "Nationality", value: "Nepali" },
-    { label: "Religion", value: "Hindu" },
-    { label: "Marital status", value: "Single" },
-  ],
-};
-
-export const ContactCard = () => {
+export const ContactCard = ({ user }: { user: TUser }) => {
+  const contactData: ContactData = {
+    info: [
+      { label: "Phone", value: "98765432222" },
+      { label: "Email", value: user.email },
+      { label: "Birthday", value: "24th July,1998" },
+      { label: "Address", value: "Kathmandu, Nepal" },
+      { label: "Gender", value: "Female" },
+      { label: "Reports to", value: "Lorem Ipsum" },
+    ],
+    personalInfo: [
+      { label: "Citizenship No.", value: "12xxxxxxxxxxxx" },
+      { label: "Phone", value: "986237232" },
+      { label: "Nationality", value: "Nepali" },
+      { label: "Religion", value: "Hindu" },
+      { label: "Marital status", value: "Single" },
+    ],
+  };
   return (
     <div className="w-full rounded-xl bg-white px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-6xl space-y-8">
@@ -57,7 +57,9 @@ const InfoSection = ({
   data: ContactInfo[];
 }) => (
   <div className="space-y-2">
-    <Text variant="text-xl" className="" semibold>{title}</Text>
+    <Text variant="text-xl" className="" semibold>
+      {title}
+    </Text>
     {data.map((item, index) => (
       <InfoItem key={index} label={item.label} value={item.value} />
     ))}
