@@ -8,7 +8,6 @@ import PopularDestinations from "@/components/home/popular-destinations";
 import Testimonials from "@/components/home/testimonials";
 import BookAppointment from "@/components/home/book-appointment";
 import { HeroSection } from "@/components/home/hero-section";
-import { getMe } from "@/server/auth/get-me";
 
 export default async function Home() {
   return (
