@@ -204,9 +204,11 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
             </div>
 
             <span className="flex flex-col items-start gap-3 py-5 lg:hidden">
-              <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">
-                Plan with us
-              </Button>
+              <Link href="/plan-with-us">
+                <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">
+                  Plan with us
+                </Button>
+              </Link>
               {user ? (
                 <span className="flex cursor-pointer items-start gap-x-4">
                   <Avatar>

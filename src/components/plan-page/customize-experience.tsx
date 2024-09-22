@@ -1,42 +1,48 @@
 import { useState } from "react";
-import { FaQuestion, FaUser } from "react-icons/fa";
-import { MdGroups2 } from "react-icons/md";
+import { FaHelicopter, FaQuestion, FaUser } from "react-icons/fa";
+import { MdGroups2, MdOutlineFestival, MdParagliding } from "react-icons/md";
+import { IoIosPersonAdd } from "react-icons/io";
 import { usePlanContext } from "./plan-context";
 
 const options = [
   {
-    icon: <FaUser />,
-    name: "Solo",
+    icon: <IoIosPersonAdd />,
+    name: "Add-ons",
   },
   {
-    icon: <MdGroups2 />,
-    name: "Group",
+    icon: <MdParagliding />,
+    name: "Adventure Activities",
   },
   {
-    icon: <FaQuestion />,
-    name: "Not Sure?",
+    icon: <MdOutlineFestival />,
+    name: "Cultural Experiences",
+  },
+  {
+    icon: <FaHelicopter />,
+    name: "Transportation options",
   },
 ];
 
-export default function Travel() {
+export default function CustomizeExperience() {
   const { updatePlanData } = usePlanContext();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const handleOptionClick = (option: string) => {
+    console.log("Option clicked:", option);
     setSelectedOption(option);
-    updatePlanData("travel", option);
+    updatePlanData("experience", option);
   };
 
   return (
     <div className="p-2 lg:p-4">
       <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        How do you want to travel?
+        Customize Your Experience
       </h2>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:gap-8">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
         {options.map((option) => (
           <div
             key={option.name}
-            className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out lg:p-4 ${
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out md:p-4 ${
               selectedOption === option.name
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
