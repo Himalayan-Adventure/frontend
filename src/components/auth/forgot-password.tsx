@@ -28,6 +28,7 @@ import {
 } from "@/validators/forgot-password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
+import { forgotPassword } from "@/server/auth/forgot-password";
 export const ForgotPasswordDialog = () => {
   const [method, setMethod] = useState<"email" | "number">("email");
   const { setType } = useCurrentAuthDialog();
@@ -44,10 +45,17 @@ export const ForgotPasswordDialog = () => {
       number: "",
     },
   });
-  function onEmailSubmit() {
-    const payload = emailForm.getValues();
-    setType("otp");
-    toast.success(`Email submitted`);
+  async function onEmailSubmit() {
+    try {
+      const payload = emailForm.getValues();
+      const res = await forgotPassword(payload);
+      if (res.status === 200) {
+        setType("otp");
+        toast.success(`Email submitted`);
+      }
+    } catch (error) {
+      toast.error(`Email not submitted`);
+    }
   }
 
   function onNumberSubmit() {

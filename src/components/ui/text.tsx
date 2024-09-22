@@ -34,7 +34,7 @@ const textVariants = cva("font-medium whitespace-normal", {
       "display-sm": "text-2xl 2xl:text-3xl leading-tight",
       "display-xs": "text-xl 2xl:text-2xl",
       "text-xl": "text-lg lg:text-xl leading-normal",
-      "text-lg": "text-lg leading-[1.55]",
+      "text-lg": "text-sm md:text-base lg:text-lg leading-[1.55]",
       "text-md": "text-base",
       "text-sm": "text-sm",
       "text-xs": "text-xs",

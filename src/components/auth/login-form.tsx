@@ -40,6 +40,9 @@ export const LoginForm = () => {
     if (res.status === 200) {
       toast.success("Successfully logged in!");
       router.refresh();
+      if (window) {
+        window.location.reload();
+      }
       router.push("/");
       // setDialogOpen(false);
     } else {

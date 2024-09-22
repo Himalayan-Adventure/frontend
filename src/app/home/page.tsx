@@ -9,12 +9,11 @@ import Testimonials from "@/components/home/testimonials";
 import BookAppointment from "@/components/home/book-appointment";
 import { HeroSection } from "@/components/home/hero-section";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main>
       <HeroSection />
       <WhatWeDo />
-      <Seasons />
       <HomeCarousel />
       <WhyUs />
       <ExplorePackages />

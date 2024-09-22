@@ -10,6 +10,9 @@ import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { LazyMotion, m, domMax, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { TUser } from "@/types/auth";
 export const Navbar = () => {
   const [scrollY, setScrollY] = useState(0);
 
@@ -26,7 +29,6 @@ export const Navbar = () => {
     window.addEventListener("scroll", scrollFn);
     return () => window.removeEventListener("scroll", scrollFn);
   }, []);
-
   return (
     <LazyMotion features={domMax}>
       <m.div
