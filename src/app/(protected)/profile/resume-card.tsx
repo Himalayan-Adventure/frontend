@@ -22,12 +22,13 @@ import {
   SiAdobephotoshop,
   SiAdobexd,
 } from "react-icons/si";
-export const ResumeCard = () => {
+import { TUser } from "@/types/auth";
+export const ResumeCard = ({user}:{user:TUser}) => {
   const resumeData = {
-    name: "Andrey Rublev",
+    name: user.username,
     role: "UI/UX Designer",
     contact: {
-      email: "mehedihasankhan153@gmail.com",
+      email: user.email,
       phone: "+8801633165851",
       location: "Joydepur, Gazipur, Bangladesh",
     },
@@ -92,8 +93,8 @@ export const ResumeCard = () => {
 
         {/* User details */}
         <div>
-          <Text variant="text-xl" className="font-semibold lg:text-2xl">
-            Andrey Rublev
+          <Text variant="text-xl" className="font-semibold lg:text-2xl capitalize">
+            {resumeData.name}
           </Text>
           <Text variant="text-lg" className="text-primary">
             UI/UX Designer

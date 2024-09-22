@@ -36,6 +36,11 @@ import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import { ChooseAccType } from "../auth/choose-acc-type";
 import { AuthCard } from "../auth";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { TUser } from "@/types/auth";
+import { toast } from "sonner";
+import { logout } from "@/server/auth/logout";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const { dialogOpen, setDialogOpen } = useCurrentAuthDialog();
@@ -54,7 +59,26 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
       href: "tel:+977 98867554",
     },
   ];
-  const [user, setUser] = useState(null);
+
+  const { data: user, isPending } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get<TUser>("/api/me");
+
+        if (!res?.data) {
+          return null;
+        }
+        console.log(res.data);
+
+        return res.data;
+      } catch (error) {
+        console.error("Error fetching user data", error);
+        return null;
+      }
+    },
+    retry: 1,
+  });
 
   return (
     <m.div
@@ -90,26 +114,13 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           ))}
         </span>
         <span className="hidden items-stretch gap-x-3 lg:flex">
-          <Link href='/plan-with-us'>
+          <Link href="/plan-with-us">
             <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 font-semibold capitalize text-gray-50">
               <p className="text-base leading-none">Plan with us</p>
             </Button>
           </Link>
           {!user ? (
             <span className="relative flex h-full flex-col items-stretch gap-y-1">
-              {/* <Dialog> */}
-              {/*   <DialogTrigger */}
-              {/*     className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white" */}
-              {/*     onClick={() => setRegisterDialogOpen(true)} */}
-              {/*   > */}
-              {/*     <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} /> */}
-              {/*     <p className="font-semibold">Register</p> */}
-              {/*   </DialogTrigger> */}
-              {/*   {registerDialogOpen && ( */}
-              {/*     <RegisterCard setIsOpen={setRegisterDialogOpen} /> */}
-              {/*   )} */}
-              {/* </Dialog> */}
-
               <Dialog>
                 <DialogTrigger
                   className="flex h-10 items-center justify-center rounded-full border border-primary bg-primary px-8 py-1 text-white transition-all ease-in-out hover:bg-transparent hover:text-primary"
@@ -124,7 +135,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar>
+                <Avatar className="cursor-pointer">
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
@@ -133,9 +144,11 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <CreditCard className="mr-2 h-4 w-4" />
@@ -143,7 +156,20 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                className="cursor-pointer"
+                  onClick={async () => {
+                    toast.promise(logout(), {
+                      loading: "Logging out...",
+                      success: "Logged out successfully",
+                      error: "Failed to log out",
+                    });
+
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }}
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
@@ -182,7 +208,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                 Plan with us
               </Button>
               {user ? (
-                <span className="flex items-start gap-x-4">
+                <span className="flex cursor-pointer items-start gap-x-4">
                   <Avatar>
                     <AvatarImage src="https://github.com/shadcn.png" />
                     <AvatarFallback>CN</AvatarFallback>
