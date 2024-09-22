@@ -1,14 +1,12 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
-import PackageCard from "./package-card";
-import { packages } from "@/data/packagesData";
-import { FaIcons } from "react-icons/fa"; // Import any icon from react-icons
-import { Text } from "../ui/text";
-import { getPackages } from "@/server/packages/get-packages";
+import { APIResponseCollection } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { APIResponseCollection } from "@/types/types";
+import { useState } from "react";
+import { FaIcons } from "react-icons/fa"; // Import any icon from react-icons
+import { Text } from "../ui/text";
+import PackageCard from "./package-card";
 import { PackageCardSkeleton } from "./package-card-skeleton";
 
 export default function PackagesList() {

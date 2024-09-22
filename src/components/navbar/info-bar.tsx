@@ -90,7 +90,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           ))}
         </span>
         <span className="hidden items-stretch gap-x-3 lg:flex">
-          <Link href='/plan-with-us'>
+          <Link href="/plan-with-us">
             <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 font-semibold capitalize text-gray-50">
               <p className="text-base leading-none">Plan with us</p>
             </Button>
@@ -178,9 +178,11 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
             </div>
 
             <span className="flex flex-col items-start gap-3 py-5 lg:hidden">
-              <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">
-                Plan with us
-              </Button>
+              <Link href="/plan-with-us">
+                <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">
+                  Plan with us
+                </Button>
+              </Link>
               {user ? (
                 <span className="flex items-start gap-x-4">
                   <Avatar>

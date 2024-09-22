@@ -1,12 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 import { useState } from "react";
-import {
-    FaBook,
-    FaRegMinusSquare
-} from "react-icons/fa";
+import { FaBook, FaRegMinusSquare } from "react-icons/fa";
 import { GiCampCookingPot } from "react-icons/gi";
 import { RiVipFill } from "react-icons/ri";
+import { usePlanContext } from "./plan-context";
 
 const options = [
   {
@@ -28,10 +26,12 @@ const options = [
 ];
 
 export default function AccomodationSelection() {
+  const { updatePlanData } = usePlanContext();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
+    updatePlanData("accommodation", option);
   };
 
   const selectedOptionData = options.find(
@@ -41,7 +41,7 @@ export default function AccomodationSelection() {
   return (
     <div className="p-2 lg:p-4">
       <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        Choose your Package
+        Accomodation Preferences
       </h2>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
         {options.map((option) => (
@@ -65,10 +65,6 @@ export default function AccomodationSelection() {
             <span className="text-sm md:text-base">{option.name}</span>
           </div>
         ))}
-      </div>
-
-      <div className="mt-8">
-        {selectedOptionData && <div className="mt-8 text-center">content</div>}
       </div>
     </div>
   );
