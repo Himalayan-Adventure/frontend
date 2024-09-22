@@ -3,8 +3,7 @@ import Departure from "@/components/packagespage/departure";
 import Facts from "@/components/packagespage/facts";
 import Faqs from "@/components/packagespage/faqs";
 import Gallery, { GalleryImageProp } from "@/components/packagespage/gallery";
-import Image from "next/image";
-import HostedBy from "@/components/packagespage/hosted-by";
+import HostInfo from "@/components/packagespage/host-info";
 import InfoTabs from "@/components/packagespage/info-tabs";
 import Itenerary from "@/components/packagespage/itenerary";
 import Map from "@/components/packagespage/map";
@@ -13,12 +12,11 @@ import Reviews from "@/components/packagespage/reviews";
 import SimilarPackages from "@/components/packagespage/similar-packages";
 import ThingsToKnow from "@/components/packagespage/things-to-know";
 import CommonBanner from "@/components/ui/common-banner";
-import bgImage from "/public/images/packageBanner.png";
 import { getSinglePackage } from "@/server/packages/get-single-package";
 import { TDepartureData } from "@/types/packages/departure";
-import HostInfo from "@/components/packagespage/host-info";
-import { FaFlag } from "react-icons/fa";
-import Link from "next/link";
+import Image from "next/image";
+import bgImage from "/public/images/packageBanner.png";
+import Video from "@/components/packagespage/video";
 
 interface Params {
   slug: string;
@@ -97,6 +95,10 @@ export default async function PackageDetail({ params }: { params: Params }) {
               </div>
             </div>
             <About desc={pkg?.description} />
+            <Video
+              packageName={pkg?.name}
+              videolink="https://www.youtube.com/embed/Mq9SubYm3zA?si=KbYeaXd9d29l82tr"
+            />
             <Itenerary />
             <InfoTabs />
           </div>

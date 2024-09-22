@@ -16,16 +16,15 @@ import {
   FaUtensils,
 } from "react-icons/fa";
 import { MdOutlineLocationOn, MdOutlineSevereCold } from "react-icons/md";
-
-/* eslint-disable react/no-unescaped-entities */
 import Image from "next/image";
+
 const CloudImage = ({ src, alt, position }: any) => (
   <div className={`absolute ${position} w-full`}>
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
   </div>
 );
 
-const factsLeft = [
+const facts = [
   {
     label: "Highest access:",
     value: "8,848.86m (29,032 ft)",
@@ -60,9 +59,6 @@ const factsLeft = [
     value: "South east ridge (Normal route)",
     icon: <FaMapMarkerAlt />,
   },
-];
-
-const factsRight = [
   {
     label: "First Ascent:",
     value: "May 29, 1953 Edmund Hillary & Tenzing Norgay Sherpa",
@@ -120,46 +116,22 @@ export default function BookAppointment() {
         <div className="relative text-white">
           <h1 className="text-lg md:text-xl lg:text-2xl">Facts of the Trip</h1>
           <div className="mt-4 grid grid-cols-1 gap-x-8 lg:mt-8 lg:grid-cols-2">
-            <div>
-              {factsLeft.map((fact, index) => (
-                <div
-                  key={index}
-                  className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
-                >
-                  <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base">
-                    {fact.label}
+            {facts.map((fact, index) => (
+              <div
+                key={index}
+                className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
+              >
+                <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base">
+                  {fact.label}
+                </p>
+                <div className="col-span-2 flex items-center space-x-1">
+                  <span>{fact.icon}</span>
+                  <p className="text-xs md:text-sm lg:text-base">
+                    {fact.value}
                   </p>
-
-                  <div className="col-span-2 flex items-center space-x-1">
-                    <span className="">{fact.icon}</span>
-
-                    <p className="text-xs md:text-sm lg:text-base">
-                      {fact.value}
-                    </p>
-                  </div>
                 </div>
-              ))}
-            </div>
-            <div>
-              {factsRight.map((fact, index) => (
-                <div
-                  key={index}
-                  className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
-                >
-                  <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base">
-                    {fact.label}
-                  </p>
-
-                  <div className="col-span-2 flex items-center space-x-1">
-                    <span className="text-primary">{fact.icon}</span>
-
-                    <p className="text-xs md:text-sm lg:text-base">
-                      {fact.value}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
