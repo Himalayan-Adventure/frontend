@@ -19,6 +19,8 @@ import { TDepartureData } from "@/types/packages/departure";
 import HostInfo from "@/components/packagespage/host-info";
 import { FaFlag } from "react-icons/fa";
 import Link from "next/link";
+import { TInfoTabs } from "@/types/packages/info-tabs";
+import { BlocksContent } from "@strapi/blocks-react-renderer";
 
 interface Params {
   slug: string;
@@ -46,11 +48,22 @@ export default async function PackageDetail({ params }: { params: Params }) {
     : [];
   const departureData: TDepartureData = {
     date: pkg?.date as string,
-    departure: pkg?.departure as string,
+    departure: pkg?.departure?.map(({ start, end }) => ({ start, end })),
     grade: pkg?.grade || "",
     altitude: pkg?.altitude || "",
     duration: pkg?.duration || "",
     season: pkg?.season || "",
+  };
+  const infoTabsData: Record<TInfoTabs, BlocksContent | undefined> = {
+    includes: pkg?.includedFacilities,
+    excludes: pkg?.excludedFacilities,
+    gears: pkg?.gears,
+    health: pkg?.healthAndSafety,
+  };
+  const thingsToKnowData = {
+    cancellationPolicy: pkg?.cancellation,
+    generalInfo: pkg?.expeditionGeneral,
+    health: pkg?.healthSafety,
   };
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
@@ -69,27 +82,37 @@ export default async function PackageDetail({ params }: { params: Params }) {
             </div>
             <div className="flex flex-wrap items-center justify-between gap-4 lg:gap-8">
               <div className="space-y-2">
-                <h1 className="text-sm md:text-lg">
-                  Package Hosted by {pkg.hostname}
-                </h1>
+                {pkg?.hostname && (
+                  <h1 className="text-sm md:text-lg">
+                    Package Hosted by {pkg?.hostname}
+                  </h1>
+                )}
+
                 <div className="flex flex-col gap-4 text-base md:flex-row md:items-center md:gap-8 lg:gap-12">
-                  <h2>5 Climbers Booked</h2>
+                  {pkg?.numberOfClimbers && (
+                    <h2>{pkg.numberOfClimbers} Climbers Booked</h2>
+                  )}
+
                   <ul className="flex list-disc space-x-8 text-sm md:text-base">
-                    <li>2 leaders</li>
+                    {pkg?.numberOfLeaders && (
+                      <li>{pkg.numberOfLeaders} leaders</li>
+                    )}
                     <li>Fixed Departure</li>
-                    <li>Season: Autumn</li>
+                    {pkg?.season && (
+                      <li className="capitalize">Season: {pkg.season}</li>
+                    )}
                   </ul>
                 </div>
               </div>
               <div>
                 {/* Host Logo  */}
-                <p className="sr-only">{pkg.hostname}</p>
+                <p className="sr-only">{pkg?.hostname}</p>
                 {pkg?.host && (
                   <Image
                     src={pkg?.host?.data?.attributes?.url || "/logo.png"}
                     alt="host logo"
                     priority
-                    className="w-28 md:w-40"
+                    className="max-h-20 w-28 object-contain md:w-40"
                     width={pkg?.host?.data?.attributes?.width || 400}
                     height={pkg?.host?.data?.attributes?.height || 400}
                   />
@@ -97,8 +120,9 @@ export default async function PackageDetail({ params }: { params: Params }) {
               </div>
             </div>
             <About desc={pkg?.description} />
-            <Itenerary />
-            <InfoTabs />
+            {/*@ts-ignore */}
+            {pkg?.itenary && <Itenerary data={pkg?.itenary} />}
+            <InfoTabs content={infoTabsData} />
           </div>
           <div className="hidden space-y-8 lg:col-span-1 lg:block">
             <Map location={pkg.name} />
@@ -106,7 +130,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
           </div>
         </div>
       </section>
-      <Facts />
+      <Facts data={pkg?.facts} />
       {pkg.faq && (
         <Faqs
           data={pkg?.faq.map((i, index) => ({
@@ -120,7 +144,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
       <Reviews />
       <SimilarPackages />
       <HostInfo />
-      <ThingsToKnow />
+      <ThingsToKnow data={thingsToKnowData}/>
     </main>
   );
 }

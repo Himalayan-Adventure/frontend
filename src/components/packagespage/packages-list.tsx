@@ -26,6 +26,8 @@ import {
 } from "react-icons/fa";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
 import { useSearchParams } from "next/navigation";
+import { Router } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function PackagesList() {
   const updateQueryString = useUpdateQueryString();
@@ -34,6 +36,7 @@ export default function PackagesList() {
     name: string;
     key: string;
   }>({ name: "All", key: "none" });
+  const router = useRouter();
   const { data, isFetching, status, error } = useQuery<
     APIResponseCollection<"api::package.package">
   >({
@@ -215,7 +218,9 @@ export default function PackagesList() {
             key={index}
             onClick={() => {
               if (category.key === "none") {
-                updateQueryString({});
+                // updateQueryString({}, ["filter",category.key ]);
+
+                router.push('/packages');
                 setSelectedCategory({ name: category.name, key: category.key });
               } else {
                 updateQueryString({ "filters[season]": category.name });

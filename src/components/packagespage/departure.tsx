@@ -17,7 +17,6 @@ export default function Departure({
   id,
 }: DepartureProps) {
   const { date, duration, season, altitude, grade, departure } = data;
-  console.log(wordsToNumbers(altitude)?.toString().split(" ").join(""));
 
   return (
     <div className="relative space-y-4">
@@ -37,17 +36,23 @@ export default function Departure({
             </p>
           </div>
           <div className="my-2 rounded border bg-white p-2">
-            <div className="mt-2 flex items-center justify-between">
-              <div className="">
-                <p className="text-xs text-black">Date</p>
-                <p className="text-sm text-gray-500">
-                  {formatDate(departure)} - {formatDate(date)}
-                </p>
+            {departure?.map((i, index) => (
+              <div className="mt-2 flex items-center justify-between">
+                <div className="">
+                  <p className="text-xs text-black">Date</p>
+                  <p
+                    className="text-sm text-gray-500"
+                    key={`departure-${index}`}
+                  >
+                    {formatDate(i?.start as string)} - {formatDate(i?.end as string)}
+                  </p>
+                </div>
+
+                <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
+                  Book Now
+                </Button>
               </div>
-              <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
-                Book Now
-              </Button>
-            </div>
+            ))}
           </div>
           <button className="mt-4 w-full rounded-lg bg-primary py-2 font-semibold text-white hover:bg-orange-500">
             Get Quote
@@ -67,7 +72,7 @@ export default function Departure({
           </p>
           <p className="flex items-center space-x-2 text-sm font-medium">
             <BsBarChartFill size={20} />
-            <span>Grade: {grade}</span>
+            <span className="capitalize">Grade: {grade}</span>
           </p>
           <p className="flex items-center space-x-2 text-sm font-medium">
             <FaMountain size={20} />

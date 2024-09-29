@@ -22,7 +22,7 @@ import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
 import wordsToNumbers from "words-to-numbers";
 
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "../ui/button";
@@ -184,17 +184,30 @@ const PackageCard = ({
                 </a>
               </p>
             </div>
-            <div className="my-2 rounded bg-white p-2">
-              <div className="mt-2 flex items-center justify-between">
-                <div className="">
-                  <p className="text-xs text-black">Date</p>
-                  <p className="text-sm text-gray-500">{attr?.departure}</p>
+            <div className="my-2 rounded border bg-white p-2">
+              {attr?.departure?.map((i, index) => (
+                <div
+                  className="mt-2 flex items-center justify-between"
+                  key={`departure-${attr.name}-${pkg.id}${index}`}
+                >
+                  <div className="">
+                    <p className="text-xs text-black">Date</p>
+                    <p
+                      className="text-sm text-gray-500"
+                      key={`departure-${index}`}
+                    >
+                      {formatDate(i?.start as string)} -{" "}
+                      {formatDate(i?.end as string)}
+                    </p>
+                  </div>
+
+                  <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
+                    Book Now
+                  </Button>
                 </div>
-                <Button className="rounded-full bg-black px-2 py-1 text-xs text-white">
-                  Book Now
-                </Button>
-              </div>
+              ))}
             </div>
+
             <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
               Get Quote
             </button>
