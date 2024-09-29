@@ -134,7 +134,7 @@ export const LoginForm = () => {
             <Text
               variant="text-sm"
               className="cursor-pointer text-center hover:underline"
-              onClick={() => setType("register")}
+              onClick={() => setType("select-user")}
               bold
             >
               Not a user? Register!

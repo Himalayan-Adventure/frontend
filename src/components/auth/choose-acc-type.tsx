@@ -15,6 +15,7 @@ import { Text } from "../ui/text";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Check, ChevronLeft } from "lucide-react";
+import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 export const ChooseAccType = () => {
   const userTypes = [
     {
@@ -28,9 +29,11 @@ export const ChooseAccType = () => {
       desc: " Travel, Tour and Expedition Guides",
     },
   ];
+
+  const { type, setType, setDialogOpen, setUserType } = useCurrentAuthDialog();
   const [active, setActive] = useState(0);
   return (
-    <DialogContent className="[&>*]:font-poppins grid h-full w-full max-w-none !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:p-16 xl:w-fit">
+    <DialogContent className="grid h-full w-full max-w-none !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:p-16 xl:w-fit [&>*]:font-poppins">
       {/* <DialogClose className="top-0" /> */}
       <span className="absolute left-4 top-4 cursor-pointer sm:left-8">
         <ArrowLeft strokeWidth={3} />
@@ -39,7 +42,7 @@ export const ChooseAccType = () => {
         <DialogTitle>
           <Text
             variant="display-sm"
-            className="font-poppins text-left font-bold capitalize sm:text-center"
+            className="text-left font-poppins font-bold capitalize sm:text-center"
           >
             Choose account type
           </Text>
@@ -92,7 +95,11 @@ export const ChooseAccType = () => {
       <DialogFooter className="flex-row justify-center sm:justify-center">
         <Button
           type="submit"
-          className="font-poppins w-3/4 max-w-[350px] self-end bg-foreground px-10 py-8 font-bold sm:w-1/2 sm:py-6"
+          className="w-3/4 max-w-[350px] self-end bg-foreground px-10 py-8 font-poppins font-bold sm:w-1/2 sm:py-6"
+          onClick={() => {
+            setType("register");
+            setUserType(active === 0 ? "customer" : "merchant");
+          }}
         >
           Continue
         </Button>
