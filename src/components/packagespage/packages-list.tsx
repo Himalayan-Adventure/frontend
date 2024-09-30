@@ -6,7 +6,7 @@ import { packages } from "@/data/packagesData";
 import { FaBorderAll, FaIcons } from "react-icons/fa"; // Import any icon from react-icons
 import { Text } from "../ui/text";
 import { getPackages } from "@/server/packages/get-packages";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
   APIResponse,
@@ -37,17 +37,37 @@ export default function PackagesList() {
     key: string;
   }>({ name: "All", key: "none" });
   const router = useRouter();
+  useEffect(() => {
+    console.log(selectedCategory);
+  }, [selectedCategory]);
   const { data, isFetching, status, error } = useQuery<
     APIResponseCollection<"api::package.package">
   >({
-    queryKey: ["packages", searchParams, selectedCategory],
+    queryKey: [
+      "packages",
+      selectedCategory,
+      searchParams.get("filter"),
+      searchParams.get("key"),
+    ],
     queryFn: async () => {
       try {
         const params = new URLSearchParams();
         params.set("populate", "*");
-        searchParams.forEach((value, key) => {
-          params.set(key, value.toLowerCase());
-        });
+        const filter = searchParams.get("filter");
+        const key = searchParams.get("key");
+        if (filter && key && selectedCategory.name !== "All") {
+          if (key === "altitude") {
+            const filterName = `filters[${key}][startsWithi]`;
+            console.log(filterName);
+            params.set(filterName, filter[0]);
+            console.log(filterName, filter[0]);
+          } else {
+            const filterName = `filters[${key}]`;
+            console.log(filterName);
+            params.set(filterName, filter);
+            console.log(filterName, filter);
+          }
+        }
 
         const data = await axios.get(
           `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?${params.toString()}`,
@@ -57,6 +77,7 @@ export default function PackagesList() {
         console.error("Error fetching", error);
       }
     },
+    placeholderData: keepPreviousData,
   });
 
   const [filters, setFilters] = useState();
@@ -72,89 +93,111 @@ export default function PackagesList() {
 
   const categories: Array<{
     name: string;
-    key: "none" | "altitude" | "season" | "type" | "grade";
+    key:
+      | "none"
+      | "altitude"
+      | "season"
+      | "type"
+      | "grade"
+      | "difficultyLevel"
+      | "planType";
+    label: string;
     icon: JSX.Element;
   }> = [
     {
       name: "All",
+      label: "All",
       key: "none",
       icon: <FaBorderAll className="size-6 md:size-8" />,
     },
 
     {
-      name: "Trekking",
-      key: "type",
+      name: "trekking",
+      label: "Trekking",
+      key: "planType",
       icon: <FaWalking className="size-6 md:size-8" />,
     },
     {
-      name: "Peak Climbing",
-      key: "type",
+      name: "climbing",
+      label: "Climbing",
+      key: "planType",
       icon: <FaMountain className="size-6 md:size-8" />,
     },
     {
-      name: "Expeditions 8000m",
+      label: "Expeditions 8000m",
+      name: "8000",
       key: "altitude",
       icon: <FaMountain className="size-6 md:size-8" />,
     },
     {
-      name: "Expeditions 7000m",
-
+      label: "Expeditions 7000m",
+      name: "7000",
       key: "altitude",
       icon: <FaMountain className="size-6 md:size-8" />,
     },
     {
-      name: "Expeditions 6000m",
+      label: "Expeditions 6000m",
+      name: "6000",
       key: "altitude",
       icon: <FaMountain className="size-6 md:size-8" />,
     },
     {
-      name: "Winter",
+      name: "winter",
+      label: "Winter",
       key: "season",
       icon: <FaSnowflake className="size-6 md:size-8" />,
     },
     {
-      name: "Spring",
+      name: "spring",
+      label: "Spring",
       key: "season",
       icon: <FaLeaf className="size-6 md:size-8" />,
     },
     {
-      name: "Summer",
+      name: "summer",
+      label: "Summer",
       key: "season",
       icon: <FaSun className="size-6 md:size-8" />,
     },
     {
-      name: "Autumn",
+      name: "autumn",
+      label: "Autumn",
       key: "season",
       icon: <FaLeaf className="size-6 md:size-8" />,
     },
     {
-      name: "Beginner",
-      key: "season",
+      name: "beginner",
+      label: "Beginner",
+      key: "difficultyLevel",
       icon: <FaSkull className="size-6 md:size-8" />,
     },
     {
-      name: "Intermediate",
-      key: "grade",
+      name: "intermediate",
+      label: "Intermediate",
+      key: "difficultyLevel",
       icon: <FaStarHalfAlt className="size-6 md:size-8" />,
     },
     {
-      name: "Experienced",
-
-      key: "grade",
+      name: "experienced",
+      label: "Experienced",
+      key: "difficultyLevel",
       icon: <FaStar className="size-6 md:size-8" />,
     },
     {
       name: "Elite",
+      label: "Elite",
       key: "type",
       icon: <FaIcons className="size-6 md:size-8" />,
     },
     {
       name: "Premium",
+      label: "Premium",
       key: "type",
       icon: <FaIcons className="size-6 md:size-8" />,
     },
     {
       name: "Basic",
+      label: "Basic",
       key: "type",
       icon: <FaIcons className="size-6 md:size-8" />,
     },
@@ -218,23 +261,22 @@ export default function PackagesList() {
             key={index}
             onClick={() => {
               if (category.key === "none") {
-                // updateQueryString({}, ["filter",category.key ]);
-
-                router.push('/packages');
+                updateQueryString({}, ["filter", "key"]);
                 setSelectedCategory({ name: category.name, key: category.key });
               } else {
-                updateQueryString({ "filters[season]": category.name });
+                updateQueryString({ key: category.key, filter: category.name });
                 setSelectedCategory({ name: category.name, key: category.key });
               }
             }}
             className={`mx-4 flex cursor-pointer flex-col items-center space-x-2 border-b-2 py-2 text-sm font-extrabold md:text-base ${
-              selectedCategory.name === category.name
+              searchParams.get("filter") === category.name ||
+              (category.name === "All" && searchParams.get("filter") === null)
                 ? "border-b-2 border-primary text-primary"
                 : "border-transparent text-gray-600"
             }`}
           >
             {category.icon}
-            <span className="text-sm">{category.name}</span>
+            <span className="text-sm">{category.label}</span>
           </button>
         ))}
       </div>
