@@ -62,7 +62,29 @@ const thingsToKnowItems = [
 export default function ThingsToKnow({
   data,
 }: {
-  data: any;
+  data: {
+    cancellationPolicy: string | undefined;
+    generalInfo:
+      | (IDProperty &
+          Omit<
+            {
+              icon?: string | undefined;
+              info?: string | undefined;
+            } & {},
+            never
+          >[])
+      | undefined;
+    health:
+      | (IDProperty &
+          Omit<
+            {
+              icon?: string | undefined;
+              info?: string | undefined;
+            } & {},
+            never
+          >[])
+      | undefined;
+  };
   // data?Record<TThingsToKnowTags,(IDProperty &
   //       Omit<
   //         {
