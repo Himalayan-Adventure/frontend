@@ -30,6 +30,7 @@ import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { useQuery } from "@tanstack/react-query";
 import { TUser } from "@/types/auth";
 import axios from "axios";
+import { Badge } from "@/components/ui/badge";
 export default function ProfilePage() {
   const { data: user, isPending } = useQuery({
     queryKey: ["user"],
@@ -87,6 +88,11 @@ export default function ProfilePage() {
   return (
     <section className="container font-poppins">
       <CommonBanner title="Profile" bgImage={bgImage} />
+      {!user?.confirmed && (
+        <Badge className="bg-red-100 text-black">
+          Please confirm your email
+        </Badge>
+      )}
       <Tabs
         defaultValue="about"
         className="relative z-10 flex flex-col items-stretch gap-x-10 gap-y-10 lg:flex-row"
@@ -178,7 +184,7 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="contact" className="mt-0">
-          {user && <ContactCard user={user}/>}
+          {user && <ContactCard user={user} />}
         </TabsContent>
 
         <TabsContent value="work" className="mt-0 w-full @container">

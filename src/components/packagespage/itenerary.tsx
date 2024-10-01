@@ -25,7 +25,24 @@ const itineraryData = [
   },
 ];
 
-export default function Itinerary() {
+export default function Itinerary({
+  data,
+}: {
+  data: Array<{ id: number; day: string }>;
+}) {
+  console.log(data);
+  const numberOfWeeks =
+    data.length / 7 - Number((data.length / 7).toFixed(0)) <= 0
+      ? Number((data.length / 7).toFixed(0))
+      : Number((data.length / 7).toFixed(0)) + 1;
+  const transformedData = Array.from({ length: numberOfWeeks }).map((_, i) => {
+    return {
+      week: `Week ${i + 1 < 10 ? `0${i + 1}` : i + 1}`,
+      days: data.slice(i * 7, i * 7 + 7).map((item) => `${item.day}`),
+    };
+  });
+  console.log(numberOfWeeks);
+
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -48,7 +65,7 @@ export default function Itinerary() {
         <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
           Itinerary
         </h1>
-        <button className="rounded border border-black px-4 py-2 text-black transition hover:bg-gray-200 text-sm md:text-base">
+        <button className="rounded border border-black px-4 py-2 text-sm text-black transition hover:bg-gray-200 md:text-base">
           Download Pdf
         </button>
       </div>
@@ -57,7 +74,7 @@ export default function Itinerary() {
           <span className="font-bold">Weeks</span> ({itineraryData.length})
         </p>
         <div className="ml-4 mt-4 space-y-6 border-l">
-          {itineraryData.map((item, index) => (
+          {transformedData.map((item, index) => (
             <div key={index}>
               <div
                 className="flex cursor-pointer space-x-4 lg:space-x-8"
@@ -85,8 +102,11 @@ export default function Itinerary() {
                     style={{ height: "0px" }}
                   >
                     {item.days.map((day, dayIndex) => (
-                      <p key={dayIndex} className="mt-2 text-xs md:text-sm lg:text-base">
-                        {day}
+                      <p
+                        key={dayIndex}
+                        className="mt-2 text-xs md:text-sm lg:text-base"
+                      >
+                        {`Day 0${dayIndex + 1}`} &nbsp; {day}
                       </p>
                     ))}
                   </div>

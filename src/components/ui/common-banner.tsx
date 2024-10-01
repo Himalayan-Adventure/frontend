@@ -1,9 +1,10 @@
 import Image, { StaticImageData } from "next/image";
+import fallbackImg from "/public/images/packageBanner.png";
 
 interface CommonBannerProps {
   title: string;
   subtitle?: string;
-  bgImage: string | StaticImageData;
+  bgImage?: string | StaticImageData;
 }
 
 const CommonBanner: React.FC<CommonBannerProps> = ({
@@ -15,7 +16,7 @@ const CommonBanner: React.FC<CommonBannerProps> = ({
     <section className="-z-10 h-60 overflow-hidden lg:h-[60vh]">
       <div className="absolute left-0 top-0 h-full w-full">
         <Image
-          src={bgImage}
+          src={bgImage || fallbackImg}
           alt="Background Image"
           objectFit="cover"
           quality={100}

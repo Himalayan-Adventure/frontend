@@ -46,6 +46,7 @@ export const RegisterPayloadSchema = z.object({
     .string()
     .min(6, { message: "Password should be at least 6 letters" })
     .max(20, { message: "Password cannot exceed 20 characters" }),
+  userType: z.enum(["merchant", "customer"]),
 });
 
 export type TRegisterPayload = z.infer<typeof RegisterPayloadSchema>;

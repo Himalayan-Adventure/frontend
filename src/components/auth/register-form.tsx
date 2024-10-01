@@ -1,23 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { FaRegUser as UserIcon } from "react-icons/fa";
 import { Text } from "@/components/ui/text";
-import { DialogContent, DialogOverlay } from "@/components/ui/dialog";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { ArrowLeft, Check, ChevronLeft, Eye, EyeOffIcon } from "lucide-react";
-import Logo from "@/components/logo";
+import { Eye, EyeOffIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { LoginFormSchema, TLoginForm } from "@/validators/login-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   RegisterFormSchema,
@@ -33,7 +27,7 @@ import { CheckedState } from "@radix-ui/react-checkbox";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 export const RegisterCard = () => {
   const router = useRouter();
-  const { setType, setDialogOpen } = useCurrentAuthDialog();
+  const { setType, setDialogOpen, type, userType } = useCurrentAuthDialog();
   const form = useForm<TRegisterForm>({
     resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
@@ -52,6 +46,7 @@ export const RegisterCard = () => {
       email: payload.email,
       password: payload.password,
       phone: payload.phone,
+      userType,
     });
     if (res.status === 200) {
       toast.success("Successfully registered!");

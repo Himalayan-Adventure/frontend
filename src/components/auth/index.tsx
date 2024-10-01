@@ -12,11 +12,13 @@ import { RegisterCard } from "./register-form";
 import { OtpForm } from "./opt-form";
 import Logo from "@/components/logo";
 import { ArrowLeft } from "lucide-react";
+import { ChooseAccType } from "./choose-acc-type";
 export const AuthCard = ({}: {}) => {
   const { type, setType, setDialogOpen } = useCurrentAuthDialog();
 
   const typeMap: { [key in TAuthDialogType]: React.ReactNode } = {
     login: <LoginForm />,
+    "select-user": <ChooseAccType />,
     register: <RegisterCard />,
     "forgot-pwd": <ForgotPasswordDialog />,
     otp: <OtpForm />,

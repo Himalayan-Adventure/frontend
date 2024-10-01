@@ -28,7 +28,7 @@ export const forgotPassword= async (payload: TForgotPwdEmailInput) => {
     }
 
     const res: AxiosResponse = await axiosInstance.post(
-      "api/auth/auth/forgot-password",
+      "api/auth/forgot-password",
       {
         email: payload.email,
       },
@@ -39,6 +39,7 @@ export const forgotPassword= async (payload: TForgotPwdEmailInput) => {
       status: res.status,
     };
   } catch (error: AxiosError | any) {
+    console.log(error)
     return {
       error: error?.response?.data || { message: "An error occurred!" },
       status: error?.response?.status || 500,

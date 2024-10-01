@@ -1,4 +1,5 @@
 "use client";
+import { IDProperty } from "@/types/types";
 import React, { useState } from "react";
 import {
   FaLeaf,
@@ -14,26 +15,40 @@ import {
   FaFirstAid,
   FaMap,
 } from "react-icons/fa";
+import DynamicReactIcon from "../icons/strapi-icon";
 
-export default function Offers() {
-  const allServices = [
-    { icon: FaLeaf, name: "Experience Guides" },
-    { icon: FaWifi, name: "Airport Receive" },
-    { icon: FaDotCircle, name: "Logistic" },
-    { icon: FaRegBuilding, name: "Hotel Booking" },
-    { icon: FaToolbox, name: "Tools and Gears" },
-    { icon: FaBone, name: "Transportation" },
-    { icon: FaFire, name: "Porters" },
-    { icon: FaVideo, name: "Emergency Rescue" },
-    { icon: FaBiking, name: "Food and beverage" },
-    { icon: FaHiking, name: "Guided Hiking" }, // New Service
-    { icon: FaFirstAid, name: "First Aid Services" }, // New Service
-    { icon: FaMap, name: "Custom Itinerary Planning" }, // New Service
-  ];
+export default function Offers({
+  data,
+}: {
+  data:
+    | (IDProperty &
+        Omit<
+          {
+            icon?: string | undefined;
+            info?: string | undefined;
+          } & {},
+          never
+        >[])
+    | undefined;
+}) {
+  // const allServices = [
+  //   { icon: FaLeaf, name: "Experience Guides" },
+  //   { icon: FaWifi, name: "Airport Receive" },
+  //   { icon: FaDotCircle, name: "Logistic" },
+  //   { icon: FaRegBuilding, name: "Hotel Booking" },
+  //   { icon: FaToolbox, name: "Tools and Gears" },
+  //   { icon: FaBone, name: "Transportation" },
+  //   { icon: FaFire, name: "Porters" },
+  //   { icon: FaVideo, name: "Emergency Rescue" },
+  //   { icon: FaBiking, name: "Food and beverage" },
+  //   { icon: FaHiking, name: "Guided Hiking" }, // New Service
+  //   { icon: FaFirstAid, name: "First Aid Services" }, // New Service
+  //   { icon: FaMap, name: "Custom Itinerary Planning" }, // New Service
+  // ];
 
   const [showAll, setShowAll] = useState(false);
 
-  const servicesToShow = showAll ? allServices : allServices.slice(0, 8);
+  const servicesToShow = showAll ? data : data?.slice(0, 8);
 
   const toggleShowAll = () => {
     setShowAll((prev) => !prev);
@@ -46,14 +61,18 @@ export default function Offers() {
           What We Offer.
         </h2>
         <div className="grid grid-cols-2 gap-4">
-          {servicesToShow.map((service, index) => (
-            <div key={index} className="flex items-center space-x-3">
-              <service.icon className="text-xl" />
-              <span className="text-sm md:text-base lg:text-lg">
-                {service.name}
-              </span>
-            </div>
-          ))}
+          <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-4 lg:mt-8 lg:grid-cols-2">
+            {data?.map((offer, index) => (
+              <div key={index} className="mb-2 flex items-start gap-x-3">
+                <div className="flex items-start gap-x-3">
+                  {offer.icon && <DynamicReactIcon className="size-5 md:size-6" name={offer.icon} />}
+                  <p className="text-sm leading-none md:text-base lg:text-lg lg:leading-none">
+                    {offer?.info}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         <button
           onClick={toggleShowAll}

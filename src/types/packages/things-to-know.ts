@@ -1,0 +1,1 @@
+export type TThingsToKnowTabs= "general" | "health" | "cancellation";
