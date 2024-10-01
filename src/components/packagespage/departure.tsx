@@ -37,14 +37,18 @@ export default function Departure({
           </div>
           <div className="my-2 rounded border bg-white p-2">
             {departure?.map((i, index) => (
-              <div className="mt-2 flex items-center justify-between">
+              <div
+                className="mt-2 flex items-center justify-between"
+                key={`departure-${index}`}
+              >
                 <div className="">
                   <p className="text-xs text-black">Date</p>
                   <p
                     className="text-sm text-gray-500"
                     key={`departure-${index}`}
                   >
-                    {formatDate(i?.start as string)} - {formatDate(i?.end as string)}
+                    {formatDate(i?.start as string)} -{" "}
+                    {formatDate(i?.end as string)}
                   </p>
                 </div>
 
