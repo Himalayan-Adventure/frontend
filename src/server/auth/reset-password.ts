@@ -2,19 +2,13 @@
 
 import { axiosInstance } from "@/lib/server-axios-instance";
 import {
-  ForgotPwdEmailFormSchema,
-  TForgotPwdEmailInput,
-} from "@/validators/forgot-password";
-import {
-  RegisterPayloadSchema,
-  type TRegisterPayload,
-} from "@/validators/register-validator";
+  ResetPasswordSchema,
+  TResetPasswordInput,
+} from "@/validators/reset-password";
 import { AxiosResponse, type AxiosError } from "axios";
-import { cookies } from "next/headers";
-export const forgotPassword= async (payload: TForgotPwdEmailInput) => {
-  const cookieStore = cookies();
+export const resetPassword = async (user: TResetPasswordInput) => {
   try {
-    const validatedFields = ForgotPwdEmailFormSchema.safeParse(payload);
+    const validatedFields = ResetPasswordSchema.safeParse(user);
 
     if (!validatedFields.success) {
       return {
@@ -27,10 +21,12 @@ export const forgotPassword= async (payload: TForgotPwdEmailInput) => {
       };
     }
 
-    const res: AxiosResponse = await axiosInstance.post(
-      "api/auth/forgot-password",
+    const res: AxiosResponse<TResetPasswordInput> = await axiosInstance.post(
+      "api/auth/reset-password",
       {
-        email: payload.email,
+        password: user.password,
+        passwordConfirmation: user.passwordConfirmation,
+        code: user.code,
       },
     );
 
@@ -39,7 +35,6 @@ export const forgotPassword= async (payload: TForgotPwdEmailInput) => {
       status: res.status,
     };
   } catch (error: AxiosError | any) {
-    console.log(error)
     return {
       error: error?.response?.data || { message: "An error occurred!" },
       status: error?.response?.status || 500,

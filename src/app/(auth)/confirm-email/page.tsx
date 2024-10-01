@@ -1,5 +1,5 @@
 import CommonBanner from "@/components/ui/common-banner";
-import { ResetPasswordForm } from "./reset-password-form";
+import { ConfirmEmailForm } from "./confirm-email-form";
 
 export default function Page({
   searchParams,
@@ -8,8 +8,8 @@ export default function Page({
 }) {
   return (
     <section className="container">
-      <CommonBanner title="Reset Password" />
-      <ResetPasswordForm code={searchParams.code} />
+      <CommonBanner title="Confirm email" />
+      <ConfirmEmailForm/>
     </section>
   );
 }

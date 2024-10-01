@@ -28,6 +28,7 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "../ui/button";
 import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
 import { TDepartureData } from "@/types/packages/departure";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const PackageCard = ({
   pkg,
@@ -50,6 +51,7 @@ const PackageCard = ({
     setIsOverlayVisible(!isOverlayVisible);
   };
   const cardRef = useRef<HTMLDivElement>(null);
+  const [cardState, setCardState] = useState(0);
   useEffect(() => {
     const handleMouseLeave = () => {
       setIsOverlayVisible(false);
@@ -65,32 +67,43 @@ const PackageCard = ({
       ref={cardRef}
       className={cn(
         variant == "default" ? "bg-white shadow-xl shadow-gray-500" : "",
-        "transform cursor-pointer overflow-hidden rounded-xl p-4 transition-transform",
+        "group transform cursor-pointer overflow-hidden rounded-xl transition-transform",
       )}
     >
-      <div className="relative h-full">
-        <Swiper
-          spaceBetween={30}
-          centeredSlides={true}
-          autoplay={false}
-          pagination={{
-            clickable: true,
+      <div className="absolute left-0 top-1/2 -z-[51] flex w-full -translate-y-1/2 justify-between opacity-0 transition-all ease-in-out group-hover:z-[51] group-hover:opacity-100">
+        <Button
+          className="w-fit rounded-none px-1"
+
+        disabled={cardState === 0}
+          onClick={() => {
+            if (cardState > 0) {
+              setCardState(cardState - 1);
+            }
           }}
-          navigation={false}
-          modules={[Autoplay, Pagination, Navigation]}
-          className="mySwiper"
         >
-          {/*@ts-ignore*/}
-          {attr?.image?.data?.map((image: any, index: number) => (
-            <SwiperSlide key={index}>
-              <img
-                src={image.attributes.url}
-                alt={image.attributes.name}
-                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+          <ChevronLeft size={14} />
+        </Button>
+
+        <Button
+        disabled={cardState === 1}
+          className="w-fit rounded-none px-1"
+          onClick={() => {
+            if (cardState < 1) {
+              setCardState(cardState + 1);
+            }
+          }}
+        >
+          <ChevronRight size={14} />
+        </Button>
+      </div>
+      <div className="relative h-full p-4">
+        <SliderComponent pkg={pkg} type="hover" />
+        {cardState === 0 && (
+          <Overlay pkg={pkg} />
+        )}
+        {/* // ) : (
+        //   <Overlay pkg={pkg} />
+        // )} */}
         <div className="absolute top-0 z-10 flex h-12 w-full items-end justify-end p-2">
           <button onClick={toggleFavorite} aria-label="Favorite">
             {isFavorited ? (
@@ -155,103 +168,142 @@ const PackageCard = ({
         </div>
 
         {/* detail overlay  */}
-
-        <div
-          className={cn(
-            isOverlayVisible ? "opacity-1 z-50" : "-z-50 opacity-0",
-            "absolute inset-0 flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white transition-all ease-in-out",
-          )}
-        >
-          <div className="absolute right-0 top-0 hidden -translate-y-1/2 translate-x-1/2 justify-end bg-black/40">
-            <button
-              onClick={toggleOverlay}
-              className="text-white hover:text-gray-400"
-            >
-              <AiOutlineClose size={16} />
-            </button>
-          </div>
-          <div>
-            <div className="flex items-center justify-between">
-              <p className="text-lg font-bold">Departure</p>
-              <p className="flex items-center space-x-1 text-sm">
-                <span>
-                  <LuStar className="text-primary" />
-                </span>
-                <span>{Math.floor(Math.random() * 5)}</span>
-                <span className="text-xl text-gray-400">·&nbsp;</span>
-                <a href="#" className="underline">
-                  {Math.floor(Math.random() * 100)} reviews
-                </a>
-              </p>
-            </div>
-            <div className="my-2 rounded border bg-white p-2">
-              {attr?.departure?.map((i, index) => (
-                <div
-                  className="mt-2 flex items-center justify-between"
-                  key={`departure-${attr.name}-${pkg.id}${index}`}
-                >
-                  <div className="">
-                    <p className="text-xs text-black">Date</p>
-                    <p
-                      className="text-sm text-gray-500"
-                      key={`departure-${index}`}
-                    >
-                      {formatDate(i?.start as string)} -{" "}
-                      {formatDate(i?.end as string)}
-                    </p>
-                  </div>
-
-                  <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
-                    Book Now
-                  </Button>
-                </div>
-              ))}
-            </div>
-
-            <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
-              Get Quote
-            </button>
-          </div>
-          <div className="mt-4 space-y-2">
-            <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
-            <p className="flex items-center space-x-2 text-sm font-medium">
-              {seasonIconMap?.[attr?.season || "winter"]}
-              <span className="capitalize">
-                {attr?.season}: ({seasonMonthMap[attr?.season || "winter"]})
-              </span>
-            </p>
-            {attr.duration && (
-              <p className="flex items-center space-x-2 text-sm font-medium">
-                <MdTimelapse size={20} />
-                <span>Duration: {wordsToNumbers(attr?.duration)}</span>
-              </p>
-            )}
-            <p className="flex items-center space-x-2 text-sm font-medium">
-              <BsBarChartFill size={20} />
-              <span>Grade: {attr.grade}</span>
-            </p>
-            {attr.altitude && (
-              <p className="flex items-center space-x-2 text-sm font-medium">
-                <FaMountain size={20} />
-                <span>Max Altitude: {wordsToNumbers(attr?.altitude)}</span>
-              </p>
-            )}
-          </div>
-
-          <hr className="mx-auto mt-2 w-[90%]" />
-
-          <div className="flex w-full justify-center">
-            <Link
-              href={`packages/${pkg?.id}`}
-              className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
-            >
-              View Details
-            </Link>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
 export default PackageCard;
+
+const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
+  const attr = pkg.attributes;
+  return (
+    <div
+      className={cn(
+        // isOverlayVisible ? "opacity-1 z-50" : "-z-50 opacity-0",
+        "absolute inset-0 -z-50 mx-auto flex w-[calc(100%-40px)] flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white opacity-0 transition-all ease-in-out group-hover:z-50 group-hover:opacity-100",
+      )}
+    >
+      <div className="absolute right-0 top-0 hidden -translate-y-1/2 translate-x-1/2 justify-end bg-black/40">
+        <button
+          // onClick={toggleOverlay}
+          className="text-white hover:text-gray-400"
+        >
+          <AiOutlineClose size={16} />
+        </button>
+      </div>
+      <div>
+        <div className="flex items-center justify-between">
+          <p className="text-lg font-bold">Departure</p>
+          <p className="flex items-center space-x-1 text-sm">
+            <span>
+              <LuStar className="text-primary" />
+            </span>
+            <span>{Math.floor(Math.random() * 5)}</span>
+            <span className="text-xl text-gray-400">·&nbsp;</span>
+            <a href="#" className="underline">
+              {Math.floor(Math.random() * 100)} reviews
+            </a>
+          </p>
+        </div>
+        <div className="my-2 rounded border bg-white p-2">
+          {attr?.departure?.map((i, index) => (
+            <div
+              className="mt-2 flex items-center justify-between"
+              key={`departure-${attr.name}-${pkg.id}${index}`}
+            >
+              <div className="">
+                <p className="text-xs text-black">Date</p>
+                <p className="text-xs text-gray-500" key={`departure-${index}`}>
+                  {formatDate(i?.start as string)} -{" "}
+                  {formatDate(i?.end as string)}
+                </p>
+              </div>
+
+              <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
+                Book Now
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
+          Get Quote
+        </button>
+      </div>
+      <div className="mt-4 space-y-2">
+        <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
+        <p className="flex items-center space-x-2 text-sm font-medium">
+          {seasonIconMap?.[attr?.season || "winter"]}
+          <span className="capitalize">
+            {attr?.season}: ({seasonMonthMap[attr?.season || "winter"]})
+          </span>
+        </p>
+        {attr.duration && (
+          <p className="flex items-center space-x-2 text-sm font-medium">
+            <MdTimelapse size={20} />
+            <span>Duration: {wordsToNumbers(attr?.duration)}</span>
+          </p>
+        )}
+        <p className="flex items-center space-x-2 text-sm font-medium">
+          <BsBarChartFill size={20} />
+          <span>Grade: {attr.grade}</span>
+        </p>
+        {attr.altitude && (
+          <p className="flex items-center space-x-2 text-sm font-medium">
+            <FaMountain size={20} />
+            <span>Max Altitude: {wordsToNumbers(attr?.altitude)}</span>
+          </p>
+        )}
+      </div>
+
+      <hr className="mx-auto mt-2 w-[90%]" />
+
+      <div className="flex w-full justify-center">
+        <Link
+          href={`packages/${pkg?.id}`}
+          className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
+        >
+          View Details
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export const SliderComponent = ({
+  pkg,
+  type,
+}: {
+  pkg: APIResponseData<"api::package.package">;
+  type: "hover" | "default";
+}) => {
+  const attr = pkg?.attributes;
+  return (
+    <Swiper
+      spaceBetween={30}
+      centeredSlides={true}
+      autoplay={false}
+      pagination={{
+        clickable: true,
+      }}
+      navigation={false}
+      modules={[Autoplay, Pagination, Navigation]}
+      className={cn(
+        "mySwiper",
+        type === "default" ? "absolute left-0" : "hidden group-hover:block",
+      )}
+    >
+      {/*@ts-ignore*/}
+      {attr?.image?.data?.map((image: any, index: number) => (
+        <SwiperSlide key={index}>
+          <img
+            src={image.attributes.url}
+            alt={image.attributes.name}
+            className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+};

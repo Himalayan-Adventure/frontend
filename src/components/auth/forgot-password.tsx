@@ -47,7 +47,6 @@ export const ForgotPasswordDialog = () => {
   });
   async function onEmailSubmit() {
     try {
-      console.log("hello")
       const payload = emailForm.getValues();
       const res = await forgotPassword(payload);
       if (res.status === 200) {
