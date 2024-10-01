@@ -154,15 +154,15 @@ export default function BookAppointment({
                 key={index}
                 className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
               >
-                <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base">
+                <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base leading-none md:leading-none lg:leading-none">
                   {fact.name}
                 </p>
 
-                <div className="col-span-2 flex items-center space-x-1">
+                <div className="col-span-2 flex items-start space-x-1">
                   {fact.icon && <DynamicReactIcon name={fact.icon} />}
                   {/* <span className="">{fact.icon}</span> */}
 
-                  <p className="text-xs md:text-sm lg:text-base">
+                  <p className="text-xs md:text-sm lg:text-base leading-none md:leading-none lg:leading-none">
                     {fact.value}
                   </p>
                 </div>

@@ -35,7 +35,7 @@ export const ChooseAccType = () => {
   return (
     <DialogContent className="grid h-full w-full max-w-none !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:p-16 xl:w-fit [&>*]:font-poppins">
       {/* <DialogClose className="top-0" /> */}
-      <span className="absolute left-4 top-4 cursor-pointer sm:left-8">
+      <span className="absolute left-4 top-4 cursor-pointer sm:left-8" onClick={()=>setType('login')}>
         <ArrowLeft strokeWidth={3} />
       </span>
       <DialogHeader className="sm:mt-none mt-14 space-y-2 sm:space-y-4 [&>*]:text-neutral-900">

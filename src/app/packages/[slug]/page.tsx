@@ -140,7 +140,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
           }))}
         />
       )}
-      <Offers />
+      <Offers data={pkg.offer} />
       <Reviews />
       <SimilarPackages />
       <HostInfo />

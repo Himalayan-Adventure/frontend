@@ -990,6 +990,12 @@ export interface ApiPackagePackage extends Schema.CollectionType {
     facts: Attribute.Component<'package-facts.facts', true>;
     departure: Attribute.Component<'package-departure.departure', true>;
     altitude: Attribute.BigInteger & Attribute.Required;
+    offer: Attribute.Component<'package-things-to-know.things-to-know', true>;
+    users_permissions_user: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

@@ -47,13 +47,17 @@ export const ForgotPasswordDialog = () => {
   });
   async function onEmailSubmit() {
     try {
+      console.log("hello")
       const payload = emailForm.getValues();
       const res = await forgotPassword(payload);
       if (res.status === 200) {
         setType("otp");
         toast.success(`Email submitted`);
+      }else{
+        throw new Error(res.error)
       }
     } catch (error) {
+      console.log(error)
       toast.error(`Email not submitted`);
     }
   }
