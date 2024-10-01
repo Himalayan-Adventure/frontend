@@ -16,8 +16,6 @@ import {
   FaUtensils,
 } from "react-icons/fa";
 import { MdOutlineLocationOn, MdOutlineSevereCold } from "react-icons/md";
-
-/* eslint-disable react/no-unescaped-entities */
 import Image from "next/image";
 import { IDProperty } from "@/types/types";
 import DynamicReactIcon from "../icons/strapi-icon";
@@ -27,7 +25,7 @@ const CloudImage = ({ src, alt, position }: any) => (
   </div>
 );
 
-const factsLeft = [
+const facts = [
   {
     label: "Highest access:",
     value: "8,848.86m (29,032 ft)",
@@ -62,9 +60,6 @@ const factsLeft = [
     value: "South east ridge (Normal route)",
     icon: <FaMapMarkerAlt />,
   },
-];
-
-const factsRight = [
   {
     label: "First Ascent:",
     value: "May 29, 1953 Edmund Hillary & Tenzing Norgay Sherpa",
@@ -154,7 +149,7 @@ export default function BookAppointment({
                 key={index}
                 className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
               >
-                <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base leading-none md:leading-none lg:leading-none">
+                <p className="col-span-1 text-xs font-semibold leading-none md:text-sm md:leading-none lg:text-base lg:leading-none">
                   {fact.name}
                 </p>
 
@@ -162,7 +157,7 @@ export default function BookAppointment({
                   {fact.icon && <DynamicReactIcon name={fact.icon} />}
                   {/* <span className="">{fact.icon}</span> */}
 
-                  <p className="text-xs md:text-sm lg:text-base leading-none md:leading-none lg:leading-none">
+                  <p className="text-xs leading-none md:text-sm md:leading-none lg:text-base lg:leading-none">
                     {fact.value}
                   </p>
                 </div>
