@@ -68,7 +68,6 @@ export default async function PackageDetail({ params }: { params: Params }) {
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
   }
-
   return (
     <main>
       <CommonBanner title={`Package ${pkg.name}`} bgImage={bgImage} />

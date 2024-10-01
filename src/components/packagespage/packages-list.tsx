@@ -30,7 +30,10 @@ export default function PackagesList() {
   const [selectedCategory, setSelectedCategory] = useState<{
     name: string;
     key: string;
-  }>({ name: "All", key: "none" });
+  }>({
+    name: searchParams.get("key") || "All",
+    key: searchParams.get("filter") || "none",
+  });
   const { data, isFetching, isRefetching, status, error } = useQuery<
     APIResponseCollection<"api::package.package">
   >({
@@ -48,8 +51,8 @@ export default function PackagesList() {
         const key = searchParams.get("key");
         if (filter && key && selectedCategory.name !== "All") {
           if (key === "altitude") {
-            const filterName = `filters[${key}][startsWithi]`;
-            params.set(filterName, filter[0]);
+            const filterName = `filters[${key}][$gte]`;
+            params.set(filterName, filter);
           } else {
             const filterName = `filters[${key}]`;
             params.set(filterName, filter);
@@ -79,8 +82,8 @@ export default function PackagesList() {
   }, [data]);
 
   return (
-    <section className="container relative sapce-y-6">
-      <div className="relative flex gap-x-2 items-center">
+    <section className="container relative">
+      <div className="relative mb-8 flex items-center gap-x-2">
         {overflowDir === "left" || overflowDir === "both" ? (
           <div className="absolute left-4 top-1/2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black shadow-lg shadow-white/10 lg:hidden">
             <ChevronLeft
@@ -95,10 +98,7 @@ export default function PackagesList() {
             />
           </div>
         ) : null}
-        <div
-          className="hide-scrollbar flex overflow-x-auto"
-          ref={containerRef}
-        >
+        <div className="hide-scrollbar flex overflow-x-auto" ref={containerRef}>
           {filterCategories.map((category, index) => (
             <button
               key={index}
@@ -149,7 +149,7 @@ export default function PackagesList() {
             />
           </div>
         ) : null}
-        <Button className="bg-white text-primary">
+        <Button className="bg-white text-primary hover:text-white">
           <SlidersHorizontal size={16} />
           <p>View filters</p>
         </Button>
