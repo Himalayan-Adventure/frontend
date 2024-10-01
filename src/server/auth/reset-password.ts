@@ -1,14 +1,14 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
-import { LoginFormSchema, type TLoginForm } from "@/validators/login-validator";
+import {
+  ResetPasswordSchema,
+  TResetPasswordInput,
+} from "@/validators/reset-password";
 import { AxiosResponse, type AxiosError } from "axios";
-import { TLoginResponse } from "@/types/auth";
-import { cookies } from "next/headers";
-export const login = async (user: TLoginForm) => {
-  const cookieStore = cookies();
+export const resetPassword = async (user: TResetPasswordInput) => {
   try {
-    const validatedFields = LoginFormSchema.safeParse(user);
+    const validatedFields = ResetPasswordSchema.safeParse(user);
 
     if (!validatedFields.success) {
       return {
@@ -21,21 +21,15 @@ export const login = async (user: TLoginForm) => {
       };
     }
 
-    const res: AxiosResponse<TLoginResponse> = await axiosInstance.post(
-      "api/auth/local",
+    const res: AxiosResponse<TResetPasswordInput> = await axiosInstance.post(
+      "api/auth/reset-password",
       {
-        identifier: user.email,
         password: user.password,
+        passwordConfirmation: user.passwordConfirmation,
+        code: user.code,
       },
     );
 
-    cookieStore.set({
-      name: "jwt",
-      value: res.data.jwt,
-      httpOnly: true,
-      path: "/",
-      domain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN,
-    });
     return {
       data: res.data,
       status: res.status,

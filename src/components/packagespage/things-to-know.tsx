@@ -1,3 +1,6 @@
+import { TThingsToKnowTabs } from "@/types/packages/things-to-know";
+import { IDProperty } from "@/types/types";
+import { BlocksContent, BlocksRenderer } from "@strapi/blocks-react-renderer";
 import React from "react";
 import {
   FaClock,
@@ -15,6 +18,7 @@ import {
   MdOutlineSecurity,
 } from "react-icons/md";
 import { RiAlarmWarningLine } from "react-icons/ri";
+import DynamicReactIcon from "../icons/strapi-icon";
 
 const thingsToKnowItems = [
   {
@@ -55,12 +59,91 @@ const thingsToKnowItems = [
   },
 ];
 
-export default function ThingsToKnow() {
+export default function ThingsToKnow({
+  data,
+}: {
+  data: {
+    cancellationPolicy: string | undefined;
+    generalInfo:
+      | (IDProperty &
+          Omit<
+            {
+              icon?: string | undefined;
+              info?: string | undefined;
+            } & {},
+            never
+          >[])
+      | undefined;
+    health:
+      | (IDProperty &
+          Omit<
+            {
+              icon?: string | undefined;
+              info?: string | undefined;
+            } & {},
+            never
+          >[])
+      | undefined;
+  };
+  // data?Record<TThingsToKnowTags,(IDProperty &
+  //       Omit<
+  //         {
+  //           name?: string | undefined;
+  //           icon?: string | undefined;
+  //           value?: string | undefined;
+  //         } & {},
+  //         never
+  //       >[])
+  //   | undefined;
+}) {
+  console.log(data);
   return (
     <section className="container py-4 lg:py-8">
       <h2 className="mb-6 text-2xl font-semibold">Things to know</h2>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 text-sm md:text-base">
-        {thingsToKnowItems.map(({ title, items }, index) => (
+      <div className="grid grid-cols-1 gap-8 text-sm md:grid-cols-3 md:text-base">
+        <div>
+          <h3 className="mb-4 font-semibold">Expedition General Info</h3>
+          <ul className="space-y-2">
+            {data?.generalInfo?.map((fact, index) => (
+              <div
+                key={index}
+                className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
+              >
+                <div className="col-span-2 flex items-center space-x-1">
+                  {fact.icon && <DynamicReactIcon name={fact.icon} />}
+                  {/* <span className="">{fact.icon}</span> */}
+
+                  <p className="text-xs md:text-sm lg:text-base">{fact.info}</p>
+                </div>
+              </div>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="mb-4 font-semibold">Health & Safety</h3>
+          <ul className="space-y-2">
+            {data?.health?.map((fact, index) => (
+              <div
+                key={index}
+                className="mb-2 grid grid-cols-2 space-x-3 lg:mb-4"
+              >
+                <div className="col-span-2 flex items-center space-x-1">
+                  {fact.icon && <DynamicReactIcon name={fact.icon} />}
+                  {/* <span className="">{fact.icon}</span> */}
+
+                  <p className="text-xs md:text-sm lg:text-base">{fact.info}</p>
+                </div>
+              </div>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="mb-4 font-semibold">Cancellation Policy</h3>
+          <p>{data.cancellationPolicy}</p>
+        </div>
+        {/* {data.map(({ title, items }, index) => (
           <div key={index}>
             <h3 className="mb-4 font-semibold">{title}</h3>
             <ul className="space-y-2">
@@ -72,7 +155,7 @@ export default function ThingsToKnow() {
               ))}
             </ul>
           </div>
-        ))}
+        ))} */}
       </div>
     </section>
   );

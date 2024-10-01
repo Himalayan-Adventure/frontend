@@ -1,18 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import { InfoBar } from "./info-bar";
-import { usePathname, useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { Text } from "@/components/ui/text";
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
+import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { InfoBar } from "./info-bar";
 
-import { LazyMotion, m, domMax, AnimatePresence } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { TUser } from "@/types/auth";
+import { LazyMotion, domMax, m } from "framer-motion";
+import { navLinks } from "@/config/navbar-links";
 export const Navbar = () => {
   const [scrollY, setScrollY] = useState(0);
 
@@ -29,6 +27,7 @@ export const Navbar = () => {
     window.addEventListener("scroll", scrollFn);
     return () => window.removeEventListener("scroll", scrollFn);
   }, []);
+
   return (
     <LazyMotion features={domMax}>
       <m.div
@@ -49,37 +48,9 @@ export const Navbar = () => {
     </LazyMotion>
   );
 };
+
+
 const Navlinks = ({ scrollY }: { scrollY: number }) => {
-  const navLinks = [
-    {
-      name: "Home",
-      href: "/home",
-    },
-    {
-      name: "Packages",
-      href: "/packages",
-    },
-    {
-      name: "About Us",
-      href: "/about-us",
-    },
-    {
-      name: "Blog",
-      href: "/blog",
-    },
-    {
-      name: "Services",
-      href: "/services",
-    },
-    {
-      name: "Shop",
-      href: "/shop",
-    },
-    {
-      name: "Our Team",
-      href: "/our-team",
-    },
-  ];
   const router = useRouter();
   const pathname = usePathname();
   // for handling navlinks overflow in mobile
@@ -98,7 +69,7 @@ const Navlinks = ({ scrollY }: { scrollY: number }) => {
       initial={{ opacity: 1, y: 0 }}
       animate={{
         opacity: scrollY < 20 ? 1 : 0,
-        y: scrollY < 20 ? 0 : -10,
+        y: scrollY < 20 ? 0 : '-100%',
         pointerEvents: scrollY < 20 ? "auto" : "none",
       }}
       exit={{ opacity: 0, top: -10 }}
