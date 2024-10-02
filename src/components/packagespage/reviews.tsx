@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaChevronRight, FaStar } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Link from "next/link";
 
 export default function Reviews() {
   const [showMoreReviews, setShowMoreReviews] = useState(false);
@@ -96,13 +97,15 @@ export default function Reviews() {
             >
               <p className="text-sm md:text-base">{rating.label}</p>
               <div className="flex items-center space-x-2">
-                <div className="h-1 w-16 md:w-24 overflow-hidden bg-gray-300">
+                <div className="h-1 w-16 overflow-hidden bg-gray-300 md:w-24">
                   <div
                     className="h-full bg-black"
                     style={{ width: `${(rating.score / 5) * 100}%` }}
                   />
                 </div>
-                <p className="text-sm md:text-base">{rating.score.toFixed(1)}</p>
+                <p className="text-sm md:text-base">
+                  {rating.score.toFixed(1)}
+                </p>
               </div>
             </div>
           ))}
@@ -116,9 +119,12 @@ export default function Reviews() {
                 <AvatarFallback>{review.name[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-sm font-semibold md:text-lg">
+                <Link
+                  href="/climber-profile"
+                  className="text-sm font-semibold md:text-lg"
+                >
                   {review.name}
-                </h3>
+                </Link>
                 <p className="text-xs text-gray-500">{review.date}</p>
                 <p className="mt-2 text-sm md:text-lg">
                   {expandedReviewIndex === index || review.text.length <= 100
@@ -144,7 +150,7 @@ export default function Reviews() {
         </div>
 
         <button
-          className="mt-6 block rounded-lg border border-black px-4 py-2 text-black hover:bg-gray-200 text-sm md:text-base"
+          className="mt-6 block rounded-lg border border-black px-4 py-2 text-sm text-black hover:bg-gray-200 md:text-base"
           onClick={() => setShowMoreReviews(!showMoreReviews)}
         >
           {showMoreReviews

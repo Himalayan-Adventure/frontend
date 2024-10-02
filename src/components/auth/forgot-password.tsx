@@ -29,8 +29,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 import { forgotPassword } from "@/server/auth/forgot-password";
+import { Oval } from "react-loader-spinner";
 export const ForgotPasswordDialog = () => {
   const [method, setMethod] = useState<"email" | "number">("email");
+  const [loading, setLoading] = useState(false);
   const { setType } = useCurrentAuthDialog();
   const emailForm = useForm<TForgotPwdEmailInput>({
     resolver: zodResolver(ForgotPwdEmailFormSchema),
@@ -47,16 +49,20 @@ export const ForgotPasswordDialog = () => {
   });
   async function onEmailSubmit() {
     try {
+      setLoading(true);
       const payload = emailForm.getValues();
       const res = await forgotPassword(payload);
       if (res.status === 200) {
+        setLoading(false);
         setType("otp");
         toast.success(`Email submitted`);
-      }else{
-        throw new Error(res.error)
+      } else {
+        setLoading(false);
+        throw new Error(res.error);
       }
     } catch (error) {
-      console.log(error)
+      setLoading(false);
+      console.log(error);
       toast.error(`Email not submitted`);
     }
   }
@@ -98,12 +104,12 @@ export const ForgotPasswordDialog = () => {
                     <FormControl>
                       <Input placeholder="john.doe@email.com" {...field} />
                     </FormControl>
-                    <p
+                    {/* <p
                       className="w-fit cursor-pointer hover:underline"
                       onClick={() => setMethod("number")}
                     >
                       Use phone instead?
-                    </p>
+                    </p> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -156,9 +162,17 @@ export const ForgotPasswordDialog = () => {
                 <Button
                   // disabled={!numberForm.formState.isValid}
                   type="submit"
-                  className="w-full self-end bg-foreground px-10 py-3 font-poppins font-bold sm:py-6"
+                  className="w-full gap-x-3 self-end bg-foreground px-10 py-3 font-poppins font-bold sm:py-6"
                 >
                   Continue
+                  {loading && (
+                    <Oval
+                      height="16"
+                      width="16"
+                      color="#FD9100"
+                      ariaLabel="oval-loading"
+                    />
+                  )}
                 </Button>
               </DialogFooter>
             </form>

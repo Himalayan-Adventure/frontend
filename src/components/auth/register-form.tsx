@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -25,8 +25,10 @@ import { register } from "@/server/auth/register-user";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
+import { Oval } from "react-loader-spinner";
 export const RegisterCard = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { setType, setDialogOpen, type, userType } = useCurrentAuthDialog();
   const form = useForm<TRegisterForm>({
     resolver: zodResolver(RegisterFormSchema),
@@ -40,6 +42,7 @@ export const RegisterCard = () => {
   });
   const [termsChecked, setTermsChecked] = useState<CheckedState>(false);
   async function onSubmit(values: TRegisterForm) {
+    setLoading(true);
     const payload = form.getValues();
     const res = await register({
       username: payload.username,
@@ -49,25 +52,26 @@ export const RegisterCard = () => {
       userType,
     });
     if (res.status === 200) {
-      toast.success("Successfully registered!");
+      setLoading(false);
+      toast.success(
+        "Successfully registered! Please check your email for confirmation",
+      );
       router.refresh();
-      // setDialogOpen(false);
       router.push("/");
     } else {
+      setLoading(false);
       console.log(res?.error?.error?.message);
       toast.error(`${res?.error?.error?.message}`);
     }
-    router.refresh();
   }
+  useEffect(()=>{
+    console.log(form.formState)
+  })
   const [showPassword, setShowPassword] = useState(false);
   const [showConfPassword, setShowConfPassword] = useState(false);
   return (
     <>
       <div>
-        {/* <DialogClose className="top-0" /> */}
-        {/* <span className="absolute left-4 top-4 cursor-pointer sm:left-8"> */}
-        {/*   <ArrowLeft strokeWidth={3} /> */}
-        {/* </span> */}
         <div className="my-4 [&>*]:text-neutral-900">
           <Text
             variant="display-sm"
@@ -116,6 +120,7 @@ export const RegisterCard = () => {
                   <FormControl>
                     <PhoneInput
                       defaultCountry="NP"
+                      initialValueFormat="national"
                       placeholder="977 **********"
                       {...field}
                       value={field.value as any}
@@ -224,10 +229,19 @@ export const RegisterCard = () => {
               <div className="mt-8 flex flex-col justify-center gap-y-2 sm:justify-center">
                 <Button
                   type="submit"
-                  disabled={!termsChecked || !form.formState.isValid}
-                  className="w-full self-end bg-foreground px-10 py-4 font-poppins font-bold sm:py-6"
+                  // disabled={!termsChecked || !form.formState.isValid}
+                  disabled={!termsChecked}
+                  className="w-full gap-x-3 self-end bg-foreground px-10 py-4 font-poppins font-bold sm:py-6"
                 >
                   Sign up
+                  {loading && (
+                    <Oval
+                      height="16"
+                      width="16"
+                      color="#FD9100"
+                      ariaLabel="three-dots-loading"
+                    />
+                  )}
                 </Button>
 
                 <Text

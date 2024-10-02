@@ -69,7 +69,6 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
         if (!res?.data) {
           return null;
         }
-        console.log(res.data);
 
         return res.data;
       } catch (error) {
@@ -157,7 +156,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                className="cursor-pointer"
+                  className="cursor-pointer"
                   onClick={async () => {
                     toast.promise(logout(), {
                       loading: "Logging out...",
@@ -211,25 +210,45 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               </Link>
               {user ? (
                 <span className="flex cursor-pointer items-start gap-x-4">
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <span className="flex flex-col items-start">
-                    <Text
-                      variant="text-md"
-                      className="max-w-60 truncate"
-                      medium
+                  <Link href="/profile">
+                    <Avatar>
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </Link>
+                  <span className="flex flex-col items-start gap-y-2">
+                    <Link href="/profile">
+                      <Text
+                        variant="text-md"
+                        className="max-w-60 truncate"
+                        medium
+                      >
+                        {user.username}
+                      </Text>
+                      <Text
+                        variant="text-sm"
+                        className="max-w-60 truncate text-gray-400"
+                        medium
+                      >
+                        {user.email}
+                      </Text>
+                    </Link>
+                    <Button
+                      onClick={async () => {
+                        toast.promise(logout(), {
+                          loading: "Logging out...",
+                          success: "Logged out successfully",
+                          error: "Failed to log out",
+                        });
+
+                        setTimeout(() => {
+                          window.location.reload();
+                        }, 1000);
+                      }}
                     >
-                      John Doe
-                    </Text>
-                    <Text
-                      variant="text-sm"
-                      className="max-w-60 truncate text-gray-400"
-                      medium
-                    >
-                      xxx.xxx@gmail.com
-                    </Text>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </Button>
                   </span>
                 </span>
               ) : (
