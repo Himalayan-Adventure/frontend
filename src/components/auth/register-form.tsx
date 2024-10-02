@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -64,6 +64,9 @@ export const RegisterCard = () => {
       toast.error(`${res?.error?.error?.message}`);
     }
   }
+  useEffect(()=>{
+    console.log(form.formState)
+  })
   const [showPassword, setShowPassword] = useState(false);
   const [showConfPassword, setShowConfPassword] = useState(false);
   return (
@@ -117,6 +120,7 @@ export const RegisterCard = () => {
                   <FormControl>
                     <PhoneInput
                       defaultCountry="NP"
+                      initialValueFormat="national"
                       placeholder="977 **********"
                       {...field}
                       value={field.value as any}
@@ -225,7 +229,8 @@ export const RegisterCard = () => {
               <div className="mt-8 flex flex-col justify-center gap-y-2 sm:justify-center">
                 <Button
                   type="submit"
-                  disabled={!termsChecked || !form.formState.isValid}
+                  // disabled={!termsChecked || !form.formState.isValid}
+                  disabled={!termsChecked}
                   className="w-full gap-x-3 self-end bg-foreground px-10 py-4 font-poppins font-bold sm:py-6"
                 >
                   Sign up
