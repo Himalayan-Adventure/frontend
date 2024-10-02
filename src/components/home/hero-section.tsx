@@ -84,7 +84,7 @@ export function HeroSection() {
         {/*
         Social icons
       */}
-        <aside className="absolute right-2 top-1/2 z-20 hidden h-screen -translate-y-1/2 flex-col justify-center gap-y-2 lg:flex">
+        {/* <aside className="absolute right-2 top-1/2 z-20 hidden h-screen -translate-y-1/2 flex-col justify-center gap-y-2 lg:flex">
           {socialIcons.map((item) => (
             <Link
               key={`social-link-${item.name}`}
@@ -98,7 +98,7 @@ export function HeroSection() {
               />
             </Link>
           ))}
-        </aside>
+        </aside> */}
         <m.header
           initial={{ opacity: 0, y: "-10%" }}
           animate={{ opacity: 1, y: 0 }}
