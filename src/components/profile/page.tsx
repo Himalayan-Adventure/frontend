@@ -21,16 +21,16 @@ import CommonBanner from "@/components/ui/common-banner";
 import bgImage from "/public/images/packagesBanner.png";
 import { socialIcons } from "@/config/constants";
 import { useEffect, useRef, useState } from "react";
-import { AboutCard } from "@/components/profile/about-card";
-import { ResumeCard } from "@/components/profile/resume-card";
-import { BlogCards } from "@/components/profile/blog";
-import { ContactCard } from "@/components/profile/contact-card";
+import { AboutCard } from "./about-card";
+import { ResumeCard } from "./resume-card";
+import { BlogCards } from "./blog";
+import { ContactCard } from "./contact-card";
+import { WorkCards } from "./work-card";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { useQuery } from "@tanstack/react-query";
 import { TUser } from "@/types/auth";
 import axios from "axios";
 import { Badge } from "@/components/ui/badge";
-import { WorkCards } from "@/components/profile/work-card";
 export default function ProfilePage() {
   const { data: user, isPending } = useQuery({
     queryKey: ["user"],

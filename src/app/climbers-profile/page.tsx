@@ -32,25 +32,36 @@ import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { WorkCards } from "@/components/profile/work-card";
 export default function ProfilePage() {
-  const { data: user, isPending } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      try {
-        const res = await axios.get<TUser>("/api/me");
+  const user: TUser = {
+    id: 1,
+    username: "Climber Person",
+    email: "climberiam@example.com",
+    provider: "local",
+    confirmed: true,
+    blocked: false,
+    createdAt: "2022-01-01T00:00:00.000Z",
+    updatedAt: "2022-01-01T00:00:00.000Z",
+  };
+  const isPending = false;
+  //   const { data: user, isPending } = useQuery({
+  //     queryKey: ["user"],
+  //     queryFn: async () => {
+  //       try {
+  //         const res = await axios.get<TUser>("/api/me");
 
-        if (!res?.data) {
-          return null;
-        }
-        console.log(res.data);
+  //         if (!res?.data) {
+  //           return null;
+  //         }
+  //         console.log(res.data);
 
-        return res.data;
-      } catch (error) {
-        console.error("Error fetching user data", error);
-        return null;
-      }
-    },
-    retry: 1,
-  });
+  //         return res.data;
+  //       } catch (error) {
+  //         console.error("Error fetching user data", error);
+  //         return null;
+  //       }
+  //     },
+  //     retry: 1,
+  //   });
   const [hideTabs, setHideTabs] = useState(false);
   const tabsTriggers = [
     {
@@ -88,11 +99,11 @@ export default function ProfilePage() {
   return (
     <section className="container font-poppins">
       <CommonBanner title="Profile" bgImage={bgImage} />
-      {!user?.confirmed && (
+      {/* {!user?.confirmed && (
         <Badge className="bg-red-100 text-black">
           Please confirm your email
         </Badge>
-      )}
+      )} */}
       <Tabs
         defaultValue="about"
         className="relative z-10 flex flex-col items-stretch gap-x-10 gap-y-10 lg:flex-row"
