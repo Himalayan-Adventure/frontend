@@ -22,7 +22,7 @@ export const OtpForm = () => {
             variant="display-sm"
             className="text-left font-poppins !text-xl font-bold capitalize sm:!text-2xl"
           >
-            Check gmail
+            Check email
           </Text>
         </DialogTitle>
         <DialogDescription className="text-left text-[13px] font-semibold">

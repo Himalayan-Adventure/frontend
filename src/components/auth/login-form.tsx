@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Oval } from "react-loader-spinner";
 import { DialogTitle } from "@/components/ui/dialog";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,7 @@ import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { type, setType, setDialogOpen } = useCurrentAuthDialog();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<TLoginForm>({
     resolver: zodResolver(LoginFormSchema),
@@ -32,12 +34,14 @@ export const LoginForm = () => {
     },
   });
   async function onSubmit(values: TLoginForm) {
+    setLoading(true);
     const payload = form.getValues();
     const res = await login({
       email: payload.email,
       password: payload.password,
     });
     if (res.status === 200) {
+      setLoading(false);
       toast.success("Successfully logged in!");
       router.refresh();
       if (window) {
@@ -46,6 +50,7 @@ export const LoginForm = () => {
       router.push("/");
       // setDialogOpen(false);
     } else {
+      setLoading(false);
       console.log(res?.error?.error?.message);
       if (
         res?.error?.error?.message === "Your account email is not confirmed"
@@ -132,9 +137,17 @@ export const LoginForm = () => {
             <Button
               type="submit"
               disabled={!form.formState.isValid}
-              className="w-full self-end bg-foreground px-10 py-6 font-poppins font-bold"
+              className="w-full self-end gap-x-3 bg-foreground px-10 py-6 font-poppins font-bold items-center"
             >
               Login
+              {loading && (
+                <Oval
+                  height="16"
+                  width="16"
+                  color="#FD9100"
+                  ariaLabel="oval-loading"
+                />
+              )}
             </Button>
             <Text
               variant="text-sm"
