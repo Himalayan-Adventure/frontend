@@ -1,46 +1,47 @@
-/* eslint-disable react/no-unescaped-entities */
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { usePlanContext } from "./plan-context";
 import { FaCalendarAlt, FaQuestionCircle } from "react-icons/fa";
 import { MdDateRange } from "react-icons/md";
 import { Calendar } from "../ui/calendar";
-import { DateRange } from "react-day-picker";
-import { usePlanContext } from "./plan-context";
-
-const options = [
-  {
-    icon: <FaCalendarAlt />,
-    name: "Exact date",
-  },
-  {
-    icon: <MdDateRange />,
-    name: "Flexible Date Range",
-  },
-  {
-    icon: <FaQuestionCircle />,
-    name: "Decide Later",
-  },
-];
 
 export default function DateSelection() {
-  const { updatePlanData } = usePlanContext();
-  const [selectedOption, setSelectedOption] = useState<string | null>(
-    "Exact date",
-  );
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const options = [
+    {
+      icon: <FaCalendarAlt />,
+      name: "Exact date",
+    },
+    {
+      icon: <MdDateRange />,
+      name: "Flexible Date Range",
+    },
+    {
+      icon: <FaQuestionCircle />,
+      name: "Decide Later",
+    },
+  ];
+
+  const {
+    setTravelDates,
+    selectedOption,
+    setSelectedOption,
+    date,
+    setDate,
+    dateRange,
+    setDateRange,
+  } = usePlanContext();
 
   useEffect(() => {
     if (selectedOption === "Exact date" && date) {
       const dateString = date.toISOString().split("T")[0];
-      updatePlanData("travelDates", dateString);
+      setTravelDates(dateString);
     } else if (selectedOption === "Flexible Date Range" && dateRange) {
       const startDateString = dateRange.from?.toISOString().split("T")[0];
       const endDateString = dateRange.to?.toISOString().split("T")[0];
-      updatePlanData("travelDates", `${startDateString} to ${endDateString}`);
+      setTravelDates(`${startDateString} to ${endDateString}`);
     } else if (selectedOption === "Decide Later") {
-      updatePlanData("travelDates", "Decide Later");
+      setTravelDates("Decide Later");
     }
-  }, [selectedOption, date, dateRange, updatePlanData]);
+  }, [selectedOption, date, dateRange, setTravelDates]);
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -75,7 +76,6 @@ export default function DateSelection() {
         ))}
       </div>
 
-      {/* Conditional content rendering based on selected option */}
       <div className="mt-8">
         {selectedOption === "Exact date" && (
           <div className="rounded-lg bg-white p-4 md:shadow-md">

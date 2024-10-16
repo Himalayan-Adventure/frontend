@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FaQuestion, FaUser } from "react-icons/fa";
 import { MdGroups2 } from "react-icons/md";
 import { usePlanContext } from "./plan-context";
@@ -19,12 +18,10 @@ const options = [
 ];
 
 export default function Travel() {
-  const { updatePlanData } = usePlanContext();
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const { selectedTravelMode, setSelectedTravelMode } = usePlanContext();
 
   const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    updatePlanData("travel", option);
+    setSelectedTravelMode(option); // Update the travel mode state
   };
 
   return (
@@ -37,7 +34,7 @@ export default function Travel() {
           <div
             key={option.name}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out lg:p-4 ${
-              selectedOption === option.name
+              selectedTravelMode === option.name
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
             }`}
@@ -45,7 +42,9 @@ export default function Travel() {
           >
             <span
               className={`text-xl lg:text-4xl ${
-                selectedOption === option.name ? "text-white" : "text-primary"
+                selectedTravelMode === option.name
+                  ? "text-white"
+                  : "text-primary"
               }`}
             >
               {option.icon}

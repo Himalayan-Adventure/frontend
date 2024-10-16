@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { FaHelicopter, FaQuestion, FaUser } from "react-icons/fa";
+import { usePlanContext } from "./plan-context";
+import { FaHelicopter } from "react-icons/fa";
 import { MdGroups2, MdOutlineFestival, MdParagliding } from "react-icons/md";
 import { IoIosPersonAdd } from "react-icons/io";
-import { usePlanContext } from "./plan-context";
 
 const options = [
   {
@@ -24,13 +23,10 @@ const options = [
 ];
 
 export default function CustomizeExperience() {
-  const { updatePlanData } = usePlanContext();
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const { experience, setExperience } = usePlanContext();
 
   const handleOptionClick = (option: string) => {
-    console.log("Option clicked:", option);
-    setSelectedOption(option);
-    updatePlanData("experience", option);
+    setExperience(option);
   };
 
   return (
@@ -43,7 +39,7 @@ export default function CustomizeExperience() {
           <div
             key={option.name}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out md:p-4 ${
-              selectedOption === option.name
+              experience === option.name
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
             }`}
@@ -51,7 +47,7 @@ export default function CustomizeExperience() {
           >
             <span
               className={`text-xl lg:text-4xl ${
-                selectedOption === option.name ? "text-white" : "text-primary"
+                experience === option.name ? "text-white" : "text-primary"
               }`}
             >
               {option.icon}

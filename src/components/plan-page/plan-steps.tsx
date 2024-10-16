@@ -2,9 +2,10 @@
 import { stepsData } from "@/data/planSteps";
 import { useState, useMemo } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { usePlanContext } from "./plan-context";
 
 export default function PlanSteps() {
-  const [selectedStep, setSelectedStep] = useState("Travel");
+  const { selectedStep, setSelectedStep } = usePlanContext();
 
   const handleStepChange = (direction: "next" | "prev") => {
     const currentIndex = stepsData.findIndex(
@@ -31,7 +32,7 @@ export default function PlanSteps() {
 
   return (
     <section className="container relative -mt-8 flex flex-row space-x-6 lg:flex-col lg:space-x-0">
-      <div className="w-96 lg:w-auto">
+      <div className=" lg:w-auto">
         <div className="sticky top-32 lg:static">
           <div className="relative mb-8 flex flex-col space-y-6 overflow-hidden lg:flex-row lg:justify-between lg:space-x-6 lg:space-y-0">
             {stepsData.map((step, index) => {
@@ -63,9 +64,9 @@ export default function PlanSteps() {
 
       {/* Two-column layout: Description and Options */}
       <div className="mt-4 grid grid-cols-1 gap-8 lg:mt-8 lg:grid-cols-3">
-        <div className="order-2 rounded-lg bg-white p-3 shadow-lg shadow-gray-700 lg:order-1 lg:col-span-1 lg:rounded-3xl lg:p-6 lg:shadow-2xl">
-          <h3 className="mb-4 text-2xl font-semibold">Description</h3>
-          <p className="text-justify text-sm text-gray-700 lg:text-base">
+        <div className="order-2 lg:min-h-96 rounded-lg bg-white p-3 shadow-lg shadow-gray-700 lg:order-1 lg:col-span-1 lg:rounded-3xl lg:p-6 lg:shadow-2xl">
+          <h3 className="mb-4 text-base lg:text-xl font-semibold">Description</h3>
+          <p className="lg:text-justify text-sm text-gray-700 lg:text-base">
             {currentStep?.description}
           </p>
         </div>

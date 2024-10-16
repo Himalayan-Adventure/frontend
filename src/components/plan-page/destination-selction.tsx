@@ -1,39 +1,40 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 import { useState } from "react";
-import { FaFlag } from "react-icons/fa";
 import { usePlanContext } from "./plan-context";
 
 const options = [
   {
     flagImage: "/images/nepalflag.png",
-    mapImage: "/images/nepalmap.png",
+    mapImage: "/images/nepalmap.svg",
     name: "Nepal",
   },
   {
     flagImage: "/images/chinaflag.png",
-    mapImage: "/images/chinaMap.png",
+    mapImage: "/images/chinamap.svg",
     name: "China",
   },
   {
     flagImage: "/images/indiaflag.png",
-    mapImage: "/images/indiamap.png",
+    mapImage: "/images/indiamap.svg",
     name: "India",
   },
   {
     flagImage: "/images/pakistanflag.png",
-    mapImage: "/images/pakistanmap.png",
+    mapImage: "/images/pakistanmap.svg",
     name: "Pakistan",
   },
 ];
 
 export default function DestinationSelection() {
-  const { updatePlanData } = usePlanContext();
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const { destination, setDestination } = usePlanContext();
+  const [selectedOption, setSelectedOption] = useState<string | null>(
+    destination || null,
+  );
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
-    updatePlanData("destination", option);
+    setDestination(option);
   };
 
   const selectedOptionData = options.find(
@@ -49,7 +50,7 @@ export default function DestinationSelection() {
         {options.map((option) => (
           <div
             key={option.name}
-            className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 md:p-4 shadow-lg transition-colors duration-300 ease-in-out ${
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out md:p-4 ${
               selectedOption === option.name
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
@@ -72,7 +73,7 @@ export default function DestinationSelection() {
             <img
               src={selectedOptionData.mapImage}
               alt={`${selectedOptionData.name} map`}
-              className="mx-auto w-auto"
+              className="mx-auto h-64 w-64 object-contain"
             />
           </div>
         )}
