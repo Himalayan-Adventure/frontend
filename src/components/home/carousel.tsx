@@ -63,13 +63,13 @@ export default function HomeCarousel() {
         : [...prevFavorites, index],
     );
   };
-  if (status === "pending") {
-    return <PackageCardSkeleton />;
-  }
+  // if (status === "pending") {
+  //   return <PackageCardSkeleton />;
+  // }
 
-  if (status === "error") {
-    return <Text variant="display-md">No packages found</Text>;
-  }
+  // if (status === "error") {
+  //   return <Text variant="display-md">No packages found</Text>;
+  // }
   return (
     <section>
       <LazyMotion features={domMax}>
@@ -93,7 +93,7 @@ export default function HomeCarousel() {
               {seasonsIconMap.map((season) => (
                 <div
                   key={season.name}
-                  className="max-w-[60px] md:max-w-[192px] gap-x-4 overflow-x-hidden md:gap-x-6 lg:gap-x-10 cursor-pointer"
+                  className="max-w-[60px] cursor-pointer gap-x-4 overflow-x-hidden md:max-w-[192px] md:gap-x-6 lg:gap-x-10"
                   onClick={() =>
                     season.name !== activeSeason
                       ? setActiveSeason(season.name as TSeason)
@@ -109,46 +109,55 @@ export default function HomeCarousel() {
           </div>
         </m.section>
       </LazyMotion>
-      <LazyMotion features={domMax}>
-        <m.section
-          initial={{ opacity: 0, y: "-10%" }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.8 }}
-          transition={{ duration: 0.5 }}
-          className="container flex justify-center py-8 lg:py-16"
-        >
-          <Carousel
-            opts={{
-              align: "start",
-            }}
-            className="w-full"
+
+      {status === "pending" ? (
+        <PackageCardSkeleton />
+      ) : status === "error" ? (
+        <Text variant="display-md">No packages found</Text>
+      ) : (
+        <LazyMotion features={domMax}>
+          <m.section
+            initial={{ opacity: 0, y: "-10%" }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.8 }}
+            transition={{ duration: 0.5 }}
+            className="container flex justify-center py-8 lg:py-16"
           >
-            <CarouselContent>
-              {activeSeason === "all"
-                ? data?.data.map((pkg, index) => (
-                    <CarouselItem
-                      key={index}
-                      className="md:basis-1/2 lg:basis-1/4"
-                    >
-                      <PackageCard pkg={pkg} variant="home" />
-                    </CarouselItem>
-                  ))
-                : data.data
-                    ?.filter((pkg) => pkg?.attributes?.season === activeSeason)
-                    .map((pkg, index) => (
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full"
+            >
+              <CarouselContent>
+                {activeSeason === "all"
+                  ? data?.data.map((pkg, index) => (
                       <CarouselItem
                         key={index}
                         className="md:basis-1/2 lg:basis-1/4"
                       >
                         <PackageCard pkg={pkg} variant="home" />
                       </CarouselItem>
-                    ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </m.section>
-      </LazyMotion>
+                    ))
+                  : data.data
+                      ?.filter(
+                        (pkg) => pkg?.attributes?.season === activeSeason,
+                      )
+                      .map((pkg, index) => (
+                        <CarouselItem
+                          key={index}
+                          className="md:basis-1/2 lg:basis-1/4"
+                        >
+                          <PackageCard pkg={pkg} variant="home" />
+                        </CarouselItem>
+                      ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </m.section>
+        </LazyMotion>
+      )}
     </section>
   );
 }
