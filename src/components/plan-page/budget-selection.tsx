@@ -19,84 +19,83 @@ const options = [
 ];
 
 export default function BudgetSelection() {
-  const { updatePlanData } = usePlanContext();
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [fixedAmount, setFixedAmount] = useState<number | "">("");
-  const [minBudget, setMinBudget] = useState<number>(1000);
-  const [maxBudget, setMaxBudget] = useState<number>(150000);
-  const [tripPlanned, setTripPlanned] = useState<boolean>(false);
+  const {
+    selectedBudgetOption,
+    setSelectedBudgetOption,
+    fixedAmount,
+    setFixedAmount,
+    minBudget,
+    setMinBudget,
+    maxBudget,
+    setMaxBudget,
+    setBudget, // Added this line to include setBudget
+  } = usePlanContext();
+
+  const [tripPlanned, setTripPlanned] = useState(false);
 
   const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
+    setSelectedBudgetOption(option);
     setTripPlanned(false);
-    if (option === "Fixed Budget") {
-      updatePlanData("budget", fixedAmount.toString());
-    } else if (option === "Set your Budget Range") {
-      updatePlanData("budget", `$ ${minBudget} to $ ${maxBudget}`);
-    } else if (option === "I'll decide later") {
-      updatePlanData("budget", "I'll decide later");
-    }
 
-    if (option !== "Fixed Budget") {
+    if (option === "Fixed Budget") {
       setFixedAmount("");
     }
   };
 
   const handlePlanTrip = () => {
-    console.log(
-      "Planning trip with:",
-      selectedOption,
-      fixedAmount,
-      minBudget,
-      maxBudget,
-    );
-
-    if (selectedOption === "Fixed Budget") {
-      updatePlanData("budget", fixedAmount.toString());
-    } else if (selectedOption === "Set your Budget Range") {
-      updatePlanData("budget", `${minBudget} to ${maxBudget}`);
-    } else if (selectedOption === "I'll decide later") {
-      updatePlanData("budget", "I'll decide later");
+    if (selectedBudgetOption === "Fixed Budget") {
+      if (!fixedAmount || fixedAmount <= 0) {
+        alert("Please enter a valid fixed amount.");
+        return;
+      }
+      setBudget(fixedAmount);
+      setTripPlanned(true);
+    } else if (selectedBudgetOption === "Set your Budget Range") {
+      if (!minBudget || !maxBudget || minBudget >= maxBudget) {
+        alert("Please set a valid budget range.");
+        return;
+      }
+      setBudget({ min: minBudget, max: maxBudget });
+      setTripPlanned(true);
+    } else if (selectedBudgetOption === "I'll decide later") {
+      setBudget(null);
+      setTripPlanned(true);
     }
-
-    setTripPlanned(true);
   };
-
-  const primaryColor = "#FD9100";
 
   return (
     <div className="p-4">
-      <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-        Budget Selection
+      <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
+        Budget
       </h2>
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
         {options.map((option) => (
           <div
             key={option.name}
-            className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-3 shadow-xl transition-transform duration-300 hover:scale-105 md:p-5 ${
-              selectedOption === option.name
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out md:p-4 ${
+              selectedBudgetOption === option.name
                 ? "bg-primary text-white"
-                : "bg-white hover:bg-gray-100"
+                : "bg-gray-100 hover:bg-gray-200"
             }`}
             onClick={() => handleOptionClick(option.name)}
           >
             <span
-              className={`text-4xl ${
-                selectedOption === option.name ? "text-white" : "text-primary"
+              className={`text-2xl lg:text-4xl ${
+                selectedBudgetOption === option.name
+                  ? "text-white"
+                  : "text-primary"
               }`}
             >
               {option.icon}
             </span>
             <hr className="my-2 w-full border-gray-300" />
-            <span className="text-sm font-medium md:text-lg">
-              {option.name}
-            </span>
+            <span className="text-sm md:text-base">{option.name}</span>
           </div>
         ))}
       </div>
 
       <div className="mt-10 text-center">
-        {selectedOption === "Fixed Budget" && (
+        {selectedBudgetOption === "Fixed Budget" && (
           <div className="w-full px-4">
             <input
               type="number"
@@ -114,14 +113,14 @@ export default function BudgetSelection() {
           </div>
         )}
 
-        {selectedOption === "Set your Budget Range" && (
+        {selectedBudgetOption === "Set your Budget Range" && (
           <div>
-            <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="mt-6 flex flex-row items-center justify-center gap-4">
               <div className="w-full">
                 <input
                   type="range"
-                  min="1000"
-                  max="150000"
+                  min="500"
+                  max="15000"
                   value={minBudget}
                   onChange={(e) => setMinBudget(Number(e.target.value))}
                   className="custom-slider w-full"
@@ -131,8 +130,8 @@ export default function BudgetSelection() {
               <div className="w-full">
                 <input
                   type="range"
-                  min="1000"
-                  max="150000"
+                  min="500"
+                  max="15000"
                   value={maxBudget}
                   onChange={(e) => setMaxBudget(Number(e.target.value))}
                   className="custom-slider -ml-12 w-full"
@@ -158,30 +157,30 @@ export default function BudgetSelection() {
           </div>
         )}
 
-        {selectedOption === "I'll decide later" && (
+        {selectedBudgetOption === "I'll decide later" && (
           <div className="mt-4 font-medium text-gray-700">
             Feel free to explore more options!
           </div>
         )}
-      </div>
 
-      {tripPlanned && (
-        <div className="mt-8 text-center">
-          {selectedOption === "Fixed Budget" ? (
-            <p className="text-xl font-semibold">
-              You have fixed a budget of ${fixedAmount}.
-            </p>
-          ) : selectedOption === "Set your Budget Range" ? (
-            <p className="text-xl font-semibold">
-              You have set a budget range from ${minBudget} to ${maxBudget}.
-            </p>
-          ) : (
-            <p className="text-xl font-semibold">
-              You can decide your budget later.
-            </p>
-          )}
-        </div>
-      )}
+        {tripPlanned && (
+          <div className="mt-8 text-center">
+            {selectedBudgetOption === "Fixed Budget" ? (
+              <p className="text-xl font-semibold">
+                You have fixed a budget of ${fixedAmount}.
+              </p>
+            ) : selectedBudgetOption === "Set your Budget Range" ? (
+              <p className="text-xl font-semibold">
+                You have set a budget range from ${minBudget} to ${maxBudget}.
+              </p>
+            ) : (
+              <p className="text-xl font-semibold">
+                You can decide your budget later.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

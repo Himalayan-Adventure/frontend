@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaBook, FaRegMinusSquare } from "react-icons/fa";
 import { GiCampCookingPot } from "react-icons/gi";
 import { RiVipFill } from "react-icons/ri";
-import { usePlanContext } from "./plan-context";
+import { usePlanContext } from "./plan-context"; // Importing context
 
 const options = [
   {
@@ -26,22 +26,20 @@ const options = [
 ];
 
 export default function AccomodationSelection() {
-  const { updatePlanData } = usePlanContext();
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const { accommodation, setAccommodation } = usePlanContext(); // Destructuring accommodation and setter from context
+  const [selectedOption, setSelectedOption] = useState<string | null>(
+    accommodation || null,
+  ); // Initialize with context state
 
   const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    updatePlanData("accommodation", option);
+    setSelectedOption(option); // Update local component state
+    setAccommodation(option); // Update context state
   };
-
-  const selectedOptionData = options.find(
-    (option) => option.name === selectedOption,
-  );
 
   return (
     <div className="p-2 lg:p-4">
       <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        Accomodation Preferences
+        Accommodation Preferences
       </h2>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
         {options.map((option) => (

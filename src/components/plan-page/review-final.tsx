@@ -1,19 +1,22 @@
+// Existing import statements
 import { useState } from "react";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { FaRedo } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
-import { usePlanContext } from "./plan-context";
+import MakeAdjustments from "./make-adjustments";
+import YourDetailsForm from "./personal-details-form";
+import Details from "./details";
 
 const options = [
   {
     icon: <FaRedo />,
     name: "Make Adjustments",
-    content: "Here you can make adjustments to your travel plans.",
+    content: <MakeAdjustments />,
   },
   {
     icon: <BsPatchCheckFill />,
     name: "Check Your Itinerary",
-    content: <Details />,
+    content: null,
   },
   {
     icon: <TbListDetails />,
@@ -34,6 +37,9 @@ export default function ReviewFinal() {
   const selectedContent = options.find(
     (option) => option.name === selectedOption,
   )?.content;
+
+  // Update the content for "Check Your Itinerary" to include the setSelectedOption prop
+  options[1].content = <Details setSelectedOption={setSelectedOption} />;
 
   return (
     <div className="">
@@ -82,110 +88,6 @@ export default function ReviewFinal() {
             </div>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function Details() {
-  const { planData } = usePlanContext();
-
-  return (
-    <div className="grid gap-6 text-left md:grid-cols-2 md:gap-8">
-      <div className="flex flex-col">
-        <h2 className="font-semibold">Travel Mode:</h2>
-        <p className="text-gray-700">{planData?.travel}</p>
-      </div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold">Budget:</h2>
-        <p className="text-gray-700">{planData?.budget}</p>
-      </div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold">Departure:</h2>
-        <p className="text-gray-700">{planData?.travelDates}</p>
-      </div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold">Custom Preferences:</h2>
-        <p className="text-gray-700">{planData?.experience}</p>
-      </div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold">Destination:</h2>
-        <p className="text-gray-700">{planData?.destination}</p>
-      </div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold">Accommodation:</h2>
-        <p className="text-gray-700">{planData?.accommodation}</p>
-      </div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold">Package:</h2>
-        <p className="text-gray-700">{planData?.package}</p>
-      </div>
-    </div>
-  );
-}
-
-function YourDetailsForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleGetQuotes = () => {
-    console.log("Get Quotes clicked", formData);
-  };
-
-  const handleOptimizePackage = () => {
-    console.log("Optimize Package clicked", formData);
-  };
-
-  return (
-    <div className="flex flex-col space-y-4">
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={formData.name}
-        onChange={handleChange}
-        className="rounded-lg border border-gray-100 bg-gray-200 p-2 px-3 pt-4 text-sm text-black placeholder-gray-700 shadow-inner shadow-gray-400 md:px-6 md:text-base"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-        className="rounded-lg border border-gray-100 bg-gray-200 p-2 px-3 pt-4 text-sm text-black placeholder-gray-700 shadow-inner shadow-gray-400 md:px-6 md:text-base"
-        required
-      />
-      <textarea
-        name="message"
-        placeholder="Message"
-        value={formData.message}
-        onChange={handleChange}
-        className="resize-none rounded-lg border border-gray-100 bg-gray-200 p-2 px-3 pt-4 text-sm text-black placeholder-gray-700 shadow-inner shadow-gray-400 md:px-6 md:text-base"
-        rows={6}
-        required
-      />
-      <div className="flex justify-center space-x-2">
-        <button
-          onClick={handleGetQuotes}
-          className="rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base"
-        >
-          Get Quotes
-        </button>
-        <button
-          onClick={handleOptimizePackage}
-          className="rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base"
-        >
-          Optimize Package
-        </button>
       </div>
     </div>
   );
