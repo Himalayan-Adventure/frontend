@@ -1,3 +1,4 @@
+"use client";
 import BlogCard from "@/components/blog/blog-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -92,7 +93,7 @@ const WorkCard = ({ work, index }: { work: any; index: number }) => {
         width="533"
         height="300"
         alt={`image of work titled ${work.title}`}
-        className="basis-1/2 saturate-0 w-full"
+        className="w-full basis-1/2 saturate-0"
       />
       <div
         className={cn(

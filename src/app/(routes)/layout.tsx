@@ -38,23 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          `min-h-screen bg-background font-overpass antialiased`,
-          overpass.variable,
-          poppins.variable,
-        )}
-      >
-        <Suspense>
-          <AppProgressBar />
-        </Suspense>
-        <Toaster richColors />
-        <Providers>
-          {children}
-          <Footer />
-        </Providers>
-      </body>
-    </html>
+    <main>
+      <Suspense>
+        <Navbar />
+      </Suspense>
+      {children}
+    </main>
   );
 }

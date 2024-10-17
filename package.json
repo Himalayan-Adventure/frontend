@@ -13,6 +13,7 @@
   "dependencies": {
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@headlessui/react": "^2.1.10",
     "@hookform/resolvers": "^3.9.0",
     "@loadable/component": "^5.16.4",
     "@radix-ui/react-accordion": "^1.2.0",
