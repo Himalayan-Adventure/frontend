@@ -8,8 +8,13 @@ import CommonBanner from "@/components/ui/common-banner";
 import { getAboutUs } from "@/server/about-us/get-aboutUs";
 import bgImage from "/public/images/packagesBanner.png";
 
-export default async function AboutUs() {
+const AboutUs = async () => {
   const data = await getAboutUs();
+
+  if (!data || !data.data || !data.data.attributes) {
+    return <CommonBanner title="Something Went Wrong" bgImage={bgImage} />;
+  }
+
   return (
     <main className="font-poppins">
       <CommonBanner title="About Us" bgImage={bgImage} />
@@ -29,4 +34,6 @@ export default async function AboutUs() {
       <Contact />
     </main>
   );
-}
+};
+
+export default AboutUs;
