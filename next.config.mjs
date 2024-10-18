@@ -16,6 +16,10 @@ const nextConfig = {
         protocol:"https",
         hostname:"unsplash.it",
       },
+      {
+        protocol:"https",
+        hostname:"s3-alpha-sig.figma.com",
+      },
     ],
   },
 };
