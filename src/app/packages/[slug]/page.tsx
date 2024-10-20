@@ -71,7 +71,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
   return (
     <main>
       <CommonBanner title={`Package ${pkg.name}`} bgImage={bgImage} />
-      <section className="container overflow-hidden">
+      <section className="container overflow-hidden lg:mt-40">
         <div className="grid gap-x-4 space-y-8 md:gap-x-8 lg:grid-cols-3 lg:gap-x-24 lg:space-y-0">
           <div className="relative space-y-8 lg:col-span-2">
             <Gallery images={images} />
@@ -147,7 +147,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
       <Reviews />
       <SimilarPackages />
       <HostInfo />
-      <ThingsToKnow data={thingsToKnowData}/>
+      <ThingsToKnow data={thingsToKnowData} />
     </main>
   );
 }
