@@ -16,7 +16,7 @@ export default function Departure({
   type = "default",
   id,
 }: DepartureProps) {
-  const { date, duration, season, altitude, grade, departure } = data;
+  const {  duration, season, altitude, grade, departure } = data;
 
   return (
     <div className="relative space-y-4">
@@ -72,7 +72,7 @@ export default function Departure({
           </p>
           <p className="flex items-center space-x-2 text-sm font-medium">
             <MdTimelapse size={20} />
-            <span>Duration: {wordsToNumbers(duration)} days</span>
+            <span>Duration: {duration} days</span>
           </p>
           <p className="flex items-center space-x-2 text-sm font-medium">
             <BsBarChartFill size={20} />

@@ -945,56 +945,56 @@ export interface ApiPackagePackage extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String & Attribute.Required;
+    country: Attribute.String & Attribute.Required;
     region: Attribute.String & Attribute.Required;
-    type: Attribute.Enumeration<['Premium', 'Elite', 'Basic']> &
-      Attribute.Required &
-      Attribute.DefaultTo<'Basic'>;
-    tags: Attribute.Enumeration<['tag1', 'tag2', 'tag3', 'tag4']>;
-    packageTag: Attribute.Enumeration<['Super', 'Ultra', 'Normal']>;
-    map: Attribute.String & Attribute.Required;
-    date: Attribute.Date;
-    season: Attribute.Enumeration<['summer', 'winter', 'monsoon', 'autumn']>;
-    duration: Attribute.Enumeration<
-      ['thirty', 'twenty', 'fifteen', 'ten', 'seven', 'three', 'one']
+    package_types: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::package-type.package-type'
     >;
-    grade: Attribute.Enumeration<
-      ['extreme', 'challenging', 'thrilling', 'fun']
+    tags: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::tag.tag'
     >;
     image: Attribute.Media<'images', true>;
-    host: Attribute.Media<'images'>;
-    hostname: Attribute.String;
-    description: Attribute.RichText;
-    faq: Attribute.Component<'faq.faq', true>;
-    difficultyLevel: Attribute.Enumeration<
-      ['beginner', 'intermediate', 'experienced']
-    > &
-      Attribute.DefaultTo<'beginner'>;
-    planType: Attribute.Enumeration<['trekking', 'climbing']>;
-    numberOfClimbers: Attribute.BigInteger & Attribute.DefaultTo<'0'>;
-    numberOfLeaders: Attribute.Integer & Attribute.DefaultTo<1>;
-    includedFacilities: Attribute.Blocks;
-    excludedFacilities: Attribute.Blocks;
-    itenary: Attribute.Component<'package-itenary.itenary', true>;
-    expeditionGeneral: Attribute.Component<
-      'package-things-to-know.things-to-know',
-      true
-    >;
-    healthSafety: Attribute.Component<
-      'package-things-to-know.things-to-know',
-      true
-    >;
-    cancellation: Attribute.String;
-    gears: Attribute.Blocks;
-    healthAndSafety: Attribute.Blocks;
-    facts: Attribute.Component<'package-facts.facts', true>;
-    departure: Attribute.Component<'package-departure.departure', true>;
-    altitude: Attribute.BigInteger & Attribute.Required;
-    offer: Attribute.Component<'package-things-to-know.things-to-know', true>;
-    users_permissions_user: Attribute.Relation<
+    brief_description: Attribute.Text & Attribute.Required;
+    long_description: Attribute.Blocks;
+    package_name: Attribute.String & Attribute.Required;
+    package_tags: Attribute.Relation<
       'api::package.package',
-      'oneToOne',
-      'plugin::users-permissions.user'
+      'manyToMany',
+      'api::package-tag.package-tag'
+    >;
+    tailor_tags: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::tailor-tag.tailor-tag'
+    >;
+    sponsor_host: Attribute.Component<'package-sponsor-host.sponsor-host'>;
+    adventure_specification: Attribute.Component<'package-adventure-specifications.adventure-specifications'>;
+    package_categories: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::package-category.package-category'
+    >;
+    itinerary: Attribute.Component<'package-itinerary.itinerary'>;
+    adventure_customization: Attribute.Component<'package-adventure-customization.adventure-customization'>;
+    logistics: Attribute.Component<'package-logistics.logistics'>;
+    accommodation: Attribute.Component<'package-accommodation.accommodation'>;
+    cost_and_budgeting: Attribute.Component<
+      'package-cost-and-budgeting.cost-and-budgeting',
+      true
+    >;
+    faq: Attribute.Component<'faq.faq', true>;
+    package_host: Attribute.Component<'package-host.package-host'>;
+    hosted_by: Attribute.Component<'package-hosted-by.hosted-by'>;
+    trip_facts: Attribute.Component<'package-trip-facts.trip-facts', true>;
+    offer: Attribute.Component<'package-trip-offer.what-we-offfer', true>;
+    visuals: Attribute.Component<'package-visuals.maps-and-visuals', true>;
+    things_to_know: Attribute.Component<
+      'package-things-to-know.things-to-know',
+      true
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1007,6 +1007,112 @@ export interface ApiPackagePackage extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::package.package',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageCategoryPackageCategory
+  extends Schema.CollectionType {
+  collectionName: 'package_categories';
+  info: {
+    singularName: 'package-category';
+    pluralName: 'package-categories';
+    displayName: 'Package Category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    packages: Attribute.Relation<
+      'api::package-category.package-category',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-category.package-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-category.package-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageTagPackageTag extends Schema.CollectionType {
+  collectionName: 'package_tags';
+  info: {
+    singularName: 'package-tag';
+    pluralName: 'package-tags';
+    displayName: 'Package Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    packages: Attribute.Relation<
+      'api::package-tag.package-tag',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-tag.package-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-tag.package-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageTypePackageType extends Schema.CollectionType {
+  collectionName: 'package_types';
+  info: {
+    singularName: 'package-type';
+    pluralName: 'package-types';
+    displayName: 'Package Type';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    packages: Attribute.Relation<
+      'api::package-type.package-type',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-type.package-type',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-type.package-type',
       'oneToOne',
       'admin::user'
     > &
@@ -1081,6 +1187,68 @@ export interface ApiShopCategoryShopCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiTagTag extends Schema.CollectionType {
+  collectionName: 'tags';
+  info: {
+    singularName: 'tag';
+    pluralName: 'tags';
+    displayName: 'Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    packages: Attribute.Relation<
+      'api::tag.tag',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTailorTagTailorTag extends Schema.CollectionType {
+  collectionName: 'tailor_tags';
+  info: {
+    singularName: 'tailor-tag';
+    pluralName: 'tailor-tags';
+    displayName: 'Tailor Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    packages: Attribute.Relation<
+      'api::tailor-tag.tailor-tag',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::tailor-tag.tailor-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::tailor-tag.tailor-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiWorkWork extends Schema.CollectionType {
   collectionName: 'works';
   info: {
@@ -1130,8 +1298,13 @@ declare module '@strapi/types' {
       'api::blog.blog': ApiBlogBlog;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::package.package': ApiPackagePackage;
+      'api::package-category.package-category': ApiPackageCategoryPackageCategory;
+      'api::package-tag.package-tag': ApiPackageTagPackageTag;
+      'api::package-type.package-type': ApiPackageTypePackageType;
       'api::shop.shop': ApiShopShop;
       'api::shop-category.shop-category': ApiShopCategoryShopCategory;
+      'api::tag.tag': ApiTagTag;
+      'api::tailor-tag.tailor-tag': ApiTailorTagTailorTag;
       'api::work.work': ApiWorkWork;
     }
   }

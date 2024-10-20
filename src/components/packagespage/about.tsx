@@ -1,8 +1,9 @@
 "use client";
+import { BlocksContent, BlocksRenderer } from "@strapi/blocks-react-renderer";
 import React, { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-export default function About({ desc }: { desc?: string }) {
+export default function About({ desc }: { desc?: BlocksContent }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpansion = () => {
@@ -21,7 +22,7 @@ export default function About({ desc }: { desc?: string }) {
               isExpanded ? "line-clamp-none" : "line-clamp-3"
             }`}
           >
-            {desc}
+            <BlocksRenderer content={desc} />
           </p>
           <button
             onClick={toggleExpansion}

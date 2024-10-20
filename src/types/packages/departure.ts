@@ -1,8 +1,8 @@
 import { Attribute } from "@strapi/strapi";
 type DateValue = globalThis.Date | string;
 export type TDepartureData = {
-  date: string;
-  duration: string;
+  // date: string;
+  duration: string | number;
   season: string;
   altitude: string;
   grade: string;
