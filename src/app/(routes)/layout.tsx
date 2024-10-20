@@ -1,25 +1,8 @@
 import type { Metadata } from "next";
-import { Overpass, Poppins } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
+import "@/app/globals.css";
 import { Navbar } from "@/components/navbar";
-import Footer from "@/components/footer";
-import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
-import Providers from "@/providers";
 import { siteConfig } from "@/config/site-config";
-import { AppProgressBar } from "@/components/ui/app-progress-bar";
-const overpass = Overpass({
-  subsets: ["latin"],
-  variable: "--font-overpass",
-  display: "swap",
-});
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {

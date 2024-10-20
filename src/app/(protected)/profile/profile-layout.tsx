@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -36,7 +36,11 @@ export default function ProfileSidebarLayout({
   return (
     <div>
       <Sidebar show={sidebarOpen} onClose={() => setSidebarOpen(false)}>
-        <SidebarContent user={user} />
+        <SidebarContent
+          user={user}
+          setSidebarHidden={setSidebarHidden}
+          sidebarHidden={sidebarHidden}
+        />
       </Sidebar>
       <LazyMotion features={domAnimation}>
         <AnimatePresence initial={false}>
@@ -49,7 +53,11 @@ export default function ProfileSidebarLayout({
               transition={{ type: "tween", duration: 0.2 }}
               className="hidden w-full lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col"
             >
-              <SidebarContent user={user} />
+              <SidebarContent
+                user={user}
+                setSidebarHidden={setSidebarHidden}
+                sidebarHidden={sidebarHidden}
+              />
             </m.div>
           )}
 
@@ -71,16 +79,20 @@ export default function ProfileSidebarLayout({
               </Button>
 
               {/* This one's only for desktop devices, where sidebar is hidden based on the state */}
-              <Button
-                variant="ghost"
-                type="button"
-                className="-m-2.5 hidden p-2.5 text-gray-700 lg:flex"
-                onClick={() => setSidebarHidden((prev) => !prev)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              </Button>
-              <Text bold variant="text-lg">
+              {/* <Button */}
+              {/*   variant="ghost" */}
+              {/*   type="button" */}
+              {/*   className={cn( */}
+              {/*     "-m-2.5 hidden p-2.5", */}
+              {/*     sidebarHidden && "lg:flex", */}
+              {/**/}
+              {/*   )} */}
+              {/*   onClick={() => setSidebarHidden((prev) => !prev)} */}
+              {/* > */}
+              {/*   <span className="sr-only">Open sidebar</span> */}
+              {/*   <Menu className="h-6 w-6" aria-hidden="true" /> */}
+              {/* </Button> */}
+              <Text bold variant="text-xl" className="leading-none">
                 Guide
               </Text>
 
@@ -102,11 +114,31 @@ export default function ProfileSidebarLayout({
 }
 
 // This is the sidebar content only
-function SidebarContent({ user }: { user?: Maybe<TUser> }) {
+function SidebarContent({
+  user,
+  setSidebarHidden,
+  sidebarHidden,
+}: {
+  user?: Maybe<TUser>;
+  setSidebarHidden: React.Dispatch<SetStateAction<boolean>>;
+  sidebarHidden: boolean;
+}) {
   const pathname = usePathname();
 
   return (
     <div className="z-[130] flex w-full grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-tertiary px-6 py-10 font-poppins text-white">
+      {/* <Button */}
+      {/*   variant="ghost" */}
+      {/*   type="button" */}
+      {/*   className={cn( */}
+      {/*     sidebarHidden && "hidden", */}
+      {/*     "-m-2.5 w-fit p-2.5 text-gray-100", */}
+      {/*   )} */}
+      {/*   onClick={() => setSidebarHidden(true)} */}
+      {/* > */}
+      {/*   <span className="sr-only">Open sidebar</span> */}
+      {/*   <Menu className="h-6 w-6" aria-hidden="true" /> */}
+      {/* </Button> */}
       <Text variant="text-xl" bold>
         Dashboard
       </Text>
@@ -147,7 +179,8 @@ function SidebarContent({ user }: { user?: Maybe<TUser> }) {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    pathname === item.href && "bg-white text-black",
+                    pathname.toString().includes(item.href) &&
+                      "bg-white text-black",
                     "flex gap-x-4 rounded-full px-2 py-2 hover:bg-white hover:text-black",
                   )}
                 >

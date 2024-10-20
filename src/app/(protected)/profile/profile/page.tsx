@@ -8,6 +8,8 @@ import {
   ChevronLeft,
   ChevronRight,
   FileText,
+  PencilIcon,
+  PenLine,
   UserRound,
 } from "lucide-react";
 import { IoReorderTwoSharp as Menu } from "react-icons/io5";
@@ -31,6 +33,7 @@ import { TUser } from "@/types/auth";
 import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { WorkCards } from "@/components/profile/work-card";
+import Banner from "@/components/profile/banner";
 export default function ProfilePage() {
   const { data: user, isPending } = useQuery({
     queryKey: ["user"],
@@ -86,8 +89,19 @@ export default function ProfilePage() {
     return () => containerRef?.current?.removeEventListener("scroll", scrollFn);
   }, []);
   return (
-    <section className="container font-poppins">
-      <CommonBanner title="Profile" bgImage={bgImage} />
+    <section className="container space-y-8 font-poppins">
+      {/*Header*/}
+      <span className="flex gap-x-3">
+        <Text variant="display-sm" bold>
+          Profile
+        </Text>
+        <Link href="/profile/edit">
+          <Button className="gap-x-1 bg-black text-sm text-white">
+            <PenLine size={16} />
+            Edit
+          </Button>
+        </Link>
+      </span>
       {!user?.confirmed && (
         <Badge className="bg-red-100 text-black">
           Please confirm your email
