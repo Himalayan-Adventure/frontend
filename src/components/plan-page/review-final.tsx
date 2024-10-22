@@ -4,7 +4,7 @@ import { BsPatchCheckFill } from "react-icons/bs";
 import { FaRedo } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
 import MakeAdjustments from "./make-adjustments";
-import YourDetailsForm from "./personal-details-form";
+import YourDetailsForm from "./YourDetailsForm";
 import Details from "./details";
 
 const options = [
@@ -38,7 +38,6 @@ export default function ReviewFinal() {
     (option) => option.name === selectedOption,
   )?.content;
 
-  // Update the content for "Check Your Itinerary" to include the setSelectedOption prop
   options[1].content = <Details setSelectedOption={setSelectedOption} />;
 
   return (

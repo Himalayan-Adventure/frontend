@@ -2,6 +2,15 @@ import { useState } from "react";
 import { FaDollarSign, FaRegQuestionCircle } from "react-icons/fa";
 import { RiSlideshowFill } from "react-icons/ri";
 import { usePlanContext } from "./plan-context";
+import { toast } from "sonner";
+
+interface Budget {
+  id: number;
+  fixed_budget: string | null;
+  budget_range_start: string | null;
+  budget_range_end: string | null;
+  decide_later: boolean;
+}
 
 const options = [
   {
@@ -28,7 +37,7 @@ export default function BudgetSelection() {
     setMinBudget,
     maxBudget,
     setMaxBudget,
-    setBudget, // Added this line to include setBudget
+    setBudget,
   } = usePlanContext();
 
   const [tripPlanned, setTripPlanned] = useState(false);
@@ -38,27 +47,56 @@ export default function BudgetSelection() {
     setTripPlanned(false);
 
     if (option === "Fixed Budget") {
-      setFixedAmount("");
+      setFixedAmount(null);
+      setMinBudget(null);
+      setMaxBudget(null);
+    } else if (option === "Set your Budget Range") {
+      setFixedAmount(null);
+    } else if (option === "I'll decide later") {
+      setFixedAmount(null);
+      setMinBudget(null);
+      setMaxBudget(null);
     }
   };
 
   const handlePlanTrip = () => {
     if (selectedBudgetOption === "Fixed Budget") {
-      if (!fixedAmount || fixedAmount <= 0) {
-        alert("Please enter a valid fixed amount.");
+      if (fixedAmount === null || fixedAmount <= 0) {
+        toast.message("Please enter a valid fixed amount.");
         return;
       }
-      setBudget(fixedAmount);
+      const budget: Budget = {
+        id: 1, // Assuming a valid id for demonstration
+        fixed_budget: fixedAmount.toString(),
+        budget_range_start: null,
+        budget_range_end: null,
+        decide_later: false,
+      };
+      setBudget(budget);
       setTripPlanned(true);
     } else if (selectedBudgetOption === "Set your Budget Range") {
-      if (!minBudget || !maxBudget || minBudget >= maxBudget) {
-        alert("Please set a valid budget range.");
+      if (minBudget === null || maxBudget === null || minBudget >= maxBudget) {
+        toast.message("Please set a valid budget range.");
         return;
       }
-      setBudget({ min: minBudget, max: maxBudget });
+      const budget: Budget = {
+        id: 1, // Assuming a valid id for demonstration
+        fixed_budget: null,
+        budget_range_start: minBudget.toString(),
+        budget_range_end: maxBudget.toString(),
+        decide_later: false,
+      };
+      setBudget(budget);
       setTripPlanned(true);
     } else if (selectedBudgetOption === "I'll decide later") {
-      setBudget(null);
+      const budget: Budget = {
+        id: 1, // Assuming a valid id for demonstration
+        fixed_budget: null,
+        budget_range_start: null,
+        budget_range_end: null,
+        decide_later: true,
+      };
+      setBudget(budget);
       setTripPlanned(true);
     }
   };
@@ -99,86 +137,55 @@ export default function BudgetSelection() {
           <div className="w-full px-4">
             <input
               type="number"
-              value={fixedAmount}
+              placeholder="Enter your fixed budget"
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={fixedAmount ?? ""}
               onChange={(e) => setFixedAmount(Number(e.target.value))}
-              placeholder="Enter fixed amount"
-              className="mt-4 block w-full rounded-md border border-gray-300 p-3 outline-none"
             />
-            <button
-              onClick={handlePlanTrip}
-              className="mt-4 w-full rounded-md bg-primary px-6 py-3 font-medium text-white transition duration-300 hover:bg-opacity-90"
-            >
-              Plan the Trip
-            </button>
           </div>
         )}
 
         {selectedBudgetOption === "Set your Budget Range" && (
-          <div>
-            <div className="mt-6 flex flex-row items-center justify-center gap-4">
-              <div className="w-full">
-                <input
-                  type="range"
-                  min="500"
-                  max="15000"
-                  value={minBudget}
-                  onChange={(e) => setMinBudget(Number(e.target.value))}
-                  className="custom-slider w-full"
-                />
-              </div>
-
-              <div className="w-full">
-                <input
-                  type="range"
-                  min="500"
-                  max="15000"
-                  value={maxBudget}
-                  onChange={(e) => setMaxBudget(Number(e.target.value))}
-                  className="custom-slider -ml-12 w-full"
-                />
-              </div>
+          <div className="mt-6 flex flex-row items-center justify-center gap-4">
+            <div className="w-full">
+              <input
+                type="range"
+                min="500"
+                max="15000"
+                className="custom-slider w-full"
+                value={minBudget ?? ""}
+                onChange={(e) => setMinBudget(Number(e.target.value))}
+              />
             </div>
-
-            <div className="mt-4 flex justify-between">
-              <span className="font-medium text-gray-700">
-                ${minBudget}/person
-              </span>
-              <span className="font-medium text-gray-700">
-                ${maxBudget}/person
-              </span>
+            <div className="w-full">
+              <input
+                type="range"
+                min="500"
+                max="15000"
+                className="custom-slider -ml-12 w-full"
+                value={maxBudget ?? ""}
+                onChange={(e) => setMaxBudget(Number(e.target.value))}
+              />
             </div>
-
-            <button
-              onClick={handlePlanTrip}
-              className="mt-6 w-full rounded-lg bg-primary py-3 font-medium text-white transition-transform duration-300 hover:bg-opacity-90 active:scale-95"
-            >
-              Plan Trip
-            </button>
           </div>
         )}
+      </div>
+      <div className="mt-4 flex justify-between">
+        <span className="font-medium text-gray-700">${minBudget}/person</span>
+        <span className="font-medium text-gray-700">${maxBudget}/person</span>
+      </div>
 
-        {selectedBudgetOption === "I'll decide later" && (
-          <div className="mt-4 font-medium text-gray-700">
-            Feel free to explore more options!
-          </div>
-        )}
-
+      <div className="mt-6 text-center">
+        <button
+          className="rounded-lg bg-primary px-6 py-2 text-white"
+          onClick={handlePlanTrip}
+        >
+          Plan My Trip
+        </button>
         {tripPlanned && (
-          <div className="mt-8 text-center">
-            {selectedBudgetOption === "Fixed Budget" ? (
-              <p className="text-xl font-semibold">
-                You have fixed a budget of ${fixedAmount}.
-              </p>
-            ) : selectedBudgetOption === "Set your Budget Range" ? (
-              <p className="text-xl font-semibold">
-                You have set a budget range from ${minBudget} to ${maxBudget}.
-              </p>
-            ) : (
-              <p className="text-xl font-semibold">
-                You can decide your budget later.
-              </p>
-            )}
-          </div>
+          <p className="mt-4 text-center text-sm font-semibold text-green-600">
+            Trip planned successfully!
+          </p>
         )}
       </div>
     </div>
