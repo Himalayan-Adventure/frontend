@@ -4,7 +4,7 @@ import Facts from "@/components/packagespage/facts";
 import Faqs from "@/components/packagespage/faqs";
 import Gallery, { GalleryImageProp } from "@/components/packagespage/gallery";
 import HostInfo from "@/components/packagespage/host-info";
-import InfoTabs from "@/components/packagespage/info-tabs";
+import InfoTabs, { InfoTabsProp } from "@/components/packagespage/info-tabs";
 import Itenerary from "@/components/packagespage/itenerary";
 import Map from "@/components/packagespage/map";
 import Offers from "@/components/packagespage/offers";
@@ -21,6 +21,8 @@ import { FaFlag } from "react-icons/fa";
 import Link from "next/link";
 import { TInfoTabs } from "@/types/packages/info-tabs";
 import { BlocksContent } from "@strapi/blocks-react-renderer";
+import { Dot } from "lucide-react";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 interface Params {
   slug: string;
@@ -46,46 +48,52 @@ export default async function PackageDetail({ params }: { params: Params }) {
         width: image.attributes?.width || 400,
       }))
     : [];
-  // const departureData: TDepartureData = {
-  //   date: pkg?.date as string,
-  //   departure: pkg?.departure?.map(({ start, end }) => ({ start, end })),
-  //   grade: pkg?.adventure_specification?.grade?.[0]?.name || "",
-  //   altitude: pkg?.adventure_specification?.max_altitude || "",
-  //   duration: pkg?.adventure_specification?.duration || "",
-  //   season: pkg?.adventure_specification?.season?.[0]?.name || "",
-  // };
-  // const infoTabsData: Record<TInfoTabs, BlocksContent | undefined> = {
-  //   includes: pkg?.itinerary?.includes,
-  //   excludes: pkg?.excludedFacilities,
-  //   gears: pkg?.gears,
-  //   health: pkg?.healthAndSafety,
-  // };
+  console.log(pkg?.adventure_specification);
+  const departureData: TDepartureData = {
+    //date: pkg?.date as string,
+    departure: [
+      {
+        start: pkg?.adventure_specification?.travel_dates[0]?.date,
+        end: pkg?.adventure_specification?.travel_dates[1]?.date,
+      },
+    ],
+    grade: pkg?.adventure_specification?.grade?.[0]?.name || "",
+    altitude: pkg?.adventure_specification?.max_altitude || "",
+    duration: pkg?.adventure_specification?.duration || "",
+    season: pkg?.adventure_specification?.season?.[0]?.name || "",
+  };
+  console.log(departureData);
+  const infoTabsData: InfoTabsProp = {
+    includes: pkg?.itinerary?.includes,
+    excludes: pkg?.itinerary?.excludes,
+    //    gears: pkg?.gears,
+    //   health: pkg?.healthAndSafety,
+  };
   // const thingsToKnowData = {
   //   cancellationPolicy: pkg?.cancellation,
   //   generalInfo: pkg?.expeditionGeneral,
   //   health: pkg?.healthSafety,
   // };
-  
-  
+
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
   }
   return (
-    <main>
-      <CommonBanner title={`Package ${pkg.package_name}`} bgImage={bgImage} />
+    <main className="font-poppins">
+      <CommonBanner title={`${pkg.package_name}`} bgImage={bgImage} />
       <section className="container overflow-hidden">
         <div className="grid gap-x-4 space-y-8 md:gap-x-8 lg:grid-cols-3 lg:gap-x-24 lg:space-y-0">
           <div className="relative space-y-8 lg:col-span-2">
             <Gallery images={images} />
             <div className="space-y-8 lg:col-span-1 lg:hidden">
               <Map location={pkg.package_name} />
-              {/* <Departure type={"default"} data={departureData} /> */}
+              <Departure type={"default"} data={departureData} />
             </div>
             <div className="flex flex-wrap items-center justify-between gap-4 lg:gap-8">
               <div className="space-y-2">
-                {pkg?.sponsor_host?.host_name && (
+                {pkg?.package_host?.hostname && (
                   <h1 className="text-sm md:text-lg">
-                    Package Hosted by {pkg?.sponsor_host?.host_name}
+                    Package Hosted by {pkg?.package_host?.hostname}
                   </h1>
                 )}
 
@@ -96,52 +104,55 @@ export default async function PackageDetail({ params }: { params: Params }) {
                   )}
                   */}
 
-                  <ul className="flex list-disc space-x-8 text-sm md:text-base">
+                  <ul className="flex list-disc space-x-1 text-sm md:text-base">
                     {/*
                     {pkg?.numberOfLeaders && (
                       <li>{pkg.numberOfLeaders} leaders</li>
                     )}
                     */}
-                    <li>Fixed Departure</li>
+                    <p>Fixed Departure</p>
+                    <Dot />
                     {pkg?.adventure_specification?.season && (
-                      <li className="capitalize">
+                      <p className="capitalize">
                         Season:{" "}
                         {pkg?.adventure_specification?.season?.[0]?.name}
-                      </li>
+                      </p>
                     )}
                   </ul>
                 </div>
               </div>
               <div>
                 {/* Host Logo  */}
-                <p className="sr-only">{pkg?.sponsor_host?.host_name}</p>
-                {pkg?.sponsor_host && (
+                <p className="sr-only">{pkg?.sponsor_host?.host_name} logo</p>
+                {pkg?.package_host && (
                   <Image
                     src={
-                      pkg?.sponsor_host?.logo?.data?.attributes?.url ||
+                      pkg?.package_host?.logo?.data?.attributes?.url ||
                       "/logo.png"
                     }
-                    alt="host logo"
+                    alt={"host logo" + pkg?.package_host?.hostname}
                     priority
                     className="max-h-20 w-28 object-contain md:w-40"
                     width={
-                      pkg?.sponsor_host?.logo?.data?.attributes?.width || 400
+                      pkg?.package_host?.logo?.data?.attributes?.width || 400
                     }
                     height={
-                      pkg?.sponsor_host?.logo?.data?.attributes?.height || 400
+                      pkg?.package_host?.logo?.data?.attributes?.height || 400
                     }
                   />
                 )}
               </div>
             </div>
-            <About desc={pkg?.long_description} />
-            {/*}<Video
-              packageName={pkg?.name}
-              videolink="https://www.youtube.com/embed/Mq9SubYm3zA?si=KbYeaXd9d29l82tr"
-            />*/}
-            {/*@ts-ignore */}
-            {pkg?.itenary && <Itenerary data={pkg?.itenary} />}
-            {/* <InfoTabs content={infoTabsData} /> */}
+            <Separator className="h-px w-full bg-gray-400" />
+
+            {pkg?.long_description && <About desc={pkg?.long_description} />}
+            {pkg?.video && (
+              <Video packageName={pkg?.package_name} videolink={pkg?.video} />
+            )}
+            {pkg?.itinerary?.timeline && (
+              <Itenerary data={pkg?.itinerary?.timeline} />
+            )}
+            <InfoTabs content={infoTabsData} />
           </div>
           <div className="hidden space-y-8 lg:col-span-1 lg:block">
             <Map location={pkg?.package_name} />
@@ -149,7 +160,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
           </div>
         </div>
       </section>
-      <Facts data={pkg?.trip_facts} />
+      {pkg?.trip_facts?.[0] && <Facts data={pkg?.trip_facts} />}
       {pkg.faq && (
         <Faqs
           data={pkg?.faq.map((i, index) => ({

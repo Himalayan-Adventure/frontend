@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { LuStar } from "react-icons/lu";
 import { Button } from "../ui/button";
@@ -11,12 +12,38 @@ import { Text } from "../ui/text";
 import wordsToNumbers from "words-to-numbers";
 import { DepartureProps } from "@/types/packages/departure";
 import { Flag } from "lucide-react";
+
 export default function Departure({
   data,
   type = "default",
   id,
 }: DepartureProps) {
-  const {  duration, season, altitude, grade, departure } = data;
+  const { duration, season, altitude, grade, departure } = data;
+  const maxAltInM = Number(
+    wordsToNumbers(altitude)?.toString().split(" ").join(""),
+  );
+  const departureFacts = [
+    {
+      title: season,
+      desc: seasonMonthMap[season],
+      icon: seasonIconMap[season],
+    },
+    {
+      title: "duration",
+      desc: duration + " days",
+      icon: <MdTimelapse size={20} />,
+    },
+    {
+      title: "grade",
+      desc: grade,
+      icon: <BsBarChartFill size={20} />,
+    },
+    {
+      title: "max altitude",
+      desc: `${maxAltInM.toLocaleString("en-us")}m/${(maxAltInM * 3.281).toLocaleString("en-us")}ft`,
+      icon: <FaMountain size={20} />,
+    },
+  ];
 
   return (
     <div className="relative space-y-4">
@@ -64,27 +91,9 @@ export default function Departure({
         </div>
         <div className="mt-4 space-y-2">
           <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
-          <p className="flex items-center space-x-2 text-sm font-medium">
-            {seasonIconMap[season]}
-            <span className="capitalize">
-              {season}: ({seasonMonthMap[season]})
-            </span>
-          </p>
-          <p className="flex items-center space-x-2 text-sm font-medium">
-            <MdTimelapse size={20} />
-            <span>Duration: {duration} days</span>
-          </p>
-          <p className="flex items-center space-x-2 text-sm font-medium">
-            <BsBarChartFill size={20} />
-            <span className="capitalize">Grade: {grade}</span>
-          </p>
-          <p className="flex items-center space-x-2 text-sm font-medium">
-            <FaMountain size={20} />
-            <span>
-              Max Altitude:{" "}
-              {wordsToNumbers(altitude)?.toString().split(" ").join("")}m
-            </span>
-          </p>
+          {departureFacts.map((fact, index) => (
+            <DepartureFact key={fact.title} {...fact} />
+          ))}
         </div>
 
         {type === "card" && (
@@ -108,7 +117,7 @@ export default function Departure({
           className="z-10 mx-auto hidden w-fit gap-x-2 underline lg:flex"
         >
           <Flag size={16} />
-          <Text variant="text-sm" className="w-fit text-sm">
+          <Text variant="text-sm" className="w-fit text-sm tracking-wide">
             Report this listing
           </Text>
         </Link>
@@ -116,3 +125,22 @@ export default function Departure({
     </div>
   );
 }
+const DepartureFact = ({
+  title,
+  desc,
+  icon,
+}: {
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+}) => {
+  return (
+    <div className="flex items-center space-x-2 text-sm font-medium">
+      {icon}
+      <span className="flex items-center gap-x-1">
+        <p className="font-semibold capitalize">{title}:</p>
+        {desc}
+      </span>
+    </div>
+  );
+};

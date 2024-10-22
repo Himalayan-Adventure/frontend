@@ -16,6 +16,7 @@ import {
   FaMap,
 } from "react-icons/fa";
 import DynamicReactIcon from "../icons/strapi-icon";
+import { IconContext } from "react-icons";
 
 export default function Offers({
   data,
@@ -65,7 +66,18 @@ export default function Offers({
             {data?.map((offer, index) => (
               <div key={index} className="mb-2 flex items-start gap-x-3">
                 <div className="flex items-start gap-x-3">
-                  {offer.icon && <DynamicReactIcon className="size-5 md:size-6" name={offer.icon} />}
+                  {offer.icon && (
+                    <IconContext.Provider
+                      value={{
+                        color: "#FD9100",
+                      }}
+                    >
+                      <DynamicReactIcon
+                        className="size-5 md:size-6"
+                        name={offer.icon}
+                      />
+                    </IconContext.Provider>
+                  )}
                   <p className="text-sm leading-none md:text-base lg:text-lg lg:leading-none">
                     {offer?.info}
                   </p>

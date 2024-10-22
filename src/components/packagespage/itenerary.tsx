@@ -1,4 +1,5 @@
 "use client";
+import { IDProperty } from "@/types/types";
 import React, { useState, useRef, useEffect } from "react";
 
 const itineraryData = [
@@ -28,7 +29,14 @@ const itineraryData = [
 export default function Itinerary({
   data,
 }: {
-  data: Array<{ id: number; day: string }>;
+  //data: Array<{ id: number; day: string }>;
+  data: IDProperty &
+    Omit<
+      { week?: number | undefined; day?: number | undefined } & {
+        description: string;
+      },
+      never
+    >[];
 }) {
   console.log(data);
   const numberOfWeeks =

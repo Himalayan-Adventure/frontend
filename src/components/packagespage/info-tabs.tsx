@@ -7,15 +7,24 @@ import {
   type BlocksContent,
 } from "@strapi/blocks-react-renderer";
 import { TInfoTabs } from "@/types/packages/info-tabs";
+import { IDProperty } from "@/types/types";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 interface TabData {
   [key: string]: string[];
 }
 
+export type InfoTabsProp = Record<
+  string,
+  | (IDProperty & Omit<{ description?: string | undefined } & {}, never>[])
+  | undefined
+>;
+
 export default function InfoTabs({
   content,
 }: {
-  readonly content: Record<TInfoTabs, BlocksContent | undefined>;
+  //  readonly content: Record<TInfoTabs, BlocksContent | undefined>;
+  content: InfoTabsProp;
 }) {
   // const tabData: TabData = {
   //   Includes: content.includes,
@@ -28,9 +37,18 @@ export default function InfoTabs({
   //   ],
   // };
   const [activeTab, setActiveTab] = useState<TInfoTabs>("includes");
+  const getData = (
+    tabData:
+      | (IDProperty & Omit<{ description?: string | undefined } & {}, never>[])
+      | undefined,
+  ) => {
+    return tabData?.map((item) => ({
+      description: item.description,
+    }));
+  };
 
   return (
-    <div className="">
+    <div className="relative">
       <div className="border-b border-gray-200 pb-4">
         <nav className="flex space-x-8" aria-label="Tabs">
           {Object.keys(content).map((tab) => (
@@ -49,23 +67,27 @@ export default function InfoTabs({
         </nav>
       </div>
       <div className="pt-6 [&>*]:list-disc">
-        {content?.[activeTab] && content?.[activeTab] !== undefined ? (
+        {/*        {content?.[activeTab] && content?.[activeTab] !== undefined ? (
           <BlocksRenderer content={content[activeTab] as []} />
         ) : (
           <p>No content found</p>
-        )}
-        {/* <h2 className="font-semibold lg:text-[20px]">{activeTab}</h2>
+        )}*/}
+        <h2 className="font-semibold capitalize lg:text-[20px]">{activeTab}</h2>
         <ul className="mt-4 space-y-4">
-          {(content[activeTab] || []).map((item: string, index: number) => (
-            <li key={index} className="flex items-start space-x-2">
-              <span className="text-yellow-500">
-                <IoCheckmarkCircleOutline className="text-primary lg:text-2xl" />
-              </span>
-              <span className="text-sm text-gray-700 md:text-base">{item}</span>
-            </li>
-          ))}
-        </ul> */}
+          {content[activeTab] &&
+            getData(content[activeTab] || [])?.map((item, index) => (
+              <li key={index} className="flex items-start space-x-2">
+                <span className="text-yellow-500">
+                  <IoCheckmarkCircleOutline className="text-primary lg:text-2xl" />
+                </span>
+                <span className="text-sm text-gray-700 md:text-base">
+                  {item.description}
+                </span>
+              </li>
+            ))}
+        </ul>
       </div>
+      <Separator className="relative mt-6 h-px w-full bg-gray-200" />
     </div>
   );
   // return <BlocksRenderer content={content} />;

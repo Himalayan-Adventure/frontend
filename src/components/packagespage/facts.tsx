@@ -19,6 +19,7 @@ import { MdOutlineLocationOn, MdOutlineSevereCold } from "react-icons/md";
 import Image from "next/image";
 import { IDProperty } from "@/types/types";
 import DynamicReactIcon from "../icons/strapi-icon";
+import { IconContext } from "react-icons";
 const CloudImage = ({ src, alt, position }: any) => (
   <div className={`absolute ${position} w-full`}>
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
@@ -107,7 +108,7 @@ const facts = [
     value: "8,848.86m (29,032 ft)",
   },
 ];
-export default function BookAppointment({
+export default function FactsOfTheTrip({
   data,
 }: {
   // data?: Array<{
@@ -169,7 +170,23 @@ export default function BookAppointment({
                     </p>
 
                     <div className="col-span-2 flex items-center space-x-1">
-                      <span className="text-primary">{item.icon}</span>
+                      <div className="text-primary">
+                        {item.icon && (
+                          <IconContext.Provider
+                            value={{
+                              color: "#FD9100",
+                              className: "global-class-name",
+                            }}
+                          >
+                            <DynamicReactIcon
+                              className="size-5 text-primary md:size-6"
+                              color="#FD9100"
+                              fill="#FD9100"
+                              name={item.icon}
+                            />
+                          </IconContext.Provider>
+                        )}
+                      </div>
 
                       <p className="text-xs md:text-sm lg:text-base">
                         {item.details}
