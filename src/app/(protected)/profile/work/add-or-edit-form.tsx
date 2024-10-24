@@ -46,9 +46,7 @@ export const WorkAddOrEditForm = ({
   );
   async function onSubmit(values: TWorkForm) {
     setLoading(true);
-    console.log("hello");
     const payload = { ...form.getValues(), description: content };
-    console.log(payload);
     toast.success("Edited successfully");
   }
   useEffect(() => {

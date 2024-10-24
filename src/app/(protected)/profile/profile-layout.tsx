@@ -14,13 +14,15 @@ import {
 import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
-import { navigations } from "@/config/profile-sidebar-nav";
+import { navigations, TNavigation } from "@/config/profile-sidebar-nav";
 import { cn } from "@/lib/utils";
 //import { type TUser } from '@/types/user';
 //import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { Menu } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
 import { TUser } from "@/types/auth";
+import { toast } from "sonner";
+import { logout } from "@/server/auth/logout";
 
 // This is the whole layout for the dashboard which includes the sidebar and the main content which is passed as children
 export default function ProfileSidebarLayout({
@@ -175,19 +177,27 @@ function SidebarContent({
           <li>
             <ul role="list" className="space-y-4">
               {navigations.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    pathname.toString().includes(item.href) &&
-                      "bg-white text-black",
-                    "flex gap-x-4 rounded-full px-2 py-2 hover:bg-white hover:text-black",
-                  )}
-                >
-                  <item.icon />
-                  <p>{item.name}</p>
-                </Link>
+                <Item key={item.name} item={item} pathname={pathname} />
               ))}
+              <Button
+                className={cn(
+                  "flex w-full justify-start gap-x-4 rounded-full bg-transparent px-4 py-2 hover:bg-white hover:text-black",
+                )}
+                onClick={async () => {
+                  toast.promise(logout(), {
+                    loading: "Logging out...",
+                    success: "Logged out successfully",
+                    error: "Failed to log out",
+                  });
+
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1000);
+                }}
+              >
+                <LogOut className={cn("h-5 w-5 shrink-0")} />
+                <p>Log out</p>
+              </Button>
             </ul>
           </li>
         </ul>
@@ -203,26 +213,18 @@ function SidebarContent({
 
 // This is the navigation item component which is used to render the sidebar navigation items and subitems if it has any
 // This is the navigation item component which acts as the main link if it doesnt have any subitems. If it has subitems, it will act as the trigger for the accordion
-const Item = ({ item, pathname }: any) => {
+const Item = ({ item, pathname }: { item: TNavigation; pathname: string }) => {
   return (
-    <div
+    <Link
+      key={item.name}
+      href={item.href}
       className={cn(
-        pathname === item.href
-          ? "rounded-4xl bg-green-50 text-green-600"
-          : "text-gray-600 hover:bg-gray-50 hover:text-green-600",
-        "group flex items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
+        pathname.toString().includes(item.href) && "bg-white text-black",
+        "flex gap-x-4 rounded-full px-4 py-2 hover:bg-white hover:text-black",
       )}
     >
-      <item.icon
-        className={cn(
-          pathname === item.href
-            ? "text-green-600"
-            : "text-gray-500 group-hover:text-green-600",
-          "h-5 w-5 shrink-0",
-        )}
-        aria-hidden="true"
-      />
+      <item.icon className={cn("h-5 w-5 shrink-0")} />
       <p>{item.name}</p>
-    </div>
+    </Link>
   );
 };

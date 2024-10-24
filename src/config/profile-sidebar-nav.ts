@@ -15,7 +15,8 @@ import {
 
 export type TNavigation = {
   name: string;
-  icon: React.FC;
+  //  icon: React.FC;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   href: string;
 };
 export const navigations: TNavigation[] = [
@@ -25,11 +26,11 @@ export const navigations: TNavigation[] = [
     icon: CircleUser,
   },
 
-  // {
-  //   name: "Blog",
-  //   href: "/profile/blog",
-  //   icon: Pencil,
-  // },
+  {
+    name: "Blog",
+    href: "/profile/blog",
+    icon: Pencil,
+  },
 
   {
     name: "Work",

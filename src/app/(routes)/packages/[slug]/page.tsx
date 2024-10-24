@@ -66,6 +66,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
   const infoTabsData: InfoTabsProp = {
     includes: pkg?.itinerary?.includes,
     excludes: pkg?.itinerary?.excludes,
+
     //    gears: pkg?.gears,
     //   health: pkg?.healthAndSafety,
   };
