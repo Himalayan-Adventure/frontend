@@ -13,12 +13,19 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 interface TabData {
   [key: string]: string[];
 }
-
-export type InfoTabsProp = Record<
-  string,
+type TabContent =
   | (IDProperty & Omit<{ description?: string | undefined } & {}, never>[])
+  | (IDProperty &
+      Omit<
+        {
+          description?: BlocksContent | undefined;
+        } & { title: string },
+        never
+      >[])
   | undefined
->;
+  | undefined;
+
+export type InfoTabsProp = Record<string, TabContent>;
 
 export default function InfoTabs({
   content,
@@ -37,11 +44,7 @@ export default function InfoTabs({
   //   ],
   // };
   const [activeTab, setActiveTab] = useState<TInfoTabs>("includes");
-  const getData = (
-    tabData:
-      | (IDProperty & Omit<{ description?: string | undefined } & {}, never>[])
-      | undefined,
-  ) => {
+  const getData = (tabData: TabContent) => {
     return tabData?.map((item) => ({
       description: item.description,
     }));
@@ -80,9 +83,14 @@ export default function InfoTabs({
                 <span className="text-yellow-500">
                   <IoCheckmarkCircleOutline className="text-primary lg:text-2xl" />
                 </span>
-                <span className="text-sm text-gray-700 md:text-base">
-                  {item.description}
-                </span>
+
+                {typeof item?.description === "string" ? (
+                  <span className="text-sm text-gray-700 md:text-base">
+                    {item.description}
+                  </span>
+                ) : (
+                  <BlocksRenderer content={item.description || []} />
+                )}
               </li>
             ))}
         </ul>

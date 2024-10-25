@@ -95,43 +95,53 @@ export default function ThingsToKnow({
   //         never
   //       >[])
   //   | undefined;
-  data: | (
-IDProperty & Omit<{
-    title?: string | undefined;
-    things_info?: (IDProperty & Omit<{
-        details?: string | undefined;
-        title?: string | undefined;
-        icon?: string | undefined;
-    } & {}, never>[]) | undefined;
-} & {}, never>[]) | undefined
-  
+  data:
+    | (IDProperty &
+        Omit<
+          {
+            title?: string | undefined;
+            things_info?:
+              | (IDProperty &
+                  Omit<
+                    {
+                      details?: string | undefined;
+                      title?: string | undefined;
+                      icon?: string | undefined;
+                    } & {},
+                    never
+                  >[])
+              | undefined;
+          } & {},
+          never
+        >[])
+    | undefined;
 }) {
-  console.log(data);
   return (
     <section className="container py-4 lg:py-8">
       <h2 className="mb-6 text-2xl font-semibold">Things to know</h2>
       <div className="grid grid-cols-1 gap-8 text-sm md:grid-cols-3 md:text-base">
-{data?.map((i)=>(
+        {data?.map((i) => (
+          <div key={i.title}>
+            <h3 className="mb-4 font-semibold">Expedition General Info</h3>
+            <ul className="space-y-2">
+              {i?.things_info?.map((fact, index) => (
+                <div
+                  key={index}
+                  className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
+                >
+                  <div className="col-span-2 flex items-center space-x-1">
+                    {fact.icon && <DynamicReactIcon name={fact.icon} />}
+                    {/* <span className="">{fact.icon}</span> */}
 
-        <div key={i.title}>
-          <h3 className="mb-4 font-semibold">Expedition General Info</h3>
-          <ul className="space-y-2">
-            {i?.things_info?.map((fact, index) => (
-              <div
-                key={index}
-                className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
-              >
-                <div className="col-span-2 flex items-center space-x-1">
-                  {fact.icon && <DynamicReactIcon name={fact.icon} />}
-                  {/* <span className="">{fact.icon}</span> */}
-
-                  <p className="text-xs md:text-sm lg:text-base">{fact.details}</p>
+                    <p className="text-xs md:text-sm lg:text-base">
+                      {fact.details}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </ul>
-        </div>
-))}
+              ))}
+            </ul>
+          </div>
+        ))}
         {/* <div>
           <h3 className="mb-4 font-semibold">Expedition General Info</h3>
           <ul className="space-y-2">

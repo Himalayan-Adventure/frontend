@@ -48,7 +48,6 @@ export default async function PackageDetail({ params }: { params: Params }) {
         width: image.attributes?.width || 400,
       }))
     : [];
-  console.log(pkg?.adventure_specification);
   const departureData: TDepartureData = {
     //date: pkg?.date as string,
     departure: [
@@ -62,14 +61,15 @@ export default async function PackageDetail({ params }: { params: Params }) {
     duration: pkg?.adventure_specification?.duration || "",
     season: pkg?.adventure_specification?.season?.[0]?.name || "",
   };
-  console.log(departureData);
   const infoTabsData: InfoTabsProp = {
     includes: pkg?.itinerary?.includes,
     excludes: pkg?.itinerary?.excludes,
+    others: pkg?.itinerary?.others,
 
     //    gears: pkg?.gears,
     //   health: pkg?.healthAndSafety,
   };
+  console.log(pkg?.itinerary?.others?.map((i) => i.title));
   // const thingsToKnowData = {
   //   cancellationPolicy: pkg?.cancellation,
   //   generalInfo: pkg?.expeditionGeneral,
