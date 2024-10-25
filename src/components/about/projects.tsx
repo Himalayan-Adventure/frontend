@@ -1,67 +1,17 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { LazyMotion, domMax, m } from "framer-motion";
-/* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
-import { FaSearch, FaSort, FaChevronRight } from "react-icons/fa";
+import { useState } from "react";
+import { FaChevronRight, FaSearch, FaSort } from "react-icons/fa";
 
-const projectsData = [
-  {
-    id: 1,
-    title: "Project One",
-    date: "January 2024",
-    description:
-      "This is a brief description of Project One. It gives a quick overview of the project. They gives a quick overview of the project. It gives a quick overview of the project. It gives a quick overview of the project. ",
-    imageUrl:
-      "https://www.nepaltrekkinginhimalaya.com/images/articles/l7cYh-3jbmy-manaslu-trek-nepal.jpg",
-  },
-  {
-    id: 2,
-    title: "Project Two",
-    date: "February 2024",
-    description:
-      "This is a brief description of Project Two. It gives a quick overview of the project. They gives a quick overview of the project. It gives a quick overview of the project. It gives a quick overview of the project. ",
-    imageUrl:
-      "https://www.nepaltrekkinginhimalaya.com/images/articles/l7cYh-3jbmy-manaslu-trek-nepal.jpg",
-  },
-  {
-    id: 3,
-    title: "Project Three",
-    date: "March 2024",
-    description:
-      "This is a brief description of Project Three. It gives a quick overview of the projectTheyIt gives a quick overview of the project. It gives a quick overview of the project. It gives a quick overview of the project. ",
-    imageUrl:
-      "https://www.nepaltrekkinginhimalaya.com/images/articles/l7cYh-3jbmy-manaslu-trek-nepal.jpg",
-  },
-  {
-    id: 4,
-    title: "Project Four",
-    date: "April 2024",
-    description:
-      "This is a brief description of Project Four. It gives a quick overview of the project.Theyt gives a quick overview of the project. It gives a quick overview of the project. It gives a quick overview of the project. ",
-    imageUrl:
-      "https://www.nepaltrekkinginhimalaya.com/images/articles/l7cYh-3jbmy-manaslu-trek-nepal.jpg",
-  },
-  {
-    id: 5,
-    title: "Project Five",
-    date: "May 2024",
-    description:
-      "This is a brief description of Project Five. It gives a quick overview of the project.Theyt gives a quick overview of the project. It gives a quick overview of the project. It gives a quick overview of the project. ",
-    imageUrl:
-      "https://www.nepaltrekkinginhimalaya.com/images/articles/l7cYh-3jbmy-manaslu-trek-nepal.jpg",
-  },
-  {
-    id: 6,
-    title: "Project Six",
-    date: "June 2024",
-    description:
-      "This is a brief description of Project Six. It gives a quick overview of the project. They gives a quick overview of the project. It gives a quick overview of the project. It gives a quick overview of the project. ",
-    imageUrl:
-      "https://www.nepaltrekkinginhimalaya.com/images/articles/l7cYh-3jbmy-manaslu-trek-nepal.jpg",
-  },
-];
+interface Project {
+  title: string;
+  date: string;
+  description: string;
+  imageUrl: string;
+}
 
-const ProjectCard = ({ title, date, description, imageUrl }: any) => {
+const ProjectCard = ({ title, date, description, imageUrl }: Project) => {
   return (
     <div className="relative">
       <div className="absolute inset-0 -z-10 h-full w-full bg-gray-500 blur-lg"></div>
@@ -85,7 +35,11 @@ const ProjectCard = ({ title, date, description, imageUrl }: any) => {
   );
 };
 
-export default function Projects() {
+export default function Projects({
+  projectsData,
+}: {
+  projectsData: Project[];
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("Sort by");
   const [showMore, setShowMore] = useState(false);
@@ -156,9 +110,9 @@ export default function Projects() {
           <div className="mt-8 grid grid-cols-1 gap-8 md:hidden md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-24">
             {filteredProjects
               .slice(0, showMore ? filteredProjects.length : 2)
-              .map((project) => (
+              .map((project, index) => (
                 <ProjectCard
-                  key={project.id}
+                  key={index}
                   title={project.title}
                   date={project.date}
                   description={project.description}
@@ -182,9 +136,9 @@ export default function Projects() {
           </div>
 
           <div className="mt-8 hidden grid-cols-1 gap-8 md:grid md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-24">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project, index) => (
               <ProjectCard
-                key={project.id}
+                key={index}
                 title={project.title}
                 date={project.date}
                 description={project.description}
