@@ -38,7 +38,6 @@ export default function Itinerary({
       never
     >[];
 }) {
-  console.log(data);
   const numberOfWeeks =
     data.length / 7 - Number((data.length / 7).toFixed(0)) <= 0
       ? Number((data.length / 7).toFixed(0))
@@ -49,7 +48,6 @@ export default function Itinerary({
       days: data.slice(i * 7, i * 7 + 7).map((item) => `${item.day}`),
     };
   });
-  console.log(numberOfWeeks);
 
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);

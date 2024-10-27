@@ -139,62 +139,56 @@ export default function FactsOfTheTrip({
     | undefined;
 }) {
   return (
-    <section
-      className="relative my-8 flex min-h-screen items-center bg-cover bg-center bg-no-repeat lg:my-16"
-      style={{
-        backgroundImage: "url('/images/factsBg.png')",
-        filter: "grayscale(100%)",
-      }}
-    >
+    <section className="relative my-8 flex min-h-screen items-center bg-cover bg-center bg-no-repeat lg:my-16">
+      <div
+        className="absolute inset-0 -z-20 min-h-screen bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/images/factsBg.png')",
+          filter: "grayscale(100%)",
+        }}
+      />
       {/* Overlay */}
       <div className="absolute inset-0 -z-10 bg-black bg-opacity-50"></div>
 
       <div className="from-gray absolute top-0 h-20 w-full bg-gradient-to-b"></div>
       <div className="container py-8 lg:py-16">
         <div className="relative text-white">
-          <h1 className="text-lg md:text-xl lg:text-2xl">Facts of the Trip</h1>
+          <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
+            Facts of the Trip
+          </h1>
           {/* <div className="mt-4 grid grid-cols-1 gap-x-8 lg:mt-8 lg:grid-cols-2"> */}
           {data?.map((fact, index) => (
             <div
               key={index}
               className="mt-4 grid grid-cols-1 gap-x-8 lg:mt-8 lg:grid-cols-2"
             >
-              <div>
-                {fact?.fact_info?.map((item, index) => (
-                  <div
-                    key={index}
-                    className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
-                  >
-                    <p className="col-span-1 text-xs font-semibold md:text-sm lg:text-base">
-                      {item.title}
-                    </p>
+              {fact?.fact_info?.map((item, index) => (
+                <div
+                  key={index}
+                  className="mb-2 grid grid-cols-[170px_auto] space-x-3 lg:mb-4"
+                >
+                  <p className="col-span-1 text-xs md:text-sm lg:text-base">
+                    {item.title}
+                  </p>
 
-                    <div className="col-span-2 flex items-center space-x-1">
-                      <div className="text-primary">
-                        {item.icon && (
-                          <IconContext.Provider
-                            value={{
-                              color: "#FD9100",
-                              className: "global-class-name",
-                            }}
-                          >
-                            <DynamicReactIcon
-                              className="size-5 text-primary md:size-6"
-                              color="#FD9100"
-                              fill="#FD9100"
-                              name={item.icon}
-                            />
-                          </IconContext.Provider>
-                        )}
-                      </div>
-
-                      <p className="text-xs md:text-sm lg:text-base">
-                        {item.details}
-                      </p>
+                  <div className="flex items-center space-x-1">
+                    <div className="text-primary">
+                      {item.icon && (
+                        <DynamicReactIcon
+                          className="size-5 text-primary md:size-6"
+                          color="#FD9100"
+                          fill="#FD9100"
+                          name={item.icon}
+                        />
+                      )}
                     </div>
+
+                    <p className="text-xs md:text-sm lg:text-base">
+                      {item.details}
+                    </p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           ))}
           {/* <div>

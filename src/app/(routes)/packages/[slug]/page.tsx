@@ -61,21 +61,22 @@ export default async function PackageDetail({ params }: { params: Params }) {
     duration: pkg?.adventure_specification?.duration || "",
     season: pkg?.adventure_specification?.season?.[0]?.name || "",
   };
+
   const infoTabsData: InfoTabsProp = {
     includes: pkg?.itinerary?.includes,
     excludes: pkg?.itinerary?.excludes,
-    others: pkg?.itinerary?.others,
-
-    //    gears: pkg?.gears,
-    //   health: pkg?.healthAndSafety,
   };
-  console.log(pkg?.itinerary?.others?.map((i) => i.title));
-  // const thingsToKnowData = {
-  //   cancellationPolicy: pkg?.cancellation,
-  //   generalInfo: pkg?.expeditionGeneral,
-  //   health: pkg?.healthSafety,
-  // };
 
+  const othersInfo = pkg?.itinerary?.others?.map(({ title, description }) => {
+    return { title, description };
+  });
+  othersInfo?.forEach((i, index) => {
+    infoTabsData[i.title] = {
+      id: index,
+      //title: i.title,
+      description: i.description || [],
+    };
+  });
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
   }
@@ -171,7 +172,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
           }))}
         />
       )}
-      {/* <Offers data={pkg.offer} /> */}
+      {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
       <Reviews />
       <SimilarPackages />
       <HostInfo data={pkg?.sponsor_host} />
