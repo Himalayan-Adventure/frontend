@@ -67,7 +67,7 @@ const levels = [
 ];
 
 export default function PackageSelection() {
-  const { updatePlanData } = usePlanContext();
+  // const { updatePlanData } = usePlanContext();
   const [selectedOption, setSelectedOption] = useState<string | null>(
     "Trekking",
   );
@@ -238,13 +238,13 @@ export default function PackageSelection() {
               <div className="flex h-full items-center border-gray-700 md:border-l md:pl-8">
                 <button
                   className={`rounded-full bg-black px-6 py-2 text-sm text-white transition duration-200 hover:bg-gray-600 md:text-base`}
-                  onClick={() => {
-                    updatePlanData(
-                      "package",
-                      `${selectedOption} - ${pkg.name}`,
-                    );
-                    setSelectedPackage(pkg.name);
-                  }}
+                  // onClick={() => {
+                  //   updatePlanData(
+                  //     "package",
+                  //     `${selectedOption} - ${pkg.name}`,
+                  //   );
+                  //   setSelectedPackage(pkg.name);
+                  // }}
                 >
                   {selectedPackage === pkg.name ? "Selected" : "Select"}
                 </button>
