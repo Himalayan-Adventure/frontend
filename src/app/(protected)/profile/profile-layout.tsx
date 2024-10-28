@@ -94,8 +94,12 @@ export default function ProfileSidebarLayout({
               {/*   <span className="sr-only">Open sidebar</span> */}
               {/*   <Menu className="h-6 w-6" aria-hidden="true" /> */}
               {/* </Button> */}
-              <Text bold variant="text-xl" className="leading-none">
-                Guide
+              <Text
+                bold
+                variant="text-xl"
+                className="font-poppins capitalize leading-none"
+              >
+                {user?.userType}
               </Text>
 
               <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
@@ -125,6 +129,7 @@ function SidebarContent({
   setSidebarHidden: React.Dispatch<SetStateAction<boolean>>;
   sidebarHidden: boolean;
 }) {
+  const isMerchant = user?.userType === "merchant";
   const pathname = usePathname();
 
   return (
@@ -165,9 +170,15 @@ function SidebarContent({
         <ul role="list" className="flex w-full flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="space-y-4">
-              {navigations.map((item) => (
-                <Item key={item.name} item={item} pathname={pathname} />
-              ))}
+              {navigations.map((item) =>
+                item.merchantOnly ? (
+                  isMerchant && (
+                    <Item key={item.name} item={item} pathname={pathname} />
+                  )
+                ) : (
+                  <Item key={item.name} item={item} pathname={pathname} />
+                ),
+              )}
               <Button
                 className={cn(
                   "flex w-full justify-start gap-x-4 rounded-full bg-transparent px-4 py-2 hover:bg-white hover:text-black",

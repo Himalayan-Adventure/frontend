@@ -18,6 +18,7 @@ export type TNavigation = {
   //  icon: React.FC;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   href: string;
+  merchantOnly?: boolean;
 };
 export const navigations: TNavigation[] = [
   {
@@ -43,14 +44,15 @@ export const navigations: TNavigation[] = [
     icon: Workflow,
   },
 
-  // {
-  //   name: "Appointments",
-  //   href: "/profile/appointments",
-  //   icon: HandHelping,
-  // },
-  // {
-  //   name: "Calendar",
-  //   href: "/profile/calendar",
-  //   icon: CalendarX,
-  // },
+  {
+    name: "Appointments",
+    href: "/profile/appointments",
+    icon: HandHelping,
+  },
+  {
+    name: "Calendar",
+    href: "/profile/calendar",
+    icon: CalendarX,
+    merchantOnly: true,
+  },
 ];

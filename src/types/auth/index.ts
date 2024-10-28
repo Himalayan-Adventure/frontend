@@ -7,6 +7,7 @@ export type TUser = {
   blocked: boolean;
   createdAt: string;
   updatedAt: string;
+  userType: string;
 };
 
 export type TLoginResponse = {
