@@ -9,7 +9,7 @@ export const GoBackButton = ({ className }: { className?: string }) => {
   const router = useRouter();
   return (
     <Button
-      className={cn(className, "border bg-primary/10")}
+      className={cn(className, "border bg-black/10")}
       onClick={() => router.back()}
       variant="ghost"
     >

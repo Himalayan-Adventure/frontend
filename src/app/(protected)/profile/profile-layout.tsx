@@ -4,7 +4,7 @@ import { SetStateAction, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "@/components/logo";
+import Logo, { BlackLogo } from "@/components/logo";
 import {
   Accordion,
   AccordionContent,
@@ -129,18 +129,7 @@ function SidebarContent({
 
   return (
     <div className="z-[130] flex w-full grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-tertiary px-6 py-10 font-poppins text-white">
-      {/* <Button */}
-      {/*   variant="ghost" */}
-      {/*   type="button" */}
-      {/*   className={cn( */}
-      {/*     sidebarHidden && "hidden", */}
-      {/*     "-m-2.5 w-fit p-2.5 text-gray-100", */}
-      {/*   )} */}
-      {/*   onClick={() => setSidebarHidden(true)} */}
-      {/* > */}
-      {/*   <span className="sr-only">Open sidebar</span> */}
-      {/*   <Menu className="h-6 w-6" aria-hidden="true" /> */}
-      {/* </Button> */}
+      <Logo variant="small" className="max-w-36" />
       <Text variant="text-xl" bold>
         Dashboard
       </Text>
