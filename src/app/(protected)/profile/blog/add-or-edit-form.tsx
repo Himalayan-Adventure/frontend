@@ -9,7 +9,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import rehypeSanitize from "rehype-sanitize";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
@@ -20,23 +26,24 @@ import { TWorkForm, WorkFormSchema } from "@/validators/work-validator";
 import FileDropZone from "@/components/ui/file-dropzone";
 import MDEditor from "@uiw/react-md-editor";
 import { toast } from "sonner";
-export const WorkAddOrEditForm = ({
+import { BlogFormSchema, TBlogForm } from "@/validators/blog-form";
+import BlogForm from "./form/page";
+export const BlogAddOrEditForm = ({
   type,
   data,
 }: {
   type: "edit" | "add";
-  data?: TWorkForm;
+  data?: TBlogForm;
 }) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
-  const form = useForm<TWorkForm>({
-    resolver: zodResolver(WorkFormSchema),
+  const form = useForm<TBlogForm>({
+    resolver: zodResolver(BlogFormSchema),
     defaultValues: {
       title: "",
-      date: "",
+      categories: "",
       description: "",
-      project_link: "",
       image: "",
     },
   });
@@ -44,7 +51,7 @@ export const WorkAddOrEditForm = ({
   const [content, setContent] = useState<string | undefined>(
     "**Hello World!**",
   );
-  async function onSubmit(values: TWorkForm) {
+  async function onSubmit(values: TBlogForm) {
     setLoading(true);
     const payload = { ...form.getValues(), description: content };
     toast.success("Edited successfully");
@@ -59,7 +66,7 @@ export const WorkAddOrEditForm = ({
           variant="display-sm"
           className="text-left font-poppins !text-xl font-bold capitalize sm:!text-2xl"
         >
-          {type} Work
+          {type} Blog
         </Text>
       </div>
       <Form {...form}>
@@ -72,19 +79,6 @@ export const WorkAddOrEditForm = ({
                 <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <Input type="date" placeholder="Enter date" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,10 +98,33 @@ export const WorkAddOrEditForm = ({
 
           <FormField
             control={form.control}
+            name="categories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Categories</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="tag-1">tag-1</SelectItem>
+                    <SelectItem value="tag-2">tag-2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>About Work</FormLabel>
+                <FormLabel>Blog</FormLabel>
                 <FormControl>
                   <div data-color-mode="light" className="space-y-10">
                     <MDEditor
@@ -124,20 +141,6 @@ export const WorkAddOrEditForm = ({
                       className="rounded-lg border !border-input p-2"
                     />
                   </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="project_link"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Project Link</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter link" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

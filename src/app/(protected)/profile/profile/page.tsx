@@ -95,7 +95,7 @@ export default function ProfilePage() {
         <Text variant="display-sm" bold>
           Profile
         </Text>
-        <Link href="/profile/edit">
+        <Link href="/profile/profile/edit">
           <Button className="gap-x-1 bg-black text-sm text-white">
             <PenLine size={16} />
             Edit

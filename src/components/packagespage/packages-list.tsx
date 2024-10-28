@@ -82,7 +82,7 @@ export default function PackagesList() {
   }, [data]);
 
   return (
-    <section className="container relative">
+    <section className="container relative lg:mt-40">
       <div className="relative mb-8 flex items-center gap-x-2">
         {overflowDir === "left" || overflowDir === "both" ? (
           <div className="absolute left-4 top-1/2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black shadow-lg shadow-white/10 lg:hidden">

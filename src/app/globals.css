@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,7 +7,7 @@
 @layer base {
   :root {
     --background: 0, 0%, 100%;
-    --foreground: 0, 0%, 14%;
+    --foreground: 0 0% 14%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
@@ -72,6 +74,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.font-poppins {
+  font-family: "Poppins", sans-serif;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -161,4 +167,3 @@
   cursor: pointer;
   border: 2px solid white;
 }
-

@@ -2,6 +2,7 @@ import next from "next";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { getCurrentUserData } from "./server/auth/get-me";
+import { toast } from "sonner";
 
 const protectedRoutes = ["/profile"];
 
@@ -21,9 +22,8 @@ export async function middleware(request: NextRequest) {
     const user = await getCurrentUserData();
 
     if (!user || !currentUser) {
-      return NextResponse.redirect(
-        new URL(`/login?from=/${path.replace("/", "")}`, request.url),
-      );
+      toast.error("You need to login first to access this page.");
+      return NextResponse.redirect(new URL(`/`, request.url));
     }
   }
 
@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
   const isAllowedDomain = allowedDomains.some((domain) =>
     hostname?.includes(domain),
   );
-};
+}
 
 //   // taking the first word of hostname . Eg: if hostname is news.nepsetrading.com, then we take only the 'news' from it.
 //   const subdomain = hostname?.split(".")[0];

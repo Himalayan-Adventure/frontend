@@ -1,8 +1,13 @@
+"use client";
 import BlogCard from "@/components/blog/blog-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { PlusIcon, Shapes } from "lucide-react";
+import { CategoriesFilter } from "./categories-filter";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function BlogPage() {
   function createBlogs(numBlogs: number) {
@@ -22,32 +27,34 @@ export default function BlogPage() {
 
     return blogs;
   }
+  const searchParams = useSearchParams();
   const blogs = createBlogs(10);
+  const updateQueryString = useUpdateQueryString();
   return (
     <section className="space-y-8 font-poppins">
       <span className="flex gap-x-3">
         <Text variant="display-sm" bold>
           Blogs
         </Text>
-        <Button className="bg-black text-sm text-white">
-          <PlusIcon size={16} />
-          Create
-        </Button>
+        <Link href="/profile/blog/form?type=add">
+          <Button className="bg-black text-sm text-white">
+            <PlusIcon size={16} />
+            Create
+          </Button>
+        </Link>
       </span>
 
       {/* Filters*/}
       <span className="flex gap-x-4">
-        <Button
-          variant="ghost"
-          className="gap-x-2 rounded-full border border-gray-200"
-        >
-          <Shapes size={18} />
-          Categories
-        </Button>
+        <CategoriesFilter />
         <div className="">
           <Input
             placeholder="Search blogs"
-            className="w-full max-w-80 rounded-full"
+            value={searchParams.get("code") || ""}
+            className="w-full max-w-80 rounded-full pl-4"
+            onChange={(value) =>
+              updateQueryString({ code: value.target.value })
+            }
           />
         </div>
       </span>
@@ -55,7 +62,12 @@ export default function BlogPage() {
       {/* Blogs */}
       <div className="flex flex-col space-y-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-          {blogs?.map((blog) => (
+          {(searchParams.get("code")
+            ? blogs.filter((i) =>
+                i.title.includes(searchParams?.get("code") || ""),
+              )
+            : blogs
+          )?.map((blog) => (
             <BlogCard
               blog={blog}
               key={`blog-${blog.title}-${blog.author_name}`}

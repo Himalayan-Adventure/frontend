@@ -73,8 +73,7 @@ const PackageCard = ({
       <div className="absolute left-0 top-1/2 -z-[51] flex w-full -translate-y-1/2 justify-between opacity-0 transition-all ease-in-out group-hover:z-[51] group-hover:opacity-100">
         <Button
           className="w-fit rounded-none px-1"
-
-        disabled={cardState === 0}
+          disabled={cardState === 0}
           onClick={() => {
             if (cardState > 0) {
               setCardState(cardState - 1);
@@ -85,7 +84,7 @@ const PackageCard = ({
         </Button>
 
         <Button
-        disabled={cardState === 1}
+          disabled={cardState === 1}
           className="w-fit rounded-none px-1"
           onClick={() => {
             if (cardState < 1) {
@@ -98,9 +97,7 @@ const PackageCard = ({
       </div>
       <div className="relative h-full p-4">
         <SliderComponent pkg={pkg} type="hover" />
-        {cardState === 0 && (
-          <Overlay pkg={pkg} />
-        )}
+        {cardState === 0 && <Overlay pkg={pkg} />}
         {/* // ) : (
         //   <Overlay pkg={pkg} />
         // )} */}
@@ -125,12 +122,12 @@ const PackageCard = ({
               <div>
                 <Link href={`/packages/${pkg.id}`}>
                   <p className="text-lg font-medium text-primary">
-                    {attr?.name}
+                    {attr?.package_name}
                   </p>
 
-                  {attr?.hostname && (
+                  {attr?.sponsor_host?.host_name && (
                     <p className="mb-2 text-sm font-light md:text-[16px]">
-                      Host: {attr.hostname}
+                      Host: {attr?.sponsor_host?.host_name}
                     </p>
                   )}
                 </Link>
@@ -147,7 +144,7 @@ const PackageCard = ({
             <Link href={`/packages/${pkg.id}`} className="pt-4">
               <div className="mb-2 flex items-center justify-between">
                 <h1 className="text-sm font-semibold text-primary">
-                  {attr?.name}
+                  {attr?.package_name}
                 </h1>
                 <div className="flex items-center text-primary">
                   <FaStar />
@@ -207,16 +204,16 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
           </p>
         </div>
         <div className="my-2 rounded border bg-white p-2">
-          {attr?.departure?.map((i, index) => (
+          {attr?.adventure_specification?.travel_dates?.map((i, index) => (
             <div
               className="mt-2 flex items-center justify-between"
-              key={`departure-${attr.name}-${pkg.id}${index}`}
+              key={`departure-${attr.package_name}-${pkg.id}${index}`}
             >
               <div className="">
                 <p className="text-xs text-black">Date</p>
                 <p className="text-xs text-gray-500" key={`departure-${index}`}>
-                  {formatDate(i?.start as string)} -{" "}
-                  {formatDate(i?.end as string)}
+                  {formatDate(i?.date as string)} -{" "}
+                  {formatDate(i?.date as string)}
                 </p>
               </div>
 
@@ -234,25 +231,42 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
       <div className="mt-4 space-y-2">
         <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
         <p className="flex items-center space-x-2 text-sm font-medium">
-          {seasonIconMap?.[attr?.season || "winter"]}
+          {
+            seasonIconMap?.[
+              (attr?.adventure_specification?.season?.toString() as string) ||
+                "winter"
+            ]
+          }
           <span className="capitalize">
-            {attr?.season}: ({seasonMonthMap[attr?.season || "winter"]})
+            {attr?.adventure_specification?.season?.toString()}: (
+            {
+              seasonMonthMap[
+                (attr?.adventure_specification?.season?.toString() as string) ||
+                  "winter"
+              ]
+            }
+            )
           </span>
         </p>
-        {attr.duration && (
+        {attr?.adventure_specification?.duration && (
           <p className="flex items-center space-x-2 text-sm font-medium">
             <MdTimelapse size={20} />
-            <span>Duration: {wordsToNumbers(attr?.duration)}</span>
+            <span>Duration: {attr?.adventure_specification?.duration}</span>
           </p>
         )}
         <p className="flex items-center space-x-2 text-sm font-medium">
           <BsBarChartFill size={20} />
-          <span>Grade: {attr.grade}</span>
+          <span>
+            Grade: {attr?.adventure_specification?.grade?.[0]?.name || "-"}
+          </span>
         </p>
-        {attr.altitude && (
+        {attr?.adventure_specification?.max_altitude && (
           <p className="flex items-center space-x-2 text-sm font-medium">
             <FaMountain size={20} />
-            <span>Max Altitude: {wordsToNumbers(attr?.altitude)}</span>
+            <span>
+              Max Altitude:{" "}
+              {wordsToNumbers(attr?.adventure_specification?.max_altitude)}
+            </span>
           </p>
         )}
       </div>

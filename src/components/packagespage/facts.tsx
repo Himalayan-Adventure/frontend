@@ -19,6 +19,7 @@ import { MdOutlineLocationOn, MdOutlineSevereCold } from "react-icons/md";
 import Image from "next/image";
 import { IDProperty } from "@/types/types";
 import DynamicReactIcon from "../icons/strapi-icon";
+import { IconContext } from "react-icons";
 const CloudImage = ({ src, alt, position }: any) => (
   <div className={`absolute ${position} w-full`}>
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
@@ -107,7 +108,7 @@ const facts = [
     value: "8,848.86m (29,032 ft)",
   },
 ];
-export default function BookAppointment({
+export default function FactsOfTheTrip({
   data,
 }: {
   // data?: Array<{
@@ -120,50 +121,77 @@ export default function BookAppointment({
     | (IDProperty &
         Omit<
           {
-            name?: string | undefined;
-            icon?: string | undefined;
-            value?: string | undefined;
+            title?: string | undefined;
+            fact_info?:
+              | (IDProperty &
+                  Omit<
+                    {
+                      title?: string | undefined;
+                      details?: string | undefined;
+                      icon?: string | undefined;
+                    } & {},
+                    never
+                  >[])
+              | undefined;
           } & {},
           never
         >[])
     | undefined;
 }) {
   return (
-    <section
-      className="relative my-8 flex min-h-screen items-center bg-cover bg-center bg-no-repeat lg:my-16"
-      style={{
-        backgroundImage: "url('/images/factsBg.png')",
-        filter: "grayscale(100%)",
-      }}
-    >
+    <section className="relative my-8 flex min-h-screen items-center bg-cover bg-center bg-no-repeat lg:my-16">
+      <div
+        className="absolute inset-0 -z-20 min-h-screen bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/images/factsBg.png')",
+          filter: "grayscale(100%)",
+        }}
+      />
       {/* Overlay */}
       <div className="absolute inset-0 -z-10 bg-black bg-opacity-50"></div>
 
       <div className="from-gray absolute top-0 h-20 w-full bg-gradient-to-b"></div>
       <div className="container py-8 lg:py-16">
         <div className="relative text-white">
-          <h1 className="text-lg md:text-xl lg:text-2xl">Facts of the Trip</h1>
-          <div className="mt-4 grid grid-cols-1 gap-x-8 lg:mt-8 lg:grid-cols-2">
-            {data?.map((fact, index) => (
-              <div
-                key={index}
-                className="mb-2 grid grid-cols-3 space-x-3 lg:mb-4"
-              >
-                <p className="col-span-1 text-xs font-semibold leading-none md:text-sm md:leading-none lg:text-base lg:leading-none">
-                  {fact.name}
-                </p>
-
-                <div className="col-span-2 flex items-start space-x-1">
-                  {fact.icon && <DynamicReactIcon name={fact.icon} />}
-                  {/* <span className="">{fact.icon}</span> */}
-
-                  <p className="text-xs leading-none md:text-sm md:leading-none lg:text-base lg:leading-none">
-                    {fact.value}
+          <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
+            Facts of the Trip
+          </h1>
+          {/* <div className="mt-4 grid grid-cols-1 gap-x-8 lg:mt-8 lg:grid-cols-2"> */}
+          {data?.map((fact, index) => (
+            <div
+              key={index}
+              className="mt-4 grid grid-cols-1 gap-x-8 lg:mt-8 lg:grid-cols-2"
+            >
+              {fact?.fact_info?.map((item, index) => (
+                <div
+                  key={index}
+                  className="mb-2 grid grid-cols-[170px_auto] space-x-3 lg:mb-4"
+                >
+                  <p className="col-span-1 text-xs md:text-sm lg:text-base">
+                    {item.title}
                   </p>
+
+                  <div className="flex items-center space-x-1">
+                    <div className="text-primary">
+                      {item.icon && (
+                        <DynamicReactIcon
+                          className="size-5 text-primary md:size-6"
+                          color="#FD9100"
+                          fill="#FD9100"
+                          name={item.icon}
+                        />
+                      )}
+                    </div>
+
+                    <p className="text-xs md:text-sm lg:text-base">
+                      {item.details}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {/* <div>
+              ))}
+            </div>
+          ))}
+          {/* <div>
               {data?.map((fact, index) => (
                 <div
                   key={index}
@@ -183,9 +211,9 @@ export default function BookAppointment({
                 </div>
               ))}
             </div> */}
-          </div>
         </div>
       </div>
+      {/* </div> */}
 
       <CloudImage
         src="/images/cloudup.png"

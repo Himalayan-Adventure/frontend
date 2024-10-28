@@ -1,17 +1,15 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
-import { ApiPackagePackage } from "@/types/contentTypes";
 import {
-  APIResponse,
-  APIResponseCollection,
-  APIResponseData,
+    APIResponse
 } from "@/types/types";
-import { AxiosResponse, type AxiosError } from "axios";
-export const getSinglePackage = async (id: string) => {
+import { AxiosError, AxiosResponse } from "axios";
+
+export const getAboutUs = async () => {
   try {
-    const res: AxiosResponse<APIResponse<"api::package.package">> =
-      await axiosInstance.get(`api/packages/${id}?populate=deep`);
+    const res: AxiosResponse<APIResponse<"api::about-us.about-us">> =
+      await axiosInstance.get(`api/about-us?populate=*`);
 
     return {
       data: res.data.data,
