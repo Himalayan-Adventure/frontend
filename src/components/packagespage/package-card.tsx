@@ -29,6 +29,7 @@ import { Button } from "../ui/button";
 import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
 import { TDepartureData } from "@/types/packages/departure";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DepartureFact } from "./departure";
 
 const PackageCard = ({
   pkg,
@@ -98,9 +99,6 @@ const PackageCard = ({
       <div className="relative h-full p-4">
         <SliderComponent pkg={pkg} type="hover" />
         {cardState === 0 && <Overlay pkg={pkg} />}
-        {/* // ) : (
-        //   <Overlay pkg={pkg} />
-        // )} */}
         <div className="absolute top-0 z-10 flex h-12 w-full items-end justify-end p-2">
           <button onClick={toggleFavorite} aria-label="Favorite">
             {isFavorited ? (
@@ -174,6 +172,65 @@ export default PackageCard;
 
 const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
   const attr = pkg.attributes;
+
+  const departureData: TDepartureData = {
+    //date: pkg?.date as string,
+    departure: [
+      {
+        start:
+          attr?.adventure_specification?.travel_dates?.[0]?.date || new Date(),
+        end:
+          attr?.adventure_specification?.travel_dates?.[1]?.date || new Date(),
+      },
+    ],
+    grade: attr?.adventure_specification?.grade?.[0]?.name || "",
+    altitude: attr?.adventure_specification?.max_altitude || "",
+    duration: attr?.adventure_specification?.duration || "",
+    season: attr?.adventure_specification?.season?.[0]?.name || "",
+  };
+  const { duration, season, altitude, grade, departure } = departureData;
+
+  const maxAltInM = Number(
+    wordsToNumbers(altitude)?.toString().split(" ").join(""),
+  );
+  // const departureFacts = [
+  //   {
+  //     title: season,
+  //     desc: seasonMonthMap[season],
+  //     icon: seasonIconMap[season],
+  //   },
+  //   {
+  //     title: "duration",
+  //     desc: duration + " days",
+  //     icon: <MdTimelapse size={20} />,
+  //   },
+  //   {
+  //     title: "grade",
+  //     desc: grade,
+  //     icon: <BsBarChartFill size={20} />,
+  //   },
+  //   {
+  //     title: "max altitude",
+  //     desc: `${maxAltInM.toLocaleString("en-us")}m/${(maxAltInM * 3.281).toLocaleString("en-us")}ft`,
+  //     icon: <FaMountain size={20} />,
+  //   },
+  // ];
+  let departureFacts = [];
+  if (season)
+    departureFacts.push({
+      title: season,
+      desc: seasonMonthMap[season],
+      icon: seasonIconMap[season],
+    });
+  if (duration) {
+    departureFacts.push({
+      title: "duration",
+      desc: duration + " days",
+      icon: <MdTimelapse size={20} />,
+    });
+  }
+
+  console.log(departureData);
   return (
     <div
       className={cn(
@@ -212,8 +269,8 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
               <div className="">
                 <p className="text-xs text-black">Date</p>
                 <p className="text-xs text-gray-500" key={`departure-${index}`}>
-                  {formatDate(i?.date as string)} -{" "}
-                  {formatDate(i?.date as string)}
+                  {formatDate((i?.date as string) || new Date().toString())} -{" "}
+                  {formatDate((i?.date as string) || new Date().toString())}
                 </p>
               </div>
 
