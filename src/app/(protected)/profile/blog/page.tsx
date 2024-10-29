@@ -1,4 +1,3 @@
-"use client";
 import BlogCard from "@/components/blog/blog-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,8 +7,13 @@ import { CategoriesFilter } from "./categories-filter";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Suspense } from "react";
 
-export default function BlogPage() {
+export default function BlogPage({
+  searchParams,
+}: {
+  searchParams: { code?: string; tag?: string };
+}) {
   function createBlogs(numBlogs: number) {
     const blogs = [];
 
@@ -27,9 +31,8 @@ export default function BlogPage() {
 
     return blogs;
   }
-  const searchParams = useSearchParams();
   const blogs = createBlogs(10);
-  const updateQueryString = useUpdateQueryString();
+  //  const updateQueryString = useUpdateQueryString();
   return (
     <section className="space-y-8 font-poppins">
       <span className="flex gap-x-3">
@@ -44,28 +47,15 @@ export default function BlogPage() {
         </Link>
       </span>
 
-      {/* Filters*/}
-      <span className="flex gap-x-4">
+      <Suspense>
         <CategoriesFilter />
-        <div className="">
-          <Input
-            placeholder="Search blogs"
-            value={searchParams.get("code") || ""}
-            className="w-full max-w-80 rounded-full pl-4"
-            onChange={(value) =>
-              updateQueryString({ code: value.target.value })
-            }
-          />
-        </div>
-      </span>
+      </Suspense>
 
       {/* Blogs */}
       <div className="flex flex-col space-y-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-          {(searchParams.get("code")
-            ? blogs.filter((i) =>
-                i.title.includes(searchParams?.get("code") || ""),
-              )
+          {(searchParams?.code
+            ? blogs.filter((i) => i.title.includes(searchParams?.code || ""))
             : blogs
           )?.map((blog) => (
             <BlogCard
