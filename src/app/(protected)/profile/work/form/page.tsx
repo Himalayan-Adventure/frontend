@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
 import { GoBackButton } from "@/components/profile/go-back-button";
 const WorkAddForm = ({
-  props,
+  searchParams,
 }: {
-  props: { type: "edit" | "add" };
+  searchParams: { type: "edit" | "add" };
   data?: TWorkForm;
 }) => {
   return (
@@ -15,7 +15,7 @@ const WorkAddForm = ({
       <Suspense>
         <GoBackButton className="my-5" />
       </Suspense>
-      <WorkAddOrEditForm type={props?.type} />
+      <WorkAddOrEditForm type={searchParams?.type} />
     </section>
   );
 };
