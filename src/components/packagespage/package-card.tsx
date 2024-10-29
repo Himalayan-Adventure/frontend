@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { LuStar } from "react-icons/lu";
-import { MdTimelapse } from "react-icons/md";
+import { MdTimelapse, MdTimer } from "react-icons/md";
 import wordsToNumbers from "words-to-numbers";
 
 import { cn, formatDate } from "@/lib/utils";
@@ -260,26 +260,31 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
             </a>
           </p>
         </div>
-        <div className="my-2 rounded border bg-white p-2">
-          {attr?.adventure_specification?.travel_dates?.map((i, index) => (
-            <div
-              className="mt-2 flex items-center justify-between"
-              key={`departure-${attr.package_name}-${pkg.id}${index}`}
-            >
-              <div className="">
-                <p className="text-xs text-black">Date</p>
-                <p className="text-xs text-gray-500" key={`departure-${index}`}>
-                  {formatDate((i?.date as string) || new Date().toString())} -{" "}
-                  {formatDate((i?.date as string) || new Date().toString())}
-                </p>
-              </div>
+        {departure && departure?.filter((i) => i.start || i.end).length > 0 && (
+          <div className="my-2 rounded border bg-white p-2">
+            {departure?.map((i, index) => (
+              <div
+                className="mt-2 flex items-center justify-between"
+                key={`departure-${index}`}
+              >
+                <div className="">
+                  <p className="text-xs text-black">Date</p>
+                  <p
+                    className="text-sm text-gray-500"
+                    key={`departure-${index}`}
+                  >
+                    {formatDate(i?.start as string)} -{" "}
+                    {formatDate(i?.end as string)}
+                  </p>
+                </div>
 
-              <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
-                Book Now
-              </Button>
-            </div>
-          ))}
-        </div>
+                <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
+                  Book Now
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
 
         <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
           Get Quote
@@ -287,44 +292,33 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
       </div>
       <div className="mt-4 space-y-2">
         <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
-        <p className="flex items-center space-x-2 text-sm font-medium">
-          {
-            seasonIconMap?.[
-              (attr?.adventure_specification?.season?.toString() as string) ||
-                "winter"
-            ]
-          }
-          <span className="capitalize">
-            {attr?.adventure_specification?.season?.toString()}: (
-            {
-              seasonMonthMap[
-                (attr?.adventure_specification?.season?.toString() as string) ||
-                  "winter"
-              ]
-            }
-            )
-          </span>
-        </p>
-        {attr?.adventure_specification?.duration && (
-          <p className="flex items-center space-x-2 text-sm font-medium">
-            <MdTimelapse size={20} />
-            <span>Duration: {attr?.adventure_specification?.duration}</span>
-          </p>
+        {season && (
+          <DepartureFact
+            title={season}
+            desc={seasonMonthMap[season]}
+            icon={seasonIconMap[season]}
+          />
         )}
-        <p className="flex items-center space-x-2 text-sm font-medium">
-          <BsBarChartFill size={20} />
-          <span>
-            Grade: {attr?.adventure_specification?.grade?.[0]?.name || "-"}
-          </span>
-        </p>
-        {attr?.adventure_specification?.max_altitude && (
-          <p className="flex items-center space-x-2 text-sm font-medium">
-            <FaMountain size={20} />
-            <span>
-              Max Altitude:{" "}
-              {wordsToNumbers(attr?.adventure_specification?.max_altitude)}
-            </span>
-          </p>
+        {duration && (
+          <DepartureFact
+            title={"duration"}
+            desc={duration + " days"}
+            icon={<MdTimelapse size={20} />}
+          />
+        )}
+        {grade && (
+          <DepartureFact
+            title="grade"
+            desc={grade}
+            icon={<BsBarChartFill size={20} />}
+          />
+        )}
+        {maxAltInM && maxAltInM !== 0 && (
+          <DepartureFact
+            title="max altitude"
+            desc={`${maxAltInM.toLocaleString("en-us")}m/${(maxAltInM * 3.281).toLocaleString("en-us")}ft`}
+            icon={<FaMountain size={20} />}
+          />
         )}
       </div>
 

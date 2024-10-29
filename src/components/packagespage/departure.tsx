@@ -45,6 +45,7 @@ export default function Departure({
     },
   ];
 
+  console.log(departure);
   return (
     <div className="relative space-y-4">
       <div className="relative rounded-lg border p-2 shadow-xl shadow-gray-300 lg:p-4">
@@ -62,38 +63,66 @@ export default function Departure({
               </a>
             </p>
           </div>
-          <div className="my-2 rounded border bg-white p-2">
-            {departure?.map((i, index) => (
-              <div
-                className="mt-2 flex items-center justify-between"
-                key={`departure-${index}`}
-              >
-                <div className="">
-                  <p className="text-xs text-black">Date</p>
-                  <p
-                    className="text-sm text-gray-500"
+          {departure &&
+            departure?.filter((i) => i.start || i.end).length > 0 && (
+              <div className="my-2 rounded border bg-white p-2">
+                {departure?.map((i, index) => (
+                  <div
+                    className="mt-2 flex items-center justify-between"
                     key={`departure-${index}`}
                   >
-                    {formatDate(i?.start as string)} -{" "}
-                    {formatDate(i?.end as string)}
-                  </p>
-                </div>
+                    <div className="">
+                      <p className="text-xs text-black">Date</p>
+                      <p
+                        className="text-sm text-gray-500"
+                        key={`departure-${index}`}
+                      >
+                        {formatDate(i?.start as string)} -{" "}
+                        {formatDate(i?.end as string)}
+                      </p>
+                    </div>
 
-                <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
-                  Book Now
-                </Button>
+                    <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
+                      Book Now
+                    </Button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
           <button className="mt-4 w-full rounded-lg bg-primary py-2 font-semibold text-white hover:bg-orange-500">
             Get Quote
           </button>
         </div>
         <div className="mt-4 space-y-2">
           <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
-          {departureFacts.map((fact, index) => (
-            <DepartureFact key={fact.title} {...fact} />
-          ))}
+          {season && (
+            <DepartureFact
+              title={season}
+              desc={seasonMonthMap[season]}
+              icon={seasonIconMap[season]}
+            />
+          )}
+          {duration && (
+            <DepartureFact
+              title={"duration"}
+              desc={duration + " days"}
+              icon={<MdTimelapse size={20} />}
+            />
+          )}
+          {grade && (
+            <DepartureFact
+              title="grade"
+              desc={grade}
+              icon={<BsBarChartFill size={20} />}
+            />
+          )}
+          {maxAltInM && maxAltInM !== 0 && (
+            <DepartureFact
+              title="max altitude"
+              desc={`${maxAltInM.toLocaleString("en-us")}m/${(maxAltInM * 3.281).toLocaleString("en-us")}ft`}
+              icon={<FaMountain size={20} />}
+            />
+          )}
         </div>
 
         {type === "card" && (
@@ -125,7 +154,7 @@ export default function Departure({
     </div>
   );
 }
-const DepartureFact = ({
+export const DepartureFact = ({
   title,
   desc,
   icon,

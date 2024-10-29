@@ -82,7 +82,19 @@ export default async function PackageDetail({ params }: { params: Params }) {
   }
   return (
     <main className="font-poppins">
-      <CommonBanner title={`${pkg.package_name}`} bgImage={bgImage} />
+      <Image
+        src={bgImage}
+        alt="Background Image"
+        objectFit="cover"
+        quality={100}
+        className="absolute inset-0 h-96 w-full object-cover lg:h-auto"
+      />
+
+      <div className="container relative z-10 flex min-h-60 flex-col justify-center space-y-3 text-white lg:space-y-6">
+        <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
+          {pkg?.package_name}
+        </h1>
+      </div>
       <section className="container overflow-hidden">
         <div className="grid gap-x-4 space-y-8 md:gap-x-8 lg:grid-cols-3 lg:gap-x-24 lg:space-y-0">
           <div className="relative space-y-8 lg:col-span-2">
@@ -175,8 +187,10 @@ export default async function PackageDetail({ params }: { params: Params }) {
       {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
       <Reviews />
       <SimilarPackages />
-      <HostInfo data={pkg?.sponsor_host} />
-      <ThingsToKnow data={pkg?.things_to_know} />
+      {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
+      {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (
+        <ThingsToKnow data={pkg?.things_to_know} />
+      )}
     </main>
   );
 }
