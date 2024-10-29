@@ -4,11 +4,10 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
 import { GoBackButton } from "@/components/profile/go-back-button";
-const WorkAddForm = ({
+const WorkAddFormPage = ({
   searchParams,
 }: {
   searchParams: { type: "edit" | "add" };
-  data?: TWorkForm;
 }) => {
   return (
     <section>
@@ -19,4 +18,4 @@ const WorkAddForm = ({
     </section>
   );
 };
-export default WorkAddForm;
+export default WorkAddFormPage;
