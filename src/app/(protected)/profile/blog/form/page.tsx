@@ -2,19 +2,18 @@ import { TWorkForm } from "@/validators/work-validator";
 import { BlogAddOrEditForm } from "../add-or-edit-form";
 import { Suspense } from "react";
 import { GoBackButton } from "@/components/profile/go-back-button";
-const BlogForm = ({
-  props,
+const BlogFormPage = ({
+  searchParams,
 }: {
-  props: { type: "edit" | "add" };
-  data?: TWorkForm;
+  searchParams: { type: "edit" | "add" };
 }) => {
   return (
     <section>
       <Suspense>
         <GoBackButton className="my-5" />
       </Suspense>
-      <BlogAddOrEditForm type={props?.type} />
+      <BlogAddOrEditForm type={searchParams?.type} />
     </section>
   );
 };
-export default BlogForm;
+export default BlogFormPage;
