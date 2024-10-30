@@ -34,13 +34,13 @@ export const stepsData = [
       "Select where you want to go. The destination sets the stage for your entire trip. Make sure it’s a place that excites you!",
     content: <DestinationSelection />,
   },
-  // {
-  //   step: "Package",
-  //   icons: <BsArchive />,
-  //   description:
-  //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vehicula lorem dolor, vitae malesuada elit porta quis. Phasellus quis arcu in metus scelerisque gravida et sed lectus. Mauris accumsan dui quis nisi cursus, ac scelerisque tellus efficitur. Curabitur condimentum, justo a hendrerit euismod, turpis magna efficitur justo, vitae consequat purus quam non neque. Nullam dictum dapibus tortor eget bibendum. Quisque pellentesque odio et velit efficitur congue. Pellentesque nec orci in urna tempus aliquet non eget orci.Maecenas nulla dui, tincidunt eget accumsan rhoncus, facilisis eu ex.",
-  //   content: <PackageSelection />,
-  // },
+  {
+    step: "Package",
+    icons: <BsArchive />,
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vehicula lorem dolor, vitae malesuada elit porta quis. Phasellus quis arcu in metus scelerisque gravida et sed lectus. Mauris accumsan dui quis nisi cursus, ac scelerisque tellus efficitur. Curabitur condimentum, justo a hendrerit euismod, turpis magna efficitur justo, vitae consequat purus quam non neque. Nullam dictum dapibus tortor eget bibendum. Quisque pellentesque odio et velit efficitur congue. Pellentesque nec orci in urna tempus aliquet non eget orci.Maecenas nulla dui, tincidunt eget accumsan rhoncus, facilisis eu ex.",
+    content: <PackageSelection />,
+  },
   {
     step: "Accommodation",
     icons: <IoHomeOutline />,

@@ -7,15 +7,15 @@ import { Calendar } from "../ui/calendar";
 export default function DateSelection() {
   const options = [
     {
-      icon: <FaCalendarAlt />,
+      icon: <FaCalendarAlt className="text-xl lg:text-4xl" />,
       name: "Exact date",
     },
     {
-      icon: <MdDateRange />,
+      icon: <MdDateRange className="text-xl lg:text-4xl" />,
       name: "Flexible Date Range",
     },
     {
-      icon: <FaQuestionCircle />,
+      icon: <FaQuestionCircle className="text-xl lg:text-4xl" />,
       name: "Decide Later",
     },
   ];
@@ -28,20 +28,48 @@ export default function DateSelection() {
     setDate,
     dateRange,
     setDateRange,
+    travelDates,
   } = usePlanContext();
 
   useEffect(() => {
-    if (selectedOption === "Exact date" && date) {
-      const dateString = date.toISOString().split("T")[0];
-      setTravelDates(dateString);
-    } else if (selectedOption === "Flexible Date Range" && dateRange) {
-      const startDateString = dateRange.from?.toISOString().split("T")[0];
-      const endDateString = dateRange.to?.toISOString().split("T")[0];
-      setTravelDates(`${startDateString} to ${endDateString}`);
-    } else if (selectedOption === "Decide Later") {
-      setTravelDates("Decide Later");
+    if (selectedOption) {
+      if (selectedOption === "Exact date" && date) {
+        const formattedDate = date.toISOString().split("T")[0];
+        setTravelDates({
+          ...(travelDates || {}),
+          exact_date_start: formattedDate,
+          exact_date_end: formattedDate,
+          flexible_date_start: null,
+          flexible_date_end: null,
+          decide_later: false,
+        });
+      } else if (
+        selectedOption === "Flexible Date Range" &&
+        dateRange?.from &&
+        dateRange?.to
+      ) {
+        const startDateString = dateRange.from.toISOString().split("T")[0];
+        const endDateString = dateRange.to.toISOString().split("T")[0];
+        setTravelDates({
+          ...(travelDates || {}),
+          exact_date_start: null,
+          exact_date_end: null,
+          flexible_date_start: startDateString,
+          flexible_date_end: endDateString,
+          decide_later: false,
+        });
+      } else if (selectedOption === "Decide Later") {
+        setTravelDates({
+          ...(travelDates || {}),
+          exact_date_start: null,
+          exact_date_end: null,
+          flexible_date_start: null,
+          flexible_date_end: null,
+          decide_later: true,
+        });
+      }
     }
-  }, [selectedOption, date, dateRange, setTravelDates]);
+  }, [selectedOption, date, dateRange, setTravelDates, travelDates]);
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -110,7 +138,7 @@ export default function DateSelection() {
         )}
 
         {selectedOption === "Decide Later" && (
-          <div className="">
+          <div className="rounded-lg bg-white p-4 md:shadow-md">
             <p className="text-center">
               You can decide your travel dates later.
             </p>

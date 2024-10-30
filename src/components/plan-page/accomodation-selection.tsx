@@ -27,13 +27,25 @@ const options = [
 
 export default function AccomodationSelection() {
   const { accommodation, setAccommodation } = usePlanContext(); // Destructuring accommodation and setter from context
-  const [selectedOption, setSelectedOption] = useState<string | null>(
-    accommodation || null,
-  ); // Initialize with context state
+
+  // Initialize selected options from context or set to an empty array if none
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(
+    accommodation || [],
+  );
 
   const handleOptionClick = (option: string) => {
-    setSelectedOption(option); // Update local component state
-    setAccommodation(option); // Update context state
+    const lowercaseOption = option.toLowerCase(); // Convert option name to lowercase
+    let updatedOptions: string[];
+    if (selectedOptions.includes(lowercaseOption)) {
+      // If already selected, remove the option
+      updatedOptions = selectedOptions.filter((opt) => opt !== lowercaseOption);
+    } else {
+      // If not selected, add it to the array
+      updatedOptions = [...selectedOptions, lowercaseOption];
+    }
+
+    setSelectedOptions(updatedOptions); // Update local state
+    setAccommodation(updatedOptions); // Update context state with the new selections
   };
 
   return (
@@ -46,7 +58,7 @@ export default function AccomodationSelection() {
           <div
             key={option.name}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-4 shadow-lg transition-colors duration-300 ease-in-out ${
-              selectedOption === option.name
+              selectedOptions.includes(option.name.toLowerCase())
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
             }`}
@@ -54,7 +66,9 @@ export default function AccomodationSelection() {
           >
             <span
               className={`text-xl lg:text-4xl ${
-                selectedOption === option.name ? "text-white" : "text-primary"
+                selectedOptions.includes(option.name.toLowerCase())
+                  ? "text-white"
+                  : "text-primary"
               }`}
             >
               {option.icon}

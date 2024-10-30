@@ -10,15 +10,15 @@ const options = [
   },
   {
     icon: <MdParagliding />,
-    name: "Adventure Activities",
+    name: "Adventure Activitiy",
   },
   {
     icon: <MdOutlineFestival />,
-    name: "Cultural Experiences",
+    name: "Cultural Experience",
   },
   {
     icon: <FaHelicopter />,
-    name: "Transportation options",
+    name: "Transportation option",
   },
 ];
 
@@ -26,7 +26,15 @@ export default function CustomizeExperience() {
   const { experience, setExperience } = usePlanContext();
 
   const handleOptionClick = (option: string) => {
-    setExperience(option);
+    const lowercaseOption = option.toLowerCase(); // Convert option name to lowercase
+    // Check if the option is already selected
+    if (experience.includes(lowercaseOption)) {
+      // Remove the option if it's already selected
+      setExperience(experience.filter((exp) => exp !== lowercaseOption));
+    } else {
+      // Add the option to the selected experiences
+      setExperience([...experience, lowercaseOption]);
+    }
   };
 
   return (
@@ -39,7 +47,7 @@ export default function CustomizeExperience() {
           <div
             key={option.name}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out md:p-4 ${
-              experience === option.name
+              experience.includes(option.name.toLowerCase())
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
             }`}
@@ -47,7 +55,9 @@ export default function CustomizeExperience() {
           >
             <span
               className={`text-xl lg:text-4xl ${
-                experience === option.name ? "text-white" : "text-primary"
+                experience.includes(option.name.toLowerCase())
+                  ? "text-white"
+                  : "text-primary"
               }`}
             >
               {option.icon}

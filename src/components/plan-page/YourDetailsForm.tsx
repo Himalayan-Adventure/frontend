@@ -24,7 +24,7 @@ export default function YourDetailsForm() {
     setDetailsFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (action: string) => {
+  const handleSubmit = async () => {
     // Basic validation
     if (
       !detailsFormData.name.trim() ||
@@ -41,7 +41,7 @@ export default function YourDetailsForm() {
       return;
     }
 
-    const combinedData = {
+    const payload = {
       data: {
         group: group,
         grade: grade,
@@ -65,15 +65,15 @@ export default function YourDetailsForm() {
       const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
 
       const response = await axios.post(
-        `${apiUrl}/api/plan-with-uses`,
-        combinedData,
+        `${apiUrl}api/plan-with-uses`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         },
       );
-      
+
       toast.success("Form submitted successfully!");
       setDetailsFormData({ name: "", email: "", message: "" });
     } catch (error: any) {
@@ -120,9 +120,9 @@ export default function YourDetailsForm() {
         rows={6}
         required
       />
-      <div className="flex justify-center space-x-2">
+      <div className="flex flex-wrap justify-center gap-4">
         <button
-          onClick={() => handleSubmit("Get Quotes")}
+          onClick={() => handleSubmit()}
           disabled={loading}
           className={`rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base ${
             loading ? "cursor-not-allowed opacity-50" : ""
@@ -131,22 +131,13 @@ export default function YourDetailsForm() {
           {loading ? "Submitting..." : "Get Quotes"}
         </button>
         <button
-          onClick={() => handleSubmit("Optimize Package")}
+          onClick={() => handleSubmit()}
           disabled={loading}
           className={`rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base ${
             loading ? "cursor-not-allowed opacity-50" : ""
           }`}
         >
           {loading ? "Submitting..." : "Optimize Package"}
-        </button>
-        <button
-          onClick={() => handleSubmit("Submit")}
-          disabled={loading}
-          className={`rounded-lg bg-green-500 px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-green-600 md:text-base ${
-            loading ? "cursor-not-allowed opacity-50" : ""
-          }`}
-        >
-          {loading ? "Submitting..." : "Submit"}
         </button>
       </div>
     </div>
