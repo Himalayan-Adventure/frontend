@@ -41,6 +41,7 @@ export default function ProfilePage() {
     blocked: false,
     createdAt: "2022-01-01T00:00:00.000Z",
     updatedAt: "2022-01-01T00:00:00.000Z",
+    userType: "merchant",
   };
   const isPending = false;
   //   const { data: user, isPending } = useQuery({

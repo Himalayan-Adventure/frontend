@@ -64,9 +64,6 @@ export const RegisterCard = () => {
       toast.error(`${res?.error?.error?.message}`);
     }
   }
-  useEffect(()=>{
-    console.log(form.formState)
-  })
   const [showPassword, setShowPassword] = useState(false);
   const [showConfPassword, setShowConfPassword] = useState(false);
   return (

@@ -51,9 +51,6 @@ export default function RootLayout({
         </Suspense>
         <Toaster richColors />
         <Providers>
-          <Suspense>
-            <Navbar />
-          </Suspense>
           {children}
           <Footer />
         </Providers>

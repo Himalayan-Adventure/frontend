@@ -141,7 +141,9 @@ export default function HomeCarousel() {
                     ))
                   : data.data
                       ?.filter(
-                        (pkg) => pkg?.attributes?.season === activeSeason,
+                        (pkg) =>
+                          pkg?.attributes?.adventure_specification?.season?.[0]
+                            ?.name === activeSeason,
                       )
                       .map((pkg, index) => (
                         <CarouselItem

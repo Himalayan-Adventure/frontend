@@ -867,6 +867,47 @@ export interface ApiAboutUsAboutUs extends Schema.SingleType {
   };
 }
 
+export interface ApiAccommodationPreferenceAccommodationPreference
+  extends Schema.CollectionType {
+  collectionName: 'accommodation_preferences';
+  info: {
+    singularName: 'accommodation-preference';
+    pluralName: 'accommodation-preferences';
+    displayName: 'Accommodation Preference';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    preference: Attribute.Component<
+      'accommodation-preference.preference',
+      true
+    >;
+    location: Attribute.Component<'accommodation-preference.preference', true>;
+    packages: Attribute.Relation<
+      'api::accommodation-preference.accommodation-preference',
+      'oneToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::accommodation-preference.accommodation-preference',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::accommodation-preference.accommodation-preference',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiBlogBlog extends Schema.CollectionType {
   collectionName: 'blogs';
   info: {
@@ -945,56 +986,66 @@ export interface ApiPackagePackage extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String & Attribute.Required;
-    region: Attribute.String & Attribute.Required;
-    type: Attribute.Enumeration<['Premium', 'Elite', 'Basic']> &
-      Attribute.Required &
-      Attribute.DefaultTo<'Basic'>;
-    tags: Attribute.Enumeration<['tag1', 'tag2', 'tag3', 'tag4']>;
-    packageTag: Attribute.Enumeration<['Super', 'Ultra', 'Normal']>;
-    map: Attribute.String & Attribute.Required;
-    date: Attribute.Date;
-    season: Attribute.Enumeration<['summer', 'winter', 'monsoon', 'autumn']>;
-    duration: Attribute.Enumeration<
-      ['thirty', 'twenty', 'fifteen', 'ten', 'seven', 'three', 'one']
+    package_types: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::package-type.package-type'
     >;
-    grade: Attribute.Enumeration<
-      ['extreme', 'challenging', 'thrilling', 'fun']
+    tags: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::tag.tag'
     >;
     image: Attribute.Media<'images', true>;
-    host: Attribute.Media<'images'>;
-    hostname: Attribute.String;
-    description: Attribute.RichText;
+    brief_description: Attribute.Text & Attribute.Required;
+    long_description: Attribute.Blocks;
+    package_name: Attribute.String & Attribute.Required;
+    package_tags: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::package-tag.package-tag'
+    >;
+    tailor_tags: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::tailor-tag.tailor-tag'
+    >;
+    sponsor_host: Attribute.Component<'package-sponsor-host.sponsor-host'>;
+    adventure_specification: Attribute.Component<'package-adventure-specifications.adventure-specifications'>;
+    package_categories: Attribute.Relation<
+      'api::package.package',
+      'manyToMany',
+      'api::package-category.package-category'
+    >;
+    itinerary: Attribute.Component<'package-itinerary.itinerary'>;
+    adventure_customization: Attribute.Component<'package-adventure-customization.adventure-customization'>;
+    logistics: Attribute.Component<'package-logistics.logistics'>;
+    accommodation: Attribute.Component<'package-accommodation.accommodation'>;
+    cost_and_budgeting: Attribute.Component<
+      'package-cost-and-budgeting.cost-and-budgeting',
+      true
+    >;
     faq: Attribute.Component<'faq.faq', true>;
-    difficultyLevel: Attribute.Enumeration<
-      ['beginner', 'intermediate', 'experienced']
-    > &
-      Attribute.DefaultTo<'beginner'>;
-    planType: Attribute.Enumeration<['trekking', 'climbing']>;
-    numberOfClimbers: Attribute.BigInteger & Attribute.DefaultTo<'0'>;
-    numberOfLeaders: Attribute.Integer & Attribute.DefaultTo<1>;
-    includedFacilities: Attribute.Blocks;
-    excludedFacilities: Attribute.Blocks;
-    itenary: Attribute.Component<'package-itenary.itenary', true>;
-    expeditionGeneral: Attribute.Component<
+    package_host: Attribute.Component<'package-host.package-host'>;
+    hosted_by: Attribute.Component<'package-hosted-by.hosted-by'>;
+    trip_facts: Attribute.Component<'package-trip-facts.trip-facts', true>;
+    offer: Attribute.Component<'package-trip-offer.what-we-offfer', true>;
+    visuals: Attribute.Component<'package-visuals.maps-and-visuals', true>;
+    things_to_know: Attribute.Component<
       'package-things-to-know.things-to-know',
       true
     >;
-    healthSafety: Attribute.Component<
-      'package-things-to-know.things-to-know',
-      true
-    >;
-    cancellation: Attribute.String;
-    gears: Attribute.Blocks;
-    healthAndSafety: Attribute.Blocks;
-    facts: Attribute.Component<'package-facts.facts', true>;
-    departure: Attribute.Component<'package-departure.departure', true>;
-    altitude: Attribute.BigInteger & Attribute.Required;
-    offer: Attribute.Component<'package-things-to-know.things-to-know', true>;
-    users_permissions_user: Attribute.Relation<
+    video: Attribute.String;
+    parent_title: Attribute.String;
+    package_country: Attribute.Relation<
       'api::package.package',
       'oneToOne',
-      'plugin::users-permissions.user'
+      'api::package-country.package-country'
+    >;
+    package_region: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'api::package-region.package-region'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1007,6 +1058,296 @@ export interface ApiPackagePackage extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::package.package',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageCategoryPackageCategory
+  extends Schema.CollectionType {
+  collectionName: 'package_categories';
+  info: {
+    singularName: 'package-category';
+    pluralName: 'package-categories';
+    displayName: 'Package Category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    packages: Attribute.Relation<
+      'api::package-category.package-category',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-category.package-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-category.package-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageCountryPackageCountry extends Schema.CollectionType {
+  collectionName: 'package_countries';
+  info: {
+    singularName: 'package-country';
+    pluralName: 'package-countries';
+    displayName: 'Package Country';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    package_region: Attribute.Relation<
+      'api::package-country.package-country',
+      'oneToOne',
+      'api::package-region.package-region'
+    >;
+    package: Attribute.Relation<
+      'api::package-country.package-country',
+      'oneToOne',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-country.package-country',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-country.package-country',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageCustomizationPackageCustomization
+  extends Schema.CollectionType {
+  collectionName: 'package_customizations';
+  info: {
+    singularName: 'package-customization';
+    pluralName: 'package-customizations';
+    displayName: 'Package Customization';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    addons: Attribute.Component<
+      'package-customization.package-customization',
+      true
+    >;
+    cultural_experience: Attribute.Component<
+      'package-customization.package-customization',
+      true
+    >;
+    adventure_activity: Attribute.Component<
+      'package-customization.package-customization',
+      true
+    >;
+    transportation: Attribute.Component<
+      'package-customization.package-customization',
+      true
+    >;
+    packages: Attribute.Relation<
+      'api::package-customization.package-customization',
+      'oneToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-customization.package-customization',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-customization.package-customization',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageRegionPackageRegion extends Schema.CollectionType {
+  collectionName: 'package_regions';
+  info: {
+    singularName: 'package-region';
+    pluralName: 'package-regions';
+    displayName: 'Package Region';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    package_country: Attribute.Relation<
+      'api::package-region.package-region',
+      'oneToOne',
+      'api::package-country.package-country'
+    >;
+    package: Attribute.Relation<
+      'api::package-region.package-region',
+      'oneToOne',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-region.package-region',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-region.package-region',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageTagPackageTag extends Schema.CollectionType {
+  collectionName: 'package_tags';
+  info: {
+    singularName: 'package-tag';
+    pluralName: 'package-tags';
+    displayName: 'Package Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    packages: Attribute.Relation<
+      'api::package-tag.package-tag',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-tag.package-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-tag.package-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPackageTypePackageType extends Schema.CollectionType {
+  collectionName: 'package_types';
+  info: {
+    singularName: 'package-type';
+    pluralName: 'package-types';
+    displayName: 'Package Type';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    packages: Attribute.Relation<
+      'api::package-type.package-type',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package-type.package-type',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package-type.package-type',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPlanWithUsPlanWithUs extends Schema.CollectionType {
+  collectionName: 'plan_with_uses';
+  info: {
+    singularName: 'plan-with-us';
+    pluralName: 'plan-with-uses';
+    displayName: 'Plan with us';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    group: Attribute.Enumeration<['solo', 'group', 'not sure']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'solo'>;
+    travel_dates: Attribute.Component<'planwithus-travel-dates.travel-dates'>;
+    destination_country: Attribute.Relation<
+      'api::plan-with-us.plan-with-us',
+      'oneToOne',
+      'api::package-country.package-country'
+    >;
+    grade: Attribute.Enumeration<['beginner', 'intermediate', 'advanced']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'beginner'>;
+    packages: Attribute.Relation<
+      'api::plan-with-us.plan-with-us',
+      'oneToMany',
+      'api::package.package'
+    >;
+    budget: Attribute.Component<'planwithus-budget.budget'>;
+    accommodation_preferences: Attribute.Text;
+    customized_experience: Attribute.String;
+    finalize: Attribute.Component<'planwithus-review-finalize.review-and-f-inalize'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::plan-with-us.plan-with-us',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::plan-with-us.plan-with-us',
       'oneToOne',
       'admin::user'
     > &
@@ -1081,6 +1422,68 @@ export interface ApiShopCategoryShopCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiTagTag extends Schema.CollectionType {
+  collectionName: 'tags';
+  info: {
+    singularName: 'tag';
+    pluralName: 'tags';
+    displayName: 'Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    packages: Attribute.Relation<
+      'api::tag.tag',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTailorTagTailorTag extends Schema.CollectionType {
+  collectionName: 'tailor_tags';
+  info: {
+    singularName: 'tailor-tag';
+    pluralName: 'tailor-tags';
+    displayName: 'Tailor Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    packages: Attribute.Relation<
+      'api::tailor-tag.tailor-tag',
+      'manyToMany',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::tailor-tag.tailor-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::tailor-tag.tailor-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiWorkWork extends Schema.CollectionType {
   collectionName: 'works';
   info: {
@@ -1127,11 +1530,21 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::about-us.about-us': ApiAboutUsAboutUs;
+      'api::accommodation-preference.accommodation-preference': ApiAccommodationPreferenceAccommodationPreference;
       'api::blog.blog': ApiBlogBlog;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::package.package': ApiPackagePackage;
+      'api::package-category.package-category': ApiPackageCategoryPackageCategory;
+      'api::package-country.package-country': ApiPackageCountryPackageCountry;
+      'api::package-customization.package-customization': ApiPackageCustomizationPackageCustomization;
+      'api::package-region.package-region': ApiPackageRegionPackageRegion;
+      'api::package-tag.package-tag': ApiPackageTagPackageTag;
+      'api::package-type.package-type': ApiPackageTypePackageType;
+      'api::plan-with-us.plan-with-us': ApiPlanWithUsPlanWithUs;
       'api::shop.shop': ApiShopShop;
       'api::shop-category.shop-category': ApiShopCategoryShopCategory;
+      'api::tag.tag': ApiTagTag;
+      'api::tailor-tag.tailor-tag': ApiTailorTagTailorTag;
       'api::work.work': ApiWorkWork;
     }
   }
