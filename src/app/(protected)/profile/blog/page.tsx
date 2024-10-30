@@ -1,12 +1,7 @@
 import BlogCard from "@/components/blog/blog-card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { PlusIcon, Shapes } from "lucide-react";
 import { CategoriesFilter } from "./categories-filter";
-import useUpdateQueryString from "@/hooks/use-update-query-string";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { AddButton } from "./add-button";
 import { Suspense } from "react";
 
 export default function BlogPage({
@@ -14,6 +9,7 @@ export default function BlogPage({
 }: {
   searchParams: { code?: string; tag?: string };
 }) {
+  const { code, tag } = searchParams;
   function createBlogs(numBlogs: number) {
     const blogs = [];
 
@@ -32,19 +28,16 @@ export default function BlogPage({
     return blogs;
   }
   const blogs = createBlogs(10);
-  //  const updateQueryString = useUpdateQueryString();
   return (
     <section className="space-y-8 font-poppins">
       <span className="flex gap-x-3">
         <Text variant="display-sm" bold>
           Blogs
         </Text>
-        <Link href="/profile/blog/form?type=add">
-          <Button className="bg-black text-sm text-white">
-            <PlusIcon size={16} />
-            Create
-          </Button>
-        </Link>
+
+        <Suspense>
+          <AddButton />
+        </Suspense>
       </span>
 
       <Suspense>
@@ -52,10 +45,11 @@ export default function BlogPage({
       </Suspense>
 
       {/* Blogs */}
+
       <div className="flex flex-col space-y-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-          {(searchParams?.code
-            ? blogs.filter((i) => i.title.includes(searchParams?.code || ""))
+          {(code
+            ? blogs.filter((i) => i.title.includes(code || ""))
             : blogs
           )?.map((blog) => (
             <BlogCard
