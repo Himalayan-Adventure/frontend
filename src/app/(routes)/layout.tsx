@@ -3,6 +3,7 @@ import "@/app/globals.css";
 import { Navbar } from "@/components/navbar";
 import { Suspense } from "react";
 import { siteConfig } from "@/config/site-config";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +27,8 @@ export default function RootLayout({
         <Navbar />
       </Suspense>
       {children}
+
+      <Footer />
     </main>
   );
 }

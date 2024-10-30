@@ -17,18 +17,19 @@ export default function BlogCard({
 }) {
   return (
     <article className="group relative flex w-full flex-col items-start justify-center gap-y-4 rounded-xl border p-4 pb-2">
-      {/*Overlay buttons*/}
-      <div className="invisible absolute inset-0 -z-20 flex w-full items-center justify-center gap-x-2 rounded-xl bg-black/40 transition-all ease-in-out group-hover:visible group-hover:z-20">
-        <Link href="/profile/blog/form?type=edit">
-          <Button className="aspect-square h-auto bg-white text-blue-400 hover:bg-blue-400 hover:text-white">
-            <Pencil size={24} />
+      {/*Overlay buttons for edit*/}
+      {variant === "edit" && (
+        <div className="invisible absolute inset-0 -z-20 flex w-full items-center justify-center gap-x-2 rounded-xl bg-black/40 transition-all ease-in-out group-hover:visible group-hover:z-20">
+          <Link href="/profile/blog/form?type=edit">
+            <Button className="aspect-square h-auto bg-white text-blue-400 hover:bg-blue-400 hover:text-white">
+              <Pencil size={24} />
+            </Button>
+          </Link>
+          <Button className="aspect-square h-auto bg-white text-red-500 hover:bg-red-500 hover:text-white">
+            <Trash size={24} />
           </Button>
-        </Link>
-        <Button className="aspect-square h-auto bg-white text-red-500 hover:bg-red-500 hover:text-white">
-          <Trash size={24} />
-        </Button>
-      </div>
-
+        </div>
+      )}
       <Link
         href={`/blog/${blog.slug}`}
         target="_blank"
