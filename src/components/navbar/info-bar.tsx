@@ -282,6 +282,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               <div className="flex flex-row justify-center gap-x-2 brightness-200">
                 {socialIcons.map((item) => (
                   <Link
+                    prefetch={true}
                     key={`social-link-${item.name}`}
                     href={item.href}
                     target="_blank"

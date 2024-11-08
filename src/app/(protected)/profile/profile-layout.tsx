@@ -216,6 +216,7 @@ function SidebarContent({
 const Item = ({ item, pathname }: { item: TNavigation; pathname: string }) => {
   return (
     <Link
+      prefetch={true}
       key={item.name}
       href={item.href}
       className={cn(
