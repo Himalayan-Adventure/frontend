@@ -34,6 +34,8 @@ import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { WorkCards } from "@/components/profile/work-card";
 import Banner from "@/components/profile/banner";
+import { APIResponse, APIResponseData } from "@/types/types";
+import { PluginUsersPermissionsUser } from "@/types/contentTypes";
 export default function ProfilePage() {
   const { data: user, isPending } = useQuery({
     queryKey: ["user"],
@@ -95,7 +97,7 @@ export default function ProfilePage() {
         <Text variant="display-sm" bold>
           Profile
         </Text>
-        <Link href="/profile/profile/edit">
+        <Link href="/dashboard/profile/edit">
           <Button className="gap-x-1 bg-black text-sm text-white">
             <PenLine size={16} />
             Edit

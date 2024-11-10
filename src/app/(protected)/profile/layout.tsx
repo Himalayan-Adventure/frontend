@@ -1,18 +1,34 @@
-import React from "react";
+import type { Metadata } from "next";
+import "@/app/globals.css";
+import { Navbar } from "@/components/navbar";
+import { Suspense } from "react";
+import { siteConfig } from "@/config/site-config";
+import Footer from "@/components/footer";
 
-import { getCurrentUserData } from "@/server/auth/get-me";
-import ProfileSidebarLayout from "./profile-layout";
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.siteName,
+    template: `%s - ${siteConfig.siteName}`,
+  },
+  description: siteConfig.siteDescription,
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
 
-export default async function ProfileLayout({
+export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCurrentUserData();
-
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <ProfileSidebarLayout user={user || null}>
-      <section className="h-full w-full px-4 sm:px-6 lg:px-8">
-        {children}
-      </section>
-    </ProfileSidebarLayout>
+    <main>
+      <Suspense>
+        <Navbar />
+      </Suspense>
+      {children}
+
+      <Footer />
+    </main>
   );
 }

@@ -23,35 +23,35 @@ export type TNavigation = {
 export const navigations: TNavigation[] = [
   {
     name: "Profile",
-    href: "/profile/profile",
+    href: "/dashboard/profile",
     icon: CircleUser,
   },
 
   {
     name: "Blog",
-    href: "/profile/blog",
+    href: "/dashboard/blog",
     icon: Pencil,
   },
 
   {
     name: "Work",
-    href: "/profile/work",
+    href: "/dashboard/work",
     icon: GitPullRequest,
   },
   {
     name: "Services",
-    href: "/profile/services",
+    href: "/dashboard/services",
     icon: Workflow,
   },
 
   {
     name: "Appointments",
-    href: "/profile/appointments",
+    href: "/dashboard/appointments",
     icon: HandHelping,
   },
   {
     name: "Calendar",
-    href: "/profile/calendar",
+    href: "/dashboard/calendar",
     icon: CalendarX,
     merchantOnly: true,
   },

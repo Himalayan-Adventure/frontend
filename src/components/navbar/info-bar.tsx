@@ -9,6 +9,7 @@ import {
   MapPin,
   Menu,
   Phone,
+  Settings,
   User,
   UserCheck,
   UserPlus,
@@ -147,6 +148,13 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                     <Link href="/profile" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
