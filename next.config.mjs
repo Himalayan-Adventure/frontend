@@ -21,8 +21,12 @@ const nextConfig = {
         hostname: "unsplash.it",
       },
       {
-        protocol:"https",
-        hostname:"s3-alpha-sig.figma.com",
+        protocol: "https",
+        hostname: "s3-alpha-sig.figma.com",
+      },
+      {
+        protocol: "https",
+        hostname: "plus.unsplash.com",
       },
     ],
   },

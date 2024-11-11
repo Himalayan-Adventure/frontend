@@ -32,7 +32,7 @@ export default function Services({ services }: { services: any }) {
               <div className="rounded-lg border-2 border-gray-800 p-3 py-8 text-center lg:p-6 lg:py-10">
                 <div className="mb-4 flex justify-center lg:mb-8">
                   <DynamicReactIcon
-                    name={services[0].icon}
+                    name={services?.[0]?.icon}
                     className="text-[32px] lg:text-[50px]"
                   />
                 </div>

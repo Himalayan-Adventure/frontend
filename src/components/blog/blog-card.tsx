@@ -7,10 +7,11 @@ import { Text } from "@/components/ui/text";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 export default function BlogCard({
   blog,
-  variant = "default",
+  variant,
 }: {
   blog: any;
   variant?: "default" | "edit";
@@ -31,13 +32,16 @@ export default function BlogCard({
         </div>
       )}
       <Link
-        href={`/blog/${blog.slug}`}
+        href={`/blog/${blog?.slug}`}
         target="_blank"
         className="h-[10rem] w-full self-stretch overflow-hidden rounded-sm bg-gray-200"
         prefetch={false}
       >
         <Image
-          src={blog?.thumbNail || "/images/fallback.jpg"}
+          src={
+            blog?.thumbNail ||
+            "https://plus.unsplash.com/premium_photo-1677002240252-af3f88114efc?q=80&w=2925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
           alt={blog?.title}
           width={600}
           height={400}
@@ -48,7 +52,7 @@ export default function BlogCard({
       <div className="flex flex-col items-start gap-2 self-stretch">
         <div className="items-center gap-4 self-start">
           <Badge className="flex rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0">
-            {blog?.tags[0]}
+            {blog?.tags ? blog?.tags?.[0] : "lorem ipsum"}
           </Badge>
           <Text variant="text-sm" className="text-gray-500"></Text>
         </div>
@@ -78,13 +82,13 @@ export default function BlogCard({
           </Avatar>
 
           <Text variant="text-sm" className="line-clamp-1 text-gray-500">
-            {blog?.author_name}
+            {blog?.author_name || "Binita Shrestha"}
           </Text>
           <Text as="span" variant="text-md" className="text-gray-500" bold>
             ·
           </Text>
           <Text variant="text-sm" className="line-clamp-1 text-gray-500">
-            {blog?.createdAt}
+            {formatDate(blog?.createdAt)}
           </Text>
         </div>
       </div>
