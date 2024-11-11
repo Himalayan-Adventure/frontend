@@ -89,11 +89,11 @@ export default function HomeCarousel() {
               of the year. Explore the perfect getaways for spring, summer,
               fall, and winter.
             </p>
-            <div className="mt-4 flex flex-wrap justify-around gap-1 sm:justify-start sm:gap-2 md:gap-4 lg:mt-8">
+            <div className="mt-4 grid grid-cols-2 justify-around gap-1 sm:justify-start sm:gap-2 md:flex md:gap-4 lg:mt-8">
               {seasonsIconMap.map((season) => (
                 <div
                   key={season.name}
-                  className="max-w-[60px] cursor-pointer gap-x-4 overflow-x-hidden md:max-w-[192px] md:gap-x-6 lg:gap-x-10"
+                  className="scale-50 cursor-pointer gap-x-4 overflow-x-hidden md:max-w-[192px] md:scale-100 md:gap-x-6 lg:gap-x-10"
                   onClick={() =>
                     season.name !== activeSeason
                       ? setActiveSeason(season.name as TSeason)
