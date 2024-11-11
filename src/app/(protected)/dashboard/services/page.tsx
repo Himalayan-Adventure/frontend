@@ -8,6 +8,7 @@ import { Text } from "@/components/ui/text";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
+import { Suspense } from "react";
 export default async function ServicesPage() {
   function getServices(n: number) {
     const d = Array.from({ length: n }, (_, i) => ({
@@ -18,7 +19,6 @@ export default async function ServicesPage() {
   }
   const data = getServices(10);
   const packages = await getPackages();
-  console.log(packages);
 
   return (
     <main className="space-y-4">
@@ -27,7 +27,9 @@ export default async function ServicesPage() {
           Services
         </Text>
       </span>
-      <TopFilter />
+      <Suspense>
+        <TopFilter />
+      </Suspense>
       <div className="flex flex-col gap-5 md:flex-row">
         <SideFilter />
         <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
