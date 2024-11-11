@@ -56,6 +56,7 @@ export default function BlogPage({
             : blogs
           )?.map((blog) => (
             <BlogCard
+              variant="edit"
               blog={blog}
               key={`blog-${blog.title}-${blog.author_name}`}
             />
