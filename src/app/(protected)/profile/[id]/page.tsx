@@ -34,12 +34,19 @@ import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { WorkCards } from "@/components/profile/work-card";
 import Banner from "@/components/profile/banner";
-export default function ProfilePage() {
+export default function PublicProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  console.log(params.id);
   const { data: user, isPending } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["public-user", params.id],
     queryFn: async () => {
       try {
-        const res = await axios.get<TUser>("/api/me");
+        const res = await axios.get<TUser>(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${params.id}?populate=deep`,
+        );
 
         if (!res?.data) {
           return null;
@@ -106,7 +113,7 @@ export default function ProfilePage() {
 
       <div className="container relative z-10 flex min-h-60 flex-col justify-center space-y-3 text-white lg:space-y-6">
         <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
-          Profile
+          Public Profile
         </h1>
       </div>
       {/*Header*/}
@@ -218,6 +225,7 @@ export default function ProfilePage() {
 }
 
 const ProfileCard = ({ user }: { user: TUser | null }) => {
+  console.log(user?.username);
   return (
     <div className="relative h-[600px] w-full overflow-hidden rounded-xl bg-black text-white shadow-lg sm:min-w-[300px] md:aspect-square md:h-auto md:min-h-[580px] md:w-auto md:max-w-sm">
       <div className="relative h-full w-full">

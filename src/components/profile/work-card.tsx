@@ -127,7 +127,7 @@ export const WorkCard = ({
             "gap-x-2",
           )}
         >
-          <Link href="/profile/work/form?type=edit">
+          <Link href="/dashboard/work/form?type=edit">
             <Button className="bg-black text-sm text-white">
               <PenLine size={16} />
               Edit

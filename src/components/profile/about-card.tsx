@@ -1,31 +1,29 @@
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import {UserRound } from "lucide-react";
-export const AboutCard = ()=>{
-    return(
-
-          <div>
-            {/* About section */}
-            <div className="bg-white px-4 py-8 sm:px-6 lg:px-8 rounded-xl">
-              <div className="mx-auto max-w-3xl">
-                <div className="relative w-fit">
-                <h1 className="text-3xl w-fit font-bold text-foreground">About</h1>
-                <Separator className="w-auto h-2 bg-black"/>
-
-                </div>
-                <p className="mt-4 text-black">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Vivamus ac porta odio. Morbi imperdiet ligula eu nisl viverra,
-                  et idareet erat faucibus. In a velit at neque tincidunt
-                  elementum. Maecenas ultrices sollicitudin quam at hendrerit.
-                  Praesent tempus turpis mi, sed aliquet lectus dapibus in.
-                  Interdum et malesuada fames ac ante ipsum primis in faucibus.
-                </p>
-              </div>
-            </div>
-            <MyServices />
+import { UserRound } from "lucide-react";
+export const AboutCard = () => {
+  return (
+    <div className="rounded-xl bg-white">
+      {/* About section */}
+      <div className="space-y-2 px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="relative w-fit">
+            <h1 className="w-fit text-3xl font-bold text-foreground">About</h1>
+            <Separator className="h-2 w-auto bg-black" />
           </div>
-    )
-}
+          <p className="mt-4 text-black">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac
+            porta odio. Morbi imperdiet ligula eu nisl viverra, et idareet erat
+            faucibus. In a velit at neque tincidunt elementum. Maecenas ultrices
+            sollicitudin quam at hendrerit. Praesent tempus turpis mi, sed
+            aliquet lectus dapibus in. Interdum et malesuada fames ac ante ipsum
+            primis in faucibus.
+          </p>
+        </div>
+      </div>
+      <MyServices />
+    </div>
+  );
+};
 
 const ServiceItem = ({
   title,
@@ -51,10 +49,10 @@ const ServiceItem = ({
 
 const MyServices = () => {
   return (
-    <div className="bg-white px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mt-2 bg-white px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <h2 className="text-2xl font-bold text-gray-900">My Services</h2>
-        <div className="mt-12 md:mt-0 flex flex-col md:flex-row items-start md:divide-x-2 space-y-4 md:space-y-0">
+        <div className="mt-12 flex flex-col items-start space-y-4 md:mt-0 md:flex-row md:space-y-0 md:divide-x-2">
           <ServiceItem
             title="Lorem Ipsum"
             description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. endent. Present tempus turpis mi, sed aliquet lectus dapibus in."

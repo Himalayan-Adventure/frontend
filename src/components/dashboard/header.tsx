@@ -10,7 +10,7 @@ export const DashboardHeader = ({ title }: { title: string }) => {
         {title}
       </Text>
 
-      <Link href="/profile/work/form?type=add">
+      <Link href="/dashboard/work/form?type=add">
         <Button className="bg-black text-sm text-white">
           <PlusIcon size={16} />
           Add Project

@@ -50,10 +50,7 @@ export default function RootLayout({
           <AppProgressBar />
         </Suspense>
         <Toaster richColors />
-        <Providers>
-          {children}
-          <Footer />
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

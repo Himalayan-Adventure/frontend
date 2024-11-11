@@ -993,6 +993,62 @@ export interface ApiBlogCategoryBlogCategory extends Schema.CollectionType {
       Attribute.Private;
   };
 }
+export interface ApiUser extends Schema.CollectionType {
+  name: Attribute.String &
+    Attribute.Required &
+    Attribute.SetMinMaxLength<{
+      minLength: 3;
+    }>;
+  description: Attribute.String;
+  type: Attribute.String & Attribute.Unique;
+  permissions: Attribute.Relation<
+    "plugin::users-permissions.role",
+    "oneToMany",
+    "plugin::users-permissions.permission"
+  >;
+  users: Attribute.Relation<
+    "plugin::users-permissions.role",
+    "oneToMany",
+    "plugin::users-permissions.user"
+  >;
+  createdAt: Attribute.DateTime;
+  updatedAt: Attribute.DateTime;
+  createdBy: Attribute.Relation<
+    "plugin::users-permissions.role",
+    "oneToOne",
+    "admin::user"
+  > &
+    Attribute.Private;
+  updatedBy: Attribute.Relation<
+    "plugin::users-permissions.role",
+    "oneToOne",
+    "admin::user"
+  > &
+    Attribute.Private;
+}
+
+export interface ApiIconIcon extends Schema.CollectionType {
+  collectionName: "icons";
+  info: {
+    singularName: "icon";
+    pluralName: "icons";
+    displayName: "Icon";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    icon: Attribute.Media<"images" | "files"> & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<"api::icon.icon", "oneToOne", "admin::user"> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<"api::icon.icon", "oneToOne", "admin::user"> &
+      Attribute.Private;
+  };
+}
 
 export interface ApiPackagePackage extends Schema.CollectionType {
   collectionName: "packages";
@@ -1705,6 +1761,7 @@ declare module "@strapi/types" {
       "api::accommodation-preference.accommodation-preference": ApiAccommodationPreferenceAccommodationPreference;
       "api::blog.blog": ApiBlogBlog;
       "api::blog-category.blog-category": ApiBlogCategoryBlogCategory;
+      "api::icon.icon": ApiIconIcon;
       "api::package.package": ApiPackagePackage;
       "api::package-category.package-category": ApiPackageCategoryPackageCategory;
       "api::package-country.package-country": ApiPackageCountryPackageCountry;
@@ -1721,6 +1778,7 @@ declare module "@strapi/types" {
       "api::tag.tag": ApiTagTag;
       "api::tailor-tag.tailor-tag": ApiTailorTagTailorTag;
       "api::work.work": ApiWorkWork;
+      "api::user.user": ApiUser;
     }
   }
 }

@@ -9,6 +9,7 @@ import {
   MapPin,
   Menu,
   Phone,
+  Settings,
   User,
   UserCheck,
   UserPlus,
@@ -149,6 +150,13 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                       <span>Profile</span>
                     </Link>
                   </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>
                     <CreditCard className="mr-2 h-4 w-4" />
                     <span>Billing</span>
@@ -282,6 +290,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               <div className="flex flex-row justify-center gap-x-2 brightness-200">
                 {socialIcons.map((item) => (
                   <Link
+                    prefetch={true}
                     key={`social-link-${item.name}`}
                     href={item.href}
                     target="_blank"

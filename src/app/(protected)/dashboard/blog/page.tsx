@@ -34,7 +34,9 @@ export default function BlogPage({
         <Text variant="display-sm" bold>
           Blogs
         </Text>
+      </span>
 
+      {/* 
         <Suspense>
           <AddButton />
         </Suspense>
@@ -44,6 +46,7 @@ export default function BlogPage({
         <CategoriesFilter />
       </Suspense>
 
+        */}
       {/* Blogs */}
 
       <div className="flex flex-col space-y-8">
