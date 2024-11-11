@@ -1,16 +1,10 @@
 "use client";
-import PackagesList from "@/components/packagespage/packages-list";
-import CommonBanner from "@/components/ui/common-banner";
-import { Suspense, useState } from "react";
-import serviceImg from "/public/images/travel.jpeg";
-import Image, { StaticImageData } from "next/image";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import Logo from "@/components/logo";
-import { Heart, Menu, Mountain, Star } from "lucide-react";
+import { Mountain } from "lucide-react";
 import { IoBusiness } from "react-icons/io5";
 import { FaPersonRays } from "react-icons/fa6";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components/ui/text";
 import { FaWalking } from "react-icons/fa";
@@ -19,6 +13,7 @@ import { FaBox, FaMountain } from "react-icons/fa";
 import { GiMountainRoad } from "react-icons/gi";
 
 import { PiMountainsFill } from "react-icons/pi";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
 const tabsTriggers = [
   {
     icon: <Mountain className="size-5 md:size-6" />,
@@ -54,11 +49,11 @@ const tabsTriggers = [
 ];
 
 const categoryTriggers = [
-  {
-    icon: <IoBusiness className="size-5 md:size-6" />,
-    name: "Agency",
-    value: "agency",
-  },
+  // {
+  //   icon: <IoBusiness className="size-5 md:size-6" />,
+  //   name: "Agency",
+  //   value: "agency",
+  // },
   {
     icon: <FaPersonRays className="size-6 md:size-6" />,
     name: "Guide",
@@ -72,17 +67,19 @@ const categoryTriggers = [
   },
 ];
 export function TopFilter() {
+  const updateQueryString = useUpdateQueryString();
   return (
     <Tabs
-      defaultValue="Agency"
+      defaultValue="Guide"
       className="relative z-10 flex w-fit flex-row items-stretch p-0 md:left-36"
     >
-      <TabsList className="hide-scrollbar relative flex h-fit w-full origin-top flex-row items-stretch gap-x-4 gap-y-10 overflow-x-scroll rounded-xl bg-background p-0 shadow-2xl transition-transform ease-out md:w-fit md:flex-row">
+      <TabsList className="hide-scrollbar relative flex h-fit w-full origin-top flex-row items-stretch gap-x-4 gap-y-10 overflow-x-scroll rounded-xl bg-background p-0 px-10 shadow-2xl transition-transform ease-out md:w-fit md:flex-row">
         {categoryTriggers.map((tab) => (
           <TabsTrigger
             key={`tab-${tab.name}`}
             value={tab.name}
             className="h-full capitalize data-[state=active]:!text-primary"
+            onClick={() => updateQueryString({ type: tab.name })}
             asChild
           >
             <Button className="flex h-full w-full flex-col items-center gap-y-1 bg-white py-4 text-black hover:bg-white hover:text-primary md:h-fit md:p-4">
