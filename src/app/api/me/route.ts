@@ -11,7 +11,7 @@ export async function GET() {
   console.log(token);
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/users/me?populate=deep`,
+    `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate=deep`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
