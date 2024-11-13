@@ -37,6 +37,7 @@ const config = {
       fontFamily: {
         overpass: ["var(--font-overpass)"],
         poppins: ["var(--font-poppins)"],
+        sourceSerif: ["Source Serif 4", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
