@@ -14,6 +14,7 @@ import { GiMountainRoad } from "react-icons/gi";
 
 import { PiMountainsFill } from "react-icons/pi";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
+import { useSearchParams } from "next/navigation";
 const tabsTriggers = [
   {
     icon: <Mountain className="size-5 md:size-6" />,
@@ -67,10 +68,12 @@ const categoryTriggers = [
   },
 ];
 export function TopFilter() {
+  const searchParams = useSearchParams();
   const updateQueryString = useUpdateQueryString();
   return (
     <Tabs
       defaultValue="Guide"
+      value={searchParams.get("type") || "Guide"}
       className="relative z-10 flex w-fit flex-row items-stretch p-0 md:left-36"
     >
       <TabsList className="hide-scrollbar relative flex h-fit w-full origin-top flex-row items-stretch gap-x-4 gap-y-10 overflow-x-scroll rounded-xl bg-background p-0 px-10 shadow-2xl transition-transform ease-out md:w-fit md:flex-row">
