@@ -63,13 +63,6 @@ export default function HomeCarousel() {
         : [...prevFavorites, index],
     );
   };
-  // if (status === "pending") {
-  //   return <PackageCardSkeleton />;
-  // }
-
-  // if (status === "error") {
-  //   return <Text variant="display-md">No packages found</Text>;
-  // }
   return (
     <section>
       <LazyMotion features={domMax}>
@@ -89,11 +82,11 @@ export default function HomeCarousel() {
               of the year. Explore the perfect getaways for spring, summer,
               fall, and winter.
             </p>
-            <div className="mt-4 grid grid-cols-2 justify-around gap-1 sm:justify-start sm:gap-2 md:flex md:gap-4 lg:mt-8">
+            <div className="relative mt-4 flex justify-start gap-1 sm:gap-2 md:gap-4 lg:mt-8">
               {seasonsIconMap.map((season) => (
                 <div
                   key={season.name}
-                  className="scale-50 cursor-pointer gap-x-4 overflow-x-hidden md:max-w-[192px] md:scale-100 md:gap-x-6 lg:gap-x-10"
+                  className="relative size-20 cursor-pointer gap-x-4 md:size-40 md:max-w-[192px] md:scale-100 md:gap-x-6 md:overflow-x-hidden lg:gap-x-10"
                   onClick={() =>
                     season.name !== activeSeason
                       ? setActiveSeason(season.name as TSeason)
@@ -113,7 +106,9 @@ export default function HomeCarousel() {
       {status === "pending" ? (
         <PackageCardSkeleton />
       ) : status === "error" ? (
-        <Text variant="display-md">No packages found</Text>
+        <Text variant="text-lg" className="text-center">
+          No packages found
+        </Text>
       ) : (
         <LazyMotion features={domMax}>
           <m.section

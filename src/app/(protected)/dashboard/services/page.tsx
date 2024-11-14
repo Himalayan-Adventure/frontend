@@ -9,15 +9,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
 import { Suspense } from "react";
+import { getServices } from "@/server/services/get-services";
 export default async function ServicesPage() {
-  function getServices(n: number) {
-    const d = Array.from({ length: n }, (_, i) => ({
-      name: "Travel and Tour " + i,
-      image: serviceImg,
-    }));
-    return d;
-  }
-  const data = getServices(10);
+  const data = await getServices();
   const packages = await getPackages();
 
   return (
@@ -33,9 +27,7 @@ export default async function ServicesPage() {
       <div className="flex flex-col gap-5 md:flex-row">
         <SideFilter />
         <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-          {data.map((svc, index) => (
-            <ServiceCard data={svc} key={index} />
-          ))}
+          {data?.map((svc, index) => <ServiceCard data={svc} key={index} />)}
         </div>
       </div>
     </main>

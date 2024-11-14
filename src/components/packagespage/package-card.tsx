@@ -189,32 +189,11 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
     season: attr?.adventure_specification?.season?.[0]?.name || "",
   };
   const { duration, season, altitude, grade, departure } = departureData;
+  console.log(altitude);
 
   const maxAltInM = Number(
     wordsToNumbers(altitude)?.toString().split(" ").join(""),
   );
-  // const departureFacts = [
-  //   {
-  //     title: season,
-  //     desc: seasonMonthMap[season],
-  //     icon: seasonIconMap[season],
-  //   },
-  //   {
-  //     title: "duration",
-  //     desc: duration + " days",
-  //     icon: <MdTimelapse size={20} />,
-  //   },
-  //   {
-  //     title: "grade",
-  //     desc: grade,
-  //     icon: <BsBarChartFill size={20} />,
-  //   },
-  //   {
-  //     title: "max altitude",
-  //     desc: `${maxAltInM.toLocaleString("en-us")}m/${(maxAltInM * 3.281).toLocaleString("en-us")}ft`,
-  //     icon: <FaMountain size={20} />,
-  //   },
-  // ];
   let departureFacts = [];
   if (season)
     departureFacts.push({
@@ -299,6 +278,7 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
             icon={seasonIconMap[season]}
           />
         )}
+
         {duration && (
           <DepartureFact
             title={"duration"}
@@ -306,6 +286,7 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
             icon={<MdTimelapse size={20} />}
           />
         )}
+
         {grade && (
           <DepartureFact
             title="grade"
@@ -313,7 +294,8 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
             icon={<BsBarChartFill size={20} />}
           />
         )}
-        {maxAltInM && maxAltInM !== 0 && (
+
+        {altitude && maxAltInM && maxAltInM !== 0 && (
           <DepartureFact
             title="max altitude"
             desc={`${maxAltInM.toLocaleString("en-us")}m/${(maxAltInM * 3.281).toLocaleString("en-us")}ft`}
@@ -326,7 +308,7 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
 
       <div className="flex w-full justify-center">
         <Link
-        prefetch={true}
+          prefetch={true}
           href={`packages/${pkg?.id}`}
           className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
         >
