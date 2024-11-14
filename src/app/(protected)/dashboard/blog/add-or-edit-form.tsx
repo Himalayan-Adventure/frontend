@@ -27,30 +27,35 @@ import FileDropZone from "@/components/ui/file-dropzone";
 import MDEditor from "@uiw/react-md-editor";
 import { toast } from "sonner";
 import { BlogFormSchema, TBlogForm } from "@/validators/blog-form";
-import BlogForm from "./form/page";
-export const BlogAddOrEditForm = ({
-  type,
-  data,
-}: {
-  type: "edit" | "add";
-  data?: TBlogForm;
-}) => {
+import BlogForm from "./write/page";
+import { GoBackButton } from "@/components/profile/go-back-button";
+import { useQuery } from "@tanstack/react-query";
+import { getBlogCategories } from "@/server/blogs/get-blog-categories";
+type BlogAddOrEditProps =
+  | { type: "add"; data?: never; id?: never }
+  | { type: "edit"; data: TBlogForm; id: number };
+export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
+  //  const { type, data, id } = props;
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
   const form = useForm<TBlogForm>({
     resolver: zodResolver(BlogFormSchema),
     defaultValues: {
-      title: "",
-      categories: "",
-      description: "",
-      image: "",
+      title: data?.title || "",
+      categories: data?.categories || "",
+      description: data?.description || "",
+      image: data?.image || "",
     },
   });
 
   const [content, setContent] = useState<string | undefined>(
-    "**Hello World!**",
+    data?.description || "**Hello World!**",
   );
+  const { data: categories, isLoading } = useQuery({
+    queryKey: [type, id],
+    queryFn: getBlogCategories,
+  });
   async function onSubmit(values: TBlogForm) {
     setLoading(true);
     const payload = { ...form.getValues(), description: content };
@@ -60,7 +65,8 @@ export const BlogAddOrEditForm = ({
     console.log(form.getValues());
   }, [form]);
   return (
-    <section className="max-w-4xl">
+    <section className="container max-w-4xl">
+      <GoBackButton className="my-5" />
       <div className="my-4 [&>*]:text-neutral-900">
         <Text
           variant="display-sm"
@@ -96,29 +102,38 @@ export const BlogAddOrEditForm = ({
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name="categories"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Categories</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="tag-1">tag-1</SelectItem>
-                    <SelectItem value="tag-2">tag-2</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
+          {categories?.data && categories?.data?.length > 0 && (
+            <FormField
+              control={form.control}
+              name="categories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categories</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories?.data?.map((i) => (
+                        <SelectItem
+                          key={`${i.id}-blog-categories`}
+                          value={i.attributes.name}
+                        >
+                          {i.attributes.name}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="tag-2">tag-2</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="description"

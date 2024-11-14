@@ -1,16 +1,14 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
-import {
-  APIResponse,
-  APIResponseCollection,
-  APIResponseData,
-} from "@/types/types";
+import { BlogFormSchema, TBlogForm } from "@/validators/blog-form";
 import { AxiosResponse, type AxiosError } from "axios";
-export const getSingleBlog = async (id: string) => {
+import { cookies } from "next/headers";
+export const deleteBlog = async (id: number) => {
+  const cookieStore = cookies();
+
   try {
-    const res: AxiosResponse<APIResponse<"api::blog.blog">> =
-      await axiosInstance.get(`api/blogs/${id}?populate=*`);
+    const res: AxiosResponse = await axiosInstance.delete(`/api/blogs/${id}`);
 
     return {
       data: res.data,

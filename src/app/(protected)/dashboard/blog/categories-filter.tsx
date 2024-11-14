@@ -20,14 +20,9 @@ export const CategoriesFilter = () => {
         onValueChange={(value) => updateQueryString({ tag: value })}
         defaultValue={searchParams?.get("tag") || ""}
       >
-        <SelectTrigger className="relative h-full w-fit border-none bg-transparent outline-none">
-          <Button
-            variant="ghost"
-            className="relative h-full gap-x-2 rounded-full border border-gray-200 bg-white"
-          >
-            <Shapes size={18} />
-            Categories
-          </Button>
+        <SelectTrigger className="relative h-full w-fit gap-x-2 rounded-full border border-none border-gray-200 bg-white outline-none">
+          <Shapes size={18} />
+          Categories
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="tag-1">tag-1</SelectItem>
