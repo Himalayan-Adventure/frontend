@@ -10,9 +10,11 @@ import { Pencil, Trash } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export default function BlogCard({
+  blogId,
   blog,
   variant,
 }: {
+  blogId?: number;
   blog: any;
   variant?: "default" | "edit";
 }) {
@@ -32,14 +34,14 @@ export default function BlogCard({
         </div>
       )}
       <Link
-        href={`/blog/${blog?.slug}`}
+        href={`/blog/${blogId ? blogId : blog?.slug}`}
         target="_blank"
         className="h-[10rem] w-full self-stretch overflow-hidden rounded-sm bg-gray-200"
         prefetch={false}
       >
         <Image
           src={
-            blog?.thumbNail ||
+            blog?.thumbnail?.data?.attributes?.url ||
             "https://plus.unsplash.com/premium_photo-1677002240252-af3f88114efc?q=80&w=2925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           }
           alt={blog?.title}
@@ -52,12 +54,12 @@ export default function BlogCard({
       <div className="flex flex-col items-start gap-2 self-stretch">
         <div className="items-center gap-4 self-start">
           <Badge className="flex rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0">
-            {blog?.tags ? blog?.tags?.[0] : "lorem ipsum"}
+            {blog?.blog_tags?.data?.[0]?.attributes?.name}
           </Badge>
           <Text variant="text-sm" className="text-gray-500"></Text>
         </div>
         <Link
-          href={`/blog/${blog.slug}`}
+          href={`/blog/${blogId ? blogId : blog?.slug}`}
           target="_blank"
           className="space-y-2.5 self-stretch underline-offset-1 hover:[&>h2]:underline"
           prefetch={false}
@@ -75,14 +77,14 @@ export default function BlogCard({
         <div className="mt-4 flex items-center gap-2 self-stretch">
           <Avatar>
             <AvatarImage
-              src="https://github.com/shadcn.png"
+              src={blog?.author_image?.data?.attributes?.url}
               className="saturate-0"
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
           <Text variant="text-sm" className="line-clamp-1 text-gray-500">
-            {blog?.author_name || "Binita Shrestha"}
+            {blog?.author_name}
           </Text>
           <Text as="span" variant="text-md" className="text-gray-500" bold>
             ·

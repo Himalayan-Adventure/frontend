@@ -73,8 +73,8 @@ export default function ShopPage({
     }
   };
 
-  const filteredProducts = getFilteredProducts(products.data);
-  const bestFilteredProducts = getFilteredProducts(bestSellingProducts.data);
+  const filteredProducts = getFilteredProducts(products?.data);
+  const bestFilteredProducts = getFilteredProducts(bestSellingProducts?.data);
 
   return (
     <>
