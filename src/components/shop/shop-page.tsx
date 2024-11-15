@@ -1,12 +1,12 @@
 "use client";
-import Benefits from "@/components/shop/benefits";
-import BestSellingProducts from "@/components/shop/best-selling-products";
-import OurProducts from "@/components/shop/our-products";
-import ProductFilterBar from "@/components/shop/product-filterbar";
-import CommonBanner from "@/components/ui/common-banner";
-import { IProduct } from "@/types/products/products";
 import { useState } from "react";
+import ProductFilterBar from "@/components/shop/product-filterbar";
+import { IProduct } from "@/types/products/products";
+import CommonBanner from "@/components/ui/common-banner";
 import bgImage from "/public/images/planPgBg.png";
+import BestSellingProducts from "./best-selling-products";
+import Benefits from "./benefits";
+import OurProducts from "./our-products";
 
 export default function ShopPage({
   products,
@@ -14,57 +14,67 @@ export default function ShopPage({
   categories,
 }: any) {
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [sortOption, setSortOption] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const getSortedProducts = (products: IProduct[], option: string) => {
-    const sortedProducts = [...products];
+  const getFilteredProducts = (products: any) => {
+    let filteredProducts = products;
 
-    if (option === "Price: Low to High") {
-      return sortedProducts.sort(
-        (a, b) => a.attributes.price - b.attributes.price,
-      );
-    } else if (option === "Price: High to Low") {
-      return sortedProducts.sort(
-        (a, b) => b.attributes.price - a.attributes.price,
-      );
-    } else if (option === "Name: A to Z") {
-      return sortedProducts.sort((a, b) =>
-        a.attributes.name.localeCompare(b.attributes.name),
-      );
-    } else if (option === "Name: Z to A") {
-      return sortedProducts.sort((a, b) =>
-        b.attributes.name.localeCompare(a.attributes.name),
+    if (selectedCategory !== "All Categories") {
+      filteredProducts = filteredProducts.filter((product: any) =>
+        product.attributes.shop_categories.data.some(
+          (category: any) => category.attributes.name === selectedCategory,
+        ),
       );
     }
 
-    return sortedProducts;
+    if (selectedSubcategory) {
+      filteredProducts = filteredProducts.filter((product: any) =>
+        product.attributes.shop_sub_categories?.data.some(
+          (sub: any) => sub.attributes.name === selectedSubcategory,
+        ),
+      );
+    }
+
+    if (searchQuery) {
+      filteredProducts = filteredProducts.filter((product: any) =>
+        product.attributes.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()),
+      );
+    }
+
+    return getSortedProducts(filteredProducts);
   };
 
-  const filteredProducts =
-    selectedCategory === "All Categories"
-      ? getSortedProducts(products?.data, sortOption)
-      : getSortedProducts(
-          products?.data?.filter((product: IProduct) =>
-            product.attributes?.shop_categories?.data?.some(
-              (category: any) =>
-                category?.attributes?.name === selectedCategory,
-            ),
-          ),
-          sortOption,
-        );
+  const getSortedProducts = (products: IProduct[]) => {
+    const sortedProducts = [...products];
 
-  const BestFilteredProducts =
-    selectedCategory === "All Categories"
-      ? getSortedProducts(bestSellingProducts?.data, sortOption)
-      : getSortedProducts(
-          bestSellingProducts?.data?.filter((product: IProduct) =>
-            product.attributes?.shop_categories?.data?.some(
-              (category: any) =>
-                category?.attributes?.name === selectedCategory,
-            ),
-          ),
-          sortOption,
+    switch (sortOption) {
+      case "Price: Low to High":
+        return sortedProducts.sort(
+          (a, b) => a.attributes.price - b.attributes.price,
         );
+      case "Price: High to Low":
+        return sortedProducts.sort(
+          (a, b) => b.attributes.price - a.attributes.price,
+        );
+      case "Name: A to Z":
+        return sortedProducts.sort((a, b) =>
+          a.attributes.name.localeCompare(b.attributes.name),
+        );
+      case "Name: Z to A":
+        return sortedProducts.sort((a, b) =>
+          b.attributes.name.localeCompare(a.attributes.name),
+        );
+      default:
+        return sortedProducts;
+    }
+  };
+
+  const filteredProducts = getFilteredProducts(products.data);
+  const bestFilteredProducts = getFilteredProducts(bestSellingProducts.data);
 
   return (
     <>
@@ -73,10 +83,13 @@ export default function ShopPage({
         categories={categories}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        selectedSubcategory={selectedSubcategory}
+        setSelectedSubcategory={setSelectedSubcategory}
         sortOption={sortOption}
         setSortOption={setSortOption}
+        setSearchQuery={setSearchQuery}
       />
-      <BestSellingProducts products={BestFilteredProducts} />
+      <BestSellingProducts products={bestFilteredProducts} />
       <Benefits />
       <OurProducts products={filteredProducts} />
     </>
