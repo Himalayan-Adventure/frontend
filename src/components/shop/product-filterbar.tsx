@@ -63,13 +63,10 @@ export default function ProductFilterBar({
             <input
               type="text"
               placeholder="Search"
-              className="ml-2 w-full bg-transparent outline-none"
+              className="ml-2 py-1 w-full bg-transparent outline-none"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button className="ml-auto rounded-full bg-primary p-3 text-white">
-              <SlidersHorizontal size={16} />
-            </Button>
           </div>
 
           {/* Sort By Button with Popover */}
