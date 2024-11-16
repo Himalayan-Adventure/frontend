@@ -4,6 +4,8 @@ import { CategoriesFilter } from "./categories-filter";
 import { AddButton } from "./add-button";
 import { Suspense } from "react";
 import { getBlogs } from "@/server/blogs/get-blogs";
+import Link from "next/link";
+import { PlusIcon } from "lucide-react";
 
 export default async function BlogPage({
   searchParams,
@@ -21,9 +23,12 @@ export default async function BlogPage({
           Blogs
         </Text>
 
-        <Suspense>
-          <AddButton />
-        </Suspense>
+        <Link href="/dashboard/blog/write">
+          <div className="flex items-center gap-x-2 rounded-lg bg-black px-4 py-2 text-sm text-white">
+            <PlusIcon size={16} />
+            Create
+          </div>
+        </Link>
       </span>
 
       <Suspense>

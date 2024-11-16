@@ -1,13 +1,13 @@
-"use server";
+"use client";
 
-import { axiosInstance } from "@/lib/server-axios-instance";
 import { BlogFormSchema, TBlogForm } from "@/validators/blog-form";
-import { AxiosResponse, type AxiosError } from "axios";
-import { cookies } from "next/headers";
-export const editBlog = async (data: TBlogForm, id: number) => {
-  const cookieStore = cookies();
+import axios, { AxiosResponse, type AxiosError } from "axios";
+import { uploadMedia } from "../media/add-media";
+import { revalidateTag } from "next/cache";
+import { toast } from "sonner";
+export const editBlog = async (blog: TBlogForm, id: number) => {
   try {
-    const validatedFields = BlogFormSchema.safeParse(data);
+    const validatedFields = BlogFormSchema.safeParse(blog);
 
     if (!validatedFields.success) {
       return {
@@ -20,14 +20,28 @@ export const editBlog = async (data: TBlogForm, id: number) => {
       };
     }
 
-    const payload = {
-      title: data.title,
-      thumbnail: data.image,
-      description: data.description,
-      categories: data.categories,
+    const uploadThumbnail = await uploadMedia(blog.image);
+    if (!uploadThumbnail) {
+      return {
+        error: {
+          message: "Failed to upload image!",
+        },
+        status: 500,
+      };
+    }
+    const data = {
+      title: blog.title,
+      thumbnail: uploadThumbnail,
+      description: blog.description,
+      categories: blog.categories,
+      slug: blog.slug,
     };
-    const res: AxiosResponse = await axiosInstance.put(`api/api/blogs/${id}`, {
-      data: payload,
+
+    const res = await axios({
+      method: "PUT",
+      url: `/api/blogs/${id}`,
+      data: data,
+      withCredentials: true,
     });
 
     return {
@@ -35,8 +49,15 @@ export const editBlog = async (data: TBlogForm, id: number) => {
       status: res.status,
     };
   } catch (error: AxiosError | any) {
+    const errorMsg =
+      error?.response?.data?.error?.message ||
+      "Error" + " | " + error?.response?.data?.error?.path?.[0] ||
+      "An error occured";
+    toast.error(errorMsg);
     return {
-      error: error?.response?.data || { message: "An error occurred!" },
+      error: {
+        message: errorMsg,
+      },
       status: error?.response?.status || 500,
     };
   }

@@ -9,6 +9,9 @@ import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
+import { useMutation } from "@tanstack/react-query";
+import { deleteBlog } from "@/server/blogs/delete-blog";
+import { toast } from "sonner";
 
 export default function BlogCard({
   blog,
@@ -18,20 +21,30 @@ export default function BlogCard({
   variant?: "default" | "edit";
 }) {
   const slug = blog?.id;
-  const image = blog?.attributes?.thumbnail?.data.attributes;
+  const image = blog?.attributes?.thumbnail?.data?.attributes;
   const tags = blog?.attributes?.blog_categories?.data;
+  const { mutate: deleteAction, isPending } = useMutation({
+    mutationKey: ["blogs", blog.id],
+    mutationFn: async () => await deleteBlog(blog.id),
+    onSuccess(data, variables, context) {
+      toast.success("Blog successfully deleted");
+    },
+  });
 
   return (
     <article className="group relative flex w-full flex-col items-start justify-center gap-y-4 rounded-xl border p-4 pb-2">
       {/*Overlay buttons for edit*/}
       {variant === "edit" && (
         <div className="invisible absolute inset-0 -z-20 flex w-full items-center justify-center gap-x-2 rounded-xl bg-black/40 transition-all ease-in-out group-hover:visible group-hover:z-20">
-          <Link href="/dashboard/blog/edit/1">
+          <Link href={`/dashboard/blog/edit/${blog.id}`}>
             <Button className="aspect-square h-auto bg-white text-blue-400 hover:bg-blue-400 hover:text-white">
               <Pencil size={24} />
             </Button>
           </Link>
-          <Button className="aspect-square h-auto bg-white text-red-500 hover:bg-red-500 hover:text-white">
+          <Button
+            onClick={() => deleteAction()}
+            className="aspect-square h-auto bg-white text-red-500 hover:bg-red-500 hover:text-white"
+          >
             <Trash size={24} />
           </Button>
         </div>
@@ -47,7 +60,7 @@ export default function BlogCard({
             image?.url ||
             "https://plus.unsplash.com/premium_photo-1677002240252-af3f88114efc?q=80&w=2925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           }
-          alt={blog?.attributes.title || "Blog image"}
+          alt={blog?.attributes?.title || "Blog image"}
           width={image?.width || 600}
           height={image?.height || 400}
           className="h-full w-full rounded-xl object-cover saturate-0 transition-transform duration-300 group-hover:scale-105"
@@ -86,14 +99,17 @@ export default function BlogCard({
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
-          {/*
-          <Text variant="text-sm" className="line-clamp-1 text-gray-500">
-            { "Binita Shrestha"}
-          </Text>
-            */}
-          <Text as="span" variant="text-md" className="text-gray-500" bold>
-            ·
-          </Text>
+          {blog?.attributes?.author_name && (
+            <>
+              <Text variant="text-sm" className="line-clamp-1 text-gray-500">
+                {blog?.attributes?.author_name}
+              </Text>
+
+              <Text as="span" variant="text-md" className="text-gray-500" bold>
+                ·
+              </Text>
+            </>
+          )}
           {blog?.attributes?.createdAt?.toString() && (
             <Text variant="text-sm" className="line-clamp-1 text-gray-500">
               {formatDate(blog?.attributes?.createdAt?.toString())}

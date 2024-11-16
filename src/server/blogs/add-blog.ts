@@ -1,18 +1,12 @@
-"use server";
+"use client";
 
-import { axiosInstance } from "@/lib/server-axios-instance";
-import { TRegisterResponse } from "@/types/auth/";
 import { BlogFormSchema, TBlogForm } from "@/validators/blog-form";
-import {
-  RegisterPayloadSchema,
-  type TRegisterPayload,
-} from "@/validators/register-validator";
-import { AxiosResponse, type AxiosError } from "axios";
-import { cookies } from "next/headers";
-export const addBlog = async (data: TBlogForm) => {
-  const cookieStore = cookies();
+import axios, { type AxiosError } from "axios";
+import { uploadMedia } from "../media/add-media";
+import { toast } from "sonner";
+export const addBlog = async (blog: TBlogForm) => {
   try {
-    const validatedFields = BlogFormSchema.safeParse(data);
+    const validatedFields = BlogFormSchema.safeParse(blog);
 
     if (!validatedFields.success) {
       return {
@@ -24,15 +18,32 @@ export const addBlog = async (data: TBlogForm) => {
         status: 400,
       };
     }
+    const uploadThumbnail = await uploadMedia(blog.image);
+    if (!uploadThumbnail) {
+      return {
+        error: {
+          message: "Failed to upload image!",
+        },
+        status: 500,
+      };
+    }
 
-    const payload = {
-      title: data.title,
-      thumbnail: data.image,
-      description: data.description,
-      categories: data.categories,
+    const data = {
+      title: blog.title,
+      thumbnail: uploadThumbnail,
+      description: blog.description,
+      categories: blog.categories,
+      slug: blog.slug,
     };
-    const res: AxiosResponse = await axiosInstance.post("api/api/blogs", {
-      data: payload,
+
+    const res = await axios({
+      method: "POST",
+      url: "/api/blogs",
+      data: data,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     return {
@@ -40,8 +51,15 @@ export const addBlog = async (data: TBlogForm) => {
       status: res.status,
     };
   } catch (error: AxiosError | any) {
+    const errorMsg =
+      error?.response?.data?.error?.message ||
+      "Error" + " | " + error?.response?.data?.error?.path?.[0] ||
+      "An error occured";
+    toast.error(errorMsg);
     return {
-      error: error?.response?.data || { message: "An error occurred!" },
+      error: {
+        message: errorMsg,
+      },
       status: error?.response?.status || 500,
     };
   }

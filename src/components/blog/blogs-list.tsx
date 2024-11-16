@@ -43,7 +43,7 @@ export default function BlogsList({
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:gap-16">
         {filteredBlogs?.length > 0 ? (
           filteredBlogs.map((blog: any, index: number) => (
-            <BlogCard variant="default" blog={blog?.attributes} key={index} />
+            <BlogCard variant="default" blog={blog} key={index} />
           ))
         ) : (
           <p>No blogs found.</p>

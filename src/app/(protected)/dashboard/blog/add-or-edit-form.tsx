@@ -16,54 +16,95 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import slugify from "slugify";
 import rehypeSanitize from "rehype-sanitize";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { TWorkForm, WorkFormSchema } from "@/validators/work-validator";
 import FileDropZone from "@/components/ui/file-dropzone";
 import MDEditor from "@uiw/react-md-editor";
 import { toast } from "sonner";
 import { BlogFormSchema, TBlogForm } from "@/validators/blog-form";
-import BlogForm from "./write/page";
 import { GoBackButton } from "@/components/profile/go-back-button";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getBlogCategories } from "@/server/blogs/get-blog-categories";
+import { Skeleton } from "@/components/ui/skeleton";
+import { addBlog } from "@/server/blogs/add-blog";
+import { editBlog } from "@/server/blogs/edit-blog";
+import { uploadMedia } from "@/server/media/add-media";
+import { APIResponse } from "@/types/types";
+import { urlToFile } from "@/lib/utils";
+import { AxiosError } from "axios";
 type BlogAddOrEditProps =
   | { type: "add"; data?: never; id?: never }
-  | { type: "edit"; data: TBlogForm; id: number };
+  | { type: "edit"; data: APIResponse<"api::blog.blog">; id: number };
 export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
-  //  const { type, data, id } = props;
+  const [file, setFile] = useState<File>();
+  const image = data?.data?.attributes.thumbnail?.data?.attributes;
+  useEffect(() => {
+    const getBlob = async () => {
+      if (!image?.url) return;
+      const imageBlob = await urlToFile(
+        image?.url,
+        image?.name || data?.data.attributes.title + " thumbnail",
+      );
+      setFile(imageBlob);
+    };
+    //eslint-disable-next-line
+    getBlob();
+  }, []);
+  const blog = {
+    title: data?.data?.attributes?.title || "",
+    description: data?.data?.attributes?.description || "",
+    image: file,
+    categories:
+      data?.data?.attributes?.blog_categories?.data?.[0]?.attributes?.name,
+    slug: data?.data?.attributes?.slug,
+  };
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
   const form = useForm<TBlogForm>({
     resolver: zodResolver(BlogFormSchema),
     defaultValues: {
-      title: data?.title || "",
-      categories: data?.categories || "",
-      description: data?.description || "",
-      image: data?.image || "",
+      title: blog?.title || "",
+      categories: blog?.categories || "",
+      description: blog?.description || "",
+      image: blog?.image,
+      slug: blog?.slug,
     },
   });
 
   const [content, setContent] = useState<string | undefined>(
-    data?.description || "**Hello World!**",
+    blog?.description || "**Hello World!**",
   );
   const { data: categories, isLoading } = useQuery({
     queryKey: [type, id],
-    queryFn: getBlogCategories,
+    queryFn: async () => await getBlogCategories(),
   });
   async function onSubmit(values: TBlogForm) {
     setLoading(true);
-    const payload = { ...form.getValues(), description: content };
-    toast.success("Edited successfully");
+    const payload = {
+      ...form.getValues(),
+      description: content || "",
+    };
+    if (type === "edit") {
+      const res = await editBlog(payload, id);
+      if (res.status === 200) {
+        toast.success("Edited blog successfully");
+        router.back();
+      }
+    } else {
+      const res = await addBlog(payload);
+      console.log(res);
+      if (res.status === 200) {
+        toast.success("Added blog successfully");
+        router.back();
+      }
+    }
+    setLoading(false);
   }
-  useEffect(() => {
-    console.log(form.getValues());
-  }, [form]);
   return (
     <section className="container max-w-4xl">
       <GoBackButton className="my-5" />
@@ -90,6 +131,30 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
               </FormItem>
             )}
           />
+          {/*
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field: { value, onChange, ...fieldProps } }) => (
+              <FormItem className="space-y-1.5">
+                <FormLabel>Thumbnail</FormLabel>
+                <FormControl>
+                  <Input
+                    {...fieldProps}
+                    placeholder="Picture"
+                    type="file"
+                    accept="image/*, application/pdf"
+                    onChange={(event) =>
+                      onChange(event.target.files && event.target.files[0])
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+            */}
 
           <div className="space-y-1.5">
             <FormLabel className="dark:text-gray-100">Image</FormLabel>
@@ -97,10 +162,14 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
               required={true}
               value={file}
               onChange={(file) => {
-                setFile(file || null);
+                if (file) {
+                  setFile(file);
+                }
               }}
             />
           </div>
+
+          {isLoading && <Skeleton className="h-12 w-full bg-primary/10" />}
 
           {categories?.data && categories?.data?.length > 0 && (
             <FormField
@@ -130,6 +199,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
                       <SelectItem value="tag-2">tag-2</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -165,8 +235,19 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
           <div className="flex flex-col justify-center gap-y-2 sm:justify-center">
             <Button
               type="submit"
-              onClick={() => form.handleSubmit(onSubmit)}
-              //disabled={!form.formState.isValid}
+              onClick={() => {
+                form.setValue("image", file);
+                form.setValue(
+                  "slug",
+                  slugify(form.getValues().title, {
+                    lower: true,
+                    strict: true, // Removes any non-alphanumeric characters except hyphen
+                    //remove: /[^a-zA-Z0-9-_.~]+/g, // Additional regex to remove unwanted characters
+                  }),
+                  //form.getValues().title.split(" ").join("-"),
+                );
+                form.handleSubmit(onSubmit);
+              }}
               className="w-fit items-center gap-x-3 self-start rounded-full bg-foreground px-10 py-6 font-poppins font-bold"
               isLoading={loading}
             >
