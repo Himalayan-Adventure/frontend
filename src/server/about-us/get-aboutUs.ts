@@ -4,12 +4,12 @@ import { axiosInstance } from "@/lib/server-axios-instance";
 import {
     APIResponse
 } from "@/types/types";
-import { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 export const getAboutUs = async () => {
   try {
     const res: AxiosResponse<APIResponse<"api::about-us.about-us">> =
-      await axiosInstance.get(`api/about-us?populate=*`);
+      await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_URL}api/about-us?populate=*`);
 
     return {
       data: res.data.data,

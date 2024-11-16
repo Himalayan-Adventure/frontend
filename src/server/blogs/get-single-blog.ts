@@ -1,11 +1,11 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
-import { AxiosResponse, type AxiosError } from "axios";
+import axios, { AxiosResponse, type AxiosError } from "axios";
 export const getSingleBlog = async (id: string) => {
   try {
-    const res: AxiosResponse = await axiosInstance.get(
-      `api/blogs/${id}?populate=*`,
+    const res: AxiosResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/blogs/${id}?populate=*`,
     );
 
     return {

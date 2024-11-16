@@ -12,7 +12,8 @@ export default function BlogDetail({ blog }: any) {
       <div className="">
         {/* ShadCN Badge */}
         <Badge className="mb-4 rounded-lg bg-black px-3 py-1 text-xs font-medium text-white md:text-sm">
-          {blog?.data?.attributes?.blog_tags?.data?.[0]?.attributes?.name}
+          {blog?.data?.attributes?.blog_tags?.data?.[0]?.attributes?.name ||
+            "Trekking"}
         </Badge>
 
         {/* Blog Title */}
@@ -30,7 +31,7 @@ export default function BlogDetail({ blog }: any) {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <p className="font-medium text-gray-600">
-            {blog?.data?.attributes?.author_name}
+            {blog?.data?.attributes?.author_name || "Guest"}
           </p>
           <div>
             <p className="text-sm font-bold text-gray-400">
@@ -53,9 +54,9 @@ export default function BlogDetail({ blog }: any) {
         </div>
 
         {/* Blog Content */}
-        <div className="leading-relaxed text-gray-700 blog-content">
+        <div className="blog-content leading-relaxed text-gray-700">
           {/* <p className="mb-4">{blog?.data?.attributes?.description}</p> */}
-          <div data-color-mode="light" className="font-sourceSerif space-y-10">
+          <div data-color-mode="light" className="space-y-10 font-sourceSerif">
             <MDEditor.Markdown
               source={blog?.data?.attributes?.description}
               style={{ whiteSpace: "pre-wrap" }}

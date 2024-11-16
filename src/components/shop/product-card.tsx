@@ -82,9 +82,11 @@ const ProductCard: React.FC<ProductProps> = ({
   return (
     <div className="group cursor-pointer">
       <div className="relative rounded-lg bg-gray-100 p-4 py-6 transition-all hover:shadow-lg">
-        <div className="absolute left-4 top-4 rounded bg-primary px-2 py-1 text-sm text-white">
-          {discountRate}%
-        </div>
+        {discountRate && (
+          <div className="absolute left-4 top-4 rounded bg-primary px-2 py-1 text-sm text-white">
+            {discountRate}%
+          </div>
+        )}
 
         {/* Favorite Button */}
         <div className="absolute right-4 top-4 flex flex-col gap-2">
