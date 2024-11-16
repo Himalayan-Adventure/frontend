@@ -8,14 +8,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
+import { getBlogCategories } from "@/server/blogs/get-blog-categories";
+import { useQuery } from "@tanstack/react-query";
 import { Shapes } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { type } from "os";
 export const CategoriesFilter = () => {
   const searchParams = useSearchParams();
   const updateQueryString = useUpdateQueryString();
+
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["blog-categories"],
+    queryFn: async () => await getBlogCategories(),
+  });
+  if (!data || isError) {
+    return <></>;
+  }
+  if (isFetching) {
+    return <Skeleton className="h-10 w-16" />;
+  }
+
   return (
-    <div className="flex gap-x-4">
+    <div className="flex items-center gap-x-4">
       <Select
         onValueChange={(value) => updateQueryString({ tag: value })}
         defaultValue={searchParams?.get("tag") || ""}
@@ -25,8 +41,11 @@ export const CategoriesFilter = () => {
           Categories
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="tag-1">tag-1</SelectItem>
-          <SelectItem value="tag-2">tag-2</SelectItem>
+          {data.data.map((i) => (
+            <SelectItem key={`categories-${i.id}`} value={i.id.toString()}>
+              {i.attributes.name}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
       <Input

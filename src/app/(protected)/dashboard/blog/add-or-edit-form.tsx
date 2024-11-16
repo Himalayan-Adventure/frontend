@@ -80,7 +80,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
     blog?.description || "**Hello World!**",
   );
   const { data: categories, isLoading } = useQuery({
-    queryKey: [type, id],
+    queryKey: ["blog-categories", type, id],
     queryFn: async () => await getBlogCategories(),
   });
   async function onSubmit(values: TBlogForm) {
@@ -164,6 +164,8 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
               onChange={(file) => {
                 if (file) {
                   setFile(file);
+                } else {
+                  setFile(undefined);
                 }
               }}
             />
