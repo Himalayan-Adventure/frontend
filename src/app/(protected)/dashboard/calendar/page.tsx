@@ -1,11 +1,7 @@
 "use client";
-import BlogCard from "@/components/blog/blog-card";
-import { WorkCard } from "@/components/profile/work-card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { cn } from "@/lib/utils";
 import { setHours, setMinutes } from "date-fns";
 import {
   Calendar as CalendarIcon,

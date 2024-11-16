@@ -10,7 +10,6 @@ export async function PUT(
   const data = await req.json();
   const cookieStore = cookies();
   const token = cookieStore.get("jwt")?.value;
-  console.log(data);
 
   if (!token) {
     return Response.json({ error: "No token, Unauthorized" }, { status: 401 });
@@ -36,7 +35,6 @@ export async function PUT(
   revalidateTag(`blog-${id}`);
 
   const value = await res.json();
-  console.log(value);
   if (!res.ok) {
     return Response.json(
       { error: value.error?.details?.errors?.[0] },
