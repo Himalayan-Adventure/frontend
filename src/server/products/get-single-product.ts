@@ -1,11 +1,12 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
-import { AxiosResponse, type AxiosError } from "axios";
+import axios, { AxiosResponse, type AxiosError } from "axios";
 export const getSingleProduct = async (id: string) => {
   try {
-    const res: AxiosResponse =
-      await axiosInstance.get(`api/shops/${id}?populate=*`);
+    const res: AxiosResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/shops/${id}?populate=*`,
+    );
 
     return {
       data: res.data.data,

@@ -54,7 +54,7 @@ export default function BlogCard({
       <div className="flex flex-col items-start gap-2 self-stretch">
         <div className="items-center gap-4 self-start">
           <Badge className="flex rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0">
-            {blog?.blog_tags?.data?.[0]?.attributes?.name}
+            {blog?.blog_tags?.data?.[0]?.attributes?.name || "Trekking"}
           </Badge>
           <Text variant="text-sm" className="text-gray-500"></Text>
         </div>
@@ -84,7 +84,7 @@ export default function BlogCard({
           </Avatar>
 
           <Text variant="text-sm" className="line-clamp-1 text-gray-500">
-            {blog?.author_name}
+            {blog?.author_name || "Guest"}
           </Text>
           <Text as="span" variant="text-md" className="text-gray-500" bold>
             ·

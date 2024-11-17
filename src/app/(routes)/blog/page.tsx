@@ -5,7 +5,6 @@ import { getBlogs } from "@/server/blogs/get-blogs";
 
 export default async function BlogsPage() {
   const blogs = await getBlogs();
-  console.log("test", blogs);
   const categories = await getBlogCategories();
 
   return (
