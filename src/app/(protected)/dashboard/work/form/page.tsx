@@ -11,9 +11,6 @@ const WorkAddFormPage = ({
 }) => {
   return (
     <section>
-      <Suspense>
-        <GoBackButton className="my-5" />
-      </Suspense>
       <WorkAddOrEditForm type={searchParams?.type} />
     </section>
   );

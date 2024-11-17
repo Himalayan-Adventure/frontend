@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -20,24 +20,39 @@ import { TWorkForm, WorkFormSchema } from "@/validators/work-validator";
 import FileDropZone from "@/components/ui/file-dropzone";
 import MDEditor from "@uiw/react-md-editor";
 import { toast } from "sonner";
-export const WorkAddOrEditForm = ({
-  type,
-  data,
-}: {
-  type: "edit" | "add";
-  data?: TWorkForm;
-}) => {
+import { GoBackButton } from "@/components/profile/go-back-button";
+import { APIResponse } from "@/types/types";
+import { urlToFile } from "@/lib/utils";
+
+type WorkAddOrEditProps =
+  | { type: "add"; data?: never; id?: never }
+  | { type: "edit"; data: APIResponse<"api::work.work">; id: number };
+export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File>();
   const router = useRouter();
+  const work = data?.data?.attributes;
+  const image = work?.image?.data?.[0]?.attributes;
+  useEffect(() => {
+    const getBlob = async () => {
+      if (!image?.url) return;
+      const imageBlob = await urlToFile(
+        image?.url,
+        image?.name || data?.data.attributes.title + " thumbnail",
+      );
+      setFile(imageBlob);
+    };
+    //eslint-disable-next-line
+    getBlob();
+  }, []);
   const form = useForm<TWorkForm>({
     resolver: zodResolver(WorkFormSchema),
     defaultValues: {
-      title: "",
-      date: "",
-      description: "",
-      project_link: "",
-      image: "",
+      title: work?.title || "",
+      date: work?.date?.toString() || "",
+      description: work?.description || "",
+      project_link: work?.link || "",
+      image: file,
     },
   });
 
@@ -53,7 +68,10 @@ export const WorkAddOrEditForm = ({
     console.log(form.getValues());
   }, [form]);
   return (
-    <section className="max-w-4xl">
+    <section className="container mx-auto max-w-4xl">
+      <Suspense>
+        <GoBackButton className="my-5" />
+      </Suspense>
       <div className="my-4 [&>*]:text-neutral-900">
         <Text
           variant="display-sm"
