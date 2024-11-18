@@ -8,6 +8,8 @@ import Image from "next/image";
 import { Text } from "../ui/text";
 import { APIResponseData } from "@/types/types";
 import Link from "next/link";
+import { deleteWork } from "@/server/work/delete-work";
+import { toast } from "sonner";
 
 export const WorkCard = ({
   data,
@@ -20,6 +22,7 @@ export const WorkCard = ({
 }) => {
   const [showMore, setShowMore] = useState(false);
   const work = {
+    id: data?.id,
     title: data?.attributes?.title,
     image: data?.attributes?.image?.data?.[0]?.attributes,
     date: data?.attributes?.createdAt?.toString(),
@@ -42,7 +45,7 @@ export const WorkCard = ({
         width={work.image?.width || 533}
         height={work.image?.height || 300}
         alt={`image of work titled ${work.title}`}
-        className="max-h-96 w-full basis-1/2 saturate-0"
+        className="max-h-96 w-full max-w-[50%] basis-1/2 object-cover saturate-0"
       />
 
       {/* Details*/}
@@ -54,7 +57,7 @@ export const WorkCard = ({
               ? "@3xl:-left-1/4"
               : "@3xl:-right-1/4"
             : "",
-          "relative z-10 flex basis-1/3 flex-col gap-y-2",
+          "relative z-10 flex flex-col gap-y-2",
         )}
       >
         {/* Edit Options */}
@@ -65,13 +68,23 @@ export const WorkCard = ({
             "gap-x-2",
           )}
         >
-          <Link href="/dashboard/work/form?type=edit">
+          <Link href={`/dashboard/work/edit/${data.id}`}>
             <Button className="bg-black text-sm text-white">
               <PenLine size={16} />
               Edit
             </Button>
           </Link>
-          <Button className="bg-black text-sm text-white">
+          <Button
+            className="bg-black text-sm text-white"
+            onClick={async () => {
+              try {
+                await deleteWork(work.id);
+                toast.success("Work deleted successfully");
+              } catch (err) {
+                console.log(err);
+              }
+            }}
+          >
             <Trash size={16} />
             Delete
           </Button>
@@ -93,12 +106,12 @@ export const WorkCard = ({
           </div>
 
           {/* Description */}
-          <div className="flex w-full flex-col space-y-4 px-4 @3xl:px-16">
+          <div className="relative flex w-full flex-col space-y-4 px-4 @3xl:px-16">
             {work.content && (
               <Text
                 variant="text-xs"
                 className={cn(
-                  "hide-scrollbar overflow-y-scroll text-balance py-5 tracking-wider @3xl:min-w-[350px]",
+                  "hide-scrollbar w-full overflow-y-scroll text-balance py-5 tracking-wider @3xl:max-w-[350px]",
                 )}
               >
                 {work.content.length < 400

@@ -64,19 +64,16 @@ export default async function WorkPage({
           Work
         </Text>
 
-        {/*
-        <Link href="/dashboard/work/form?type=add">
-          <Button className="bg-black text-sm text-white">
+        <Link href="/dashboard/work/write">
+          <div className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
             <PlusIcon size={16} />
             Add Project
-          </Button>
+          </div>
         </Link>
-        <Button className="bg-black text-sm text-white">
+        <div className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
           <PlusIcon size={16} />
-          Upcoming Projects
-        </Button>
-
-          */}
+          Upcoming projects
+        </div>
       </span>
 
       {/* Works */}

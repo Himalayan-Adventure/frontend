@@ -27,6 +27,7 @@ export default function BlogCard({
     mutationKey: ["blogs", blog.id],
     mutationFn: async () => await deleteBlog(blog.id),
     onSuccess(data, variables, context) {
+      console.log(data);
       toast.success("Blog successfully deleted");
     },
   });

@@ -1,6 +1,7 @@
 import { BlogAddOrEditForm } from "../../add-or-edit-form";
 import { getSingleBlog } from "@/server/blogs/get-single-blog";
 import { Text } from "@/components/ui/text";
+import { GoBackButton } from "@/components/profile/go-back-button";
 
 type Props = {
   params: {
@@ -10,9 +11,10 @@ type Props = {
 export default async function BlogEditPage({ params }: Props) {
   const { id } = params;
   const blog = await getSingleBlog(id.toString());
-  if (!blog) {
+  if (!blog?.data?.data) {
     return (
-      <section>
+      <section className="space-y-10">
+        <GoBackButton />
         <Text variant="text-xl">No available blog</Text>
       </section>
     );

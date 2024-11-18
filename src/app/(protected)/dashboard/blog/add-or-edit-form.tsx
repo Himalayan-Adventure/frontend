@@ -97,7 +97,6 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
       }
     } else {
       const res = await addBlog(payload);
-      console.log(res);
       if (res.status === 200) {
         toast.success("Added blog successfully");
         router.back();
@@ -243,10 +242,8 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
                   "slug",
                   slugify(form.getValues().title, {
                     lower: true,
-                    strict: true, // Removes any non-alphanumeric characters except hyphen
-                    //remove: /[^a-zA-Z0-9-_.~]+/g, // Additional regex to remove unwanted characters
+                    strict: true,
                   }),
-                  //form.getValues().title.split(" ").join("-"),
                 );
                 form.handleSubmit(onSubmit);
               }}

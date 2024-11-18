@@ -17,7 +17,7 @@ export const WorkFormSchema = z.object({
     .optional(),
   image: z.preprocess((value) => value, z.instanceof(File)).optional(),
   description: z.string().optional(),
-  project_link: z.string().url().optional(),
+  link: z.string().url().optional(),
 });
 
 export type TWorkForm = z.infer<typeof WorkFormSchema>;
