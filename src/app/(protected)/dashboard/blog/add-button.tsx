@@ -1,7 +1,7 @@
 "use client";
 import { PlusIcon } from "lucide-react";
 import { Suspense } from "react";
-import { Button } from "react-day-picker";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 export const AddButton = () => {
   return (

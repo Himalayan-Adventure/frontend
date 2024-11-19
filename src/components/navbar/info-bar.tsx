@@ -152,7 +152,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="cursor-pointer">
+                    <Link href="/dashboard/profile" className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Dashboard</span>
                     </Link>

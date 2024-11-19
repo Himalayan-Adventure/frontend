@@ -68,7 +68,7 @@ export default function ProfileSidebarLayout({
               !sidebarHidden && "transition-all duration-200 lg:pl-72",
             )}
           >
-            <div className="sticky top-0 z-[100] flex h-[var(--profile-header-height)] shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white/90 px-4 shadow-sm backdrop-blur-md sm:gap-x-6 sm:px-6 lg:px-8">
+            <div className="sticky top-0 z-[30] flex h-[var(--profile-header-height)] shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white/90 px-4 shadow-sm backdrop-blur-md sm:gap-x-6 sm:px-6 lg:px-8">
               {/* This one's only for mobile devices, where sidebar is hiddden regardless of the state */}
               <Button
                 variant="ghost"
@@ -94,6 +94,7 @@ export default function ProfileSidebarLayout({
               {/*   <span className="sr-only">Open sidebar</span> */}
               {/*   <Menu className="h-6 w-6" aria-hidden="true" /> */}
               {/* </Button> */}
+              {/*
               <Text
                 bold
                 variant="text-xl"
@@ -101,6 +102,8 @@ export default function ProfileSidebarLayout({
               >
                 {user?.userType}
               </Text>
+
+                */}
 
               <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
                 <div className="ml-auto flex items-center gap-x-4 lg:gap-x-6">
@@ -159,8 +162,11 @@ function SidebarContent({
             >
               {user?.username}
             </Text>
-            <Text variant="text-xs" className="max-w-52 truncate text-gray-200">
-              {user?.email}
+            <Text
+              variant="text-xs"
+              className="max-w-52 truncate capitalize text-gray-200"
+            >
+              {user?.userType}
             </Text>
           </div>
         </div>

@@ -93,7 +93,7 @@ export default function FileDropZone({
             <button
               type="button"
               onClick={() => handleDeleteClick()}
-              className="flex-center absolute right-0 top-0 z-[2000] h-6 w-6 rounded-full bg-red-500 text-white drop-shadow-md"
+              className="absolute right-0 top-0 z-[2000] grid h-6 w-6 place-items-center rounded-full bg-red-500 text-white drop-shadow-md"
               aria-label={`Delete`}
             >
               <X aria-hidden="true" className="h-4 w-4" />

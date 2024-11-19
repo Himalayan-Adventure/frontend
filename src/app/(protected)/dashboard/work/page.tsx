@@ -1,17 +1,26 @@
-"use client";
 import BlogCard from "@/components/blog/blog-card";
-import { WorkCard } from "@/components/profile/work-card";
+import { WorkCard } from "@/components/work/work-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
+import { WorkPagination } from "@/components/work/pagination";
 import { cn } from "@/lib/utils";
+import { getWorks } from "@/server/work/get-works";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { PenLine, PlusIcon, Shapes, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 
-export default function WorkPage() {
+export default async function WorkPage({
+  searchParams,
+}: {
+  searchParams: { limit?: number };
+}) {
+  const { limit } = searchParams;
+  const works = await getWorks();
+  {
+    /*
   const works = [
     {
       date: "DEC 08, 2020",
@@ -45,7 +54,8 @@ export default function WorkPage() {
     },
   ];
 
-  const [limit, setLimit] = useState(6);
+    */
+  }
   return (
     <section className="space-y-8 font-poppins @container">
       {/*Header*/}
@@ -54,16 +64,16 @@ export default function WorkPage() {
           Work
         </Text>
 
-        <Link href="/dashboard/work/form?type=add">
-          <Button className="bg-black text-sm text-white">
+        <Link href="/dashboard/work/write">
+          <div className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
             <PlusIcon size={16} />
             Add Project
-          </Button>
+          </div>
         </Link>
-        <Button className="bg-black text-sm text-white">
+        <div className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
           <PlusIcon size={16} />
-          Upcoming Projects
-        </Button>
+          Upcoming projects
+        </div>
       </span>
 
       {/* Works */}
@@ -71,13 +81,13 @@ export default function WorkPage() {
         <div className="rounded-xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl space-y-8">
             {/* Works*/}
-            <div className="flex flex-col space-y-8">
-              <div className="flex flex-col space-y-8">
-                {works
-                  .slice(0, limit)
+            <div className="flex flex-col gap-y-32">
+              <div className="flex flex-col gap-y-16">
+                {works.data
+                  ?.slice(0, limit)
                   ?.map((work, index) => (
                     <WorkCard
-                      work={work}
+                      data={work}
                       index={index}
                       key={`work-${index}`}
                       type="edit"
@@ -85,16 +95,7 @@ export default function WorkPage() {
                   ))}
               </div>
 
-              <Button
-                className="self-center bg-foreground px-8 py-4"
-                onClick={() =>
-                  setLimit((prev) => {
-                    return limit < works.length ? prev + 2 : prev - 2;
-                  })
-                }
-              >
-                {limit < works.length ? "More..." : "Less..."}
-              </Button>
+              <WorkPagination />
             </div>
           </div>
         </div>
