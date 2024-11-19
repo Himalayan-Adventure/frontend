@@ -28,7 +28,7 @@ export const BlogFormSchema = z.object({
   //   .optional(),
   //image: z.instanceof(FileList).optional(),
   image: z.preprocess((value) => value, z.instanceof(File)).optional(),
-  categories: z.string().optional(),
+  blog_categories: z.string().optional(),
   description: z.string(),
   slug: z.string(),
 });

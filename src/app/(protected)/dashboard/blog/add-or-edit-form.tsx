@@ -69,7 +69,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
     resolver: zodResolver(BlogFormSchema),
     defaultValues: {
       title: blog?.title || "",
-      categories: blog?.categories || "",
+      blog_categories: blog?.categories || "",
       description: blog?.description || "",
       image: blog?.image,
       slug: blog?.slug,
@@ -89,6 +89,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
       ...form.getValues(),
       description: content || "",
     };
+    console.log(payload);
     if (type === "edit") {
       const res = await editBlog(payload, id);
       if (res.status === 200) {
@@ -175,7 +176,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
           {categories?.data && categories?.data?.length > 0 && (
             <FormField
               control={form.control}
-              name="categories"
+              name="blog_categories"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Categories</FormLabel>
@@ -192,12 +193,11 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
                       {categories?.data?.map((i) => (
                         <SelectItem
                           key={`${i.id}-blog-categories`}
-                          value={i.attributes.name}
+                          value={i.id.toString()}
                         >
                           {i.attributes.name}
                         </SelectItem>
                       ))}
-                      <SelectItem value="tag-2">tag-2</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
