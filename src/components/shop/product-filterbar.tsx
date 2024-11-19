@@ -1,26 +1,42 @@
 import { useState } from "react";
 import { FiList, FiSearch } from "react-icons/fi";
 import { MdCategory } from "react-icons/md";
-import { SlidersHorizontal } from "lucide-react";
-import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface ProductFilterBarProps {
   categories: any;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedSubcategory: string;
+  setSelectedSubcategory: (subcategory: string) => void;
   sortOption: string;
   setSortOption: (option: string) => void;
+  setSearchQuery: (query: string) => void;
 }
 
 export default function ProductFilterBar({
   categories,
   selectedCategory,
   setSelectedCategory,
+  selectedSubcategory,
+  setSelectedSubcategory,
   sortOption,
   setSortOption,
+  setSearchQuery,
 }: ProductFilterBarProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [openCategoryId, setOpenCategoryId] = useState<number | null>(null);
+
+  // Timer state to handle mouse enter/leave delay
+  let delayTimer: NodeJS.Timeout;
+
+  const handleMouseEnterCategory = (categoryId: number) => {
+    clearTimeout(delayTimer); // Clear any timer if already set
+    setOpenCategoryId(categoryId);
+  };
+
+  const handleMouseLeaveCategory = () => {
+    delayTimer = setTimeout(() => setOpenCategoryId(null), 200); // 200ms delay
+  };
 
   return (
     <section className="container relative mx-auto py-8 lg:mt-32 lg:py-16">
@@ -31,26 +47,61 @@ export default function ProductFilterBar({
             <PopoverTrigger asChild>
               <button className="order-2 flex items-center justify-center space-x-2 rounded-lg border border-black px-2 py-1 text-xs sm:w-auto md:text-sm lg:order-1 lg:px-4 lg:py-2 lg:text-base">
                 <MdCategory size={20} />
-                <span>{selectedCategory}</span>
+                <span>{selectedCategory || "Select Category"}</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-48 rounded-md bg-white p-2 shadow-lg">
               <ul>
                 <li
                   className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
-                  onClick={() => setSelectedCategory("All Categories")}
+                  onClick={() => {
+                    setSelectedCategory("All Categories");
+                    setSelectedSubcategory("");
+                  }}
                 >
                   All Categories
                 </li>
                 {categories?.data?.map((category: any) => (
                   <li
                     key={category.id}
-                    className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
-                    onClick={() =>
-                      setSelectedCategory(category.attributes.name)
-                    }
+                    className="group relative"
+                    onMouseEnter={() => handleMouseEnterCategory(category.id)}
+                    onMouseLeave={handleMouseLeaveCategory}
                   >
-                    {category.attributes.name}
+                    <div
+                      className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
+                      onClick={() =>
+                        setSelectedCategory(category.attributes.name)
+                      }
+                    >
+                      {category.attributes.name}
+                    </div>
+                    {openCategoryId === category.id &&
+                      category.attributes.shop_sub_categories && (
+                        <div
+                          className="absolute left-full top-0 w-48 border border-gray-200 bg-white shadow-lg"
+                          onMouseEnter={() => clearTimeout(delayTimer)} // Keep subcategory menu open
+                          onMouseLeave={handleMouseLeaveCategory} // Close with delay on leave
+                        >
+                          <ul>
+                            {category.attributes.shop_sub_categories?.data.map(
+                              (subCategory: any) => (
+                                <li
+                                  key={subCategory.id}
+                                  className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
+                                  onClick={() =>
+                                    setSelectedSubcategory(
+                                      subCategory.attributes.name,
+                                    )
+                                  }
+                                >
+                                  {subCategory.attributes.name}
+                                </li>
+                              ),
+                            )}
+                          </ul>
+                        </div>
+                      )}
                   </li>
                 ))}
               </ul>
@@ -63,13 +114,9 @@ export default function ProductFilterBar({
             <input
               type="text"
               placeholder="Search"
-              className="ml-2 w-full bg-transparent outline-none"
-              value={searchQuery}
+              className="ml-2 w-full bg-transparent py-1 outline-none"
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button className="ml-auto rounded-full bg-primary p-3 text-white">
-              <SlidersHorizontal size={16} />
-            </Button>
           </div>
 
           {/* Sort By Button with Popover */}

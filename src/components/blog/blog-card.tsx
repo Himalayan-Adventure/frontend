@@ -20,7 +20,7 @@ export default function BlogCard({
   blog: APIResponseData<"api::blog.blog">;
   variant?: "default" | "edit";
 }) {
-  const slug = blog?.id;
+  const slug = blog?.attributes.slug || blog?.id;
   const image = blog?.attributes?.thumbnail?.data?.attributes;
   const tags = blog?.attributes?.blog_categories?.data;
   const { mutate: deleteAction, isPending } = useMutation({
@@ -92,13 +92,15 @@ export default function BlogCard({
         </Link>
 
         <div className="mt-4 flex items-center gap-2 self-stretch">
-          <Avatar>
-            <AvatarImage
-              src="https://github.com/shadcn.png"
-              className="saturate-0"
-            />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          {blog?.attributes?.author_image?.data && (
+            <Avatar>
+              <AvatarImage
+                src={blog?.attributes.author_image?.data?.attributes?.url}
+                className="saturate-0"
+              />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          )}
 
           {blog?.attributes?.author_name && (
             <>

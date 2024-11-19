@@ -33,21 +33,22 @@ export default function RelatedItems({ relatedItems }: any) {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:mt-12 lg:grid-cols-4 lg:gap-12">
-        {relatedItems?.data?.map((product: IProduct) => (
+        {relatedItems?.data?.map((product: any) => (
           <ProductCard
-            key={product.id}
+            key={product?.id}
+            slug={product?.attributes?.slug}
             id={product?.id}
             name={product?.attributes?.name}
+            description={product?.attributes?.descsription}
             price={product?.attributes?.price}
-            originalPrice={product?.attributes?.price}
-            discount={product?.attributes?.charge}
+            discountRate={product?.attributes?.discount_rate}
+            rentAvailable={product?.attributes?.rentAvailable}
+            rentPrice={product?.attributes?.rentPrice}
+            stockCount={product?.attributes?.stockCount}
+            colors={product?.attributes?.count}
             rating={4}
             reviews={54}
             img={product?.attributes?.image?.data?.[0]?.attributes?.url}
-            likedProducts={likedProducts}
-            viewedProducts={viewedProducts}
-            onToggleLike={toggleLike}
-            onToggleView={toggleView}
           />
         ))}
       </div>

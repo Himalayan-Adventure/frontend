@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/server-axios-instance";
 import { APIResponseCollection } from "@/types/types";
-import { AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
 
 export const getBlogs = async () => {
   try {
