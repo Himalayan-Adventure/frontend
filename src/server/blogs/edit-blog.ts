@@ -33,7 +33,7 @@ export const editBlog = async (blog: TBlogForm, id: number) => {
       title: blog.title,
       thumbnail: uploadThumbnail,
       description: blog.description,
-      categories: blog.categories,
+      blog_categories: blog.blog_categories,
       slug: blog.slug,
     };
 
