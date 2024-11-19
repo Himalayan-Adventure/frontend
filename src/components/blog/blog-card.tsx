@@ -20,9 +20,10 @@ export default function BlogCard({
   blog: APIResponseData<"api::blog.blog">;
   variant?: "default" | "edit";
 }) {
-  const slug = blog?.attributes.slug || blog?.id;
+  const slug = blog?.id;
   const image = blog?.attributes?.thumbnail?.data?.attributes;
-  const tags = blog?.attributes?.blog_categories?.data;
+  const tags = blog?.attributes?.blog_categories?.data?.[0]?.attributes?.name;
+  console.log(blog.attributes.blog_categories);
   const { mutate: deleteAction, isPending } = useMutation({
     mutationKey: ["blogs", blog.id],
     mutationFn: async () => await deleteBlog(blog.id),
@@ -69,12 +70,14 @@ export default function BlogCard({
       </Link>
 
       <div className="flex flex-col items-start gap-2 self-stretch">
-        <div className="items-center gap-4 self-start">
-          <Badge className="flex rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0">
-            {tags ? tags?.[0]?.attributes?.name : "lorem ipsum"}
-          </Badge>
-          <Text variant="text-sm" className="text-gray-500"></Text>
-        </div>
+        {tags && (
+          <div className="items-center gap-4 self-start">
+            <Badge className="flex rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0">
+              {tags}
+            </Badge>
+            <Text variant="text-sm" className="text-gray-500"></Text>
+          </div>
+        )}
         <Link
           href={`/blog/${slug}`}
           target="_blank"
