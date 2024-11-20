@@ -1,3 +1,4 @@
+"use server";
 import { axiosInstance } from "@/lib/server-axios-instance";
 import { APIResponseCollection } from "@/types/types";
 import { AxiosResponse, AxiosError } from "axios";

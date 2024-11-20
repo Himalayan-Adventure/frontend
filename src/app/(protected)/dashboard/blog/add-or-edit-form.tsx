@@ -43,6 +43,11 @@ type BlogAddOrEditProps =
 export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
   const [file, setFile] = useState<File>();
   const image = data?.data?.attributes.thumbnail?.data?.attributes;
+
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ["blog-categories", type, id],
+    queryFn: async () => await getBlogCategories(),
+  });
   useEffect(() => {
     const getBlob = async () => {
       if (!image?.url) return;
@@ -60,7 +65,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
     description: data?.data?.attributes?.description || "",
     image: file,
     categories:
-      data?.data?.attributes?.blog_categories?.data?.[0]?.attributes?.name,
+      data?.data?.attributes?.blog_categories?.data?.[0]?.id.toString(),
     slug: data?.data?.attributes?.slug,
   };
   const [loading, setLoading] = useState(false);
@@ -79,10 +84,6 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
   const [content, setContent] = useState<string | undefined>(
     blog?.description || "**Hello World!**",
   );
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ["blog-categories", type, id],
-    queryFn: async () => await getBlogCategories(),
-  });
   async function onSubmit(values: TBlogForm) {
     setLoading(true);
     const payload = {
@@ -182,7 +183,10 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
                   <FormLabel>Categories</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={categories.data
+                      .find((i) => i.id === Number(blog.categories))
+                      ?.id.toString()}
+                    //defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
