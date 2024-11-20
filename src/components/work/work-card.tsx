@@ -33,7 +33,7 @@ export const WorkCard = ({
     <article
       className={cn(
         index % 2 === 0 ? "@3xl:flex-row" : "@3xl:flex-row-reverse",
-        "relative flex min-h-96 flex-col justify-between gap-y-3 @3xl:items-center",
+        "group relative flex min-h-96 flex-col justify-between gap-y-3 @3xl:items-center",
         type === "edit" && "gap-x-10",
       )}
     >
@@ -45,7 +45,7 @@ export const WorkCard = ({
         width={work.image?.width || 533}
         height={work.image?.height || 300}
         alt={`image of work titled ${work.title}`}
-        className="max-h-96 w-full max-w-[50%] basis-1/2 object-cover saturate-0"
+        className="max-h-96 w-full max-w-[50%] basis-1/2 object-cover object-center saturate-0 transition-[400ms] ease-in-out group-hover:scale-[1.01]"
       />
 
       {/* Details*/}

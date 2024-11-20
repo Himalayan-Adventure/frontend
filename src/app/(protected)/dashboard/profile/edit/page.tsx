@@ -33,6 +33,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Label } from "@/components/ui/label";
 import { MultiInput } from "@/components/ui/multi-input";
+import { GoBackButton } from "@/components/profile/go-back-button";
 export default function ProfileEditForm() {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -54,7 +55,8 @@ export default function ProfileEditForm() {
     contact: <ContactForm control={form.control} />,
   };
   return (
-    <section className="max-w-4xl">
+    <section className="container max-w-4xl">
+      <GoBackButton />
       <div className="my-4 [&>*]:text-neutral-900">
         <Text
           variant="display-sm"
