@@ -95,9 +95,11 @@ export default function BlogCard({
         </Link>
 
         <div className="mt-4 flex items-center gap-2 self-stretch">
+          {/*@ts-ignore*/}
           {blog?.attributes?.author_image?.data && (
             <Avatar>
               <AvatarImage
+                //@ts-ignore
                 src={blog?.attributes.author_image?.data?.attributes?.url}
                 className="saturate-0"
               />
@@ -105,9 +107,11 @@ export default function BlogCard({
             </Avatar>
           )}
 
+          {/*@ts-ignore*/}
           {blog?.attributes?.author_name && (
             <>
               <Text variant="text-sm" className="line-clamp-1 text-gray-500">
+                {/*@ts-ignore*/}
                 {blog?.attributes?.author_name}
               </Text>
 

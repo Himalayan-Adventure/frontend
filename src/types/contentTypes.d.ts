@@ -934,7 +934,6 @@ export interface ApiBlogBlog extends Schema.CollectionType {
     singularName: 'blog';
     pluralName: 'blogs';
     displayName: 'Blog';
-    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -947,16 +946,6 @@ export interface ApiBlogBlog extends Schema.CollectionType {
       'api::blog.blog',
       'manyToMany',
       'api::blog-category.blog-category'
-    >;
-    slug: Attribute.UID<'api::blog.blog', 'title'> & Attribute.Required;
-    author_name: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'admin'>;
-    author_image: Attribute.Media<'images'>;
-    blog_tags: Attribute.Relation<
-      'api::blog.blog',
-      'manyToMany',
-      'api::blog-tag.blog-tag'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -998,41 +987,6 @@ export interface ApiBlogCategoryBlogCategory extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::blog-category.blog-category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiBlogTagBlogTag extends Schema.CollectionType {
-  collectionName: 'blog_tags';
-  info: {
-    singularName: 'blog-tag';
-    pluralName: 'blog-tags';
-    displayName: 'Blog Tag';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String & Attribute.Required;
-    blogs: Attribute.Relation<
-      'api::blog-tag.blog-tag',
-      'manyToMany',
-      'api::blog.blog'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::blog-tag.blog-tag',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::blog-tag.blog-tag',
       'oneToOne',
       'admin::user'
     > &
@@ -1565,11 +1519,6 @@ export interface ApiShopShop extends Schema.CollectionType {
       'manyToMany',
       'api::shop-sub-category.shop-sub-category'
     >;
-    discount_rate: Attribute.Integer;
-    stock_count: Attribute.BigInteger &
-      Attribute.Required &
-      Attribute.DefaultTo<'1'>;
-    slug: Attribute.UID<'api::shop.shop', 'name'> & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1779,7 +1728,6 @@ declare module '@strapi/types' {
       'api::accommodation-preference.accommodation-preference': ApiAccommodationPreferenceAccommodationPreference;
       'api::blog.blog': ApiBlogBlog;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
-      'api::blog-tag.blog-tag': ApiBlogTagBlogTag;
       'api::icon.icon': ApiIconIcon;
       'api::package.package': ApiPackagePackage;
       'api::package-category.package-category': ApiPackageCategoryPackageCategory;

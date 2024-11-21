@@ -13,19 +13,6 @@ export interface UserAboutAbout extends Schema.Component {
   };
 }
 
-export interface PlanwithusReviewFinalizeReviewAndFInalize
-  extends Schema.Component {
-  collectionName: 'components_planwithus_review_finalize_review_and_f_inalizes';
-  info: {
-    displayName: 'Review & FInalize';
-  };
-  attributes: {
-    name: Attribute.String;
-    email: Attribute.Email;
-    message: Attribute.Text;
-  };
-}
-
 export interface PlanwithusTravelDatesTravelDates extends Schema.Component {
   collectionName: 'components_planwithus_travel_dates_travel_dates';
   info: {
@@ -40,6 +27,19 @@ export interface PlanwithusTravelDatesTravelDates extends Schema.Component {
     decide_later: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
+  };
+}
+
+export interface PlanwithusReviewFinalizeReviewAndFInalize
+  extends Schema.Component {
+  collectionName: 'components_planwithus_review_finalize_review_and_f_inalizes';
+  info: {
+    displayName: 'Review & FInalize';
+  };
+  attributes: {
+    name: Attribute.String;
+    email: Attribute.Email;
+    message: Attribute.Text;
   };
 }
 
@@ -192,6 +192,17 @@ export interface PackageSkillLevelSkillLevel extends Schema.Component {
   };
 }
 
+export interface PackageSeasonSeason extends Schema.Component {
+  collectionName: 'components_package_season_seasons';
+  info: {
+    displayName: 'Season';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.Enumeration<['winter', 'summer', 'spring', 'autumn']>;
+  };
+}
+
 export interface PackageLogisticsLogistics extends Schema.Component {
   collectionName: 'components_package_logistics_logistics';
   info: {
@@ -202,17 +213,6 @@ export interface PackageLogisticsLogistics extends Schema.Component {
     equipment_provided: Attribute.Blocks;
     packing_list: Attribute.Blocks;
     permits: Attribute.Blocks;
-  };
-}
-
-export interface PackageSeasonSeason extends Schema.Component {
-  collectionName: 'components_package_season_seasons';
-  info: {
-    displayName: 'Season';
-    description: '';
-  };
-  attributes: {
-    name: Attribute.Enumeration<['winter', 'summer', 'spring', 'autumn']>;
   };
 }
 
@@ -318,23 +318,6 @@ export interface PackageGradeGrade extends Schema.Component {
   };
 }
 
-export interface PackageCostAndBudgetingCostAndBudgeting
-  extends Schema.Component {
-  collectionName: 'components_package_cost_and_budgeting_cost_and_budgetings';
-  info: {
-    displayName: 'Cost and Budgeting';
-  };
-  attributes: {
-    title: Attribute.String & Attribute.Required;
-    lowest: Attribute.BigInteger;
-    highest: Attribute.BigInteger;
-    offer_price: Attribute.BigInteger;
-    offer_percent: Attribute.Integer;
-    inclusions: Attribute.Blocks;
-    exclusions: Attribute.Blocks;
-  };
-}
-
 export interface PackageFitnessFitness extends Schema.Component {
   collectionName: 'components_package_fitness_fitnesses';
   info: {
@@ -368,6 +351,23 @@ export interface PackageCustomizationPackageCustomization
   };
 }
 
+export interface PackageCostAndBudgetingCostAndBudgeting
+  extends Schema.Component {
+  collectionName: 'components_package_cost_and_budgeting_cost_and_budgetings';
+  info: {
+    displayName: 'Cost and Budgeting';
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    lowest: Attribute.BigInteger;
+    highest: Attribute.BigInteger;
+    offer_price: Attribute.BigInteger;
+    offer_percent: Attribute.Integer;
+    inclusions: Attribute.Blocks;
+    exclusions: Attribute.Blocks;
+  };
+}
+
 export interface PackageAdventureTransportationTransporation
   extends Schema.Component {
   collectionName: 'components_package_adventure_transportation_transporations';
@@ -378,34 +378,6 @@ export interface PackageAdventureTransportationTransporation
     name: Attribute.Enumeration<
       ['Private transfers', 'Shared shuttles', 'Flights', 'Self-drive']
     >;
-  };
-}
-
-export interface PackageAdventureSpecificationsAdventureSpecifications
-  extends Schema.Component {
-  collectionName: 'components_package_adv_spec';
-  info: {
-    displayName: 'Adventure Specifications';
-    description: '';
-  };
-  attributes: {
-    travel_dates: Attribute.Component<
-      'package-travel-dates.package-travel-dates',
-      true
-    > &
-      Attribute.Required;
-    fixed_departure: Attribute.Component<
-      'package-travel-dates.package-travel-dates',
-      true
-    > &
-      Attribute.Required;
-    season: Attribute.Component<'package-season.season', true> &
-      Attribute.Required;
-    grade: Attribute.Component<'package-grade.grade', true>;
-    fitness: Attribute.Component<'package-fitness.fitness', true>;
-    skill_level: Attribute.Component<'package-skill-level.skill-level', true>;
-    duration: Attribute.Integer & Attribute.Required & Attribute.DefaultTo<1>;
-    max_altitude: Attribute.BigInteger & Attribute.Required;
   };
 }
 
@@ -509,18 +481,31 @@ export interface PackageAccommodationLocationLocation extends Schema.Component {
   };
 }
 
-export interface PackageAccommodationAccommodation extends Schema.Component {
-  collectionName: 'components_pkg_acc';
+export interface PackageAdventureSpecificationsAdventureSpecifications
+  extends Schema.Component {
+  collectionName: 'components_package_adv_spec';
   info: {
-    displayName: 'Accommodation ';
+    displayName: 'Adventure Specifications';
     description: '';
   };
   attributes: {
-    accommodation_preference: Attribute.Relation<
-      'package-accommodation.accommodation',
-      'oneToOne',
-      'api::accommodation-preference.accommodation-preference'
-    >;
+    travel_dates: Attribute.Component<
+      'package-travel-dates.package-travel-dates',
+      true
+    > &
+      Attribute.Required;
+    fixed_departure: Attribute.Component<
+      'package-travel-dates.package-travel-dates',
+      true
+    > &
+      Attribute.Required;
+    season: Attribute.Component<'package-season.season', true> &
+      Attribute.Required;
+    grade: Attribute.Component<'package-grade.grade', true>;
+    fitness: Attribute.Component<'package-fitness.fitness', true>;
+    skill_level: Attribute.Component<'package-skill-level.skill-level', true>;
+    duration: Attribute.Integer & Attribute.Required & Attribute.DefaultTo<1>;
+    max_altitude: Attribute.BigInteger & Attribute.Required;
   };
 }
 
@@ -547,6 +532,21 @@ export interface ColorShopColor extends Schema.Component {
   };
 }
 
+export interface PackageAccommodationAccommodation extends Schema.Component {
+  collectionName: 'components_pkg_acc';
+  info: {
+    displayName: 'Accommodation ';
+    description: '';
+  };
+  attributes: {
+    accommodation_preference: Attribute.Relation<
+      'package-accommodation.accommodation',
+      'oneToOne',
+      'api::accommodation-preference.accommodation-preference'
+    >;
+  };
+}
+
 export interface AccommodationPreferencePreference extends Schema.Component {
   collectionName: 'components_accommodation_preference_preferences';
   info: {
@@ -554,6 +554,18 @@ export interface AccommodationPreferencePreference extends Schema.Component {
   };
   attributes: {
     name: Attribute.String;
+  };
+}
+
+export interface AboutServiceAboutServices extends Schema.Component {
+  collectionName: 'components_about_service_about_services';
+  info: {
+    displayName: 'About Services';
+  };
+  attributes: {
+    icon: Attribute.String & Attribute.CustomField<'plugin::react-icons.icon'>;
+    title: Attribute.String & Attribute.Required;
+    description: Attribute.Text;
   };
 }
 
@@ -576,16 +588,6 @@ export interface AboutResumeResume extends Schema.Component {
   };
 }
 
-export interface AboutEducationEducation extends Schema.Component {
-  collectionName: 'components_about_education_educations';
-  info: {
-    displayName: 'education';
-  };
-  attributes: {
-    education: Attribute.String;
-  };
-}
-
 export interface AboutContactContact extends Schema.Component {
   collectionName: 'components_about_contact_contacts';
   info: {
@@ -605,15 +607,13 @@ export interface AboutContactContact extends Schema.Component {
   };
 }
 
-export interface AboutServiceAboutServices extends Schema.Component {
-  collectionName: 'components_about_service_about_services';
+export interface AboutEducationEducation extends Schema.Component {
+  collectionName: 'components_about_education_educations';
   info: {
-    displayName: 'About Services';
+    displayName: 'education';
   };
   attributes: {
-    icon: Attribute.String & Attribute.CustomField<'plugin::react-icons.icon'>;
-    title: Attribute.String & Attribute.Required;
-    description: Attribute.Text;
+    education: Attribute.String;
   };
 }
 
@@ -621,8 +621,8 @@ declare module '@strapi/types' {
   export module Shared {
     export interface Components {
       'user-about.about': UserAboutAbout;
-      'planwithus-review-finalize.review-and-f-inalize': PlanwithusReviewFinalizeReviewAndFInalize;
       'planwithus-travel-dates.travel-dates': PlanwithusTravelDatesTravelDates;
+      'planwithus-review-finalize.review-and-f-inalize': PlanwithusReviewFinalizeReviewAndFInalize;
       'planwithus-budget.budget': PlanwithusBudgetBudget;
       'package-visuals.maps-and-visuals': PackageVisualsMapsAndVisuals;
       'package-trip-offer.what-we-offfer': PackageTripOfferWhatWeOfffer;
@@ -634,8 +634,8 @@ declare module '@strapi/types' {
       'package-sponsor-host.sponsor-host': PackageSponsorHostSponsorHost;
       'package-socials.package-socials': PackageSocialsPackageSocials;
       'package-skill-level.skill-level': PackageSkillLevelSkillLevel;
-      'package-logistics.logistics': PackageLogisticsLogistics;
       'package-season.season': PackageSeasonSeason;
+      'package-logistics.logistics': PackageLogisticsLogistics;
       'package-itinerary-timeline.itinerary-timeline': PackageItineraryTimelineItineraryTimeline;
       'package-itinerary-others.others': PackageItineraryOthersOthers;
       'package-itinerary-includes.includes': PackageItineraryIncludesIncludes;
@@ -643,25 +643,25 @@ declare module '@strapi/types' {
       'package-hosted-by.hosted-by': PackageHostedByHostedBy;
       'package-host.package-host': PackageHostPackageHost;
       'package-grade.grade': PackageGradeGrade;
-      'package-cost-and-budgeting.cost-and-budgeting': PackageCostAndBudgetingCostAndBudgeting;
       'package-fitness.fitness': PackageFitnessFitness;
       'package-customization.package-customization': PackageCustomizationPackageCustomization;
+      'package-cost-and-budgeting.cost-and-budgeting': PackageCostAndBudgetingCostAndBudgeting;
       'package-adventure-transportation.transporation': PackageAdventureTransportationTransporation;
-      'package-adventure-specifications.adventure-specifications': PackageAdventureSpecificationsAdventureSpecifications;
       'package-adventure-customization.adventure-customization': PackageAdventureCustomizationAdventureCustomization;
       'package-adventure-cultural-experiences.cultural-experiences': PackageAdventureCulturalExperiencesCulturalExperiences;
       'package-adventure-activities.adventure-activities': PackageAdventureActivitiesAdventureActivities;
       'package-adventure-addons.add-ons': PackageAdventureAddonsAddOns;
       'package-accommodation-preferences.accommodation-preferences': PackageAccommodationPreferencesAccommodationPreferences;
       'package-accommodation-location.location': PackageAccommodationLocationLocation;
-      'package-accommodation.accommodation': PackageAccommodationAccommodation;
+      'package-adventure-specifications.adventure-specifications': PackageAdventureSpecificationsAdventureSpecifications;
       'faq.faq': FaqFaq;
       'color.shop-color': ColorShopColor;
+      'package-accommodation.accommodation': PackageAccommodationAccommodation;
       'accommodation-preference.preference': AccommodationPreferencePreference;
-      'about-resume.resume': AboutResumeResume;
-      'about-education.education': AboutEducationEducation;
-      'about-contact.contact': AboutContactContact;
       'about-service.about-services': AboutServiceAboutServices;
+      'about-resume.resume': AboutResumeResume;
+      'about-contact.contact': AboutContactContact;
+      'about-education.education': AboutEducationEducation;
     }
   }
 }

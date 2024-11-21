@@ -12,11 +12,10 @@ import { getServices } from "@/server/services/get-services";
 import { getUsers } from "@/server/users/get-users";
 import { ServicesPagination } from "@/components/services/pagination";
 import { APIResponseCollection } from "@/types/types";
-export default async function ServicesPage({
-  searchParams,
-}: {
-  searchParams: { type?: string };
-}) {
+type TSearchParams = {
+  searchParams: { type?: string; category?: string; name?: string };
+};
+export default async function ServicesPage({ searchParams }: TSearchParams) {
   return (
     <main className="container space-y-4">
       <Image
@@ -47,7 +46,7 @@ export default async function ServicesPage({
         <div className="flex flex-col gap-5 md:flex-row">
           <SideFilter />
           {searchParams.type === "Packages" ? (
-            <ServicesPackages />
+            <ServicesPackages searchParams={searchParams} />
           ) : (
             <ServicesGuides />
           )}
@@ -56,8 +55,9 @@ export default async function ServicesPage({
     </main>
   );
 }
-async function ServicesPackages() {
-  const data = await getServices();
+async function ServicesPackages({ searchParams }: TSearchParams) {
+  const { category } = searchParams;
+  const data = await getServices(searchParams);
   return (
     <div className="z-10 w-full space-y-10 py-10">
       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
