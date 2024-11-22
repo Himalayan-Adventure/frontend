@@ -15,7 +15,7 @@ export const ServiceCard = ({
   data: APIResponseData<"api::service.service">;
 }) => {
   const [isFav, setIsFav] = useState(false);
-  const image = data?.attributes?.image?.data.attributes;
+  const image = data?.attributes?.image?.data?.attributes;
   //@ts-ignore
   const service_provider = data?.attributes?.service_provider?.data;
   console.log(service_provider);
@@ -23,14 +23,16 @@ export const ServiceCard = ({
   return (
     <div className="relative z-10 grid max-w-[300px] grid-rows-[auto_auto] rounded-lg bg-white px-2 pt-2 shadow-2xl md:px-3 md:pt-3">
       <div className="relative h-full">
-        {image?.url && (
+        {image?.url ? (
           <Image
             src={image?.url}
-            alt={image.name || data?.attributes?.title}
+            alt={image?.name || data?.attributes?.title}
             width={image?.width || 400}
             height={image?.height || 400}
             className="relative aspect-square h-full w-full rounded-bl-3xl rounded-tr-3xl object-cover lg:max-h-96"
           />
+        ) : (
+          <div className="relative aspect-square h-full w-full rounded-bl-3xl rounded-tr-3xl bg-gray-300 object-cover lg:max-h-96" />
         )}
       </div>
       <div className="relative flex w-full flex-col items-center gap-y-2 pb-4 pt-2 text-center font-poppins">

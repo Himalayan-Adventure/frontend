@@ -32,7 +32,7 @@ export const getServices = async ({
     console.log("query", query);
     const res: AxiosResponse<APIResponseCollection<"api::service.service">> =
       await axiosInstance.get(
-        `api/services?populate[0]=image&populate[1]=service_provider&${query}`,
+        `api/services?populate[0]=image&populate[1]=service_provider&populate[2]=categories&populate[3]=associated_packages&${query}`,
       );
 
     return res.data.data;
