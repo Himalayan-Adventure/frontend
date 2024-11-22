@@ -7,8 +7,13 @@ import { PlusIcon } from "lucide-react";
 import { getServices } from "@/server/services/get-services";
 import DataTable from "./_table/data-table";
 import { columns } from "./_table/columns-def";
-export default async function ServicesPage() {
-  const data = await getServices({});
+export default async function ServicesPage({
+  searchParams,
+}: {
+  searchParams: { name?: string };
+}) {
+  const { name } = searchParams;
+  const data = await getServices({ name });
   console.log(data);
 
   return (
@@ -33,11 +38,12 @@ export default async function ServicesPage() {
           Add Services
         </div>
       </span>
-      <div className="flex flex-col gap-5 md:flex-row">
+      <div className="relative flex flex-col gap-5 md:flex-row">
         <DataTable
-          data={data || []}
+          data={data?.data || []}
+          meta={data?.meta}
           columns={columns}
-          className="overflow-auto"
+          className="table-scrollbar max-h-[calc(100dvh-var(--navbar-height)-150px)] overflow-auto"
         />
       </div>
     </section>

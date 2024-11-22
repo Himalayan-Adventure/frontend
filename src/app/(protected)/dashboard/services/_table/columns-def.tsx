@@ -174,7 +174,7 @@ function IndeterminateCheckbox({
     <input
       type="checkbox"
       ref={ref}
-      className={className + " cursor-pointer"}
+      className={className + " size-5 cursor-pointer"}
       {...rest}
     />
   );

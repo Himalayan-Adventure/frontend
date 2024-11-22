@@ -6,7 +6,7 @@ import useUpdateQueryString from "@/hooks/use-update-query-string";
 import { cn } from "@/lib/utils";
 import { type Column } from "@tanstack/react-table";
 import { MoveDown, MoveUp } from "lucide-react";
-
+import { FaSort as Sort } from "react-icons/fa";
 // TODO: Make this more reusable
 export function SortableHeaderButton<T>({
   column,
@@ -75,18 +75,12 @@ export function SortableHeaderButton<T>({
         className="ml-1 mr-4 flex items-center gap-1"
         style={{ visibility: hideButton ? "hidden" : "visible" }}
       >
-        <MoveUp
+        <Sort
           strokeWidth={2.5}
           className={cn(
-            "absolute h-[0.92rem] w-4",
-            isSorted && isAscending && "text-primary/80",
-          )}
-        />
-        <MoveDown
-          strokeWidth={2.5}
-          className={cn(
-            "absolute h-[0.92rem] w-4 translate-x-[0.45rem]",
-            isSorted && !isAscending && "text-primary/80",
+            "h-[0.92rem]",
+            column.getIsSorted() === "asc" && "text-primary",
+            column.getIsSorted() === "desc" && "text-purple-500",
           )}
         />
       </div>
