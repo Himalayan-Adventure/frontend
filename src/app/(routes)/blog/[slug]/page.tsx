@@ -13,7 +13,7 @@ export default async function BlogDetailPage({
   return (
     <main>
       <CommonBanner title="Blog" />
-      <BlogDetail blog={blog} />
+      <BlogDetail blog={blog?.data} />
     </main>
   );
 }
