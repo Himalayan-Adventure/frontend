@@ -68,6 +68,7 @@ export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
 
       if (res.status === 200) {
         toast.success("Edited work successfully");
+        router.refresh();
         router.back();
       }
     } else {
@@ -75,6 +76,7 @@ export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
 
       if (res.status === 200) {
         toast.success("Added work successfully");
+        router.refresh();
         router.back();
       }
     }

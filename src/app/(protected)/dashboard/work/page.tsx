@@ -5,6 +5,11 @@ import { getWorks } from "@/server/work/get-works";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import { getWorksOfUser } from "@/server/work/get-works-of-user";
+import { getCurrentUserData } from "@/server/auth/get-me";
+import { toast } from "sonner";
+import { redirect } from "next/navigation";
+import { APIResponseCollection } from "@/types/types";
 
 export default async function WorkPage({
   searchParams,
@@ -12,7 +17,13 @@ export default async function WorkPage({
   searchParams: { limit?: number };
 }) {
   const { limit } = searchParams;
-  const works = await getWorks();
+  const user = await getCurrentUserData();
+  if (!user) {
+    toast.error("Please sign in ");
+    redirect("/home");
+  }
+  const works = await getWorksOfUser({ id: user.id });
+
   return (
     <section className="space-y-8 font-poppins @container">
       {/*Header*/}
@@ -40,16 +51,20 @@ export default async function WorkPage({
             {/* Works*/}
             <div className="flex flex-col gap-y-32">
               <div className="flex flex-col gap-y-16">
-                {works.data
-                  ?.slice(0, limit)
-                  ?.map((work, index) => (
-                    <WorkCard
-                      data={work}
-                      index={index}
-                      key={`work-${index}`}
-                      type="edit"
-                    />
-                  ))}
+                {(!works.data || works.data.length) === 0 ? (
+                  <div>No works found of user</div>
+                ) : (
+                  works.data
+                    ?.slice(0, limit)
+                    ?.map((work, index) => (
+                      <WorkCard
+                        data={work}
+                        index={index}
+                        key={`work-${index}`}
+                        type="edit"
+                      />
+                    ))
+                )}
               </div>
 
               <WorkPagination />

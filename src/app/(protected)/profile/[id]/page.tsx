@@ -29,7 +29,7 @@ import { BlogCards } from "@/components/profile/blog";
 import { ContactCard } from "@/components/profile/contact-card";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { useQuery } from "@tanstack/react-query";
-import { TUser } from "@/types/auth";
+import { TUser, TUserDeep } from "@/types/auth";
 import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { WorkCards } from "@/components/profile/work-card";
@@ -44,7 +44,7 @@ export default function PublicProfilePage({
     queryKey: ["public-user", params.id],
     queryFn: async () => {
       try {
-        const res = await axios.get<TUser>(
+        const res = await axios.get<TUserDeep>(
           `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${params.id}?populate=deep`,
         );
 
@@ -201,7 +201,7 @@ export default function PublicProfilePage({
         </TabsList>
 
         <TabsContent value="about" className="mt-0">
-          <AboutCard />
+          {user && <AboutCard user={user} />}
         </TabsContent>
 
         <TabsContent value="resume" className="mt-0">
@@ -217,7 +217,7 @@ export default function PublicProfilePage({
         </TabsContent>
 
         <TabsContent value="work" className="mt-0 w-full @container">
-          <WorkCards />
+          {user && <WorkCards user={user} />}
         </TabsContent>
       </Tabs>
     </section>

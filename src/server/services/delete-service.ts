@@ -3,12 +3,12 @@
 import axios, { AxiosResponse, type AxiosError } from "axios";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-export const deleteBlog = async (id: number) => {
+export const deleteService = async (id: number) => {
   const cookieStore = cookies();
 
   try {
     const res: AxiosResponse = await axios(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/blogs/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/services/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -16,15 +16,12 @@ export const deleteBlog = async (id: number) => {
         },
       },
     );
-    revalidateTag("blogs");
+    revalidateTag("services");
 
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
-    return {
-      data: res.data,
-      status: res.status,
-    };
+    return res;
   } catch (error: AxiosError | any) {
     return {
       error: error?.response?.data || { message: "An error occurred!" },

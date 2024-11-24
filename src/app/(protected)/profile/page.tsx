@@ -29,7 +29,7 @@ import { BlogCards } from "@/components/profile/blog";
 import { ContactCard } from "@/components/profile/contact-card";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { useQuery } from "@tanstack/react-query";
-import { TUser } from "@/types/auth";
+import { TUser, TUserDeep } from "@/types/auth";
 import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { WorkCards } from "@/components/profile/work-card";
@@ -39,7 +39,7 @@ export default function ProfilePage() {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const res = await axios.get<TUser>("/api/me");
+        const res = await axios.get<TUserDeep>("/api/me");
 
         if (!res?.data) {
           return null;
@@ -194,7 +194,7 @@ export default function ProfilePage() {
         </TabsList>
 
         <TabsContent value="about" className="mt-0">
-          <AboutCard />
+          {user && <AboutCard user={user} />}
         </TabsContent>
 
         <TabsContent value="resume" className="mt-0">
@@ -210,7 +210,7 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="work" className="mt-0 w-full @container">
-          <WorkCards />
+          {user && <WorkCards user={user} />}
         </TabsContent>
       </Tabs>
     </section>

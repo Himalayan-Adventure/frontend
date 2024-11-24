@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
-import { getWorks } from "@/server/work/get-works";
+import { getWorksOfUser } from "@/server/work/get-works-of-user";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { PenLine, Trash } from "lucide-react";
@@ -13,10 +13,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { WorkCard } from "../work/work-card";
-export const WorkCards = () => {
+import { TUser } from "@/types/auth";
+export const WorkCards = ({ user }: { user: TUser }) => {
   const { data: works, isPending } = useQuery({
     queryKey: ["works"],
-    queryFn: async () => await getWorks(),
+    queryFn: async () => await getWorksOfUser({ id: user.id }),
   });
 
   const [limit, setLimit] = useState(6);

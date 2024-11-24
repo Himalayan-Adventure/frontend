@@ -37,16 +37,30 @@ import { uploadMedia } from "@/server/media/add-media";
 import { APIResponse } from "@/types/types";
 import { urlToFile } from "@/lib/utils";
 import { AxiosError } from "axios";
-type BlogAddOrEditProps =
+import {
+  ServiceFormSchema,
+  TServiceForm,
+} from "@/validators/service-form-validator";
+import { getServiceCategories } from "@/server/services/get-services-categories";
+import { addService } from "@/server/services/add-service";
+type ServiceAddOrEditProps =
   | { type: "add"; data?: never; id?: never }
-  | { type: "edit"; data: APIResponse<"api::blog.blog">; id: number };
-export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
+  | { type: "edit"; data: APIResponse<"api::service.service">; id: number };
+export const ServiceAddOrEditForm = ({
+  type,
+  data,
+  id,
+}: ServiceAddOrEditProps) => {
   const [file, setFile] = useState<File>();
-  const image = data?.data?.attributes.thumbnail?.data?.attributes;
+  console.log(data);
+  //const image = data?.data.attributes.image?.data?.attributes;
+  const image = data?.data?.attributes?.image?.data?.attributes;
+
+  //const image = data?.data?.attributes.thumbnail?.data?.attributes;
 
   const { data: categories, isLoading } = useQuery({
-    queryKey: ["blog-categories", type, id],
-    queryFn: async () => await getBlogCategories(),
+    queryKey: ["service-categories", type, id],
+    queryFn: async () => await getServiceCategories(),
   });
   useEffect(() => {
     const getBlob = async () => {
@@ -60,48 +74,31 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
     //eslint-disable-next-line
     getBlob();
   }, []);
-  const blog = {
+  const service = {
     title: data?.data?.attributes?.title || "",
-    description: data?.data?.attributes?.description || "",
     image: file,
-    categories:
-      data?.data?.attributes?.blog_categories?.data?.[0]?.id.toString(),
-    slug: data?.data?.attributes?.slug,
+    categories: data?.data?.attributes?.categories?.data?.[0]?.id.toString(),
+    service_charge: Number(data?.data?.attributes?.service_charge),
+    booking_charge: Number(data?.data?.attributes?.booking_charge),
   };
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const form = useForm<TBlogForm>({
-    resolver: zodResolver(BlogFormSchema),
-    defaultValues: {
-      title: blog?.title || "",
-      blog_categories: blog?.categories || "",
-      description: blog?.description || "",
-      image: blog?.image,
-      slug: blog?.slug,
-    },
+  const form = useForm<TServiceForm>({
+    resolver: zodResolver(ServiceFormSchema),
+    defaultValues: service,
   });
 
-  const [content, setContent] = useState<string | undefined>(
-    blog?.description || "**Hello World!**",
-  );
-  async function onSubmit(values: TBlogForm) {
+  async function onSubmit(values: TServiceForm) {
     setLoading(true);
     const payload = {
       ...form.getValues(),
-      description: content || "",
     };
     console.log(payload);
     if (type === "edit") {
-      const res = await editBlog(payload, id);
-      if (res.status === 200) {
-        toast.success("Edited blog successfully");
-        router.refresh();
-        router.back();
-      }
     } else {
-      const res = await addBlog(payload);
+      const res = await addService(payload);
       if (res.status === 200) {
-        toast.success("Added blog successfully");
+        toast.success("Added service successfully");
         router.refresh();
         router.back();
       }
@@ -116,7 +113,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
           variant="display-sm"
           className="text-left font-poppins !text-xl font-bold capitalize sm:!text-2xl"
         >
-          {type} Blog
+          {type} Service
         </Text>
       </div>
       <Form {...form}>
@@ -126,7 +123,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>Services Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter title" {...field} />
                 </FormControl>
@@ -134,30 +131,33 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
               </FormItem>
             )}
           />
-          {/*
+
           <FormField
             control={form.control}
-            name="image"
-            render={({ field: { value, onChange, ...fieldProps } }) => (
-              <FormItem className="space-y-1.5">
-                <FormLabel>Thumbnail</FormLabel>
+            name="service_charge"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Service Charge</FormLabel>
                 <FormControl>
-                  <Input
-                    {...fieldProps}
-                    placeholder="Picture"
-                    type="file"
-                    accept="image/*, application/pdf"
-                    onChange={(event) =>
-                      onChange(event.target.files && event.target.files[0])
-                    }
-                  />
+                  <Input type="number" placeholder="Rs." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-            */}
+          <FormField
+            control={form.control}
+            name="booking_charge"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Booking Charge</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Rs." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="space-y-1.5">
             <FormLabel className="dark:text-gray-100">Image</FormLabel>
@@ -179,14 +179,14 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
           {categories?.data && categories?.data?.length > 0 && (
             <FormField
               control={form.control}
-              name="blog_categories"
+              name="categories"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Categories</FormLabel>
+                  <FormLabel>Service Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={categories.data
-                      .find((i) => i.id === Number(blog.categories))
+                      .find((i) => i.id === Number(service.categories))
                       ?.id.toString()}
                     //defaultValue={field.value}
                   >
@@ -198,7 +198,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
                     <SelectContent>
                       {categories?.data?.map((i) => (
                         <SelectItem
-                          key={`${i.id}-blog-categories`}
+                          key={`${i.id}-service-categories`}
                           value={i.id.toString()}
                         >
                           {i.attributes.name}
@@ -211,46 +211,12 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
               )}
             />
           )}
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Blog</FormLabel>
-                <FormControl>
-                  <div data-color-mode="light" className="space-y-10">
-                    <MDEditor
-                      preview="edit"
-                      value={content}
-                      onChange={setContent}
-                      previewOptions={{
-                        rehypePlugins: [[rehypeSanitize]],
-                      }}
-                    />
-                    <MDEditor.Markdown
-                      source={content}
-                      style={{ whiteSpace: "pre-wrap" }}
-                      className="rounded-lg border !border-input p-2"
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           <div className="flex flex-col justify-center gap-y-2 sm:justify-center">
             <Button
               type="submit"
               onClick={() => {
                 form.setValue("image", file);
-                form.setValue(
-                  "slug",
-                  slugify(form.getValues().title, {
-                    lower: true,
-                    strict: true,
-                  }),
-                );
                 form.handleSubmit(onSubmit);
               }}
               className="w-fit items-center gap-x-3 self-start rounded-full bg-foreground px-10 py-6 font-poppins font-bold"
