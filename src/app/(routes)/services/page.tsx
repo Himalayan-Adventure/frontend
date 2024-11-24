@@ -13,8 +13,15 @@ import { getUsers, getUsersDeep } from "@/server/users/get-users";
 import { ServicesPagination } from "@/components/services/pagination";
 import { APIResponseCollection } from "@/types/types";
 import { GuideCard } from "@/components/profile/guide-card";
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 type TSearchParams = {
   searchParams: { type?: string; category?: string; name?: string };
+};
+
+export const metadata: Metadata = {
+  title: `Services | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
 };
 export default async function ServicesPage({ searchParams }: TSearchParams) {
   return (
@@ -62,7 +69,9 @@ async function ServicesPackages({ searchParams }: TSearchParams) {
   return (
     <div className="z-10 w-full space-y-10 py-10">
       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-        {data?.map((svc, index) => <ServiceCard data={svc} key={index} />)}
+        {data?.data?.map((svc, index) => (
+          <ServiceCard data={svc} key={index} />
+        ))}
       </div>
       <ServicesPagination />
     </div>

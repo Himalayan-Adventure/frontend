@@ -78,10 +78,8 @@ export const ServiceAddOrEditForm = ({
     title: data?.data?.attributes?.title || "",
     image: file,
     categories: data?.data?.attributes?.categories?.data?.[0]?.id.toString(),
-    //@ts-ignore
-    service_charge: data?.data?.attributes?.service_charge,
-    //@ts-ignore
-    booking_charge: data?.data?.attributes?.booking_charge,
+    service_charge: Number(data?.data?.attributes?.service_charge),
+    booking_charge: Number(data?.data?.attributes?.booking_charge),
   };
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -97,15 +95,11 @@ export const ServiceAddOrEditForm = ({
     };
     console.log(payload);
     if (type === "edit") {
-      //const res = await editBlog(payload, id);
-      // if (res.status === 200) {
-      //   toast.success("Edited blog successfully");
-      //   router.back();
-      // }
     } else {
       const res = await addService(payload);
       if (res.status === 200) {
         toast.success("Added service successfully");
+        router.refresh();
         router.back();
       }
     }

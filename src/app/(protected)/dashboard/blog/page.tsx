@@ -23,7 +23,7 @@ export default async function BlogPage({
           Blogs
         </Text>
 
-        <Link href="/dashboard/blog/write">
+        <Link href="/dashboard/blog/write" prefetch={true}>
           <div className="flex items-center gap-x-2 rounded-lg bg-black px-4 py-2 text-sm text-white">
             <PlusIcon size={16} />
             Create

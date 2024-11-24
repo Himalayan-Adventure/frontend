@@ -29,19 +29,20 @@ import { BlogCards } from "@/components/profile/blog";
 import { ContactCard } from "@/components/profile/contact-card";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { useQuery } from "@tanstack/react-query";
-import { TUser } from "@/types/auth";
+import { TUser, TUserDeep } from "@/types/auth";
 import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { WorkCards } from "@/components/profile/work-card";
 import Banner from "@/components/profile/banner";
 import { APIResponse, APIResponseData } from "@/types/types";
 import { PluginUsersPermissionsUser } from "@/types/contentTypes";
+import { ProfileCard } from "@/components/profile/profile-card";
 export default function ProfilePage() {
   const { data: user, isPending } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const res = await axios.get<TUser>("/api/me");
+        const res = await axios.get<TUserDeep>("/api/me");
 
         if (!res?.data) {
           return null;
@@ -188,7 +189,7 @@ export default function ProfilePage() {
         </TabsList>
 
         <TabsContent value="about" className="mt-0">
-          <AboutCard />
+          {user && <AboutCard user={user} />}
         </TabsContent>
 
         <TabsContent value="resume" className="mt-0">
@@ -204,14 +205,14 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="work" className="mt-0 w-full @container">
-          <WorkCards />
+          {user && <WorkCards user={user} />}
         </TabsContent>
       </Tabs>
     </section>
   );
 }
 
-const ProfileCard = ({ user }: { user: TUser | null }) => {
+const LegacyProfileCard = ({ user }: { user: TUser | null }) => {
   return (
     <div className="relative h-[600px] w-full overflow-hidden rounded-xl bg-black text-white shadow-lg sm:min-w-[300px] md:aspect-square md:h-auto md:w-auto md:max-w-sm">
       <div className="relative h-full w-full">

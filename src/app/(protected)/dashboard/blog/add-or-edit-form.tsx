@@ -95,12 +95,14 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
       const res = await editBlog(payload, id);
       if (res.status === 200) {
         toast.success("Edited blog successfully");
+        router.refresh();
         router.back();
       }
     } else {
       const res = await addBlog(payload);
       if (res.status === 200) {
         toast.success("Added blog successfully");
+        router.refresh();
         router.back();
       }
     }

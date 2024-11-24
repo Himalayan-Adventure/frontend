@@ -7,13 +7,22 @@ import { PlusIcon } from "lucide-react";
 import { getServices } from "@/server/services/get-services";
 import DataTable from "./_table/data-table";
 import { columns } from "./_table/columns-def";
+import { getCurrentUserData } from "@/server/auth/get-me";
+import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Services Dashboard | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
 export default async function ServicesPage({
   searchParams,
 }: {
   searchParams: { name?: string };
 }) {
   const { name } = searchParams;
-  const data = await getServices({ name });
+  const user = await getCurrentUserData();
+  const data = await getServices({ name, id: user?.id });
   console.log(data);
 
   return (
@@ -23,7 +32,7 @@ export default async function ServicesPage({
           Services
         </Text>
 
-        <Link href="/dashboard/services/write">
+        <Link href="/dashboard/services/write" prefetch={true}>
           <div className="btn-primary font-semibold">
             <PlusIcon size={16} />
             Add Services
@@ -31,11 +40,11 @@ export default async function ServicesPage({
         </Link>
         <div className="btn-primary font-semibold">
           <GrUpgrade size={16} />
-          Add Services
+          Service Request
         </div>
         <div className="btn-primary font-semibold">
           <TbMessageCircleSearch size={16} />
-          Add Services
+          Service Enquiry
         </div>
       </span>
       <div className="relative flex flex-col gap-5 md:flex-row">
@@ -43,7 +52,7 @@ export default async function ServicesPage({
           data={data?.data || []}
           meta={data?.meta}
           columns={columns}
-          className="table-scrollbar max-h-[calc(100dvh-var(--navbar-height)-150px)] overflow-auto"
+          className="table-scrollbar relative max-h-[calc(100dvh-var(--navbar-height)-150px)] overflow-auto"
         />
       </div>
     </section>

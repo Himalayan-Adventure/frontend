@@ -22,20 +22,21 @@ import {
   SiAdobephotoshop,
   SiAdobexd,
 } from "react-icons/si";
-import { TUser } from "@/types/auth";
-export const ResumeCard = ({user}:{user:TUser}) => {
+import { TUser, TUserDeep } from "@/types/auth";
+export const ResumeCard = ({ user }: { user: TUserDeep }) => {
   const resumeData = {
     name: user.username,
-    role: "UI/UX Designer",
+    role: user.userType,
     contact: {
       email: user.email,
-      phone: "+8801633165851",
-      location: "Joydepur, Gazipur, Bangladesh",
+      phone: user.contact.phone,
+      location: user.contact.address,
     },
-    portfolio: {
-      behance: "https://www.behance.net/mehedihasankhan1",
-      dribbble: "https://www.dribbble.com/mehedihasan5851",
-    },
+    // portfolio: {
+    //   behance: "https://www.behance.net/mehedihasankhan1",
+    //   dribbble: "https://www.dribbble.com/mehedihasan5851",
+    // },
+    portfolio: user.resume.portfolio,
     education: {
       institution:
         "Model Institute of Science and Technology (Under National University)",
@@ -93,7 +94,10 @@ export const ResumeCard = ({user}:{user:TUser}) => {
 
         {/* User details */}
         <div>
-          <Text variant="text-xl" className="font-semibold lg:text-2xl capitalize">
+          <Text
+            variant="text-xl"
+            className="font-semibold capitalize lg:text-2xl"
+          >
             {resumeData.name}
           </Text>
           <Text variant="text-lg" className="text-primary">
@@ -131,7 +135,9 @@ export const ResumeCard = ({user}:{user:TUser}) => {
           <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Portfolio
           </Text>
-          <div className="space-y-2">
+          <Link href={resumeData.portfolio}>{resumeData.portfolio}</Link>
+          {/*
+                     <div className="space-y-2">
             {Object.entries(resumeData.portfolio).map(([key, value]) => (
               <LinkWithIcon
                 key={`portfolio-${key}`}
@@ -141,6 +147,7 @@ export const ResumeCard = ({user}:{user:TUser}) => {
               />
             ))}
           </div>
+ */}
         </div>
 
         {/* Education details */}
@@ -270,8 +277,11 @@ const LinkWithIcon = ({
 }) => {
   return (
     <Link href={href} target="_blank" className="flex items-center gap-x-2">
-      <span className="min-w-6 h-fit">{icon}</span>
-      <Text variant="text-lg" className="block text-sm sm:text-base md:text-lg whitespace-normal break-all">
+      <span className="h-fit min-w-6">{icon}</span>
+      <Text
+        variant="text-lg"
+        className="block whitespace-normal break-all text-sm sm:text-base md:text-lg"
+      >
         {name}
       </Text>
     </Link>

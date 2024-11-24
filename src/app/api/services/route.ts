@@ -24,6 +24,7 @@ export async function POST(req: Request) {
         revalidate: 15,
         tags: ["services"],
       },
+      cache: "no-cache",
     },
   );
   revalidateTag("services");

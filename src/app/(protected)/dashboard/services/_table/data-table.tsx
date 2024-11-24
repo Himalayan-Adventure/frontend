@@ -51,6 +51,10 @@ import SearchBar from "@/components/ui/search-bar";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
 import { setPriority } from "os";
 import { APIResponseCollectionMetadata } from "@/types/types";
+import { useMutation } from "@tanstack/react-query";
+import { Mukta } from "next/font/google";
+import { deleteService } from "@/server/services/delete-service";
+import { toast } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -137,17 +141,41 @@ function DataTable<TData, TValue>({
       },
     },
   });
-  useEffect(() => {
-    console.log(rowSelection);
-  }, [rowSelection]);
+  const [bulkAction, setBulkAction] = useState("");
+  const {
+    mutate: deleteServiceMutation,
+    isPending,
+    isSuccess,
+  } = useMutation({
+    mutationKey: ["services"],
+    mutationFn: async () => {
+      const iterable = Object.entries(rowSelection);
+      for (const [key, value] of iterable) {
+        await deleteService(Number(key));
+      }
+    },
+    onSuccess(data, variables, context) {
+      console.log(data);
+      toast.success("Service deleted successfully");
+    },
+    onError(error, variables, context) {
+      toast.error(`Action couldn't be performed ${error}`);
+    },
+  });
 
   return (
     <div className="w-full space-y-4">
+      {/*
+        Top actions bar
+      */}
       <span className="flex items-center justify-between">
         <span className="flex items-center gap-x-4">
-          <Select>
+          <Select
+            onValueChange={(e) => setBulkAction(e)}
+            defaultValue={bulkAction}
+          >
             <SelectTrigger className="max-w-36 whitespace-nowrap">
-              Bulk action
+              <SelectValue placeholder="Bulk action" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem
@@ -161,7 +189,13 @@ function DataTable<TData, TValue>({
               </SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline">Apply</Button>
+          <Button
+            disabled={bulkAction === ""}
+            variant="outline"
+            onClick={() => deleteServiceMutation()}
+          >
+            Apply
+          </Button>
           <Select>
             <SelectTrigger className="max-w-36">All dates</SelectTrigger>
             <SelectContent>
@@ -172,6 +206,9 @@ function DataTable<TData, TValue>({
         <SearchBar selector="name" />
       </span>
 
+      {/*
+        Table
+      */}
       <div
         className={cn(
           "w-full",
@@ -280,7 +317,7 @@ function DataTable<TData, TValue>({
                 if (meta?.pagination && page <= meta?.pagination.pageCount) {
                   updateQueryString({ page: page.toString() });
                 }
-                setPage(page - 1);
+                setPage(page + 1);
               }}
             />
           </PaginationItem>
