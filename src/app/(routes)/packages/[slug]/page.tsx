@@ -57,7 +57,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
       },
     ],
     grade: pkg?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: pkg?.adventure_specification?.max_altitude || "",
+    altitude: pkg?.adventure_specification?.max_altitude.toString() || "",
     duration: pkg?.adventure_specification?.duration || "",
     season: pkg?.adventure_specification?.season?.[0]?.name || "",
   };
