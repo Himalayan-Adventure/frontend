@@ -184,7 +184,7 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
       },
     ],
     grade: attr?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: attr?.adventure_specification?.max_altitude || "",
+    altitude: attr?.adventure_specification?.max_altitude.toString() || "",
     duration: attr?.adventure_specification?.duration || "",
     season: attr?.adventure_specification?.season?.[0]?.name || "",
   };

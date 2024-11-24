@@ -47,7 +47,7 @@ export const ServiceCard = ({
               <Avatar className="size-8">
                 <AvatarImage src={image?.url} className="saturate-0" />
                 <AvatarFallback>
-                  {service_provider.username?.[0]}
+                  {service_provider.attributes.username?.[0]}
                 </AvatarFallback>
               </Avatar>
               <Text variant="text-xs" className="text-gray-500">
