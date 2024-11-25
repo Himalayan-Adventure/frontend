@@ -76,7 +76,7 @@ export function ProfileTabs({ user }: { user: TUserDeep }) {
   return (
     <Tabs
       defaultValue="about"
-      className="relative z-10 flex flex-col items-stretch gap-x-10 gap-y-10 lg:flex-row"
+      className="relative z-10 flex flex-col items-stretch gap-x-10 gap-y-10 xl:flex-row"
     >
       <TabsList className="flex h-fit w-full flex-col items-stretch gap-x-10 gap-y-10 bg-transparent md:w-fit md:flex-row">
         <div className="relative w-full">
@@ -96,7 +96,7 @@ export function ProfileTabs({ user }: { user: TUserDeep }) {
           ) : null}
           <div className="flex items-stretch gap-2 md:h-fit md:max-w-28 md:flex-col md:gap-4">
             <Button
-              className="rouned-2xl flex h-auto w-fit flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary md:h-fit md:w-full md:p-8 lg:p-6"
+              className="rouned-2xl hidden h-auto w-fit flex-col items-center gap-y-1 bg-white p-5 text-black shadow-2xl hover:bg-white hover:text-primary md:flex md:h-fit md:w-full md:p-8 lg:p-6"
               onClick={() => setHideTabs(!hideTabs)}
             >
               <Menu className="size-5 md:size-10" />
