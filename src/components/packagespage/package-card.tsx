@@ -7,16 +7,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, RefObject, useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsBarChartFill, BsCloudHail } from "react-icons/bs";
-import {
-  FaCanadianMapleLeaf,
-  FaMountain,
-  FaRegSnowflake,
-  FaRegSun,
-  FaStar,
-} from "react-icons/fa";
+import { FaMountain, FaStar } from "react-icons/fa";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { LuStar } from "react-icons/lu";
 import { MdTimelapse, MdTimer } from "react-icons/md";
@@ -51,29 +45,71 @@ const PackageCard = ({
     0;
     setIsOverlayVisible(!isOverlayVisible);
   };
+  const [currentTarget, setCurrentTarget] = useState<Element | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [cardState, setCardState] = useState(0);
   useEffect(() => {
-    const handleMouseLeave = () => {
+    const container = containerRef?.current;
+
+    const handleMouseLeaveContainer = (e: MouseEvent) => {
       setIsOverlayVisible(false);
     };
-    if (cardRef?.current) {
-      cardRef.current.addEventListener("mouseleave", handleMouseLeave);
+    const handleMouseLeave = (e: MouseEvent) => {
+      if (
+        overlayRef.current &&
+        overlayRef.current.contains(e.relatedTarget as Node)
+      ) {
+        return;
+      }
+      if ((e.relatedTarget as HTMLElement).id === `swiper-button-${pkg.id}`) {
+        return;
+      }
+
+      setIsOverlayVisible(false);
+    };
+    const handleMouseEnter = () => {
+      setIsOverlayVisible(true);
+    };
+    if (overlayRef?.current) {
+      overlayRef.current.addEventListener("mouseleave", handleMouseLeave);
     }
-    return () =>
-      cardRef?.current?.removeEventListener("mouseleave", handleMouseLeave);
+    if (cardRef?.current) {
+      cardRef.current.addEventListener("mouseenter", handleMouseEnter);
+    }
+    if (container) {
+      container.addEventListener("mouseleave", handleMouseLeaveContainer);
+    }
+    return () => {
+      overlayRef?.current?.removeEventListener("mouseleave", handleMouseLeave);
+      cardRef?.current?.removeEventListener("mouseenter", handleMouseEnter);
+      containerRef?.current?.addEventListener(
+        "mouseleave",
+        handleMouseLeaveContainer,
+      );
+    };
   });
+  useEffect(() => {
+    console.log(isOverlayVisible);
+  }, [isOverlayVisible]);
   return (
     <div
-      ref={cardRef}
+      ref={containerRef}
       className={cn(
+        //isOverlayVisible ? "" : "-z-[10]",
         variant == "default" ? "bg-white shadow-xl shadow-gray-500" : "",
         "group transform cursor-pointer overflow-hidden rounded-xl transition-transform",
       )}
     >
-      <div className="absolute left-0 top-1/2 -z-[51] flex w-full -translate-y-1/2 justify-between opacity-0 transition-all ease-in-out group-hover:z-[51] group-hover:opacity-100">
+      <div
+        id={`swiper-button-${pkg.id}`}
+        className={cn(
+          "absolute left-0 top-1/2 z-[51] flex w-full -translate-y-1/2 justify-between transition-all ease-in-out",
+        )}
+      >
         <Button
-          className="w-fit rounded-none px-1"
+          className="relative -z-[51] w-fit rounded-none px-1 opacity-0 disabled:opacity-0 group-hover:z-[51] group-hover:opacity-100 group-hover:disabled:opacity-50"
           disabled={cardState === 0}
           onClick={() => {
             if (cardState > 0) {
@@ -86,7 +122,7 @@ const PackageCard = ({
 
         <Button
           disabled={cardState === 1}
-          className="w-fit rounded-none px-1"
+          className="relative -z-[51] w-fit rounded-none px-1 opacity-0 disabled:opacity-0 group-hover:z-[51] group-hover:opacity-100 group-hover:disabled:opacity-50"
           onClick={() => {
             if (cardState < 1) {
               setCardState(cardState + 1);
@@ -97,9 +133,28 @@ const PackageCard = ({
         </Button>
       </div>
       <div className="relative h-full p-4">
-        <SliderComponent pkg={pkg} type="hover" />
-        {cardState === 0 && <Overlay pkg={pkg} />}
-        <div className="absolute top-0 z-10 flex h-12 w-full items-end justify-end p-2">
+        <div
+          id={`${pkg.id}-swapper-ref`}
+          className={cn(
+            isOverlayVisible ? "z-auto" : "z-[52]",
+            "relative h-fit",
+          )}
+          ref={cardRef}
+        >
+          <SliderComponent
+            pkg={pkg}
+            type="hover"
+            isOverlayVisible={isOverlayVisible}
+          />
+        </div>
+        {cardState === 0 && (
+          <Overlay
+            ref={overlayRef}
+            pkg={pkg}
+            isOverlayVisible={isOverlayVisible}
+          />
+        )}
+        <div className="absolute top-0 -z-10 flex h-12 w-full items-end justify-end p-2">
           <button onClick={toggleFavorite} aria-label="Favorite">
             {isFavorited ? (
               <IoHeartSharp size={24} className="text-primary" />
@@ -170,7 +225,14 @@ const PackageCard = ({
 
 export default PackageCard;
 
-const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
+const Overlay = forwardRef<
+  HTMLDivElement,
+  {
+    pkg: APIResponseData<"api::package.package">;
+    isOverlayVisible: boolean;
+  }
+>((props, ref) => {
+  const { pkg, isOverlayVisible } = props;
   const attr = pkg.attributes;
 
   const departureData: TDepartureData = {
@@ -189,7 +251,6 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
     season: attr?.adventure_specification?.season?.[0]?.name || "",
   };
   const { duration, season, altitude, grade, departure } = departureData;
-  console.log(altitude);
 
   const maxAltInM = Number(
     wordsToNumbers(altitude)?.toString().split(" ").join(""),
@@ -209,12 +270,13 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
     });
   }
 
-  console.log(departureData);
   return (
     <div
+      id={`overlay-${pkg.id}`}
+      ref={ref}
       className={cn(
-        // isOverlayVisible ? "opacity-1 z-50" : "-z-50 opacity-0",
-        "absolute inset-0 -z-50 mx-auto flex w-[calc(100%-40px)] flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white opacity-0 transition-all ease-in-out group-hover:z-50 group-hover:opacity-100",
+        isOverlayVisible ? "z-50 opacity-100" : "-z-50 opacity-0",
+        "overlay w-calc(100%-40px)] absolute inset-0 mx-auto flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white transition-all ease-in-out",
       )}
     >
       <div className="absolute right-0 top-0 hidden -translate-y-1/2 translate-x-1/2 justify-end bg-black/40">
@@ -317,14 +379,18 @@ const Overlay = ({ pkg }: { pkg: APIResponseData<"api::package.package"> }) => {
       </div>
     </div>
   );
-};
+});
+
+Overlay.displayName = "Overlay";
 
 export const SliderComponent = ({
   pkg,
   type,
+  isOverlayVisible,
 }: {
   pkg: APIResponseData<"api::package.package">;
   type: "hover" | "default";
+  isOverlayVisible: boolean;
 }) => {
   const attr = pkg?.attributes;
   return (
@@ -339,7 +405,11 @@ export const SliderComponent = ({
       modules={[Autoplay, Pagination, Navigation]}
       className={cn(
         "mySwiper",
-        type === "default" ? "absolute left-0" : "hidden group-hover:block",
+        type === "default"
+          ? "absolute left-0"
+          : isOverlayVisible
+            ? "z-auto block"
+            : "z-[52] hidden",
       )}
     >
       {/*@ts-ignore*/}
