@@ -7,7 +7,7 @@ import { UserRound } from "lucide-react";
 import DynamicReactIcon from "../icons/strapi-icon";
 export const AboutCard = ({ user }: { user: TUserDeep | null }) => {
   return (
-    <div className="rounded-xl bg-white">
+    <div className="h-full w-full rounded-xl bg-white">
       {/* About section */}
       <div className="space-y-2 px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
@@ -15,7 +15,9 @@ export const AboutCard = ({ user }: { user: TUserDeep | null }) => {
             <h1 className="w-fit text-3xl font-bold text-foreground">About</h1>
             <Separator className="h-2 w-auto bg-black" />
           </div>
-          <p className="mt-4 text-black">{user?.about.description}</p>
+          <p className="mt-4 text-black">
+            {user?.about?.description || "No description provided"}
+          </p>
         </div>
       </div>
       {user && <Services user={user} />}

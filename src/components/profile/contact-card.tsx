@@ -2,32 +2,33 @@ import React from "react";
 
 interface ContactInfo {
   label: string;
-  value: string;
+  value?: string;
 }
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Text } from "@/components/ui/text";
-import { TUser } from "@/types/auth";
+import { TUser, TUserDeep } from "@/types/auth";
 interface ContactData {
   info: ContactInfo[];
   personalInfo: ContactInfo[];
 }
 
-export const ContactCard = ({ user }: { user: TUser }) => {
+export const ContactCard = ({ user }: { user: TUserDeep }) => {
+  const data = user?.contact;
   const contactData: ContactData = {
     info: [
-      { label: "Phone", value: "98765432222" },
-      { label: "Email", value: user.email },
-      { label: "Birthday", value: "24th July,1998" },
-      { label: "Address", value: "Kathmandu, Nepal" },
-      { label: "Gender", value: "Female" },
-      { label: "Reports to", value: "Lorem Ipsum" },
+      { label: "Phone", value: data?.phone },
+      { label: "Email", value: user?.email },
+      { label: "Birthday", value: data?.birthday },
+      { label: "Address", value: data?.address },
+      { label: "Gender", value: data?.gender },
+      { label: "Reports to", value: data?.reports_to },
     ],
     personalInfo: [
-      { label: "Citizenship No.", value: "12xxxxxxxxxxxx" },
-      { label: "Phone", value: "986237232" },
-      { label: "Nationality", value: "Nepali" },
-      { label: "Religion", value: "Hindu" },
-      { label: "Marital status", value: "Single" },
+      { label: "Citizenship No.", value: data?.citizenship },
+      { label: "Phone", value: data?.phone },
+      { label: "Nationality", value: data?.nationality },
+      { label: "Religion", value: data?.religion },
+      { label: "Marital status", value: data?.religion },
     ],
   };
   return (
@@ -66,10 +67,10 @@ const InfoSection = ({
   </div>
 );
 
-const InfoItem = ({ label, value }: { label: string; value: string }) => (
+const InfoItem = ({ label, value }: { label: string; value?: string }) => (
   <div className="grid grid-cols-3">
-    <span className="font-medium">{label}</span>
+    <span className="font-semibold">{label}</span>
     <span className="font-medium">:</span>
-    <span>{value}</span>
+    <span className="font-semibold">{value || "-"}</span>
   </div>
 );

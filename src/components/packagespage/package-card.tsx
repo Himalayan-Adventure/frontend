@@ -24,6 +24,7 @@ import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
 import { TDepartureData } from "@/types/packages/departure";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DepartureFact } from "./departure";
+import Image from "next/image";
 
 const PackageCard = ({
   pkg,
@@ -393,6 +394,7 @@ export const SliderComponent = ({
   isOverlayVisible: boolean;
 }) => {
   const attr = pkg?.attributes;
+  console.log(attr);
   return (
     <Swiper
       spaceBetween={30}
@@ -412,16 +414,20 @@ export const SliderComponent = ({
             : "z-[52] hidden",
       )}
     >
-      {/*@ts-ignore*/}
-      {attr?.image?.data?.map((image: any, index: number) => (
-        <SwiperSlide key={index}>
-          <img
-            src={image.attributes.url}
-            alt={image.attributes.name}
-            className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
-          />
-        </SwiperSlide>
-      ))}
+      {attr?.image?.data?.map(
+        (image, index: number) =>
+          image?.attributes?.url && (
+            <SwiperSlide key={index}>
+              <Image
+                src={image?.attributes?.url}
+                alt={image?.attributes?.name || pkg.attributes.package_name}
+                width={image?.attributes?.width || 400}
+                height={image?.attributes?.height || 400}
+                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
+              />
+            </SwiperSlide>
+          ),
+      )}
     </Swiper>
   );
 };
