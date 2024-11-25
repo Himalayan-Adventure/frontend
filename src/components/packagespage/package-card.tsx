@@ -48,18 +48,15 @@ const PackageCard = ({
   const [currentTarget, setCurrentTarget] = useState<Element | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [cardState, setCardState] = useState(0);
   useEffect(() => {
-    console.log(overlayRef.current);
-  });
-  useEffect(() => {
-    const handleTargetChange = (e: MouseEvent) => {
-      const currentElement = document.elementFromPoint(e.clientX, e.clientY);
-      //console.log(currentElement);
-      setCurrentTarget(currentElement);
+    const container = containerRef?.current;
+
+    const handleMouseLeaveContainer = (e: MouseEvent) => {
+      setIsOverlayVisible(false);
     };
     const handleMouseLeave = (e: MouseEvent) => {
-      //console.log(currentTarget?.classList.contains("overlay"));
       if (
         overlayRef.current &&
         overlayRef.current.contains(e.relatedTarget as Node)
@@ -68,7 +65,6 @@ const PackageCard = ({
       }
       if ((e.relatedTarget as HTMLElement).id === `swiper-button-${pkg.id}`) {
         return;
-        //setIsOverlayVisible(false);
       }
 
       setIsOverlayVisible(false);
@@ -76,17 +72,22 @@ const PackageCard = ({
     const handleMouseEnter = () => {
       setIsOverlayVisible(true);
     };
-    //document.addEventListener("mousemove", handleTargetChange);
     if (overlayRef?.current) {
       overlayRef.current.addEventListener("mouseleave", handleMouseLeave);
     }
     if (cardRef?.current) {
       cardRef.current.addEventListener("mouseenter", handleMouseEnter);
     }
+    if (container) {
+      container.addEventListener("mouseleave", handleMouseLeaveContainer);
+    }
     return () => {
-      // document.removeEventListener("mousemove", handleTargetChange);
       overlayRef?.current?.removeEventListener("mouseleave", handleMouseLeave);
       cardRef?.current?.removeEventListener("mouseenter", handleMouseEnter);
+      containerRef?.current?.addEventListener(
+        "mouseleave",
+        handleMouseLeaveContainer,
+      );
     };
   });
   useEffect(() => {
@@ -94,6 +95,7 @@ const PackageCard = ({
   }, [isOverlayVisible]);
   return (
     <div
+      ref={containerRef}
       className={cn(
         //isOverlayVisible ? "" : "-z-[10]",
         variant == "default" ? "bg-white shadow-xl shadow-gray-500" : "",
@@ -133,7 +135,10 @@ const PackageCard = ({
       <div className="relative h-full p-4">
         <div
           id={`${pkg.id}-swapper-ref`}
-          className="relative h-fit"
+          className={cn(
+            isOverlayVisible ? "z-auto" : "z-[52]",
+            "relative h-fit",
+          )}
           ref={cardRef}
         >
           <SliderComponent
@@ -403,8 +408,8 @@ export const SliderComponent = ({
         type === "default"
           ? "absolute left-0"
           : isOverlayVisible
-            ? "block"
-            : "hidden",
+            ? "z-auto block"
+            : "z-[52] hidden",
       )}
     >
       {/*@ts-ignore*/}
