@@ -130,7 +130,7 @@ export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
           <div className="space-y-1.5">
             <FormLabel className="dark:text-gray-100">Image</FormLabel>
             <FileDropZone
-              required={true}
+              required={false}
               value={file}
               onChange={(file) => {
                 if (file) {

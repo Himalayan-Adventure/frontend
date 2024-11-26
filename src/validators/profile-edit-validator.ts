@@ -9,7 +9,9 @@ export const EditProfileFormSchema = z.object({
   lastname: z.string().optional(),
   email: z.string().email(),
   post: z.string().optional(),
-  profile_picture: z.string().url().optional(),
+  profile_picture: z
+    .preprocess((value) => value, z.instanceof(File))
+    .optional(),
   phone: z
     .string()
     .refine(isValidPhoneNumber, { message: "Invalid phone number" })

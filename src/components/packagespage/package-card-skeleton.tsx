@@ -13,7 +13,7 @@ export const PackageCardSkeleton = () => {
         "container w-full transform cursor-pointer overflow-hidden rounded-xl p-4 transition-transform",
       )}
     >
-      <div className="relative flex h-full w-full gap-x-4 space-x-10">
+      <div className="relative grid h-full w-full gap-4 gap-x-4 space-x-10 md:grid-cols-2 lg:grid-cols-4">
         <Skeleton className="h-96 max-h-[70%] w-full rounded rounded-es-3xl rounded-se-3xl object-cover md:hidden" />
         {Array.from({ length: 5 })?.map((image: any, index: number) => (
           <div
