@@ -1,15 +1,19 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
-import axios, { AxiosResponse, type AxiosError } from "axios";
+import {
+  APIResponse,
+  APIResponseCollection,
+  APIResponseData,
+} from "@/types/types";
+import { AxiosResponse, type AxiosError } from "axios";
 export const getSingleBlog = async (id: string) => {
   try {
-    const res: AxiosResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/blogs/${id}?populate=*`,
-    );
+    const res: AxiosResponse<APIResponse<"api::blog.blog">> =
+      await axiosInstance.get(`api/blogs/${id}?populate=*`);
 
     return {
-      data: res.data.data,
+      data: res.data,
       status: res.status,
     };
   } catch (error: AxiosError | any) {

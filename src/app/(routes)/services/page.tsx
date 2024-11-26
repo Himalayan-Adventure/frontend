@@ -9,14 +9,21 @@ import Image from "next/image";
 import { SortFilters } from "./sort-filters";
 import { Text } from "@/components/ui/text";
 import { getServices } from "@/server/services/get-services";
-import { getUsers } from "@/server/users/get-users";
+import { getUsers, getUsersDeep } from "@/server/users/get-users";
 import { ServicesPagination } from "@/components/services/pagination";
 import { APIResponseCollection } from "@/types/types";
-export default async function ServicesPage({
-  searchParams,
-}: {
-  searchParams: { type?: string };
-}) {
+import { GuideCard } from "@/components/profile/guide-card";
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+type TSearchParams = {
+  searchParams: { type?: string; category?: string; name?: string };
+};
+
+export const metadata: Metadata = {
+  title: `Services | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
+export default async function ServicesPage({ searchParams }: TSearchParams) {
   return (
     <main className="container space-y-4">
       <Image
@@ -47,7 +54,7 @@ export default async function ServicesPage({
         <div className="flex flex-col gap-5 md:flex-row">
           <SideFilter />
           {searchParams.type === "Packages" ? (
-            <ServicesPackages />
+            <ServicesPackages searchParams={searchParams} />
           ) : (
             <ServicesGuides />
           )}
@@ -56,19 +63,22 @@ export default async function ServicesPage({
     </main>
   );
 }
-async function ServicesPackages() {
-  const data = await getServices();
+async function ServicesPackages({ searchParams }: TSearchParams) {
+  const { category } = searchParams;
+  const data = await getServices(searchParams);
   return (
     <div className="z-10 w-full space-y-10 py-10">
       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-        {data?.map((svc, index) => <ServiceCard data={svc} key={index} />)}
+        {data?.data?.map((svc, index) => (
+          <ServiceCard data={svc} key={index} />
+        ))}
       </div>
       <ServicesPagination />
     </div>
   );
 }
 async function ServicesGuides() {
-  const data = await getUsers("merchant");
+  const data = await getUsersDeep("merchant");
 
   return (
     <div className="flex flex-col gap-y-5 py-10">
@@ -78,45 +88,7 @@ async function ServicesGuides() {
 
       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
         {data?.map((user, index) => (
-          <section
-            className="group rounded-tr-[43px] bg-neutral-100 pb-2 pl-2 pr-4 pt-4 text-center font-poppins transition-all ease-in-out hover:bg-primary"
-            key={user.username}
-          >
-            {user.profilePicture && (
-              <Image
-                src={user.profilePicture.url}
-                width={user.profilePicture.width}
-                height={user.profilePicture.height}
-                alt={
-                  user.profilePicture.name || user.username + " profile picture"
-                }
-                className="aspect-square rounded-tr-[35px] object-cover"
-              />
-            )}
-            <div className="flex flex-col py-8">
-              <Text
-                variant={"text-lg"}
-                className="font-extrabold capitalize group-hover:text-background"
-              >
-                {user.username}
-              </Text>
-              <span className="flex flex-col gap-y-2">
-                <Text
-                  variant={"text-sm"}
-                  className="capitalize group-hover:text-background"
-                >
-                  Trekker
-                </Text>
-
-                <Text
-                  variant={"text-sm"}
-                  className="capitalize group-hover:text-background"
-                >
-                  Extreme Adventure
-                </Text>
-              </span>
-            </div>
-          </section>
+          <GuideCard user={user} key={`guide-${index}`} />
         ))}
       </div>
       <ServicesPagination />

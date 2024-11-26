@@ -20,6 +20,7 @@ export const login = async (user: TLoginForm) => {
         status: 400,
       };
     }
+    console.log(user);
 
     const res: AxiosResponse<TLoginResponse> = await axiosInstance.post(
       "api/auth/local",

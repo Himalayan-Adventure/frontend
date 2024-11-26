@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -20,40 +20,76 @@ import { TWorkForm, WorkFormSchema } from "@/validators/work-validator";
 import FileDropZone from "@/components/ui/file-dropzone";
 import MDEditor from "@uiw/react-md-editor";
 import { toast } from "sonner";
-export const WorkAddOrEditForm = ({
-  type,
-  data,
-}: {
-  type: "edit" | "add";
-  data?: TWorkForm;
-}) => {
+import { GoBackButton } from "@/components/profile/go-back-button";
+import { APIResponse } from "@/types/types";
+import { urlToFile } from "@/lib/utils";
+import { addWork } from "@/server/work/add-work";
+import { editWork } from "@/server/work/edit-work";
+import { Textarea } from "@/components/ui/textarea";
+
+type WorkAddOrEditProps =
+  | { type: "add"; data?: never; id?: never }
+  | { type: "edit"; data: APIResponse<"api::work.work">; id: number };
+export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File>();
   const router = useRouter();
+  const work = data?.data?.attributes;
+  const image = work?.image?.data?.[0]?.attributes;
+  useEffect(() => {
+    const getBlob = async () => {
+      if (!image?.url) return;
+      const imageBlob = await urlToFile(
+        image?.url,
+        image?.name || data?.data.attributes.title + " thumbnail",
+      );
+      setFile(imageBlob);
+    };
+    //eslint-disable-next-line
+    getBlob();
+  }, []);
   const form = useForm<TWorkForm>({
     resolver: zodResolver(WorkFormSchema),
     defaultValues: {
-      title: "",
-      date: "",
-      description: "",
-      project_link: "",
-      image: "",
+      title: work?.title || "",
+      date: work?.date?.toString() || "",
+      description: work?.description || "",
+      link: work?.link || "",
+      image: file,
     },
   });
 
-  const [content, setContent] = useState<string | undefined>(
-    "**Hello World!**",
-  );
   async function onSubmit(values: TWorkForm) {
     setLoading(true);
-    const payload = { ...form.getValues(), description: content };
+    const payload = { ...form.getValues() };
+
+    if (type === "edit") {
+      const res = await editWork(payload, id);
+
+      if (res.status === 200) {
+        toast.success("Edited work successfully");
+        router.refresh();
+        router.back();
+      }
+    } else {
+      const res = await addWork(payload);
+
+      if (res.status === 200) {
+        toast.success("Added work successfully");
+        router.refresh();
+        router.back();
+      }
+    }
     toast.success("Edited successfully");
   }
   useEffect(() => {
     console.log(form.getValues());
   }, [form]);
   return (
-    <section className="max-w-4xl">
+    <section className="container mx-auto max-w-4xl">
+      <Suspense>
+        <GoBackButton className="my-5" />
+      </Suspense>
       <div className="my-4 [&>*]:text-neutral-900">
         <Text
           variant="display-sm"
@@ -94,10 +130,14 @@ export const WorkAddOrEditForm = ({
           <div className="space-y-1.5">
             <FormLabel className="dark:text-gray-100">Image</FormLabel>
             <FileDropZone
-              required={true}
+              required={false}
               value={file}
               onChange={(file) => {
-                setFile(file || null);
+                if (file) {
+                  setFile(file);
+                } else {
+                  setFile(undefined);
+                }
               }}
             />
           </div>
@@ -109,21 +149,11 @@ export const WorkAddOrEditForm = ({
               <FormItem>
                 <FormLabel>About Work</FormLabel>
                 <FormControl>
-                  <div data-color-mode="light" className="space-y-10">
-                    <MDEditor
-                      preview="edit"
-                      value={content}
-                      onChange={setContent}
-                      previewOptions={{
-                        rehypePlugins: [[rehypeSanitize]],
-                      }}
-                    />
-                    <MDEditor.Markdown
-                      source={content}
-                      style={{ whiteSpace: "pre-wrap" }}
-                      className="rounded-lg border !border-input p-2"
-                    />
-                  </div>
+                  <Textarea
+                    placeholder="Tell us a little bit about your work"
+                    className="resize-none"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -132,7 +162,7 @@ export const WorkAddOrEditForm = ({
 
           <FormField
             control={form.control}
-            name="project_link"
+            name="link"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Project Link</FormLabel>
@@ -147,7 +177,10 @@ export const WorkAddOrEditForm = ({
           <div className="flex flex-col justify-center gap-y-2 sm:justify-center">
             <Button
               type="submit"
-              onClick={() => form.handleSubmit(onSubmit)}
+              onClick={() => {
+                form.setValue("image", file);
+                form.handleSubmit(onSubmit);
+              }}
               //disabled={!form.formState.isValid}
               className="w-fit items-center gap-x-3 self-start rounded-full bg-foreground px-10 py-6 font-poppins font-bold"
               isLoading={loading}

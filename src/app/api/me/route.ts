@@ -8,8 +8,6 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  console.log(token);
-
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate=deep`,
     {

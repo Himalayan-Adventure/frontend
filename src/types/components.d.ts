@@ -30,6 +30,19 @@ export interface PlanwithusTravelDatesTravelDates extends Schema.Component {
   };
 }
 
+export interface PlanwithusReviewFinalizeReviewAndFInalize
+  extends Schema.Component {
+  collectionName: 'components_planwithus_review_finalize_review_and_f_inalizes';
+  info: {
+    displayName: 'Review & FInalize';
+  };
+  attributes: {
+    name: Attribute.String;
+    email: Attribute.Email;
+    message: Attribute.Text;
+  };
+}
+
 export interface PlanwithusBudgetBudget extends Schema.Component {
   collectionName: 'components_planwithus_budget_budgets';
   info: {
@@ -42,19 +55,6 @@ export interface PlanwithusBudgetBudget extends Schema.Component {
     decide_later: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
-  };
-}
-
-export interface PlanwithusReviewFinalizeReviewAndFInalize
-  extends Schema.Component {
-  collectionName: 'components_planwithus_review_finalize_review_and_f_inalizes';
-  info: {
-    displayName: 'Review & FInalize';
-  };
-  attributes: {
-    name: Attribute.String;
-    email: Attribute.Email;
-    message: Attribute.Text;
   };
 }
 
@@ -130,21 +130,6 @@ export interface PackageTravelDatesPackageTravelDates extends Schema.Component {
   };
 }
 
-export interface PackageSponsorHostSponsorHost extends Schema.Component {
-  collectionName: 'components_package_sponsor_host';
-  info: {
-    displayName: 'Sponsor Host';
-    description: '';
-  };
-  attributes: {
-    host_name: Attribute.String & Attribute.Required;
-    host_contact: Attribute.BigInteger;
-    short_description: Attribute.Text;
-    logo: Attribute.Media<'images'>;
-    socials: Attribute.Component<'package-socials.package-socials'>;
-  };
-}
-
 export interface PackageThingsToKnowThingsToKnow extends Schema.Component {
   collectionName: 'components_package_things_tk';
   info: {
@@ -156,6 +141,32 @@ export interface PackageThingsToKnowThingsToKnow extends Schema.Component {
       'package-trip-facts-info.fact-information',
       true
     >;
+  };
+}
+
+export interface PackageStepsSteps extends Schema.Component {
+  collectionName: 'components_package_steps_steps';
+  info: {
+    displayName: 'Steps';
+    description: '';
+  };
+  attributes: {
+    step: Attribute.Text & Attribute.Required;
+  };
+}
+
+export interface PackageSponsorHostSponsorHost extends Schema.Component {
+  collectionName: 'components_package_sponsor_host';
+  info: {
+    displayName: 'Sponsor Host';
+    description: '';
+  };
+  attributes: {
+    host_name: Attribute.String & Attribute.Required;
+    short_description: Attribute.Text;
+    logo: Attribute.Media<'images'>;
+    socials: Attribute.Component<'package-socials.package-socials'>;
+    host_contact: Attribute.String;
   };
 }
 
@@ -221,11 +232,12 @@ export interface PackageItineraryTimelineItineraryTimeline
   collectionName: 'components_package_itinerary_timeline_itinerary_timelines';
   info: {
     displayName: 'Itinerary Timeline';
+    description: '';
   };
   attributes: {
     week: Attribute.Integer;
-    day: Attribute.Integer;
     description: Attribute.String & Attribute.Required;
+    day: Attribute.String & Attribute.Required;
   };
 }
 
@@ -245,9 +257,10 @@ export interface PackageItineraryIncludesIncludes extends Schema.Component {
   collectionName: 'components_package_itinerary_includes_includes';
   info: {
     displayName: 'Includes';
+    description: '';
   };
   attributes: {
-    description: Attribute.Text;
+    description: Attribute.String & Attribute.Required;
   };
 }
 
@@ -318,34 +331,6 @@ export interface PackageGradeGrade extends Schema.Component {
   };
 }
 
-export interface PackageCostAndBudgetingCostAndBudgeting
-  extends Schema.Component {
-  collectionName: 'components_package_cost_and_budgeting_cost_and_budgetings';
-  info: {
-    displayName: 'Cost and Budgeting';
-  };
-  attributes: {
-    title: Attribute.String & Attribute.Required;
-    lowest: Attribute.BigInteger;
-    highest: Attribute.BigInteger;
-    offer_price: Attribute.BigInteger;
-    offer_percent: Attribute.Integer;
-    inclusions: Attribute.Blocks;
-    exclusions: Attribute.Blocks;
-  };
-}
-
-export interface PackageCustomizationPackageCustomization
-  extends Schema.Component {
-  collectionName: 'components_pckg_custz';
-  info: {
-    displayName: 'Package Customization';
-  };
-  attributes: {
-    name: Attribute.String;
-  };
-}
-
 export interface PackageFitnessFitness extends Schema.Component {
   collectionName: 'components_package_fitness_fitnesses';
   info: {
@@ -365,6 +350,34 @@ export interface PackageFitnessFitness extends Schema.Component {
     > &
       Attribute.Required &
       Attribute.DefaultTo<'Beginner'>;
+  };
+}
+
+export interface PackageCustomizationPackageCustomization
+  extends Schema.Component {
+  collectionName: 'components_pckg_custz';
+  info: {
+    displayName: 'Package Customization';
+  };
+  attributes: {
+    name: Attribute.String;
+  };
+}
+
+export interface PackageCostAndBudgetingCostAndBudgeting
+  extends Schema.Component {
+  collectionName: 'components_package_cost_and_budgeting_cost_and_budgetings';
+  info: {
+    displayName: 'Cost and Budgeting';
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    lowest: Attribute.BigInteger;
+    highest: Attribute.BigInteger;
+    offer_price: Attribute.BigInteger;
+    offer_percent: Attribute.Integer;
+    inclusions: Attribute.Blocks;
+    exclusions: Attribute.Blocks;
   };
 }
 
@@ -405,7 +418,23 @@ export interface PackageAdventureSpecificationsAdventureSpecifications
     fitness: Attribute.Component<'package-fitness.fitness', true>;
     skill_level: Attribute.Component<'package-skill-level.skill-level', true>;
     duration: Attribute.Integer & Attribute.Required & Attribute.DefaultTo<1>;
-    max_altitude: Attribute.BigInteger & Attribute.Required;
+    max_altitude: Attribute.Float & Attribute.Required;
+  };
+}
+
+export interface PackageAdventureCustomizationAdventureCustomization
+  extends Schema.Component {
+  collectionName: 'components_pkg_adv_customz';
+  info: {
+    displayName: 'Adventure Customization';
+    description: '';
+  };
+  attributes: {
+    package_customization: Attribute.Relation<
+      'package-adventure-customization.adventure-customization',
+      'oneToOne',
+      'api::package-customization.package-customization'
+    >;
   };
 }
 
@@ -443,22 +472,6 @@ export interface PackageAdventureActivitiesAdventureActivities
   attributes: {
     name: Attribute.Enumeration<
       ['Rock climbing ', 'River rafting ', 'Bungee jumping']
-    >;
-  };
-}
-
-export interface PackageAdventureCustomizationAdventureCustomization
-  extends Schema.Component {
-  collectionName: 'components_pkg_adv_customz';
-  info: {
-    displayName: 'Adventure Customization';
-    description: '';
-  };
-  attributes: {
-    package_customization: Attribute.Relation<
-      'package-adventure-customization.adventure-customization',
-      'oneToOne',
-      'api::package-customization.package-customization'
     >;
   };
 }
@@ -569,16 +582,6 @@ export interface AboutServiceAboutServices extends Schema.Component {
   };
 }
 
-export interface AboutEducationEducation extends Schema.Component {
-  collectionName: 'components_about_education_educations';
-  info: {
-    displayName: 'education';
-  };
-  attributes: {
-    education: Attribute.String;
-  };
-}
-
 export interface AboutResumeResume extends Schema.Component {
   collectionName: 'components_about_resume_resumes';
   info: {
@@ -595,6 +598,16 @@ export interface AboutResumeResume extends Schema.Component {
     hard_skill: Attribute.Text;
     technical_skill: Attribute.Text;
     interest: Attribute.Text;
+  };
+}
+
+export interface AboutEducationEducation extends Schema.Component {
+  collectionName: 'components_about_education_educations';
+  info: {
+    displayName: 'education';
+  };
+  attributes: {
+    education: Attribute.String;
   };
 }
 
@@ -622,16 +635,17 @@ declare module '@strapi/types' {
     export interface Components {
       'user-about.about': UserAboutAbout;
       'planwithus-travel-dates.travel-dates': PlanwithusTravelDatesTravelDates;
-      'planwithus-budget.budget': PlanwithusBudgetBudget;
       'planwithus-review-finalize.review-and-f-inalize': PlanwithusReviewFinalizeReviewAndFInalize;
+      'planwithus-budget.budget': PlanwithusBudgetBudget;
       'package-visuals.maps-and-visuals': PackageVisualsMapsAndVisuals;
       'package-trip-offer.what-we-offfer': PackageTripOfferWhatWeOfffer;
       'package-trip-facts-info.offer-info': PackageTripFactsInfoOfferInfo;
       'package-trip-facts-info.fact-information': PackageTripFactsInfoFactInformation;
       'package-trip-facts.trip-facts': PackageTripFactsTripFacts;
       'package-travel-dates.package-travel-dates': PackageTravelDatesPackageTravelDates;
-      'package-sponsor-host.sponsor-host': PackageSponsorHostSponsorHost;
       'package-things-to-know.things-to-know': PackageThingsToKnowThingsToKnow;
+      'package-steps.steps': PackageStepsSteps;
+      'package-sponsor-host.sponsor-host': PackageSponsorHostSponsorHost;
       'package-socials.package-socials': PackageSocialsPackageSocials;
       'package-skill-level.skill-level': PackageSkillLevelSkillLevel;
       'package-season.season': PackageSeasonSeason;
@@ -643,15 +657,15 @@ declare module '@strapi/types' {
       'package-hosted-by.hosted-by': PackageHostedByHostedBy;
       'package-host.package-host': PackageHostPackageHost;
       'package-grade.grade': PackageGradeGrade;
-      'package-cost-and-budgeting.cost-and-budgeting': PackageCostAndBudgetingCostAndBudgeting;
-      'package-customization.package-customization': PackageCustomizationPackageCustomization;
       'package-fitness.fitness': PackageFitnessFitness;
+      'package-customization.package-customization': PackageCustomizationPackageCustomization;
+      'package-cost-and-budgeting.cost-and-budgeting': PackageCostAndBudgetingCostAndBudgeting;
       'package-adventure-transportation.transporation': PackageAdventureTransportationTransporation;
       'package-adventure-specifications.adventure-specifications': PackageAdventureSpecificationsAdventureSpecifications;
+      'package-adventure-customization.adventure-customization': PackageAdventureCustomizationAdventureCustomization;
       'package-adventure-cultural-experiences.cultural-experiences': PackageAdventureCulturalExperiencesCulturalExperiences;
       'package-adventure-addons.add-ons': PackageAdventureAddonsAddOns;
       'package-adventure-activities.adventure-activities': PackageAdventureActivitiesAdventureActivities;
-      'package-adventure-customization.adventure-customization': PackageAdventureCustomizationAdventureCustomization;
       'package-accommodation-preferences.accommodation-preferences': PackageAccommodationPreferencesAccommodationPreferences;
       'package-accommodation-location.location': PackageAccommodationLocationLocation;
       'package-accommodation.accommodation': PackageAccommodationAccommodation;
@@ -659,8 +673,8 @@ declare module '@strapi/types' {
       'color.shop-color': ColorShopColor;
       'accommodation-preference.preference': AccommodationPreferencePreference;
       'about-service.about-services': AboutServiceAboutServices;
-      'about-education.education': AboutEducationEducation;
       'about-resume.resume': AboutResumeResume;
+      'about-education.education': AboutEducationEducation;
       'about-contact.contact': AboutContactContact;
     }
   }

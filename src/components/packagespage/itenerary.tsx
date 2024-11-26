@@ -32,8 +32,11 @@ export default function Itinerary({
   //data: Array<{ id: number; day: string }>;
   data: IDProperty &
     Omit<
-      { week?: number | undefined; day?: number | undefined } & {
+      {
+        week?: number | undefined;
+      } & {
         description: string;
+        day: string;
       },
       never
     >[];

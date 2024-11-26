@@ -13,7 +13,7 @@ import SimilarPackages from "@/components/packagespage/similar-packages";
 import ThingsToKnow from "@/components/packagespage/things-to-know";
 import CommonBanner from "@/components/ui/common-banner";
 import { getSinglePackage } from "@/server/packages/get-single-package";
-import { TDepartureData } from "@/types/packages/departure";
+import { CostBudgeting, TDepartureData } from "@/types/packages/departure";
 import Image from "next/image";
 import bgImage from "/public/images/packageBanner.png";
 import Video from "@/components/packagespage/video";
@@ -57,9 +57,10 @@ export default async function PackageDetail({ params }: { params: Params }) {
       },
     ],
     grade: pkg?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: pkg?.adventure_specification?.max_altitude || "",
+    altitude: pkg?.adventure_specification?.max_altitude.toString() || "",
     duration: pkg?.adventure_specification?.duration || "",
     season: pkg?.adventure_specification?.season?.[0]?.name || "",
+    cost_and_budgeting: (pkg?.cost_and_budgeting ?? []) as CostBudgeting[],
   };
 
   const infoTabsData: InfoTabsProp = {
@@ -101,7 +102,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
             <Gallery images={images} />
             <div className="space-y-8 lg:col-span-1 lg:hidden">
               <Map location={pkg.package_name} />
-              <Departure type={"default"} data={departureData} />
+              <Departure type="default" data={departureData}/>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-4 lg:gap-8">
               <div className="space-y-2">

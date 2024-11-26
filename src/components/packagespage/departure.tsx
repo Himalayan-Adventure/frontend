@@ -9,7 +9,11 @@ import Link from "next/link";
 import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
 import { formatDate } from "@/lib/utils";
 import wordsToNumbers from "words-to-numbers";
-import { DepartureProps } from "@/types/packages/departure";
+import {
+  CostBudgeting,
+  DepartureProps,
+  ListType,
+} from "@/types/packages/departure";
 import { Flag } from "lucide-react";
 import {
   Dialog,
@@ -19,6 +23,24 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+
+type ButtonStyleMap = {
+  Standard: string;
+  Premium: string;
+  Luxury: string;
+  Default: string;
+};
+
+const buttonStyles: ButtonStyleMap = {
+  Standard:
+    "w-48 rounded-lg border border-black py-2 text-black transition hover:bg-gray-100 md:w-60",
+  Premium:
+    "w-48 rounded-lg bg-primary py-2 text-white transition hover:bg-orange-600 md:w-60",
+  Luxury:
+    "w-48 rounded-lg bg-black py-2 text-white transition hover:bg-gray-800 md:w-60",
+  Default:
+    "w-48 rounded-lg border border-gray-400 py-2 text-black transition hover:bg-gray-200 md:w-60",
+};
 
 export default function Departure({
   data,
@@ -31,9 +53,16 @@ export default function Departure({
   );
 
   const [selectedPackage, setSelectedPackage] = useState<string>("");
+  const [packageDetails, setPackageDetails] = useState<CostBudgeting | null>(
+    data?.cost_and_budgeting?.[0] || null,
+  );
 
   const handleButtonClick = (packageType: string) => {
     setSelectedPackage(packageType);
+    const selected = data?.cost_and_budgeting?.find(
+      (item) => item?.title === packageType,
+    );
+    setPackageDetails(selected ?? null);
   };
 
   const departureFacts = [
@@ -60,6 +89,20 @@ export default function Departure({
       icon: <FaMountain size={20} />,
     },
   ];
+
+  // Helper function to render list items
+  const renderListItems = (list: any) => {
+    return list.map((listType: ListType, idx: number) => (
+      <ul
+        key={idx}
+        className="ml-3 mt-4 list-disc font-poppins font-light tracking-wider text-gray-700"
+      >
+        {listType.children.map((item, itemIdx) => (
+          <li key={itemIdx}>{item.children[0]?.text}</li>
+        ))}
+      </ul>
+    ));
+  };
 
   return (
     <div className="relative space-y-4">
@@ -108,30 +151,19 @@ export default function Departure({
           <Dialog>
             {/* Trigger Buttons */}
             <div className="mt-4 flex flex-col items-center justify-center gap-4 md:mt-8">
-              <DialogTrigger asChild>
-                <button
-                  className="w-48 rounded-lg border border-black py-2 text-black transition hover:bg-gray-100 md:w-60"
-                  onClick={() => handleButtonClick("Standard")}
-                >
-                  Standard
-                </button>
-              </DialogTrigger>
-              <DialogTrigger asChild>
-                <button
-                  className="w-48 rounded-lg bg-primary py-2 text-white transition hover:bg-orange-600 md:w-60"
-                  onClick={() => handleButtonClick("Premium")}
-                >
-                  Premium
-                </button>
-              </DialogTrigger>
-              <DialogTrigger asChild>
-                <button
-                  className="w-48 rounded-lg bg-black py-2 text-white transition hover:bg-gray-800 md:w-60"
-                  onClick={() => handleButtonClick("Luxury")}
-                >
-                  Luxury
-                </button>
-              </DialogTrigger>
+              {data?.cost_and_budgeting?.map((itm, index) => (
+                <DialogTrigger asChild key={index}>
+                  <button
+                    className={
+                      buttonStyles[itm?.title as keyof ButtonStyleMap] ||
+                      buttonStyles.Default
+                    }
+                    onClick={() => handleButtonClick(itm?.title)}
+                  >
+                    {itm?.title}
+                  </button>
+                </DialogTrigger>
+              ))}
             </div>
 
             {/* Dialog Content */}
@@ -140,15 +172,17 @@ export default function Departure({
                 {/* Package Selection Buttons */}
                 <DialogTitle>
                   <div className="flex w-full gap-2">
-                    {["Standard", "Premium", "Luxury"].map((pkg) => (
+                    {data?.cost_and_budgeting?.map((type, index) => (
                       <button
-                        key={pkg}
-                        onClick={() => setSelectedPackage(pkg)}
+                        key={index}
+                        onClick={() => handleButtonClick(type?.title)}
                         className={`w-full rounded-lg px-4 py-2 text-sm text-white transition md:px-8 ${
-                          selectedPackage === pkg ? "bg-primary" : "bg-black"
+                          selectedPackage === type?.title
+                            ? "bg-primary"
+                            : "bg-black"
                         }`}
                       >
-                        {pkg}
+                        {type?.title}
                       </button>
                     ))}
                   </div>
@@ -162,11 +196,15 @@ export default function Departure({
                       <h3 className="font-poppins tracking-widest text-black md:text-lg md:font-light">
                         Inclusions
                       </h3>
-                      <ul className="ml-3 mt-4 list-disc font-poppins tracking-wider font-light text-gray-700 sm:mb-8">
-                        <li>Inclusion 1 for {selectedPackage}.</li>
-                        <li>Inclusion 2 for {selectedPackage}.</li>
-                        <li>Inclusion 3 for {selectedPackage}.</li>
-                      </ul>
+                      {selectedPackage &&
+                        data?.cost_and_budgeting?.find(
+                          (item) => item?.title === selectedPackage,
+                        )?.inclusions &&
+                        renderListItems(
+                          data?.cost_and_budgeting?.find(
+                            (item) => item?.title === selectedPackage,
+                          )?.inclusions,
+                        )}
                     </div>
 
                     {/* Exclusions */}
@@ -174,17 +212,16 @@ export default function Departure({
                       <h3 className="font-poppins tracking-widest text-black md:text-lg md:font-light">
                         Exclusions
                       </h3>
-                      <ul className="ml-3 mt-4 list-disc font-poppins tracking-wider font-light text-gray-700 sm:mb-8">
-                        <li>Exclusion 1 for {selectedPackage}.</li>
-                        <li>Exclusion 2 for {selectedPackage}.</li>
-                        <li>Exclusion 3 for {selectedPackage}.</li>
-                      </ul>
+                      {selectedPackage &&
+                        data?.cost_and_budgeting?.find(
+                          (item) => item?.title === selectedPackage,
+                        )?.exclusions &&
+                        renderListItems(
+                          data.cost_and_budgeting.find(
+                            (item) => item?.title === selectedPackage,
+                          )?.exclusions,
+                        )}
                     </div>
-                  </div>
-                  <div className="mt-8 flex items-center justify-center">
-                    <button className="w-48 rounded-lg bg-primary p-2 font-medium text-white">
-                      Get Quote
-                    </button>
                   </div>
                 </DialogDescription>
               </DialogHeader>

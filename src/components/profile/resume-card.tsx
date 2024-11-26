@@ -22,35 +22,40 @@ import {
   SiAdobephotoshop,
   SiAdobexd,
 } from "react-icons/si";
-import { TUser } from "@/types/auth";
-export const ResumeCard = ({user}:{user:TUser}) => {
+import { TUser, TUserDeep } from "@/types/auth";
+import { HiArrowDownOnSquare } from "react-icons/hi2";
+export const ResumeCard = ({ user }: { user: TUserDeep }) => {
   const resumeData = {
     name: user.username,
-    role: "UI/UX Designer",
+    role: user.userType,
     contact: {
       email: user.email,
-      phone: "+8801633165851",
-      location: "Joydepur, Gazipur, Bangladesh",
+      phone: user?.contact?.phone,
+      location: user?.contact?.address,
     },
-    portfolio: {
-      behance: "https://www.behance.net/mehedihasankhan1",
-      dribbble: "https://www.dribbble.com/mehedihasan5851",
-    },
-    education: {
-      institution:
-        "Model Institute of Science and Technology (Under National University)",
-      degree: "Bachelor of Science (BSC)",
-      subject: "Computer Science and Engineering (CSE)",
-      result: "GPA in Progress (Last Semester)",
-    },
-    hardSkills: [
-      "Problem Solving",
-      "Wireframing",
-      "Responsive Design",
-      "Usability Testing",
-      "Prototyping",
-      "High Fidelity Design",
-    ],
+    // portfolio: {
+    //   behance: "https://www.behance.net/mehedihasankhan1",
+    //   dribbble: "https://www.dribbble.com/mehedihasan5851",
+    // },
+    portfolio: user?.resume?.portfolio,
+    // education: {
+    //   institution:
+    //     "Model Institute of Science and Technology (Under National University)",
+    //   degree: "Bachelor of Science (BSC)",
+    //   subject: "Computer Science and Engineering (CSE)",
+    //   result: "GPA in Progress (Last Semester)",
+    // },
+    // education:user.resume.education,
+    // hardSkills: [
+    //   "Problem Solving",
+    //   "Wireframing",
+    //   "Responsive Design",
+    //   "Usability Testing",
+    //   "Prototyping",
+    //   "High Fidelity Design",
+    // ],
+    hardSkills: user?.resume?.hard_skill?.split("\\n"),
+
     technicalSkill: [
       { skillName: "Figma", skillLevel: 80 },
       { skillName: "Adobe XD", skillLevel: 70 },
@@ -58,7 +63,7 @@ export const ResumeCard = ({user}:{user:TUser}) => {
       { skillName: "Adobe Illustrator", skillLevel: 75 },
     ],
     languages: ["English", "Bangla", "Hindi"],
-    interests: ["Research", "Travel", "Reading", "Writing"],
+    interests: user?.resume?.interest?.split("\\n"),
   };
   const contactIconMap = {
     email: <Mail size={24} />,
@@ -93,11 +98,14 @@ export const ResumeCard = ({user}:{user:TUser}) => {
 
         {/* User details */}
         <div>
-          <Text variant="text-xl" className="font-semibold lg:text-2xl capitalize">
+          <Text
+            variant="text-xl"
+            className="font-semibold capitalize lg:text-2xl"
+          >
             {resumeData.name}
           </Text>
-          <Text variant="text-lg" className="text-primary">
-            UI/UX Designer
+          <Text variant="text-lg" className="capitalize text-primary">
+            {user.userType}
           </Text>
         </div>
 
@@ -112,26 +120,33 @@ export const ResumeCard = ({user}:{user:TUser}) => {
               icon={contactIconMap.email}
               name={resumeData.contact.email}
             />
-            <LinkWithIcon
-              href={`tel:${resumeData.contact.phone}`}
-              icon={contactIconMap.phone}
-              name={resumeData.contact.phone}
-            />
+            {resumeData?.contact?.phone && (
+              <LinkWithIcon
+                href={`tel:${resumeData.contact.phone}`}
+                icon={contactIconMap.phone}
+                name={resumeData.contact.phone}
+              />
+            )}
 
-            <LinkWithIcon
-              href={`https://www.google.com/maps/place/${resumeData.contact.location}`}
-              icon={contactIconMap.location}
-              name={resumeData.contact.location}
-            />
+            {resumeData?.contact?.location && (
+              <LinkWithIcon
+                href={`https://www.google.com/maps/place/${resumeData.contact.location}`}
+                icon={contactIconMap.location}
+                name={resumeData.contact.location}
+              />
+            )}
           </div>
         </div>
 
         {/* Portfolio details */}
-        <div className="space-y-3">
-          <Text variant="text-xl" className="font-semibold lg:text-2xl">
-            Portfolio
-          </Text>
-          <div className="space-y-2">
+        {resumeData.portfolio && (
+          <div className="space-y-3">
+            <Text variant="text-xl" className="font-semibold lg:text-2xl">
+              Portfolio
+            </Text>
+            <Link href={resumeData.portfolio}>{resumeData.portfolio}</Link>
+            {/*
+                     <div className="space-y-2">
             {Object.entries(resumeData.portfolio).map(([key, value]) => (
               <LinkWithIcon
                 key={`portfolio-${key}`}
@@ -141,9 +156,12 @@ export const ResumeCard = ({user}:{user:TUser}) => {
               />
             ))}
           </div>
-        </div>
+ */}
+          </div>
+        )}
 
         {/* Education details */}
+        {/* 
         <div className="space-y-3">
           <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Education
@@ -168,6 +186,7 @@ export const ResumeCard = ({user}:{user:TUser}) => {
             ))}
           </div>
         </div>
+          */}
 
         {/* Hard details */}
         <div className="space-y-3">
@@ -175,7 +194,7 @@ export const ResumeCard = ({user}:{user:TUser}) => {
             Hard Skills
           </Text>
           <div className="space-y-2">
-            {resumeData.hardSkills.map((skill) => (
+            {resumeData?.hardSkills?.map((skill) => (
               <Text
                 variant="text-lg"
                 key={`hardskill-${skill}`}
@@ -219,7 +238,7 @@ export const ResumeCard = ({user}:{user:TUser}) => {
         </div>
 
         {/* Languages*/}
-        <div className="space-y-3">
+        <div className="hidden space-y-3">
           <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Languages
           </Text>
@@ -239,10 +258,10 @@ export const ResumeCard = ({user}:{user:TUser}) => {
         {/* Interests */}
         <div className="space-y-3">
           <Text variant="text-xl" className="font-semibold lg:text-2xl">
-            Interests
+            Interest
           </Text>
           <div className="flex items-center gap-x-2">
-            {resumeData.interests.map((lang) => (
+            {resumeData?.interests?.map((lang) => (
               <Text
                 variant="text-md"
                 key={`languages-${lang}`}
@@ -270,8 +289,11 @@ const LinkWithIcon = ({
 }) => {
   return (
     <Link href={href} target="_blank" className="flex items-center gap-x-2">
-      <span className="min-w-6 h-fit">{icon}</span>
-      <Text variant="text-lg" className="block text-sm sm:text-base md:text-lg whitespace-normal break-all">
+      <span className="h-fit min-w-6">{icon}</span>
+      <Text
+        variant="text-lg"
+        className="block whitespace-normal break-all text-sm sm:text-base md:text-lg"
+      >
         {name}
       </Text>
     </Link>

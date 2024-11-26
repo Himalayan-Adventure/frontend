@@ -34,7 +34,7 @@ export default function SearchBar({
         //icon={props.variant === 'show-icon' && props.icon}
         placeholder={props.placeholder || "Search..."}
         className={cn(
-          "h-10 w-full pr-5 text-base placeholder:text-base dark:bg-transparent dark:text-gray-300 sm:h-10",
+          "h-10 w-full pl-8 text-base placeholder:text-base dark:bg-transparent dark:text-gray-300 sm:h-10",
           className,
         )}
         type="search"
@@ -45,7 +45,7 @@ export default function SearchBar({
         }}
         defaultValue={searchParams.get(selector) || ""}
       />
-      <Search size={18} className="absolute right-4 top-1/2 -translate-y-1/2" />
+      <Search size={18} className="absolute left-2 top-1/2 -translate-y-1/2" />
     </div>
   );
 }

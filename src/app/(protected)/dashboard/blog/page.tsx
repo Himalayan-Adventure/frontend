@@ -4,6 +4,8 @@ import { CategoriesFilter } from "./categories-filter";
 import { AddButton } from "./add-button";
 import { Suspense } from "react";
 import { getBlogs } from "@/server/blogs/get-blogs";
+import Link from "next/link";
+import { PlusIcon } from "lucide-react";
 
 export default async function BlogPage({
   searchParams,
@@ -14,46 +16,31 @@ export default async function BlogPage({
 
   const data = await getBlogs();
   const blogs = data.data;
-  // function createBlogs(numBlogs: number) {
-  //   const blogs = [];
-  //
-  //   for (let i = 1; i <= numBlogs; i++) {
-  //     blogs.push({
-  //       title: `Blog Title  ${i} Lorem ipsum dolor sit amet, consectetur adipiscing elit`,
-  //       slug: `blog-title-${i}`,
-  //       tags: ["lorem ipsum"],
-  //       author_name: `Author ${i}`,
-  //       createdAt: `August ${20 + i}, 2023`,
-  //       thumbNail:
-  //         "https://fastly.picsum.photos/id/764/1000/750.jpg?hmac=Je4D-wCU3q0Rm_b0noAdu-8_mD1xeZIizwuI7iT8a-w",
-  //     });
-  //   }
-  //
-  //   return blogs;
-  // }
-  // const blogs = createBlogs(10);
   return (
     <section className="space-y-8 font-poppins">
       <span className="flex gap-x-3">
         <Text variant="display-sm" bold>
           Blogs
         </Text>
-      </span>
 
-      {/* 
-        <Suspense>
-          <AddButton />
-        </Suspense>
+        <Link href="/dashboard/blog/write" prefetch={true}>
+          <div className="flex items-center gap-x-2 rounded-lg bg-black px-4 py-2 text-sm text-white">
+            <PlusIcon size={16} />
+            Create
+          </div>
+        </Link>
       </span>
 
       <Suspense>
         <CategoriesFilter />
       </Suspense>
 
-        */}
       {/* Blogs */}
 
       <div className="flex flex-col space-y-8">
+        {(!blogs || blogs.length === 0) && (
+          <Text variant="text-xl">No blogs found</Text>
+        )}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {(code
             ? blogs.filter((i) => i.attributes.title.includes(code || ""))
