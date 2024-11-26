@@ -3,10 +3,8 @@ import { Text } from "@/components/ui/text";
 import { PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
-import { socialIcons } from "@/config/constants";
 import { useQuery } from "@tanstack/react-query";
-import { TUser, TUserDeep } from "@/types/auth";
+import { TUserDeep } from "@/types/auth";
 import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
@@ -44,7 +42,7 @@ export default function ProfilePage() {
           </Button>
         </Link>
       </span>
-      {!user?.confirmed && (
+      {user && !user?.confirmed && (
         <Badge className="bg-red-100 text-black">
           Please confirm your email
         </Badge>

@@ -21,7 +21,6 @@ export async function POST(req: Request) {
       method: "POST",
       body: JSON.stringify({ data }),
       next: {
-        revalidate: 15,
         tags: ["blogs"],
       },
     },

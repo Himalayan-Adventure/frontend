@@ -26,7 +26,6 @@ export async function PUT(
       method: "PUT",
       body: JSON.stringify({ data }),
       next: {
-        revalidate: 15,
         //tags: ["blogs", `blog-${id}`],
       },
     },
