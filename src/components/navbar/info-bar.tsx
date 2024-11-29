@@ -77,7 +77,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
         return null;
       }
     },
-    retry: 1,
+    retry: 5,
   });
 
   return (

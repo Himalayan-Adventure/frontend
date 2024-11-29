@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const cookieStore = cookies();
   const token = cookieStore.get("jwt")?.value;
 
@@ -8,8 +9,15 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const searchParams = request.nextUrl.searchParams;
+
+  const populate = searchParams?.get("populate");
+  const params = new URLSearchParams();
+  if (populate) {
+    params.set("populate", populate);
+  }
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate=deep`,
+    `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?${params.toString()}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
