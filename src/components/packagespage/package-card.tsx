@@ -179,9 +179,9 @@ const PackageCard = ({
                     {attr?.package_name}
                   </p>
 
-                  {attr?.sponsor_host?.host_name && (
+                  {attr?.package_host?.hostname && (
                     <p className="mb-2 text-sm font-light md:text-[16px]">
-                      Host: {attr?.sponsor_host?.host_name}
+                      Host: {attr?.package_host?.hostname}
                     </p>
                   )}
                 </Link>
