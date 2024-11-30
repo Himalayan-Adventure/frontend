@@ -30,7 +30,7 @@ export const getPackages = async ({
     const query = queryGenerator(key, filter);
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&fields[1]=parent_title&populate[1]=image&populate[2]=adventure_specification&populate[3]=package_host&${query}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=travel_dates&populate[package_host][populate][3]=package_host&${query}`,
       {
         next: {
           tags: ["packages"],
