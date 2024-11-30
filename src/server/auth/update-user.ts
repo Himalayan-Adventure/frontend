@@ -1,13 +1,10 @@
 "use client";
 
-import { axiosInstance } from "@/lib/server-axios-instance";
-import { TRegisterResponse } from "@/types/auth/";
 import {
   EditProfileFormSchema,
   TEditProfileForm,
 } from "@/validators/profile-edit-validator";
 import axios, { AxiosResponse, type AxiosError } from "axios";
-import { cookies } from "next/headers";
 import { uploadMedia } from "../media/add-media";
 export const updateUser = async (user: TEditProfileForm, id: number) => {
   try {
@@ -33,7 +30,6 @@ export const updateUser = async (user: TEditProfileForm, id: number) => {
       };
     }
     const data = { ...user, profile_picture: uploadPfp };
-    console.log(data);
 
     const res = await axios({
       method: "PUT",

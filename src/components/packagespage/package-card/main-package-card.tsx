@@ -235,7 +235,6 @@ export const SliderComponent = ({
   isOverlayVisible: boolean;
 }) => {
   const attr = pkg?.attributes;
-  console.log(attr);
   return (
     <Swiper
       spaceBetween={30}

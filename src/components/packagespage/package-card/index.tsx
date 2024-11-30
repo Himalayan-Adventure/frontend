@@ -3,6 +3,7 @@ import React from "react";
 import MainPackageCard from "./main-package-card";
 import { APIResponseData } from "@/types/types";
 import HomePackageCard from "./home-page-package";
+import SimilarPackageCard from "./similar-package-card";
 
 export default function PackageCard({
   variant = "default",
@@ -16,7 +17,7 @@ export default function PackageCard({
   const variantsRenderMap = {
     home: () => <HomePackageCard {...props} />,
     default: () => <MainPackageCard {...props} />,
-    similar: () => <MainPackageCard {...props} />,
+    similar: () => <SimilarPackageCard {...props} />,
   };
 
   const Card = variantsRenderMap[variant];

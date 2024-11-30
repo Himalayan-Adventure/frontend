@@ -1,5 +1,3 @@
-import PackagesList from "@/components/packagespage/packages-list";
-import CommonBanner from "@/components/ui/common-banner";
 import bgImage from "/public/images/packagesBanner.png";
 import { Suspense } from "react";
 import Image, { StaticImageData } from "next/image";
