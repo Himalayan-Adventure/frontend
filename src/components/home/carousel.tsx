@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { m, domMax, LazyMotion } from "framer-motion";
 import { useEffect, useState } from "react";
-import PackageCard from "../packagespage/package-card";
+import PackageCard from "../packagespage/package-card/index";
 import { PackageCardSkeleton } from "../packagespage/package-card-skeleton";
 import { Text } from "../ui/text";
 import {

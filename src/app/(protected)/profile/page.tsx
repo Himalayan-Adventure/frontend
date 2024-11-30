@@ -40,7 +40,7 @@ export default function ProfilePage() {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const res = await axios.get<TUserDeep>("/api/me");
+        const res = await axios.get<TUserDeep>("/api/me?populate=deep");
 
         if (!res?.data) {
           return null;

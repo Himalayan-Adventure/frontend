@@ -19,14 +19,15 @@ import wordsToNumbers from "words-to-numbers";
 import { cn, formatDate } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
 import { TDepartureData } from "@/types/packages/departure";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DepartureFact } from "./departure";
+import { DepartureFact } from "../departure";
 import Image from "next/image";
+import { Overlay } from "./overlay";
 
-const PackageCard = ({
+const MainPackageCard = ({
   pkg,
   variant = "default",
 }: {
@@ -91,14 +92,10 @@ const PackageCard = ({
       );
     };
   });
-  useEffect(() => {
-    console.log(isOverlayVisible);
-  }, [isOverlayVisible]);
   return (
     <div
       ref={containerRef}
       className={cn(
-        //isOverlayVisible ? "" : "-z-[10]",
         variant == "default" ? "bg-white shadow-xl shadow-gray-500" : "",
         "group transform cursor-pointer overflow-hidden rounded-xl transition-transform",
       )}
@@ -155,15 +152,17 @@ const PackageCard = ({
             isOverlayVisible={isOverlayVisible}
           />
         )}
-        <div className="absolute top-0 -z-10 flex h-12 w-full items-end justify-end p-2">
-          <button onClick={toggleFavorite} aria-label="Favorite">
-            {isFavorited ? (
-              <IoHeartSharp size={24} className="text-primary" />
-            ) : (
-              <IoHeartOutline size={24} className="text-white" />
-            )}
-          </button>
-        </div>
+        {cardState === 1 && (
+          <div className="absolute right-4 top-4 z-[52] flex h-12 w-full items-end justify-end p-2">
+            <button onClick={toggleFavorite} aria-label="Favorite">
+              {isFavorited ? (
+                <IoHeartSharp size={24} className="text-primary" />
+              ) : (
+                <IoHeartOutline size={24} className="text-primary" />
+              )}
+            </button>
+          </div>
+        )}
 
         <div className="py-2">
           {variant !== "similar" ? (
@@ -179,9 +178,9 @@ const PackageCard = ({
                     {attr?.package_name}
                   </p>
 
-                  {attr?.sponsor_host?.host_name && (
+                  {attr?.package_host?.hostname && (
                     <p className="mb-2 text-sm font-light md:text-[16px]">
-                      Host: {attr?.sponsor_host?.host_name}
+                      Host: {attr?.package_host?.hostname}
                     </p>
                   )}
                 </Link>
@@ -224,165 +223,7 @@ const PackageCard = ({
   );
 };
 
-export default PackageCard;
-
-const Overlay = forwardRef<
-  HTMLDivElement,
-  {
-    pkg: APIResponseData<"api::package.package">;
-    isOverlayVisible: boolean;
-  }
->((props, ref) => {
-  const { pkg, isOverlayVisible } = props;
-  const attr = pkg.attributes;
-
-  const departureData: TDepartureData = {
-    //date: pkg?.date as string,
-    departure: [
-      {
-        start:
-          attr?.adventure_specification?.travel_dates?.[0]?.date || new Date(),
-        end:
-          attr?.adventure_specification?.travel_dates?.[1]?.date || new Date(),
-      },
-    ],
-    grade: attr?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: attr?.adventure_specification?.max_altitude.toString() || "",
-    duration: attr?.adventure_specification?.duration || "",
-    season: attr?.adventure_specification?.season?.[0]?.name || "",
-  };
-  const { duration, season, altitude, grade, departure } = departureData;
-
-  const maxAltInM = Number(
-    wordsToNumbers(altitude)?.toString().split(" ").join(""),
-  );
-  let departureFacts = [];
-  if (season)
-    departureFacts.push({
-      title: season,
-      desc: seasonMonthMap[season],
-      icon: seasonIconMap[season],
-    });
-  if (duration) {
-    departureFacts.push({
-      title: "duration",
-      desc: duration + " days",
-      icon: <MdTimelapse size={20} />,
-    });
-  }
-
-  return (
-    <div
-      id={`overlay-${pkg.id}`}
-      ref={ref}
-      className={cn(
-        isOverlayVisible ? "z-50 opacity-100" : "-z-50 opacity-0",
-        "overlay w-calc(100%-40px)] absolute inset-0 mx-auto flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white transition-all ease-in-out",
-      )}
-    >
-      <div className="absolute right-0 top-0 hidden -translate-y-1/2 translate-x-1/2 justify-end bg-black/40">
-        <button
-          // onClick={toggleOverlay}
-          className="text-white hover:text-gray-400"
-        >
-          <AiOutlineClose size={16} />
-        </button>
-      </div>
-      <div>
-        <div className="flex items-center justify-between">
-          <p className="text-lg font-bold">Departure</p>
-          <p className="flex items-center space-x-1 text-sm">
-            <span>
-              <LuStar className="text-primary" />
-            </span>
-            <span>{Math.floor(Math.random() * 5)}</span>
-            <span className="text-xl text-gray-400">·&nbsp;</span>
-            <a href="#" className="underline">
-              {Math.floor(Math.random() * 100)} reviews
-            </a>
-          </p>
-        </div>
-        {departure && departure?.filter((i) => i.start || i.end).length > 0 && (
-          <div className="my-2 rounded border bg-white p-2">
-            {departure?.map((i, index) => (
-              <div
-                className="mt-2 flex items-center justify-between"
-                key={`departure-${index}`}
-              >
-                <div className="">
-                  <p className="text-xs text-black">Date</p>
-                  <p
-                    className="text-sm text-gray-500"
-                    key={`departure-${index}`}
-                  >
-                    {formatDate(i?.start as string)} -{" "}
-                    {formatDate(i?.end as string)}
-                  </p>
-                </div>
-
-                <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
-                  Book Now
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <button className="mt-4 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
-          Get Quote
-        </button>
-      </div>
-      <div className="mt-4 space-y-2">
-        <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
-        {season && (
-          <DepartureFact
-            title={season}
-            desc={seasonMonthMap[season]}
-            icon={seasonIconMap[season]}
-          />
-        )}
-
-        {duration && (
-          <DepartureFact
-            title={"duration"}
-            desc={duration + " days"}
-            icon={<MdTimelapse size={20} />}
-          />
-        )}
-
-        {grade && (
-          <DepartureFact
-            title="grade"
-            desc={grade}
-            icon={<BsBarChartFill size={20} />}
-          />
-        )}
-
-        {altitude && maxAltInM && maxAltInM !== 0 && (
-          <DepartureFact
-            title="max altitude"
-            desc={`${maxAltInM.toLocaleString("en-us")}m/${(maxAltInM * 3.281).toLocaleString("en-us")}ft`}
-            icon={<FaMountain size={20} />}
-          />
-        )}
-      </div>
-
-      <hr className="mx-auto mt-2 w-[90%]" />
-
-      <div className="flex w-full justify-center">
-        <Link
-          prefetch={true}
-          href={`packages/${pkg?.id}`}
-          className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
-        >
-          View Details
-        </Link>
-      </div>
-    </div>
-  );
-});
-
-Overlay.displayName = "Overlay";
+export default MainPackageCard;
 
 export const SliderComponent = ({
   pkg,
@@ -394,7 +235,6 @@ export const SliderComponent = ({
   isOverlayVisible: boolean;
 }) => {
   const attr = pkg?.attributes;
-  console.log(attr);
   return (
     <Swiper
       spaceBetween={30}
