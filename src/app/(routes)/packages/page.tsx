@@ -9,7 +9,7 @@ import { siteConfig } from "@/config/site-config";
 import { getPackages } from "@/server/packages/get-packages";
 import { PackageFilter } from "./filter";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
-import PackageCard from "@/components/packagespage/package-card";
+import PackageCard from "@/components/packagespage/package-card/index";
 
 export const metadata: Metadata = {
   title: `Packages | ${siteConfig.siteName}`,
@@ -57,7 +57,7 @@ export default async function Packages({
             ) : (
               data?.data?.map((pkg, index) => (
                 <Suspense key={index}>
-                  <PackageCard key={index} pkg={pkg} />
+                  <PackageCard variant="default" key={index} pkg={pkg} />
                 </Suspense>
               ))
             )}
