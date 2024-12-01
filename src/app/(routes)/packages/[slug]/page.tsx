@@ -165,7 +165,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
               <Video packageName={pkg?.package_name} videolink={pkg?.video} />
             )}
             {pkg?.itinerary?.timeline && (
-              <Itenerary data={pkg?.itinerary?.timeline} />
+              <Itenerary data={pkg?.itinerary?.timeline} packageName={pkg?.package_name} />
             )}
             <InfoTabs content={infoTabsData} />
           </div>

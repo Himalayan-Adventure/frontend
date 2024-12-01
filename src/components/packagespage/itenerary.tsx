@@ -5,6 +5,7 @@ import generatePDF, { Resolution, Margin } from "react-to-pdf";
 
 export default function Itinerary({
   data,
+  packageName,
 }: {
   //data: Array<{ id: number; day: string }>;
   data: IDProperty &
@@ -17,6 +18,7 @@ export default function Itinerary({
       },
       never
     >[];
+  packageName: string;
 }) {
   const numberOfWeeks =
     data.length / 7 - Number((data.length / 7).toFixed(0)) <= 0
@@ -53,7 +55,7 @@ export default function Itinerary({
     setIsLoading(true);
     try {
       await generatePDF(getTargetElement, {
-        filename: "package",
+        filename: `${packageName} Package`,
         method: "save",
         page: {
           orientation: "portrait",
