@@ -82,7 +82,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
   }
   return (
-    <main className="font-poppins">
+    <main className="font-poppins" id="pdfContent">
       <Image
         src={bgImage}
         alt="Background Image"
@@ -102,7 +102,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
             <Gallery images={images} />
             <div className="space-y-8 lg:col-span-1 lg:hidden">
               <Map location={pkg.package_name} />
-              <Departure type="default" data={departureData}/>
+              <Departure type="default" data={departureData} />
             </div>
             <div className="flex flex-wrap items-center justify-between gap-4 lg:gap-8">
               <div className="space-y-2">

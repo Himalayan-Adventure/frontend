@@ -1,30 +1,7 @@
 "use client";
 import { IDProperty } from "@/types/types";
 import React, { useState, useRef, useEffect } from "react";
-
-const itineraryData = [
-  {
-    week: "Week 01",
-    days: [
-      "Day 01. Arrival in Kathmandu & transfer to the hotel (1,300m/4,265ft)",
-      "Day 02. Arrival in Kathmandu & transfer to the hotel (1,300m/4,265ft)",
-    ],
-  },
-  {
-    week: "Week 02",
-    days: [
-      "Day 01. Explore Kathmandu, visit Pashupatinath and Boudhanath Stupas",
-      "Day 02. Fly to Lukla (2,800m/9,186ft) & trek to Phakding (2,652m/8,700ft)",
-    ],
-  },
-  {
-    week: "Week 03",
-    days: [
-      "Day 01. Trek to Namche Bazaar (3,440m/11,286ft)",
-      "Day 02. Acclimatization day in Namche Bazaar",
-    ],
-  },
-];
+import generatePDF, { Resolution, Margin } from "react-to-pdf";
 
 export default function Itinerary({
   data,
@@ -55,6 +32,8 @@ export default function Itinerary({
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     contentRefs.current.forEach((ref, index) => {
       if (ref) {
@@ -68,19 +47,42 @@ export default function Itinerary({
     setExpandedWeek((prev) => (prev === index ? null : index));
   };
 
+  const getTargetElement = () => document.getElementById("pdfContent");
+
+  const handleGeneratePDF = async () => {
+    setIsLoading(true);
+    try {
+      await generatePDF(getTargetElement, {
+        filename: "package",
+        method: "save",
+        page: {
+          orientation: "portrait",
+          margin: Margin.SMALL,
+        },
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
           Itinerary
         </h1>
-        <button className="rounded border border-black px-4 py-2 text-sm text-black transition hover:bg-gray-200 md:text-base">
-          Download Pdf
+        <button
+          onClick={handleGeneratePDF}
+          className="rounded border border-black px-4 py-2 text-sm text-black transition hover:bg-gray-200 md:text-base"
+        >
+          {isLoading ? <span>Downloading...</span> : <span>Download Pdf</span>}
         </button>
       </div>
       <div className="mt-4">
         <p className="text-base text-gray-600 lg:text-xl">
-          <span className="font-bold">Weeks</span> ({itineraryData.length})
+          <span className="font-bold">Weeks</span> ({data?.length})
         </p>
         <div className="ml-4 mt-4 space-y-6 border-l">
           {transformedData.map((item, index) => (
