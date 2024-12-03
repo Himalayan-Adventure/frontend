@@ -45,7 +45,7 @@ export default function Projects({
   const [showMore, setShowMore] = useState(false);
 
   const filteredProjects = projectsData
-    .filter(
+    ?.filter(
       (project) =>
         project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         project.description.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -109,8 +109,8 @@ export default function Projects({
           {/* Projects Grid */}
           <div className="mt-8 grid grid-cols-1 gap-8 md:hidden md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-24">
             {filteredProjects
-              .slice(0, showMore ? filteredProjects.length : 2)
-              .map((project, index) => (
+              ?.slice(0, showMore ? filteredProjects.length : 2)
+              ?.map((project, index) => (
                 <ProjectCard
                   key={index}
                   title={project.title}
@@ -121,11 +121,10 @@ export default function Projects({
               ))}
           </div>
 
-          {/* Show More / Show Less Button for small screens */}
           <div className="mt-6 flex md:hidden">
             <button
               className="flex items-center space-x-1 text-sm underline"
-              onClick={() => setShowMore(!showMore)} // Toggle showMore
+              onClick={() => setShowMore(!showMore)}
             >
               <span>{showMore ? "Show Less" : "Show More"}</span>{" "}
               <FaChevronRight
@@ -136,7 +135,7 @@ export default function Projects({
           </div>
 
           <div className="mt-8 hidden grid-cols-1 gap-8 md:grid md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-24">
-            {filteredProjects.map((project, index) => (
+            {filteredProjects?.map((project, index) => (
               <ProjectCard
                 key={index}
                 title={project.title}

@@ -11,6 +11,9 @@ import Link from "next/link";
 import { socialIcons } from "@/config/constants";
 
 import { m, domMax, LazyMotion } from "framer-motion";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import FilterBox from "./Filters";
+import { Toaster } from "sonner";
 export function HeroSection() {
   return (
     <LazyMotion features={domMax}>
@@ -111,13 +114,24 @@ export function HeroSection() {
           >
             Not sure where to go? Perfect.
           </Text>
-          <Button className="flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white sm:w-auto md:px-10 md:py-8">
-            <Search />
-            <Text variant="text-md" bold>
-              Find your Adventure
-            </Text>
-          </Button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              {/* Wrapping both the button and the icon inside a single element */}
+              <div>
+                <Button className="flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white sm:w-auto md:px-10 md:py-8">
+                  <Search />
+                  <Text variant="text-md" bold>
+                    Find your Adventure
+                  </Text>
+                </Button>
+              </div>
+            </DialogTrigger>
+            {/* FilterBox will be rendered inside DialogContent */}
+            <FilterBox />
+          </Dialog>
         </m.header>
+        <Toaster position="bottom-right" />
       </section>
     </LazyMotion>
   );
