@@ -9,9 +9,10 @@ import "server-only";
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_STRAPI_URL,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  //   Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+  // },
 });
 
 // axiosInstance.interceptors.request.use(

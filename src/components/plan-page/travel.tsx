@@ -1,27 +1,31 @@
-import { FaQuestion, FaUser } from "react-icons/fa";
-import { MdGroups2 } from "react-icons/md";
+// Travel.tsx
 import { usePlanContext } from "./plan-context";
+import { FaUser, FaQuestion } from "react-icons/fa";
+import { MdGroups2 } from "react-icons/md";
 
-const options = [
+export const travelOptions = [
   {
     icon: <FaUser />,
     name: "Solo",
+    value: "solo",
   },
   {
     icon: <MdGroups2 />,
     name: "Group",
+    value: "group",
   },
   {
     icon: <FaQuestion />,
     name: "Not Sure?",
+    value: "not sure",
   },
 ];
 
 export default function Travel() {
-  const { selectedTravelMode, setSelectedTravelMode } = usePlanContext();
+  const { group, setGroup } = usePlanContext();
 
-  const handleOptionClick = (option: string) => {
-    setSelectedTravelMode(option); // Update the travel mode state
+  const handleOptionClick = (optionValue: string) => {
+    setGroup(optionValue);
   };
 
   return (
@@ -30,21 +34,19 @@ export default function Travel() {
         How do you want to travel?
       </h2>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:gap-8">
-        {options.map((option) => (
+        {travelOptions.map((option) => (
           <div
-            key={option.name}
+            key={option.value}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out lg:p-4 ${
-              selectedTravelMode === option.name
+              group === option.value
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
             }`}
-            onClick={() => handleOptionClick(option.name)}
+            onClick={() => handleOptionClick(option.value)}
           >
             <span
               className={`text-xl lg:text-4xl ${
-                selectedTravelMode === option.name
-                  ? "text-white"
-                  : "text-primary"
+                group === option.value ? "text-white" : "text-primary"
               }`}
             >
               {option.icon}

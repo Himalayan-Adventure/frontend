@@ -36,6 +36,7 @@ export const LoginForm = () => {
   async function onSubmit(values: TLoginForm) {
     setLoading(true);
     const payload = form.getValues();
+    console.log(payload);
     const res = await login({
       email: payload.email,
       password: payload.password,
@@ -137,7 +138,7 @@ export const LoginForm = () => {
             <Button
               type="submit"
               disabled={!form.formState.isValid}
-              className="w-full self-end gap-x-3 bg-foreground px-10 py-6 font-poppins font-bold items-center"
+              className="w-full items-center gap-x-3 self-end bg-foreground px-10 py-6 font-poppins font-bold"
             >
               Login
               {loading && (

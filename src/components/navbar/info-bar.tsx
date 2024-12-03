@@ -9,9 +9,9 @@ import {
   MapPin,
   Menu,
   Phone,
+  Settings,
   User,
   UserCheck,
-  UserPlus,
 } from "lucide-react";
 import Image from "next/image";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -24,12 +24,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
@@ -76,7 +71,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
         return null;
       }
     },
-    retry: 1,
+    retry: 5,
   });
 
   return (
@@ -147,6 +142,13 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                     <Link href="/profile" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/profile" className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
@@ -282,6 +284,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               <div className="flex flex-row justify-center gap-x-2 brightness-200">
                 {socialIcons.map((item) => (
                   <Link
+                    prefetch={true}
                     key={`social-link-${item.name}`}
                     href={item.href}
                     target="_blank"

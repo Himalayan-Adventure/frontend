@@ -1,22 +1,21 @@
+"use client";
 import { useState } from "react";
 import { usePlanContext } from "./plan-context";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function YourDetailsForm() {
-  const {
-    selectedTravelMode,
-    budget,
-    travelDates,
-    experience,
-    destination,
-    accommodation,
-    // packageType,
-  } = usePlanContext();
+  const { group, budget, travelDates, experience, accommodation, grade } =
+    usePlanContext();
 
   const [detailsFormData, setDetailsFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -25,18 +24,71 @@ export default function YourDetailsForm() {
     setDetailsFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (action: string) => {
+  const handleSubmit = async (action: string) => {
+    // Basic validation
+    if (
+      !detailsFormData.name.trim() ||
+      !detailsFormData.email.trim() ||
+      !detailsFormData.message.trim()
+    ) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(detailsFormData.email)) {
+      toast.error("Please enter a valid email.");
+      return;
+    }
+
     const combinedData = {
-      ...detailsFormData,
-      selectedTravelMode,
-      budget,
-      travelDates,
-      experience,
-      destination,
-      accommodation,
-      // packageType,
+      data: {
+        group: group,
+        grade: grade,
+        accommodation_preferences: accommodation.join(", "),
+        customized_experience: experience.join(", "),
+        travel_dates: travelDates,
+        budget: budget,
+        finalize: {
+          name: detailsFormData.name,
+          email: detailsFormData.email,
+          message: detailsFormData.message,
+        },
+      },
     };
-    console.log(`${action} clicked`, combinedData);
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const token = process.env.NEXT_PUBLIC_API_TOKEN;
+      const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+
+      const response = await axios.post(
+        `${apiUrl}/api/plan-with-uses`,
+        combinedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      
+      toast.success("Form submitted successfully!");
+      setDetailsFormData({ name: "", email: "", message: "" });
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error response:", error.response);
+        toast.error(
+          error.response?.data?.message || "Failed to submit the form.",
+        );
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,15 +123,30 @@ export default function YourDetailsForm() {
       <div className="flex justify-center space-x-2">
         <button
           onClick={() => handleSubmit("Get Quotes")}
-          className="rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base"
+          disabled={loading}
+          className={`rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base ${
+            loading ? "cursor-not-allowed opacity-50" : ""
+          }`}
         >
-          Get Quotes
+          {loading ? "Submitting..." : "Get Quotes"}
         </button>
         <button
           onClick={() => handleSubmit("Optimize Package")}
-          className="rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base"
+          disabled={loading}
+          className={`rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base ${
+            loading ? "cursor-not-allowed opacity-50" : ""
+          }`}
         >
-          Optimize Package
+          {loading ? "Submitting..." : "Optimize Package"}
+        </button>
+        <button
+          onClick={() => handleSubmit("Submit")}
+          disabled={loading}
+          className={`rounded-lg bg-green-500 px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-green-600 md:text-base ${
+            loading ? "cursor-not-allowed opacity-50" : ""
+          }`}
+        >
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </div>
     </div>

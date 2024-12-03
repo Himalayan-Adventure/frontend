@@ -37,6 +37,7 @@ const config = {
       fontFamily: {
         overpass: ["var(--font-overpass)"],
         poppins: ["var(--font-poppins)"],
+        sourceSerif: ["Source Serif 4", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,6 +52,9 @@ const config = {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+        },
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary-background))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -102,6 +106,7 @@ const config = {
   plugins: [
     require("tailwindcss-animate"),
     require("@tailwindcss/container-queries"),
+    require("@tailwindcss/typography"),
   ],
 } satisfies Config;
 

@@ -11,7 +11,7 @@ import { AxiosResponse, type AxiosError } from "axios";
 export const getSinglePackage = async (id: string) => {
   try {
     const res: AxiosResponse<APIResponse<"api::package.package">> =
-      await axiosInstance.get(`api/packages/${id}?populate=*`);
+      await axiosInstance.get(`api/packages/${id}?populate=deep`);
 
     return {
       data: res.data.data,

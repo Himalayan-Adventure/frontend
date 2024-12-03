@@ -7,3 +7,13 @@ declare namespace NodeJS {
     NODE_ENV: "development" | "production";
   }
 }
+
+/**
+ * Represents a type that can be either a value of type T, null, or undefined.
+ * @template T - The type of the value.
+ */
+type Maybe<T> = T | null | undefined;
+
+/**
+ * Takes an object type and makes the hover overlay more readable.
+ */

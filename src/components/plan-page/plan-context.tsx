@@ -1,24 +1,40 @@
 "use client";
+
 import { createContext, useState, useContext, ReactNode } from "react";
 import { DateRange } from "react-day-picker";
 
-type Budget = string | number | null | { min: number; max: number };
+interface Budget {
+  // id: number;
+  fixed_budget: string | null;
+  budget_range_start: string | null;
+  budget_range_end: string | null;
+  decide_later: boolean;
+}
+
+interface TravelDates {
+  // id: number;
+  exact_date_start: string | null;
+  exact_date_end: string | null;
+  flexible_date_start: string | null;
+  flexible_date_end: string | null;
+  decide_later: boolean;
+}
 
 interface PlanContextType {
-  travelDates: string;
-  setTravelDates: (value: string) => void;
+  group: string;
+  setGroup: (group: string) => void;
+  grade: string;
+  setGrade: (grade: string) => void;
   destination: string;
   setDestination: (value: string) => void;
-  packageType: string;
-  setPackageType: (value: string) => void;
-  accommodation: string;
-  setAccommodation: (value: string) => void;
-  budget: Budget;
-  setBudget: (budget: Budget) => void;
-  experience: string;
-  setExperience: (value: string) => void;
-  selectedTravelMode: string;
-  setSelectedTravelMode: (value: string) => void;
+  accommodation: string[];
+  setAccommodation: (preferences: string[]) => void;
+  experience: string[];
+  setExperience: (experiences: string[]) => void;
+
+  // travel date-related states
+  travelDates: TravelDates;
+  setTravelDates: (dates: TravelDates) => void;
   selectedOption: string;
   setSelectedOption: (value: string) => void;
   date: Date | undefined;
@@ -26,44 +42,61 @@ interface PlanContextType {
   dateRange: DateRange | undefined;
   setDateRange: (value: DateRange | undefined) => void;
 
-  //  budget-related states
+  // Budget-related states
   selectedBudgetOption: string;
-  setSelectedBudgetOption: (value: string) => void;
-  fixedAmount: number | "";
-  setFixedAmount: (value: number | "") => void;
-  minBudget: number;
-  setMinBudget: (value: number) => void;
-  maxBudget: number;
-  setMaxBudget: (value: number) => void;
+  setSelectedBudgetOption: (option: string) => void;
+  fixedAmount: number | null;
+  setFixedAmount: (amount: number | null) => void;
+  minBudget: number | null;
+  setMinBudget: (min: number | null) => void;
+  maxBudget: number | null;
+  setMaxBudget: (max: number | null) => void;
+  setBudget: (budget: Budget) => void;
+  budget: Budget | null;
 
-  // step-related states
+  // Step-related states
   selectedStep: string;
   setSelectedStep: (value: string) => void;
 }
 
+// Create the context
 const PlanContext = createContext<PlanContextType | undefined>(undefined);
 
+// Context provider component
 export const PlanProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedTravelMode, setSelectedTravelMode] = useState<string>("Solo");
-  const [travelDates, setTravelDates] = useState<string>("");
+  const [group, setGroup] = useState<string>("solo");
+  const [grade, setGrade] = useState<string>("beginner");
   const [destination, setDestination] = useState<string>("");
-  const [packageType, setPackageType] = useState<string>("");
-  const [accommodation, setAccommodation] = useState<string>("");
-  const [budget, setBudget] = useState<Budget>(null);
-  const [experience, setExperience] = useState<string>("");
+  const [accommodation, setAccommodation] = useState<string[]>([]);
+  const [experience, setExperience] = useState<string[]>([]);
 
-  // Date selection related state
-  const [selectedOption, setSelectedOption] = useState<string>("Exact date");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  // traveldate-related states
+  const [travelDates, setTravelDates] = useState<TravelDates>({
+    // id: 1,
+    exact_date_start: null,
+    exact_date_end: null,
+    flexible_date_start: null,
+    flexible_date_end: null,
+    decide_later: false,
+  });
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   // Budget-related states
   const [selectedBudgetOption, setSelectedBudgetOption] = useState<string>("");
-  const [fixedAmount, setFixedAmount] = useState<number | "">("");
-  const [minBudget, setMinBudget] = useState<number>(200);
-  const [maxBudget, setMaxBudget] = useState<number>(15000);
+  const [fixedAmount, setFixedAmount] = useState<number | null>(null);
+  const [minBudget, setMinBudget] = useState<number | null>(null);
+  const [maxBudget, setMaxBudget] = useState<number | null>(null);
+  const [budget, setBudget] = useState<Budget>({
+    // id: 1,
+    fixed_budget: null,
+    budget_range_start: null,
+    budget_range_end: null,
+    decide_later: false,
+  });
 
-  // Step-related states
+  // Grade and step-related states
   const [selectedStep, setSelectedStep] = useState<string>("Travel");
 
   return (
@@ -73,24 +106,18 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
         setTravelDates,
         destination,
         setDestination,
-        packageType,
-        setPackageType,
         accommodation,
         setAccommodation,
-        budget,
-        setBudget,
         experience,
         setExperience,
-        selectedTravelMode,
-        setSelectedTravelMode,
         selectedOption,
         setSelectedOption,
         date,
         setDate,
         dateRange,
         setDateRange,
-
-        // Budget-related values
+        group,
+        setGroup,
         selectedBudgetOption,
         setSelectedBudgetOption,
         fixedAmount,
@@ -99,8 +126,10 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
         setMinBudget,
         maxBudget,
         setMaxBudget,
-
-        // Step-related values
+        budget,
+        setBudget,
+        grade,
+        setGrade,
         selectedStep,
         setSelectedStep,
       }}

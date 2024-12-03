@@ -2,7 +2,7 @@
 
 import "server-only";
 
-import { type TUser } from "@/types/auth";
+import { TUserDeep, type TUser } from "@/types/auth";
 
 /**
  * Get the current user's data.
@@ -85,7 +85,7 @@ export async function getCurrentUserData() {
           Authorization: `Bearer ${token}` || "",
         },
         next: {
-          revalidate: 15,
+          tags: ["me"],
         },
       },
     );
@@ -95,6 +95,34 @@ export async function getCurrentUserData() {
     }
 
     const data: TUser = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getCurrentUserDataDeep() {
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get("jwt")?.value;
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate=deep`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}` || "",
+        },
+        next: {
+          tags: ["me"],
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data: TUserDeep = await response.json();
     return data;
   } catch (error) {
     console.log(error);

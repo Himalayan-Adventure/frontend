@@ -102,7 +102,9 @@ const CountrySelect = ({
           )}
           disabled={disabled}
         >
-          <CountryCodeComponent country={value} countryName={value} />
+          {value && (
+            <CountryCodeComponent country={value} countryName={value} />
+          )}
           <ChevronDown
             className={cn(
               "h-4 w-4 translate-y-[1.5px] text-gray-400 opacity-50",
@@ -164,10 +166,10 @@ const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
   );
 };
 const CountryCodeComponent = ({ country, countryName }: RPNInput.FlagProps) => {
-  const cocuntryCode = getCountryCallingCode(country);
-  //   const countryCode = RPNInput.getCountryCallingCode(country);
+  const countryCode = getCountryCallingCode(country);
+  //const countryCode = RPNInput.getCountryCallingCode(country);
 
-  return <span className="flex h-4 w-6 text-gray-400">+{cocuntryCode}</span>;
+  return <span className="flex h-4 w-6 text-gray-400">+{countryCode}</span>;
 };
 FlagComponent.displayName = "FlagComponent";
 

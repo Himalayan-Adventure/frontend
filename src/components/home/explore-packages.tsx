@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { Button } from "../ui/button";
 import packageImg from "/public/images/package1.jpeg";
 import { m, domMax, LazyMotion } from "framer-motion";
@@ -48,26 +48,7 @@ export default function ExplorePackages() {
           {/* Packages Grid */}
           <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16">
             {packages.map((pkg, index) => (
-              <div key={index} className="">
-                <Image
-                  src={pkg.image}
-                  alt={pkg.name}
-                  className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-none"
-                />
-                <div className="py-2 text-center">
-                  <h2 className="mb-2 text-base font-semibold lg:text-xl">
-                    {pkg.name}
-                  </h2>
-                  <div className="flex flex-col items-center space-y-3">
-                    <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
-                      Inquire
-                    </Button>
-                    <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
-                      View More
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <ServiceCard data={pkg} key={pkg.name} />
             ))}
           </div>
         </div>
@@ -75,3 +56,29 @@ export default function ExplorePackages() {
     </LazyMotion>
   );
 }
+const ServiceCard = ({
+  data,
+}: {
+  data: { name: string; image: StaticImageData };
+}) => {
+  return (
+    <div className="">
+      <Image
+        src={data.image}
+        alt={data.name}
+        className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-none"
+      />
+      <div className="py-2 text-center">
+        <h2 className="mb-2 text-base font-semibold lg:text-xl">{data.name}</h2>
+        <div className="flex flex-col items-center space-y-3">
+          <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
+            Inquire
+          </Button>
+          <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
+            View More
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};

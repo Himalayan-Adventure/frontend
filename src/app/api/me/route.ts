@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const cookieStore = cookies();
   const token = cookieStore.get("jwt")?.value;
 
@@ -8,23 +9,30 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  console.log(token);
+  const searchParams = request.nextUrl.searchParams;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const populate = searchParams?.get("populate");
+  const params = new URLSearchParams();
+  if (populate) {
+    params.set("populate", populate);
+  }
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?${params.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      next: {
+        revalidate: 15,
+        tags: ["me"],
+      },
     },
-    next: {
-      revalidate: 15,
-      tags: ["me"],
-    },
-  });
+  );
 
   if (!res.ok) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const user = await res.json();
-
   return Response.json(user);
 }

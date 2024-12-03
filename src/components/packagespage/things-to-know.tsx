@@ -1,7 +1,8 @@
+"use client";
 import { TThingsToKnowTabs } from "@/types/packages/things-to-know";
 import { IDProperty } from "@/types/types";
 import { BlocksContent, BlocksRenderer } from "@strapi/blocks-react-renderer";
-import React from "react";
+import React, { useState } from "react";
 import {
   FaClock,
   FaLock,
@@ -19,6 +20,9 @@ import {
 } from "react-icons/md";
 import { RiAlarmWarningLine } from "react-icons/ri";
 import DynamicReactIcon from "../icons/strapi-icon";
+import { Text } from "../ui/text";
+import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const thingsToKnowItems = [
   {
@@ -58,50 +62,64 @@ const thingsToKnowItems = [
     items: [{ text: "Free cancellation before Feb 14", link: "Show more" }],
   },
 ];
+type ThingsInfo =
+  | (IDProperty &
+      Omit<
+        {
+          details?: string | undefined;
+          title?: string | undefined;
+          icon?: string | undefined;
+        } & {},
+        never
+      >[])
+  | undefined;
+
+type ThingsToKnow = IDProperty & {
+  title?: string | undefined;
+  things_info?: ThingsInfo[] | undefined;
+};
+type TData = Omit<
+  {
+    title?: string | undefined;
+    things_info?: ThingsInfo;
+  } & {},
+  never
+>;
 
 export default function ThingsToKnow({
   data,
 }: {
-  data: {
-    cancellationPolicy: string | undefined;
-    generalInfo:
-      | (IDProperty &
-          Omit<
-            {
-              icon?: string | undefined;
-              info?: string | undefined;
-            } & {},
-            never
-          >[])
-      | undefined;
-    health:
-      | (IDProperty &
-          Omit<
-            {
-              icon?: string | undefined;
-              info?: string | undefined;
-            } & {},
-            never
-          >[])
-      | undefined;
-  };
-  // data?Record<TThingsToKnowTags,(IDProperty &
+  data: (IDProperty & TData[]) | undefined;
+  //  data:ThingsToKnow
+  // data:
+  //   | (IDProperty &
   //       Omit<
   //         {
-  //           name?: string | undefined;
-  //           icon?: string | undefined;
-  //           value?: string | undefined;
+  //           title?: string | undefined;
+  //           things_info?:
+  //             | (IDProperty &
+  //                 Omit<
+  //                   {
+  //                     details?: string | undefined;
+  //                     title?: string | undefined;
+  //                     icon?: string | undefined;
+  //                   } & {},
+  //                   never
+  //                 >[])
+  //             | undefined;
   //         } & {},
   //         never
   //       >[])
   //   | undefined;
 }) {
-  console.log(data);
   return (
     <section className="container py-4 lg:py-8">
       <h2 className="mb-6 text-2xl font-semibold">Things to know</h2>
       <div className="grid grid-cols-1 gap-8 text-sm md:grid-cols-3 md:text-base">
-        <div>
+        {data?.map((i, index) => (
+          <ThingsRow key={`i.title-${index}`} data={i} />
+        ))}
+        {/* <div>
           <h3 className="mb-4 font-semibold">Expedition General Info</h3>
           <ul className="space-y-2">
             {data?.generalInfo?.map((fact, index) => (
@@ -111,16 +129,14 @@ export default function ThingsToKnow({
               >
                 <div className="col-span-2 flex items-center space-x-1">
                   {fact.icon && <DynamicReactIcon name={fact.icon} />}
-                  {/* <span className="">{fact.icon}</span> */}
-
                   <p className="text-xs md:text-sm lg:text-base">{fact.info}</p>
                 </div>
               </div>
             ))}
           </ul>
-        </div>
+        </div> */}
 
-        <div>
+        {/* <div>
           <h3 className="mb-4 font-semibold">Health & Safety</h3>
           <ul className="space-y-2">
             {data?.health?.map((fact, index) => (
@@ -130,19 +146,18 @@ export default function ThingsToKnow({
               >
                 <div className="col-span-2 flex items-center space-x-1">
                   {fact.icon && <DynamicReactIcon name={fact.icon} />}
-                  {/* <span className="">{fact.icon}</span> */}
 
                   <p className="text-xs md:text-sm lg:text-base">{fact.info}</p>
                 </div>
               </div>
             ))}
           </ul>
-        </div>
+        </div> */}
 
-        <div>
+        {/* <div>
           <h3 className="mb-4 font-semibold">Cancellation Policy</h3>
           <p>{data.cancellationPolicy}</p>
-        </div>
+        </div> */}
         {/* {data.map(({ title, items }, index) => (
           <div key={index}>
             <h3 className="mb-4 font-semibold">{title}</h3>
@@ -160,3 +175,45 @@ export default function ThingsToKnow({
     </section>
   );
 }
+const ThingsRow = ({ data }: { data: TData }) => {
+  const [showMore, setShowMore] = useState(
+    data.things_info ? data.things_info?.length > 8 : false,
+  );
+  return (
+    <div key={data.title} className="space-y-2">
+      <h3 className="mb-4 font-semibold">{data.title}</h3>
+      <ul className="space-y-2">
+        {(showMore ? data?.things_info : data?.things_info?.slice(0, 8))?.map(
+          (fact, index) => (
+            <div
+              key={`things-toknow ${data.title}-${index}`}
+              className={cn(
+                fact.icon ? "grid-cols-[40px_auto]" : "",
+                "mb-2 grid lg:mb-4",
+              )}
+            >
+              {fact.icon && (
+                <DynamicReactIcon
+                  className="size-5 md:size-6"
+                  name={fact.icon}
+                />
+              )}
+              <p className="text-xs md:text-sm lg:text-base">{fact?.title}</p>
+            </div>
+          ),
+        )}
+      </ul>
+      {data?.things_info && data?.things_info?.length > 8 && (
+        <Text
+          variant="text-md"
+          semibold
+          onClick={() => setShowMore(!showMore)}
+          className="flex cursor-pointer items-center gap-x-0.5 underline hover:gap-x-1.5"
+        >
+          Show {!showMore ? "more" : "less"}
+          <ChevronRight size={13} />
+        </Text>
+      )}
+    </div>
+  );
+};
