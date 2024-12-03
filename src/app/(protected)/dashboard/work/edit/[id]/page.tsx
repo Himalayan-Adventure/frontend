@@ -3,6 +3,12 @@ import { WorkAddOrEditForm } from "../../add-or-edit-form";
 import { Text } from "@/components/ui/text";
 import { getSingleWork } from "@/server/work/get-single-work";
 
+import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: `Edit Work Dashboard | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
 type Props = {
   params: {
     id: number;

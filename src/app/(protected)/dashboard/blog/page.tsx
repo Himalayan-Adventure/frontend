@@ -7,6 +7,14 @@ import { getBlogs } from "@/server/blogs/get-blogs";
 import Link from "next/link";
 import { PlusIcon } from "lucide-react";
 
+import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Blog Dashboard | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
+
 export default async function BlogPage({
   searchParams,
 }: {

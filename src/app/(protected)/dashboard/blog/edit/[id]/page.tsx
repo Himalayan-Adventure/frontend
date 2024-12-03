@@ -3,6 +3,13 @@ import { getSingleBlog } from "@/server/blogs/get-single-blog";
 import { Text } from "@/components/ui/text";
 import { GoBackButton } from "@/components/profile/go-back-button";
 
+import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: `Edit Blog Dashboard | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
+
 type Props = {
   params: {
     id: number;
