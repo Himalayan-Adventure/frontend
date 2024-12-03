@@ -11,6 +11,13 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { APIResponseCollection } from "@/types/types";
 
+import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: `Work Dashboard | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
+
 export default async function WorkPage({
   searchParams,
 }: {
