@@ -1,7 +1,7 @@
 "use client";
 
-import { IProduct } from "@/types/products/products";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BsKey } from "react-icons/bs";
@@ -9,61 +9,109 @@ import { FaArrowLeft } from "react-icons/fa";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import { LiaSyncSolid } from "react-icons/lia";
 import { TbTruckDelivery } from "react-icons/tb";
+import RentDialog from "./rent-dialog";
 import { StarRating } from "./star-rating";
-import Link from "next/link";
+import { Toaster } from "../ui/sonner";
+import { useCart } from "@/contexts/CartContext";
 
 export default function ProductDetail({ product }: any) {
+  const rentdetails = {
+    product_name: product?.attributes?.name,
+    category: product?.attributes?.shop_categories?.data?.[0]?.attributes?.name,
+    size: "Medium",
+    manufacturer: "lorem",
+    quantity: "10",
+    condition: "New",
+    termsAndConditions: product?.attributes?.terms_and_condition,
+    rentalDetails: product?.attributes?.rental_detail,
+    images: product?.attributes?.image?.data,
+  };
+
   const router = useRouter();
+  const { addToCart, removeFromCart, isInCart, updateCartItemQuantity } =
+    useCart();
+
   const [quantity, setQuantity] = useState(1);
   const [isLiked, setIsLiked] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
+  const [isInCartStatus, setIsInCartStatus] = useState(false);
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-    const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (typeof window !== "undefined") {
+      const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      setIsLiked(favorites.includes(product?.id));
 
-    setIsLiked(favorites.includes(product?.id));
-    setIsInCart(cartItems.includes(product?.id));
+      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+      const existingItemIndex = cartItems.findIndex(
+        (item: any) => item.id === product?.id,
+      );
+      if (existingItemIndex > -1) {
+        setIsInCartStatus(true);
+        setQuantity(cartItems[existingItemIndex].quantity);
+      }
+    }
   }, [product?.id]);
 
   const handleToggleLike = () => {
     setIsLiked((prev) => {
       const updatedLikedStatus = !prev;
-      const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 
-      if (updatedLikedStatus) {
-        favorites.push(product?.id);
-      } else {
-        const index = favorites.indexOf(product?.id);
-        if (index > -1) favorites.splice(index, 1);
+      if (typeof window !== "undefined") {
+        const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+        if (updatedLikedStatus) {
+          favorites.push(product?.id);
+        } else {
+          const index = favorites.indexOf(product?.id);
+          if (index > -1) favorites.splice(index, 1);
+        }
+        localStorage.setItem("favorites", JSON.stringify(favorites));
       }
-      localStorage.setItem("favorites", JSON.stringify(favorites));
+
       return updatedLikedStatus;
     });
   };
 
   const handleAddToCart = () => {
-    const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existingItemIndex = cartItems.findIndex(
-      (item: any) => item.id === product?.id && item.color === selectedColor,
-    );
+    if (typeof window !== "undefined") {
+      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+      const price = product?.attributes?.price || 0;
+      const cartItem = {
+        id: product?.id,
+        name: product?.attributes?.name,
+        quantity,
+        price: product?.attributes?.price,
+        img: product?.attributes?.image?.data?.[0]?.attributes?.url,
+        color: selectedColor,
+        subtotal: quantity * price,
+      };
 
-    const cartItem = {
-      id: product?.id,
-      name: product?.attributes?.name,
-      quantity,
-      color: selectedColor,
-      price: product?.attributes?.price,
-    };
+      const existingItemIndex = cartItems.findIndex(
+        (item: any) => item.id === product?.id,
+      );
 
-    if (existingItemIndex > -1) {
-      cartItems[existingItemIndex].quantity += quantity; // Increment quantity if item already in cart
-    } else {
-      cartItems.push(cartItem);
+      if (existingItemIndex > -1) {
+        const updatedCartItems = [...cartItems];
+        updatedCartItems[existingItemIndex].quantity = quantity;
+        localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+        updateCartItemQuantity(product?.id, quantity);
+      } else {
+        cartItems.push(cartItem);
+        localStorage.setItem("cart", JSON.stringify(cartItems));
+        addToCart(cartItem);
+      }
     }
+  };
 
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-    setIsInCart(true);
+  const handleRemoveFromCart = () => {
+    if (typeof window !== "undefined") {
+      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+      const updatedCartItems = cartItems.filter(
+        (item: any) => item.id !== product?.id,
+      );
+
+      localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+      removeFromCart(product?.id);
+    }
   };
 
   const [selectedColor, setSelectedColor] = useState(
@@ -71,9 +119,35 @@ export default function ProductDetail({ product }: any) {
   );
 
   const handleGoBack = () => router.back();
-  const increment = () => setQuantity((prev) => prev + 1);
-  const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const increment = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
 
+    if (isInCartStatus && typeof window !== "undefined") {
+      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+      const updatedCartItems = cartItems.map((item: any) =>
+        item.id === product?.id ? { ...item, quantity: newQuantity } : item,
+      );
+      localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+      updateCartItemQuantity(product?.id, newQuantity);
+    }
+  };
+
+  const decrement = () => {
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+
+      if (isInCartStatus && typeof window !== "undefined") {
+        const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+        const updatedCartItems = cartItems.map((item: any) =>
+          item.id === product?.id ? { ...item, quantity: newQuantity } : item,
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+        updateCartItemQuantity(product?.id, newQuantity);
+      }
+    }
+  };
   return (
     <section className="container relative mx-auto p-8 lg:mt-32 lg:py-16">
       <div className="mb-4 lg:mb-8">
@@ -88,9 +162,8 @@ export default function ProductDetail({ product }: any) {
           <div className="grid grid-cols-4 gap-4 sm:gap-6">
             {/* Thumbnail Images */}
             <div className="col-span-1 grid gap-2 sm:gap-4 lg:grid-cols-none lg:grid-rows-4">
-              {product?.attributes?.image?.data
-                ?.slice(1)
-                .map((img: any, index: number) => (
+              {product?.attributes?.image?.data?.map(
+                (img: any, index: number) => (
                   <div
                     className="relative flex h-full w-full items-center justify-center rounded-lg bg-gray-100 p-1 sm:p-2"
                     key={index}
@@ -103,7 +176,8 @@ export default function ProductDetail({ product }: any) {
                       className="object-cover"
                     />
                   </div>
-                ))}
+                ),
+              )}
             </div>
             {/* Main Image Display */}
             <div className="col-span-3 flex items-center justify-center rounded-lg bg-gray-100 p-4 sm:p-6">
@@ -196,10 +270,12 @@ export default function ProductDetail({ product }: any) {
               </button>
             </div>
             <button
-              onClick={handleAddToCart}
+              onClick={
+                isInCart(product?.id) ? handleRemoveFromCart : handleAddToCart
+              }
               className="w-full flex-grow rounded bg-black px-4 py-2 text-sm text-white sm:w-auto sm:px-6 sm:py-2 lg:text-lg"
             >
-              {isInCart ? "Remove from Cart" : "Add to Cart"}
+              {isInCart(product?.id) ? "Remove from Cart" : "Add to Cart"}
             </button>
             <button
               onClick={handleToggleLike}
@@ -267,14 +343,13 @@ export default function ProductDetail({ product }: any) {
                 )}
               </div>
               {product?.attributes?.rent_available && (
-                <button className="rounded bg-black px-4 py-1 text-xs text-white md:text-sm">
-                  RENT NOW
-                </button>
+                <RentDialog {...rentdetails} />
               )}
             </div>
           </div>
         </div>
       </div>
+      <Toaster />
     </section>
   );
 }
