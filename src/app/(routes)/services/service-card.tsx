@@ -16,10 +16,7 @@ export const ServiceCard = ({
 }) => {
   const [isFav, setIsFav] = useState(false);
   const image = data?.attributes?.image?.data?.attributes;
-  //@ts-ignore
   const service_provider = data?.attributes?.service_provider?.data;
-  console.log(service_provider);
-  console.log(data);
   return (
     <div className="relative z-10 grid max-w-[300px] grid-rows-[auto_auto] rounded-lg bg-white px-2 pt-2 shadow-2xl md:px-3 md:pt-3">
       <div className="relative h-full">

@@ -43,7 +43,7 @@ export function SortFilters() {
             ) : (
               categories?.data.map((i) => (
                 <SelectItem
-                  key={"services-categories-${i.id}"}
+                  key={`services-categories-${i.id}`}
                   value={i.attributes.name}
                 >
                   {i.attributes.name}

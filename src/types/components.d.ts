@@ -1,5 +1,19 @@
 import type { Schema, Attribute } from '@strapi/strapi';
 
+export interface WorkWork extends Schema.Component {
+  collectionName: 'components_work_works';
+  info: {
+    displayName: 'work';
+  };
+  attributes: {
+    title: Attribute.String;
+    date: Attribute.Date;
+    image: Attribute.Media<'images'> & Attribute.Required;
+    description: Attribute.Blocks;
+    link: Attribute.String;
+  };
+}
+
 export interface UserAboutAbout extends Schema.Component {
   collectionName: 'components_user_about_abouts';
   info: {
@@ -10,6 +24,16 @@ export interface UserAboutAbout extends Schema.Component {
     instagram: Attribute.String;
     whatsapp: Attribute.String;
     description: Attribute.Text;
+  };
+}
+
+export interface StepsSteps extends Schema.Component {
+  collectionName: 'components_steps_steps';
+  info: {
+    displayName: 'steps';
+  };
+  attributes: {
+    step: Attribute.String;
   };
 }
 
@@ -311,26 +335,6 @@ export interface PackageHostPackageHost extends Schema.Component {
   };
 }
 
-export interface PackageGradeGrade extends Schema.Component {
-  collectionName: 'components_package_grade_grades';
-  info: {
-    displayName: 'Grade';
-  };
-  attributes: {
-    name: Attribute.Enumeration<
-      [
-        'Beginner (grade I)',
-        'Intermediate (grade II)',
-        'Challenging (grade III)',
-        'Strenuous (grade IV)',
-        'Extreme (grade V)'
-      ]
-    > &
-      Attribute.Required &
-      Attribute.DefaultTo<'Beginner (grade I)'>;
-  };
-}
-
 export interface PackageFitnessFitness extends Schema.Component {
   collectionName: 'components_package_fitness_fitnesses';
   info: {
@@ -350,6 +354,26 @@ export interface PackageFitnessFitness extends Schema.Component {
     > &
       Attribute.Required &
       Attribute.DefaultTo<'Beginner'>;
+  };
+}
+
+export interface PackageGradeGrade extends Schema.Component {
+  collectionName: 'components_package_grade_grades';
+  info: {
+    displayName: 'Grade';
+  };
+  attributes: {
+    name: Attribute.Enumeration<
+      [
+        'Beginner (grade I)',
+        'Intermediate (grade II)',
+        'Challenging (grade III)',
+        'Strenuous (grade IV)',
+        'Extreme (grade V)'
+      ]
+    > &
+      Attribute.Required &
+      Attribute.DefaultTo<'Beginner (grade I)'>;
   };
 }
 
@@ -633,7 +657,9 @@ export interface AboutContactContact extends Schema.Component {
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
+      'work.work': WorkWork;
       'user-about.about': UserAboutAbout;
+      'steps.steps': StepsSteps;
       'planwithus-travel-dates.travel-dates': PlanwithusTravelDatesTravelDates;
       'planwithus-review-finalize.review-and-f-inalize': PlanwithusReviewFinalizeReviewAndFInalize;
       'planwithus-budget.budget': PlanwithusBudgetBudget;
@@ -656,8 +682,8 @@ declare module '@strapi/types' {
       'package-itinerary.itinerary': PackageItineraryItinerary;
       'package-hosted-by.hosted-by': PackageHostedByHostedBy;
       'package-host.package-host': PackageHostPackageHost;
-      'package-grade.grade': PackageGradeGrade;
       'package-fitness.fitness': PackageFitnessFitness;
+      'package-grade.grade': PackageGradeGrade;
       'package-customization.package-customization': PackageCustomizationPackageCustomization;
       'package-cost-and-budgeting.cost-and-budgeting': PackageCostAndBudgetingCostAndBudgeting;
       'package-adventure-transportation.transporation': PackageAdventureTransportationTransporation;

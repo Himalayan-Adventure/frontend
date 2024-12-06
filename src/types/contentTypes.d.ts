@@ -856,6 +856,22 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::inquiry.inquiry'
     >;
+    team: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::team.team'
+    >;
+    projects: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::project.project'
+    >;
+    quote: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::quote.quote'
+    >;
+    work: Attribute.Component<'work.work', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -948,6 +964,53 @@ export interface ApiAccommodationPreferenceAccommodationPreference
   };
 }
 
+export interface ApiAdminAppointmentAdminAppointment
+  extends Schema.CollectionType {
+  collectionName: 'admin_appointments';
+  info: {
+    singularName: 'admin-appointment';
+    pluralName: 'admin-appointments';
+    displayName: 'Admin Appointment';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    phone: Attribute.String & Attribute.Required;
+    email: Attribute.Email & Attribute.Required;
+    expectation: Attribute.Text & Attribute.Required;
+    appointment_date: Attribute.DateTime &
+      Attribute.Required &
+      Attribute.DefaultTo<'2024-12-01T03:15:52.780Z'>;
+    package: Attribute.Relation<
+      'api::admin-appointment.admin-appointment',
+      'oneToOne',
+      'api::package.package'
+    >;
+    service: Attribute.Relation<
+      'api::admin-appointment.admin-appointment',
+      'oneToOne',
+      'api::service.service'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::admin-appointment.admin-appointment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::admin-appointment.admin-appointment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiAppointmentAppointment extends Schema.CollectionType {
   collectionName: 'appointments';
   info: {
@@ -969,6 +1032,11 @@ export interface ApiAppointmentAppointment extends Schema.CollectionType {
       'api::appointment.appointment',
       'manyToOne',
       'plugin::users-permissions.user'
+    >;
+    package: Attribute.Relation<
+      'api::appointment.appointment',
+      'oneToOne',
+      'api::package.package'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1146,6 +1214,71 @@ export interface ApiCalendarCalendar extends Schema.CollectionType {
   };
 }
 
+export interface ApiCouponCoupon extends Schema.CollectionType {
+  collectionName: 'coupons';
+  info: {
+    singularName: 'coupon';
+    pluralName: 'coupons';
+    displayName: 'Coupon';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    code: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMaxLength<{
+        minLength: 4;
+        maxLength: 15;
+      }>;
+    percentage: Attribute.Integer & Attribute.Required;
+    products: Attribute.Relation<
+      'api::coupon.coupon',
+      'oneToMany',
+      'api::shop.shop'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::coupon.coupon',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::coupon.coupon',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiIconIcon extends Schema.CollectionType {
+  collectionName: 'icons';
+  info: {
+    singularName: 'icon';
+    pluralName: 'icons';
+    displayName: 'Icon';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    icon: Attribute.Media<'images' | 'files'> & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::icon.icon', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::icon.icon', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 export interface ApiInquiryInquiry extends Schema.CollectionType {
   collectionName: 'inquiries';
   info: {
@@ -1167,6 +1300,11 @@ export interface ApiInquiryInquiry extends Schema.CollectionType {
       'api::inquiry.inquiry',
       'manyToOne',
       'plugin::users-permissions.user'
+    >;
+    package: Attribute.Relation<
+      'api::inquiry.inquiry',
+      'oneToOne',
+      'api::package.package'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1268,6 +1406,31 @@ export interface ApiPackagePackage extends Schema.CollectionType {
       'api::package.package',
       'oneToMany',
       'plugin::users-permissions.user'
+    >;
+    project: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'api::project.project'
+    >;
+    quote: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'api::quote.quote'
+    >;
+    inquiry: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'api::inquiry.inquiry'
+    >;
+    appointment: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'api::appointment.appointment'
+    >;
+    admin_appointment: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'api::admin-appointment.admin-appointment'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1527,6 +1690,36 @@ export interface ApiPackageTypePackageType extends Schema.CollectionType {
   };
 }
 
+export interface ApiPlanWithPlanWith extends Schema.SingleType {
+  collectionName: 'plan_withs';
+  info: {
+    singularName: 'plan-with';
+    pluralName: 'plan-withs';
+    displayName: 'Plan With';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    steps: Attribute.Component<'steps.steps', true>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::plan-with.plan-with',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::plan-with.plan-with',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPlanWithUsPlanWithUs extends Schema.CollectionType {
   collectionName: 'plan_with_uses';
   info: {
@@ -1560,7 +1753,6 @@ export interface ApiPlanWithUsPlanWithUs extends Schema.CollectionType {
     accommodation_preferences: Attribute.Text;
     customized_experience: Attribute.String;
     finalize: Attribute.Component<'planwithus-review-finalize.review-and-f-inalize'>;
-    steps: Attribute.Component<'package-steps.steps', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1579,12 +1771,58 @@ export interface ApiPlanWithUsPlanWithUs extends Schema.CollectionType {
   };
 }
 
+export interface ApiProjectProject extends Schema.CollectionType {
+  collectionName: 'projects';
+  info: {
+    singularName: 'project';
+    pluralName: 'projects';
+    displayName: 'Project';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    date: Attribute.Date & Attribute.Required;
+    image: Attribute.Media<'images', true>;
+    about_work: Attribute.Blocks;
+    project_link: Attribute.String;
+    guides: Attribute.Relation<
+      'api::project.project',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    package: Attribute.Relation<
+      'api::project.project',
+      'oneToOne',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::project.project',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::project.project',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiQuoteQuote extends Schema.CollectionType {
   collectionName: 'quotes';
   info: {
     singularName: 'quote';
     pluralName: 'quotes';
     displayName: 'Quote';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1599,6 +1837,16 @@ export interface ApiQuoteQuote extends Schema.CollectionType {
       'api::quote.quote',
       'oneToOne',
       'api::service.service'
+    >;
+    package: Attribute.Relation<
+      'api::quote.quote',
+      'oneToOne',
+      'api::package.package'
+    >;
+    guide: Attribute.Relation<
+      'api::quote.quote',
+      'oneToOne',
+      'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1658,6 +1906,11 @@ export interface ApiServiceService extends Schema.CollectionType {
       'api::service.service',
       'oneToOne',
       'api::quote.quote'
+    >;
+    admin_appointment: Attribute.Relation<
+      'api::service.service',
+      'oneToOne',
+      'api::admin-appointment.admin-appointment'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1752,6 +2005,11 @@ export interface ApiShopShop extends Schema.CollectionType {
     slug: Attribute.UID<'api::shop.shop', 'name'> & Attribute.Required;
     terms_and_condition: Attribute.Blocks;
     rental_detail: Attribute.Blocks;
+    coupon: Attribute.Relation<
+      'api::shop.shop',
+      'manyToOne',
+      'api::coupon.coupon'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1918,9 +2176,9 @@ export interface ApiTeamTeam extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    teams: Attribute.Relation<
+    member: Attribute.Relation<
       'api::team.team',
-      'oneToMany',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     designation: Attribute.String;
@@ -1946,6 +2204,7 @@ export interface ApiTeamCategoryTeamCategory extends Schema.CollectionType {
     singularName: 'team-category';
     pluralName: 'team-categories';
     displayName: 'Team Category';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1956,6 +2215,7 @@ export interface ApiTeamCategoryTeamCategory extends Schema.CollectionType {
       'manyToOne',
       'api::team.team'
     >;
+    name: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2027,11 +2287,14 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::about-us.about-us': ApiAboutUsAboutUs;
       'api::accommodation-preference.accommodation-preference': ApiAccommodationPreferenceAccommodationPreference;
+      'api::admin-appointment.admin-appointment': ApiAdminAppointmentAdminAppointment;
       'api::appointment.appointment': ApiAppointmentAppointment;
       'api::blog.blog': ApiBlogBlog;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::blog-tag.blog-tag': ApiBlogTagBlogTag;
       'api::calendar.calendar': ApiCalendarCalendar;
+      'api::coupon.coupon': ApiCouponCoupon;
+      'api::icon.icon': ApiIconIcon;
       'api::inquiry.inquiry': ApiInquiryInquiry;
       'api::package.package': ApiPackagePackage;
       'api::package-category.package-category': ApiPackageCategoryPackageCategory;
@@ -2040,7 +2303,9 @@ declare module '@strapi/types' {
       'api::package-region.package-region': ApiPackageRegionPackageRegion;
       'api::package-tag.package-tag': ApiPackageTagPackageTag;
       'api::package-type.package-type': ApiPackageTypePackageType;
+      'api::plan-with.plan-with': ApiPlanWithPlanWith;
       'api::plan-with-us.plan-with-us': ApiPlanWithUsPlanWithUs;
+      'api::project.project': ApiProjectProject;
       'api::quote.quote': ApiQuoteQuote;
       'api::service.service': ApiServiceService;
       'api::service-category.service-category': ApiServiceCategoryServiceCategory;

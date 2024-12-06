@@ -31,7 +31,7 @@ export default function BookAppointment() {
         <div className="container py-8 lg:py-16">
           <div className="relative z-10 text-white lg:text-center">
             <h1 className="comp-heading mb-6">Talk to Experts</h1>
-            <Button className="rounded-full border border-white bg-transparent px-6 py-4 text-base text-white lg:text-xl">
+            <Button className="rounded-full border border-white bg-transparent px-10 py-8 text-base text-white lg:text-xl">
               Book An Appointment
             </Button>
           </div>

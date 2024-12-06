@@ -42,7 +42,7 @@ export default function CalendarSection({
             />
           </div>
           <div className="flex flex-col gap-y-3">
-            <label className="text-lg font-semibold">Time </label>
+            <label className="grap-y-2 text-lg font-semibold">Time </label>
             <span className="flex items-center gap-x-2">
               <Clock size={18} />
               <span className="flex items-center">
