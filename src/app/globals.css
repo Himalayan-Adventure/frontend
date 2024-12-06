@@ -82,9 +82,6 @@
     @apply flex items-center gap-x-2 rounded-lg bg-black px-4 py-2 text-sm text-white;
   }
 }
-.font-poppins {
-  font-family: "Poppins", sans-serif;
-}
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
