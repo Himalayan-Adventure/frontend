@@ -1,90 +1,158 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
-import { useState } from "react";
-import { FiSearch } from "react-icons/fi";
+import { useEffect, useMemo, useState } from "react";
 
-export default function TeamsList({ teams }: any) {
-  const [searchQuery, setSearchQuery] = useState("");
+interface Member {
+  id: number;
+  attributes: {
+    designation: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    thumbnail: {
+      data: {
+        attributes: {
+          url: string;
+        };
+      };
+    };
+    team_category: {
+      data: {
+        id: number;
+        attributes: {
+          createdAt: string;
+          updatedAt: string;
+          publishedAt: string;
+          name: string;
+        };
+      };
+    };
+  };
+}
+
+interface Category {
+  id: number;
+  attributes: {
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    name: string;
+    teams: {
+      data: {
+        id: number;
+        attributes: {
+          designation: string;
+          createdAt: string;
+          updatedAt: string;
+          publishedAt: string;
+        };
+      }[];
+    };
+  };
+}
+
+interface TeamsListProps {
+  teamCategories: Category[];
+  members: Member[];
+}
+
+export default function TeamsList({ teamCategories, members }: TeamsListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("Core Team");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Filter the teams based on the selected category and search query
-  const filteredTeams = teams.data
-    .filter((team: any) => team.attributes.category === selectedCategory)
-    .map((team: any) => ({
-      ...team,
-      attributes: {
-        ...team.attributes,
-        members: team.attributes.members.filter((member: any) =>
-          member.name.toLowerCase().includes(searchQuery.toLowerCase()),
-        ),
-      },
-    }));
+  useEffect(() => {
+    if (teamCategories?.length > 0) {
+      setIsLoading(false);
+    }
+  }, [teamCategories]);
+
+  const filteredMembers = useMemo(
+    () =>
+      members?.filter(
+        (member) =>
+          member?.attributes?.team_category?.data?.attributes?.name ===
+          selectedCategory,
+      ),
+    [selectedCategory, members],
+  );
 
   return (
     <section className="component-py container relative lg:mt-48">
-      {/* Search Bar and Sort Button */}
-      <div className="mb-8 flex justify-center gap-4 md:gap-8">
-        {/* Search Bar */}
-        <div className="flex w-full items-center rounded-full border border-gray-400 px-2 py-1 sm:w-80 md:w-[28rem] lg:w-[40rem] lg:px-4 lg:py-2">
-          <FiSearch size={24} className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="ml-2 w-full bg-transparent py-1 outline-none"
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
-
       {/* Title */}
-      <div className="mb-6 md:mb-12 mt-8 text-center md:mt-16">
+      <div className="mb-6 mt-8 text-center md:mb-12 md:mt-16">
         <h1 className="font-poppins text-xl font-bold text-gray-800 md:text-2xl lg:text-4xl">
           <span className="border-b-4 border-black pb-1">Our Team</span>
         </h1>
       </div>
 
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-8">
+          <div className="loader" />
+        </div>
+      )}
+
       {/* Category Tabs */}
-      <div className="my-8 flex mb-16 ">
-        {teams.data.map((team: any) => (
-          <button
-            key={team.id}
-            onClick={() => setSelectedCategory(team.attributes.category)}
-            className={`border-r-2 border-gray-700 font-semibold transition-colors last:border-r-0`}
-          >
-            <span
-              className={`mx-3 pb-2 md:text-lg lg:text-xl ${
-                selectedCategory === team.attributes.category
-                  ? "border-b-4 border-primary text-primary"
-                  : "border-b-4 border-transparent text-gray-700"
-              }`}
-            >
-              {team.attributes.category}
-            </span>
-          </button>
-        ))}
-      </div>
+      {!isLoading && (
+        <div className="hide-scrollbar my-8 flex overflow-auto text-nowrap pb-4">
+          {teamCategories?.length > 0 ? (
+            teamCategories?.map((team: Category) => (
+              <button
+                key={team.id}
+                onClick={() => setSelectedCategory(team.attributes.name)}
+                className={`border-r-2 border-gray-700 font-semibold transition-colors last:border-r-0`}
+              >
+                <span
+                  className={`mx-3 pb-2 md:text-lg lg:text-xl ${
+                    selectedCategory === team.attributes.name
+                      ? "border-b-4 border-primary text-primary"
+                      : "border-b-4 border-transparent text-gray-700"
+                  }`}
+                >
+                  {team.attributes.name}
+                </span>
+              </button>
+            ))
+          ) : (
+            <p className="text-gray-500">No team categories available</p>
+          )}
+        </div>
+      )}
 
       {/* Team Members List */}
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filteredTeams.length > 0 ? (
-          filteredTeams[0].attributes.members.map(
-            (member: any, index: number) => (
-              <div key={index}>
+      {!isLoading && (
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {filteredMembers?.length > 0 ? (
+            filteredMembers?.map((member, index) => (
+              <div key={member.id} className="h-full w-full">
                 <Image
-                  src={member.image.data.attributes.url}
-                  alt={member.name}
+                  src={member?.attributes?.thumbnail?.data?.attributes?.url}
+                  alt={member?.attributes?.designation}
                   width={500}
                   height={500}
-                  className="h-full object-cover"
+                  className="h-full w-full object-contain"
                 />
               </div>
-            ),
-          )
-        ) : (
-          <p className="text-center text-gray-500">No members found</p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No members found in this category.</p>
+          )}
+        </div>
+      )}
+
+      {/* Fallback for no team categories or members */}
+      {!isLoading && teamCategories?.length === 0 && (
+        <p className="mt-8 text-center text-gray-500">
+          There are no available team categories to display.
+        </p>
+      )}
+
+      {!isLoading && members?.length === 0 && (
+        <p className="mt-8 text-center text-gray-500">
+          No team members available at the moment.
+        </p>
+      )}
     </section>
   );
 }
