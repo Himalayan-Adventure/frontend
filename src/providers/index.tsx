@@ -1,5 +1,6 @@
 "use client";
 
+import { CartProvider } from "@/contexts/CartContext";
 import {
   MutationCache,
   QueryClient,
@@ -34,7 +35,9 @@ export default function Providers({ children }: ProviderProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactWrapBalancerProvider>{children}</ReactWrapBalancerProvider>
+      <ReactWrapBalancerProvider>
+        <CartProvider>{children}</CartProvider>
+      </ReactWrapBalancerProvider>
     </QueryClientProvider>
   );
 }

@@ -11,11 +11,14 @@ import {
   FaCarAlt,
   FaChevronDown,
   FaHiking,
+  FaLeaf,
   FaMountain,
   FaSkiingNordic,
+  FaSnowflake,
+  FaSun,
 } from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa6";
-import { GiHiking, GiStairsGoal } from "react-icons/gi";
+import { GiFlowerEmblem, GiHiking, GiStairsGoal } from "react-icons/gi";
 import { MdHiking } from "react-icons/md";
 import { toast } from "sonner";
 
@@ -74,12 +77,34 @@ const heights = [
   },
 ];
 
+const seasons = [
+  {
+    name: "Winter",
+    icon: <FaSnowflake />,
+    months: ["December", "January", "February"],
+  },
+  {
+    name: "Spring",
+    icon: <GiFlowerEmblem />,
+    months: ["March", "April", "May"],
+  },
+  {
+    name: "Summer",
+    icon: <FaSun />,
+    months: ["June", "July", "August"],
+  },
+  {
+    name: "Autumn",
+    icon: <FaLeaf />,
+    months: ["September", "October", "November"],
+  },
+];
+
 export default function FilterBox() {
   const [countries, setCountries] = useState<any>();
-  const [regions, setRegions] = useState<any>();
   const [loading, setLoading] = useState(true);
   const [level, setLevel] = useState<number | null>(0);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [selectedAdventureType, setSelectedAdventureType] = useState<
     string | null
   >(null);
@@ -87,27 +112,11 @@ export default function FilterBox() {
     null,
   );
   const [selectedHeight, setSelectedHeight] = useState<string | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
   const toggleLevel = (index: number) => {
     setLevel(level === index ? null : index);
   };
-
-  useEffect(() => {
-    const fetchRegions = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-regions?populate=*`,
-        );
-        setRegions(response.data.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching regions:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchRegions();
-  }, []);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -131,14 +140,28 @@ export default function FilterBox() {
   }
 
   const handleApplyFilters = () => {
+    const selectedCountry = countries?.find((country: any) =>
+      country?.attributes?.package_regions?.data?.some(
+        (region: any) => region?.attributes?.name === selectedRegion,
+      ),
+    );
+
+    const selectedCountryName = selectedCountry
+      ? selectedCountry?.attributes?.name
+      : "Not selected";
+
     const selectedLevelName =
       level !== null ? levels[level]?.title : "Not selected";
+
     const filtersMessage = `
-      Country: ${selectedCountry || "Not selected"}
+      Country: ${selectedCountryName}
+      Region: ${selectedRegion || "Not selected"}
       Adventure Type: ${selectedAdventureType || "Not selected"}
       Experience Level: ${selectedExperience || "Not selected"}
       Height: ${selectedHeight || "Not selected"}
       Level: ${selectedLevelName || "Not selected"}
+      Month: ${selectedMonth || "Not selected"}
+
     `;
 
     alert(filtersMessage);
@@ -158,26 +181,28 @@ export default function FilterBox() {
       {/* Choosing Country (Regions) */}
       <div className="mt-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Choose by Region</h2>
+          <h2 className="text-xl font-semibold md:text-2xl">Choose by Month</h2>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-4 md:mt-8 md:grid-cols-3">
-          {regions?.map((region: any, index: number) => (
+          {countries?.map((country: any, index: number) => (
             <div key={index} className="cursor-pointer">
-              <h3 className="text-lg font-bold uppercase md:text-2xl">
-                {region?.attributes?.name}
+              <h3 className="text-lg font-bold uppercase md:text-xl">
+                {country?.attributes?.name}
               </h3>
               <ul className="mt-2">
-                <li
-                  onClick={() =>
-                    setSelectedCountry(
-                      region?.attributes?.package_country?.data?.attributes
-                        ?.name,
-                    )
-                  }
-                  className={`cursor-pointer px-4 py-1 ${selectedCountry === region?.attributes?.package_country?.data?.attributes?.name ? "rounded-lg border border-primary" : ""}`}
-                >
-                  {region?.attributes?.package_country?.data?.attributes?.name}
-                </li>
+                {country?.attributes?.package_regions?.data?.map(
+                  (region: any, index: number) => (
+                    <li
+                      key={index}
+                      onClick={() =>
+                        setSelectedRegion(region?.attributes?.name)
+                      }
+                      className={`cursor-pointer px-2 py-1 ${selectedRegion === region?.attributes?.name ? "rounded-lg bg-primary text-white" : ""}`}
+                    >
+                      {region?.attributes?.name}
+                    </li>
+                  ),
+                )}
               </ul>
             </div>
           ))}
@@ -192,12 +217,42 @@ export default function FilterBox() {
             <div
               key={adventure.name}
               onClick={() => setSelectedAdventureType(adventure.name)}
-              className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border p-3 shadow-lg hover:shadow-xl ${selectedAdventureType === adventure.name ? "border-primary" : ""}`}
+              className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border p-3 shadow-lg hover:shadow-xl ${selectedAdventureType === adventure.name ? "bg-primary text-white" : ""}`}
             >
-              {adventure.icon}
-              <span className="border-t border-primary pt-1 text-sm font-medium">
+              <span>{adventure.icon}</span>
+              <span
+                className={`border-t pt-1 text-sm font-medium ${selectedAdventureType === adventure?.name ? "border-white" : "border-primary"}`}
+              >
                 {adventure.name}
               </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Choose by Month */}
+      <div className="mt-4 md:mt-8">
+        <h2 className="text-xl font-semibold md:text-2xl">Choose by Month</h2>
+        <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {seasons.map((season, index) => (
+            <div key={index}>
+              <div className="flex items-center justify-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-white">
+                {season.icon}
+                <span className="text-sm font-medium">{season.name}</span>
+              </div>
+              <div className="mt-2 space-y-1 text-center text-sm">
+                {season.months.map((month, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => setSelectedMonth(month)}
+                    className={`cursor-pointer rounded px-2 py-1 font-medium ${
+                      selectedMonth === month ? "bg-primary text-white" : " "
+                    }`}
+                  >
+                    {month}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -214,12 +269,12 @@ export default function FilterBox() {
               onClick={() => setSelectedExperience(exp.value)}
             >
               <div
-                className={`rounded-full border-[1px] p-2 ${selectedExperience === exp.value ? "border-primary" : "border-black"}`}
+                className={`rounded-full border-[1px] p-2 ${selectedExperience === exp.value ? "bg-primary text-white" : "border-black"}`}
               >
                 {exp?.icon}
               </div>
               <div
-                className={`flex w-full justify-center rounded-lg border p-2 uppercase shadow ${selectedExperience === exp.value ? "border-primary" : "border-black"}`}
+                className={`flex w-full justify-center rounded-lg border p-2 uppercase shadow ${selectedExperience === exp.value ? "bg-primary text-white" : "border-black"}`}
               >
                 {exp?.name}
               </div>

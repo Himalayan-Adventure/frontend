@@ -1,10 +1,11 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
-
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { StarRating } from "./star-rating";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductProps {
   id: number;
@@ -37,46 +38,50 @@ const ProductCard: React.FC<ProductProps> = ({
   img,
 }) => {
   const [isLiked, setIsLiked] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
+
+  const { cartItems, addToCart, removeFromCart } = useCart();
+
+  const isInCart = cartItems.some((item) => item.id === id);
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-    const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    setIsLiked(favorites.includes(id));
-    setIsInCart(cartItems.includes(id));
+    if (typeof window !== "undefined") {
+      const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      setIsLiked(favorites.includes(id));
+    }
   }, [id]);
 
   const handleToggleLike = () => {
-    setIsLiked((prev) => {
-      const updatedLikedStatus = !prev;
-      const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    if (typeof window !== "undefined") {
+      setIsLiked((prev) => {
+        const updatedLikedStatus = !prev;
+        const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 
-      if (updatedLikedStatus) {
-        favorites.push(id);
-      } else {
-        const index = favorites.indexOf(id);
-        if (index > -1) favorites.splice(index, 1);
-      }
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-      return updatedLikedStatus;
-    });
+        if (updatedLikedStatus) {
+          favorites.push(id);
+        } else {
+          const index = favorites.indexOf(id);
+          if (index > -1) favorites.splice(index, 1);
+        }
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        return updatedLikedStatus;
+      });
+    }
   };
 
   const handleAddToCart = () => {
-    setIsInCart((prev) => {
-      const updatedCartStatus = !prev;
-      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-
-      if (updatedCartStatus) {
-        cartItems.push(id);
-      } else {
-        const index = cartItems.indexOf(id);
-        if (index > -1) cartItems.splice(index, 1);
-      }
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-      return updatedCartStatus;
-    });
+    if (isInCart) {
+      removeFromCart(id);
+    } else {
+      addToCart({
+        id,
+        name,
+        price,
+        img,
+        quantity: 1,
+        color: "",
+        subtotal: price * 1,
+      });
+    }
   };
 
   return (

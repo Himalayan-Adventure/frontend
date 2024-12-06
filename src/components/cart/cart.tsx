@@ -5,11 +5,13 @@ import React, { useState } from "react";
 import { FaArrowLeft, FaTimes } from "react-icons/fa";
 import AddressDialog from "./AddressForm";
 import PaymentDialog from "./Payment";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Cart() {
   const router = useRouter();
   const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  const { cartItems, removeFromCart, updateCartItemQuantity } = useCart();
 
   const handleCheckout = () => {
     setIsAddressDialogOpen(true);
@@ -30,46 +32,8 @@ export default function Cart() {
     alert("Payment Details Submitted");
   };
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Jacket",
-      price: 650,
-      quantity: 1,
-      subtotal: 650,
-      image:
-        "https://res.cloudinary.com/dpu483bcg/image/upload/v1731651333/edb397_c1cb90cf60ce400da301fa0b14310823_mv2_k25a40_169e4d9927.png",
-    },
-    {
-      id: 2,
-      name: "Gloves",
-      price: 550,
-      quantity: 2,
-      subtotal: 1100,
-      image:
-        "https://res.cloudinary.com/dpu483bcg/image/upload/v1731549956/k_1118310_yloc_removebg_preview_sbmu5b_71ed7a2deb.png",
-    },
-  ]);
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
-
-  const handleQuantityChange = (id: number, newQuantity: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: newQuantity,
-              subtotal: newQuantity * item.price,
-            }
-          : item,
-      ),
-    );
-  };
-
-  const handleRemoveItem = (id: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
 
   const applyCoupon = () => {
     if (coupon.toLowerCase() === "discount10") {
@@ -79,14 +43,26 @@ export default function Cart() {
     }
   };
 
+  const handleRemoveItem = (id: number) => {
+    removeFromCart(id);
+  };
+
+  const handleQuantityChange = (id: number, quantity: number) => {
+    if (quantity < 1) return;
+    updateCartItemQuantity(id, quantity);
+  };
+
+  const calculateSubtotal = () => {
+    return cartItems.reduce((acc, item) => acc + item.subtotal!, 0);
+  };
+
   const calculateTotal = () => {
-    const subtotal = cartItems.reduce((acc, item) => acc + item.subtotal, 0);
+    const subtotal = calculateSubtotal();
     const discountAmount = (subtotal * discount) / 100;
     return subtotal - discountAmount;
   };
 
-  const discountAmount =
-    (cartItems.reduce((acc, item) => acc + item.subtotal, 0) * discount) / 100;
+  const discountAmount = (calculateSubtotal() * discount) / 100;
 
   return (
     <section className="container relative mx-auto p-8 lg:mt-32 lg:py-16">
@@ -106,62 +82,68 @@ export default function Cart() {
         </div>
       </div>
 
-      {/* Cart Items */}
-      <div className="space-y-4">
-        {cartItems.map((item) => (
-          <div
-            key={item.id}
-            className="grid grid-cols-3 items-center border border-gray-100 p-2 shadow-xl shadow-gray-100 md:grid-cols-4 md:p-4"
-          >
-            {/* Product Column */}
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => handleRemoveItem(item.id)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <FaTimes />
-              </button>
-              <img
-                src={item.image}
-                alt={item.name}
-                className="h-12 w-12 rounded-md object-cover md:h-16 md:w-16"
-              />
-              <span className="hidden font-normal text-gray-900 md:block">
-                {item.name}
-              </span>
-            </div>
+      {/* Display message if cart is empty */}
+      {cartItems.length === 0 ? (
+        <div className="py-8 text-lg font-semibold text-gray-700">
+          Your cart is empty. Add some items to your cart.
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="grid grid-cols-3 items-center border border-gray-100 p-2 shadow-xl shadow-gray-100 md:grid-cols-4 md:p-4"
+            >
+              {/* Product Column */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => handleRemoveItem(item.id)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <FaTimes />
+                </button>
+                <img
+                  src={item?.img}
+                  alt={item?.name}
+                  className="h-12 w-12 rounded-md object-cover md:h-16 md:w-16"
+                />
+                <span className="hidden font-normal text-gray-900 md:block">
+                  {item?.name}
+                </span>
+              </div>
 
-            {/* small screen name and price of product  */}
-            <div className="flex flex-col items-center justify-center md:hidden">
-              <div>{item?.name}</div>
-              <div className="text-lg font-bold text-gray-600">
-                Rs. {item?.subtotal}
+              {/* small screen name and price of product  */}
+              <div className="flex flex-col items-center justify-center md:hidden">
+                <div>{item?.name}</div>
+                <div className="text-lg font-bold text-gray-600">
+                  Rs. {item?.subtotal}
+                </div>
+              </div>
+
+              {/* Price Column */}
+              <div className="hidden font-normal text-gray-900 md:block">
+                Rs. {item.price}
+              </div>
+              {/* Quantity Column */}
+              <div className="flex justify-end md:flex-none md:justify-normal">
+                <input
+                  type="number"
+                  value={item.quantity}
+                  onChange={(e) =>
+                    handleQuantityChange(item.id, parseInt(e.target.value))
+                  }
+                  min={1}
+                  className="w-16 rounded-md border border-gray-500 px-3 py-1 text-center outline-none"
+                />
+              </div>
+              {/* Subtotal Column */}
+              <div className="hidden font-normal text-gray-900 md:block">
+                Rs. {item.subtotal}
               </div>
             </div>
-
-            {/* Price Column */}
-            <div className="hidden font-normal text-gray-900 md:block">
-              ${item.price}
-            </div>
-            {/* Quantity Column */}
-            <div className="flex justify-end md:flex-none md:justify-normal">
-              <input
-                type="number"
-                value={item.quantity}
-                onChange={(e) =>
-                  handleQuantityChange(item.id, parseInt(e.target.value))
-                }
-                min={1}
-                className="w-16 rounded-md border border-gray-500 px-3 py-1 text-center outline-none"
-              />
-            </div>
-            {/* Subtotal Column */}
-            <div className="hidden font-normal text-gray-900 md:block">
-              Rs.{item.subtotal}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="my-4 flex justify-between py-4">
@@ -207,9 +189,7 @@ export default function Cart() {
 
           <div className="flex justify-between">
             <span>Subtotal:</span>
-            <span>
-              Rs.{cartItems.reduce((acc, item) => acc + item.subtotal, 0)}
-            </span>
+            <span>Rs.{calculateSubtotal()}</span>
           </div>
           <hr className="my-2 lg:my-3" />
           <div className="flex justify-between">
