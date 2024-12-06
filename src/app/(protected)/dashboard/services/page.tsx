@@ -18,12 +18,11 @@ export const metadata: Metadata = {
 export default async function ServicesPage({
   searchParams,
 }: {
-  searchParams: { name?: string };
+  searchParams: { name?: string; page?: number };
 }) {
-  const { name } = searchParams;
+  const { name, page } = searchParams;
   const user = await getCurrentUserData();
-  const data = await getServices({ name, id: user?.id });
-  console.log(data);
+  const data = await getServices({ name, id: user?.id, page });
 
   return (
     <section className="space-y-4">

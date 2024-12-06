@@ -12,7 +12,7 @@ import { getServices } from "@/server/services/get-services";
 import { getUsers, getUsersDeep } from "@/server/users/get-users";
 import { ServicesPagination } from "@/components/services/pagination";
 import { APIResponseCollection } from "@/types/types";
-import { GuideCard } from "@/components/profile/guide-card";
+import { GuideCard } from "@/components/services/guide-card";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 type TSearchParams = {

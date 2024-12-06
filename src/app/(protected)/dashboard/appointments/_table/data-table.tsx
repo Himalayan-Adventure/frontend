@@ -56,6 +56,7 @@ import { Mukta } from "next/font/google";
 import { deleteService } from "@/server/services/delete-service";
 import { toast } from "sonner";
 import TablePagination from "@/components/table/table-pagination";
+import { deleteAppointment } from "@/server/appointments/delete-appointment";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -140,20 +141,15 @@ function DataTable<TData, TValue>({
     },
   });
   const [bulkAction, setBulkAction] = useState("");
-  const {
-    mutate: deleteServiceMutation,
-    isPending,
-    isSuccess,
-  } = useMutation({
-    mutationKey: ["services"],
+  const { mutate: deleteAppointmentMutation } = useMutation({
+    mutationKey: ["appointments"],
     mutationFn: async () => {
       const iterable = Object.entries(rowSelection);
       for (const [key, value] of iterable) {
-        await deleteService(Number(key));
+        await deleteAppointment(Number(key));
       }
     },
     onSuccess(data, variables, context) {
-      console.log(data);
       toast.success("Service deleted successfully");
     },
     onError(error, variables, context) {
@@ -190,7 +186,7 @@ function DataTable<TData, TValue>({
           <Button
             disabled={bulkAction === ""}
             variant="outline"
-            onClick={() => deleteServiceMutation()}
+            onClick={() => deleteAppointmentMutation()}
           >
             Apply
           </Button>
@@ -215,7 +211,7 @@ function DataTable<TData, TValue>({
         )}
       >
         <Table className="relative">
-          <TableHeader className="sticky top-0 z-20 bg-background">
+          <TableHeader className="sticky top-0 z-20 m-0 bg-background">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -223,7 +219,7 @@ function DataTable<TData, TValue>({
                     <TableHead
                       className={cn(
                         header.id === "select" && "!w-[20px]",
-                        "border-b border-gray-200 !bg-gray-100 font-semibold text-gray-600 [&>*]:font-semibold",
+                        "border-b border-gray-200 !bg-gray-100 font-semibold uppercase text-gray-600 [&>*]:font-semibold",
                         paddingX,
                         alignTextClassName.includes("text-right") &&
                           "[&>button]:justify-end",

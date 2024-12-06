@@ -5,7 +5,7 @@ import { getCurrentUserData } from "./server/auth/get-me";
 import { toast } from "sonner";
 
 const protectedRoutes = ["/profile", "/dashboard"];
-
+const guideOnlyRoutes = ["/dashboard/calendar"];
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const hostname = request.headers.get("host");
@@ -22,6 +22,20 @@ export async function middleware(request: NextRequest) {
 
     if (!user || !currentUser) {
       toast.error("You need to login first to access this page.");
+      return NextResponse.redirect(new URL(`/`, request.url));
+    }
+  }
+
+  if (guideOnlyRoutes.some((route) => url.pathname.startsWith(route))) {
+    const currentUser = request.cookies.get("jwt")?.value;
+
+    const user = await getCurrentUserData();
+
+    if (!user || !currentUser || user.userType !== "merchant") {
+      toast.error("You need to login first to access this page.");
+      return NextResponse.redirect(new URL(`/`, request.url));
+    } else if (user.userType !== "merchant") {
+      toast.error("Your roles are not enough to access this page");
       return NextResponse.redirect(new URL(`/`, request.url));
     }
   }

@@ -8,10 +8,12 @@ export const getServices = async ({
   id,
   category,
   name,
+  page,
 }: {
   id?: number;
   category?: string;
   name?: string;
+  page?: number;
 }) => {
   try {
     const query = qs.stringify(
@@ -30,6 +32,11 @@ export const getServices = async ({
               $eqi: category,
             },
           },
+        },
+
+        pagination: {
+          pageSize: 8,
+          page: page,
         },
       },
       {
