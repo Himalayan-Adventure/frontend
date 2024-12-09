@@ -2,7 +2,7 @@
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { APIResponseData } from "@/types/types";
-import { Calendar, Clock } from "lucide-react";
+import { Calendar, Clock, PencilLine, Trash } from "lucide-react";
 
 export const DateCard = ({
   data,
@@ -12,14 +12,40 @@ export const DateCard = ({
   active: boolean;
 }) => {
   const updateQueryString = useUpdateQueryString();
+  const searchParams = useSearchParams();
+
+  const { mutate: deleteAction, isPending } = useMutation({
+    mutationKey: ["calendars", `calendars-${data.id}`],
+    mutationFn: async () => await deleteCalendar(data.id),
+    onSuccess() {
+      if (searchParams.get("active") === data.id.toString()) {
+        updateQueryString({}, ["active"]);
+      }
+      toast.success("Calendar successfully deleted");
+    },
+  });
   return (
     <Card
       className={cn(
         active && "border-2 border-yellow-500 bg-yellow-50",
-        "w-fit cursor-pointer space-y-2 p-4 pr-8",
+        "group relative w-fit cursor-pointer space-y-2 p-4 pr-8",
       )}
       onClick={() => updateQueryString({ active: data?.id.toString() })}
     >
+      <span className="absolute right-2 top-2 hidden items-center gap-x-2 group-hover:flex">
+        <Link
+          href={`/dashboard/calendar/edit/${data.id}`}
+          className="rounded-full p-1 text-blue-900 hover:bg-blue-900 hover:text-white"
+        >
+          <PencilLine size={16} />
+        </Link>
+        <Button
+          className="h-auto rounded-full bg-transparent p-1 text-red-600 hover:bg-red-600 hover:text-white"
+          onClick={() => deleteAction()}
+        >
+          <Trash size={16} />
+        </Button>
+      </span>
       <CardTitle className="text-base font-normal">
         {data?.attributes?.is_available ? "Available" : "Busy"}
       </CardTitle>
@@ -55,6 +81,12 @@ export const DateCard = ({
 import { format, isSameMonth, isSameYear } from "date-fns";
 import { cn } from "@/lib/utils";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { deleteCalendar } from "@/server/calendar/delete-calendar";
+import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 function formatDateRange(start: Date | string, end: Date | string) {
   const startDate = new Date(start);
