@@ -31,12 +31,14 @@ export default async function ServicesPage({
           Services
         </Text>
 
-        <Link href="/dashboard/services/write" prefetch={true}>
-          <div className="btn-primary font-semibold">
-            <PlusIcon size={16} />
-            Add Services
-          </div>
-        </Link>
+        {user?.userType === "merchant" && (
+          <Link href="/dashboard/services/write" prefetch={true}>
+            <div className="btn-primary font-semibold">
+              <PlusIcon size={16} />
+              Add Services
+            </div>
+          </Link>
+        )}
         <div className="btn-primary font-semibold">
           <GrUpgrade size={16} />
           Service Request

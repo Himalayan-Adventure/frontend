@@ -18,6 +18,7 @@ import { ArrayWrapper } from "./components/ArrayWrapper";
 import { ArrayElementWrapper } from "./components/ArrayElementWrapper";
 import { CustomPhoneInput } from "./components/custom-phone";
 import { TextAreaField } from "./components/TextBox";
+import { HideInput } from "./components/HideInput";
 
 const ShadcnUIComponents: AutoFormUIComponents = {
   Form,
@@ -37,6 +38,7 @@ export const ShadcnAutoFormFieldComponents = {
   select: SelectField,
   phone: CustomPhoneInput,
   textarea: TextAreaField,
+  hideInput: HideInput,
 } as const;
 export type FieldTypes = keyof typeof ShadcnAutoFormFieldComponents;
 

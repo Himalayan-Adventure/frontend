@@ -6,8 +6,9 @@ import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Tag } from "lucide-react";
+import { PencilLine, Tag } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { HTMLProps } from "react";
 
 export const columns: ColumnDef<
@@ -153,6 +154,21 @@ export const columns: ColumnDef<
             </span>
           ))}
         </div>
+      );
+    },
+  },
+
+  {
+    header: "ACTIONS",
+    accessorKey: "edit",
+    cell({ row }) {
+      return (
+        <Link
+          href={`/dashboard/services/edit/${row.original.id}`}
+          className="flex w-fit flex-wrap gap-1 rounded-lg bg-blue-100 p-3 text-blue-900 hover:bg-blue-900 hover:text-blue-100"
+        >
+          <PencilLine size={18} />
+        </Link>
       );
     },
   },

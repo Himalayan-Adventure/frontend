@@ -15,6 +15,7 @@ import { Skeleton } from "../ui/skeleton";
 import { WorkCard } from "../work/work-card";
 import { TUser } from "@/types/auth";
 export const WorkCards = ({ user }: { user: TUser }) => {
+  console.log(user);
   const { data: works, isPending } = useQuery({
     queryKey: ["works"],
     queryFn: async () => await getWorksOfUser({ id: user.id }),

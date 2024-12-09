@@ -1,8 +1,17 @@
+import { getCurrentUserData } from "@/server/auth/get-me";
 import { ServiceAddOrEditForm } from "../add-or-edit-form";
-const ServiceAddPage = () => {
+
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+export const metadata: Metadata = {
+  title: `Add Service Dashboard | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
+const ServiceAddPage = async () => {
+  const user = await getCurrentUserData();
   return (
     <section>
-      <ServiceAddOrEditForm type={"add"} />
+      {user && <ServiceAddOrEditForm type={"add"} user={user} />}
     </section>
   );
 };

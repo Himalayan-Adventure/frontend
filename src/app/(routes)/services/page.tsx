@@ -56,7 +56,7 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
           {searchParams.type === "Packages" ? (
             <ServicesPackages searchParams={searchParams} />
           ) : (
-            <ServicesGuides />
+            <ServicesGuides searchParams={searchParams} />
           )}
         </div>
       </section>
@@ -77,8 +77,8 @@ async function ServicesPackages({ searchParams }: TSearchParams) {
     </div>
   );
 }
-async function ServicesGuides() {
-  const data = await getUsersDeep("merchant");
+async function ServicesGuides({ searchParams }: TSearchParams) {
+  const data = await getUsers("merchant", searchParams.name);
 
   return (
     <div className="flex flex-col gap-y-5 py-10">

@@ -5,7 +5,11 @@ import { getCurrentUserData } from "./server/auth/get-me";
 import { toast } from "sonner";
 
 const protectedRoutes = ["/profile", "/dashboard"];
-const guideOnlyRoutes = ["/dashboard/calendar"];
+const guideOnlyRoutes = [
+  "/dashboard/calendar",
+  "/dashboard/services/write",
+  "/dashboard/services/edit",
+];
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const hostname = request.headers.get("host");

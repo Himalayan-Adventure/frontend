@@ -49,13 +49,9 @@ export const getServices = async ({
         next: {
           tags: ["services"],
         },
-        cache: "no-store",
+        //cache: "no-store",
       },
     );
-    // const res: AxiosResponse<APIResponseCollection<"api::service.service">> =
-    //   await axiosInstance.get(
-    //     `api/services?populate[0]=image&populate[1]=service_provider&populate[2]=categories&populate[3]=associated_packages&${query}`,
-    //   );
     const data: APIResponseCollection<"api::service.service"> =
       await res.json();
 

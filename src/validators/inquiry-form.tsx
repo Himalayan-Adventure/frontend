@@ -1,7 +1,9 @@
 "use client";
 import * as z from "zod";
+
+import { z as zodInfer } from "zod";
 import { ZodProvider } from "@autoform/zod";
-import { buildZodFieldConfig } from "@autoform/react";
+import { buildZodFieldConfig, FieldWrapperProps } from "@autoform/react";
 import { AutoForm, FieldTypes } from "@/components/ui/autoform";
 import { type Value } from "react-phone-number-input";
 const fieldConfig = buildZodFieldConfig<
@@ -12,7 +14,7 @@ const fieldConfig = buildZodFieldConfig<
 >();
 
 const e164Regex = /^\+[1-9]\d{1,14}$/;
-export const guideMessageFormSchema = z.object({
+export const InquiryFormSchema = z.object({
   name: z
     .string({
       required_error: "Name is required.",
@@ -30,8 +32,8 @@ export const guideMessageFormSchema = z.object({
 
   phoneNumber: z
     .string()
-    .max(10)
 
+    .max(10)
     .superRefine(
       fieldConfig({
         fieldType: "phone",
@@ -63,7 +65,7 @@ export const guideMessageFormSchema = z.object({
       }),
     ),
 
-  yourMessage: z
+  message: z
     .string({ required_error: "Message is required" })
     .min(10)
     .max(500)
@@ -76,8 +78,26 @@ export const guideMessageFormSchema = z.object({
         },
       }),
     ),
+
+  guide: z.coerce.number({ required_error: "Guide is required" }).superRefine(
+    fieldConfig({
+      fieldWrapper: (props: FieldWrapperProps) => {
+        return <></>;
+      },
+    }),
+  ),
+
+  package: z.coerce
+    .number()
+    .optional()
+    .superRefine(
+      fieldConfig({
+        fieldWrapper: (props: FieldWrapperProps) => {
+          return <></>;
+        },
+      }),
+    ),
 });
 
-export const guideMessageSchemaProvider = new ZodProvider(
-  guideMessageFormSchema,
-);
+export const InquirySchemaProvider = new ZodProvider(InquiryFormSchema);
+export type TInquiryForm = zodInfer.infer<typeof InquiryFormSchema>;

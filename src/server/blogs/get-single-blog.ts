@@ -6,20 +6,23 @@ import {
   APIResponseCollection,
   APIResponseData,
 } from "@/types/types";
-import { AxiosResponse, type AxiosError } from "axios";
 export const getSingleBlog = async (id: string) => {
   try {
-    const res: AxiosResponse<APIResponse<"api::blog.blog">> =
-      await axiosInstance.get(`api/blogs/${id}?populate=*`);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/blogs/${id}?populate=*`,
+      {
+        next: {
+          tags: [`blog-${id}`],
+        },
+      },
+    );
+    const data: APIResponse<"api::blog.blog"> = await res.json();
 
     return {
-      data: res.data,
+      data: data,
       status: res.status,
     };
-  } catch (error: AxiosError | any) {
-    return {
-      error: error?.response?.data || { message: "An error occurred!" },
-      status: error?.response?.status || 500,
-    };
+  } catch (error) {
+    console.log(error);
   }
 };

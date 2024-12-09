@@ -5,14 +5,13 @@ import { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
 
 export const getWorksOfUser = async ({ id }: { id: number }) => {
+  console.log("hello", id);
   try {
     const query = qs.stringify(
       {
         filters: {
           user_works: {
-            id: {
-              $eqi: id,
-            },
+            id,
           },
         },
       },
@@ -26,11 +25,6 @@ export const getWorksOfUser = async ({ id }: { id: number }) => {
         next: {
           tags: ["works"],
         },
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   Authorization: `Bearer ${token}`,
-        // },
-        cache: "no-store",
       },
     );
     const data: APIResponseCollection<"api::work.work"> = await res.json();

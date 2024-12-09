@@ -1,9 +1,8 @@
 import { CalendarAddOrEditForm } from "../add-or-edit-form";
 
-import { siteConfig } from "@/config/site-config";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { Metadata } from "next";
-
+import { siteConfig } from "@/config/site-config";
 export const metadata: Metadata = {
   title: `Add Calendar Dashboard | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,

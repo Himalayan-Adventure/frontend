@@ -3,7 +3,10 @@
 import { useGuideDialog } from "@/store/get-guide-dialog-type";
 import { TUserDeep } from "@/types/auth";
 import { AutoForm } from "@/components/ui/autoform";
-import { guideMessageSchemaProvider } from "@/validators/guide-message-form";
+import {
+  InquiryFormSchema,
+  InquirySchemaProvider,
+} from "@/validators/inquiry-form";
 import { Text } from "../ui/text";
 
 export const BookAppointmentDialog = ({ user }: { user: TUserDeep }) => {
@@ -19,7 +22,7 @@ export const BookAppointmentDialog = ({ user }: { user: TUserDeep }) => {
         Leave a message
       </Text>
       <AutoForm
-        schema={guideMessageSchemaProvider}
+        schema={InquirySchemaProvider}
         onSubmit={(data) => {
           console.log(data);
         }}

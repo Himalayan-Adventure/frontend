@@ -43,16 +43,23 @@ import {
 } from "@/validators/service-form-validator";
 import { getServiceCategories } from "@/server/services/get-services-categories";
 import { addService } from "@/server/services/add-service";
+import { TUser } from "@/types/auth";
+import { editService } from "@/server/services/edit-service";
 type ServiceAddOrEditProps =
-  | { type: "add"; data?: never; id?: never }
-  | { type: "edit"; data: APIResponse<"api::service.service">; id: number };
+  | { type: "add"; data?: never; id?: never; user: TUser }
+  | {
+      type: "edit";
+      data: APIResponse<"api::service.service">;
+      id: number;
+      user?: never;
+    };
 export const ServiceAddOrEditForm = ({
   type,
   data,
   id,
+  user,
 }: ServiceAddOrEditProps) => {
   const [file, setFile] = useState<File>();
-  console.log(data);
   //const image = data?.data.attributes.image?.data?.attributes;
   const image = data?.data?.attributes?.image?.data?.attributes;
 
@@ -80,6 +87,8 @@ export const ServiceAddOrEditForm = ({
     categories: data?.data?.attributes?.categories?.data?.[0]?.id.toString(),
     service_charge: Number(data?.data?.attributes?.service_charge),
     booking_charge: Number(data?.data?.attributes?.booking_charge),
+    service_provider:
+      data?.data.attributes.service_provider?.data.id || user?.id,
   };
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -95,12 +104,18 @@ export const ServiceAddOrEditForm = ({
     };
     console.log(payload);
     if (type === "edit") {
+      const res = await editService(payload, data.data.id);
+      if (res.status === 200) {
+        toast.success("Added service successfully");
+        router.refresh();
+        router.push("/dashboard/services");
+      }
     } else {
       const res = await addService(payload);
       if (res.status === 200) {
         toast.success("Added service successfully");
         router.refresh();
-        router.back();
+        router.push("/dashboard/services");
       }
     }
     setLoading(false);

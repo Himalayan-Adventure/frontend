@@ -3,24 +3,20 @@
 import { useGuideDialog } from "@/store/get-guide-dialog-type";
 import { TUserDeep } from "@/types/auth";
 import { AutoForm } from "@/components/ui/autoform";
-import { guideMessageSchemaProvider } from "@/validators/guide-message-form";
+import { InquirySchemaProvider } from "@/validators/inquiry-form";
 import { Text } from "../ui/text";
 
-export const MessageDialog = ({ user }: { user: TUserDeep }) => {
+export const MessageDialog = ({ guide }: { guide: TUserDeep }) => {
   const { type, setType, setDialogOpen } = useGuideDialog();
-  const socialMedia = {
-    facebook: user.about?.facebook,
-    instagram: user.about?.instagram,
-    whatsapp: user.about?.whatsapp,
-  };
   return (
     <div className="relative">
       <Text className="w-full text-center" variant={"text-md"}>
         Leave a message
       </Text>
       <AutoForm
-        schema={guideMessageSchemaProvider}
+        schema={InquirySchemaProvider}
         onSubmit={(data) => {
+          const payload = { ...data, guide: guide.id };
           console.log(data);
         }}
         withSubmit
