@@ -3,7 +3,7 @@ import { InquiryFormSchema, TInquiryForm } from "@/validators/inquiry-form";
 import { cookies } from "next/headers";
 export const addInquiry = async (inquiry: TInquiryForm) => {
   const cookieStore = cookies();
-  const token = cookieStore?.get("jwt");
+  const token = cookieStore?.get("jwt")?.value;
   try {
     const validatedFields = InquiryFormSchema.safeParse(inquiry);
 

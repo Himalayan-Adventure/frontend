@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { addInquiry } from "@/server/inquiry/write-inquiry";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-export const MessageDialog = ({ guide }: { guide: TUserDeep }) => {
+export const MessageDialog = ({ guideId }: { guideId: number }) => {
   const { type, setType, setDialogOpen } = useGuideDialog();
 
   const router = useRouter();
@@ -35,7 +35,7 @@ export const MessageDialog = ({ guide }: { guide: TUserDeep }) => {
       phone: "",
       subject: "",
       message: "",
-      guide: guide.id,
+      guide: guideId,
     },
   });
   async function onSubmit(values: TInquiryForm) {

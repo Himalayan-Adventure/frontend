@@ -131,7 +131,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className="cursor-pointer">
+                <Avatar className="cursor-pointer border-2 border-white/40">
                   {user?.profilePicture && (
                     <AvatarImage
                       src={user?.profilePicture.url}

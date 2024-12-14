@@ -1,5 +1,5 @@
 import { SideFilter, TopFilter } from "./filters";
-
+import { Loading } from "@/components/loading";
 import fallbackImg from "/public/images/packageBanner.png";
 import { ServiceCard } from "./service-card";
 import Image from "next/image";
@@ -11,6 +11,8 @@ import { ServicesPagination } from "@/components/services/pagination";
 import { GuideCard } from "@/components/services/guide-card";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { Suspense } from "react";
+import { Oval } from "react-loader-spinner";
 type TSearchParams = {
   searchParams: { type?: string; category?: string; name?: string };
 };
@@ -47,12 +49,16 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
           <TopFilter />
           <SortFilters />
         </div>
-        <div className="flex flex-col gap-5 md:flex-row">
+        <div className="flex w-full flex-col gap-5 md:flex-row">
           <SideFilter />
           {searchParams.type === "Packages" ? (
-            <ServicesPackages searchParams={searchParams} />
+            <Suspense fallback={<Loading className="h-48" />}>
+              <ServicesPackages searchParams={searchParams} />
+            </Suspense>
           ) : (
-            <ServicesGuides searchParams={searchParams} />
+            <Suspense fallback={<Loading className="h-48" />}>
+              <ServicesGuides searchParams={searchParams} />
+            </Suspense>
           )}
         </div>
       </section>
@@ -77,7 +83,7 @@ async function ServicesGuides({ searchParams }: TSearchParams) {
   const data = await getUsers("merchant", searchParams.name);
 
   return (
-    <div className="flex flex-col gap-y-5 py-10">
+    <div className="flex w-full flex-col gap-y-5 py-10">
       <Text variant="text-xl" bold>
         All members
       </Text>

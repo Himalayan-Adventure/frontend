@@ -81,7 +81,7 @@ const GuideCardOverlay = ({
 
   const typeMap: { [key in TGuideDialogType]: React.ReactNode } = {
     details: <UserDetails id={user.id} />,
-    message: <MessageDialog guide={user} />,
+    message: <MessageDialog guideId={user.id} />,
     appointments: <AppointmentDialog guide={user} />,
   };
   return (
