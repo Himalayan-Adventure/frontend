@@ -1,11 +1,16 @@
 "use server";
-import { InquiryFormSchema, TInquiryForm } from "@/validators/inquiry-form";
+import {
+  BookAppointmentFormSchema,
+  TBookAppointmentSchemaProvider,
+} from "@/validators/book-appointment-validator";
 import { cookies } from "next/headers";
-export const addInquiry = async (inquiry: TInquiryForm) => {
+export const makeAppointment = async (
+  appointment: TBookAppointmentSchemaProvider,
+) => {
   const cookieStore = cookies();
   const token = cookieStore?.get("jwt");
   try {
-    const validatedFields = InquiryFormSchema.safeParse(inquiry);
+    const validatedFields = BookAppointmentFormSchema.safeParse(appointment);
 
     if (!validatedFields.success) {
       return {
@@ -18,10 +23,10 @@ export const addInquiry = async (inquiry: TInquiryForm) => {
       };
     }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/inquiries`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/appointments`,
       {
         method: "POST",
-        body: JSON.stringify({ data: inquiry }),
+        body: JSON.stringify({ data: appointment }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -48,7 +53,7 @@ export const addInquiry = async (inquiry: TInquiryForm) => {
         message:
           error.status === 403
             ? "You are not authorized or logged in"
-            : "Couldn't submit message",
+            : "Couldn't make an appointment. Please try again",
       },
       status: error?.response?.status || 500,
     };

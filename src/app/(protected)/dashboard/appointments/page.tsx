@@ -17,12 +17,12 @@ export const metadata: Metadata = {
 export default async function ApppointmentsPage({
   searchParams,
 }: {
-  searchParams: { page?: number };
+  searchParams: { page?: number; date?: string };
 }) {
-  const { page } = searchParams;
+  const { page, date } = searchParams;
   const user = await getCurrentUserData();
   if (!user) redirect("/home");
-  const data = await getAppointments({ user, page });
+  const data = await getAppointments({ user, page, date });
   return (
     <section className="space-y-8 font-poppins @container">
       {/*Header*/}
@@ -30,19 +30,6 @@ export default async function ApppointmentsPage({
         <Text variant="display-sm" bold>
           Appointments
         </Text>
-        {/*
-
-        <Link href="/dashboard/work/write">
-          <div className="btn-primary bg-black font-semibold">
-            <PlusIcon size={16} />
-            Appointments
-          </div>
-        </Link>
-        <div className="btn-primary bg-black font-semibold">
-          <PencilLineIcon size={16} />
-          Edit
-        </div>
-          */}
       </span>
       <div className="relative flex flex-col gap-5 md:flex-row">
         <DataTable

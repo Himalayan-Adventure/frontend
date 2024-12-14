@@ -10,6 +10,7 @@ export type TUser = {
   createdAt: string;
   updatedAt: string;
   userType: string;
+  profilePicture?: TImage;
 };
 
 export type TLoginResponse = {

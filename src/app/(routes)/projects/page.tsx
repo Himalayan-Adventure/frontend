@@ -5,9 +5,11 @@ import cloudImage from "/public/images/cloud.png";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { getPackages } from "@/server/packages/get-packages";
-import { PackageFilter } from "./filter";
+import { PackageFilter } from "../packages/filter";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
 import PackageCard from "@/components/packagespage/package-card/index";
+import { getProjects } from "@/server/projects/get-projects";
+import ProjectCard from "./project-card";
 
 export const metadata: Metadata = {
   title: `Packages | ${siteConfig.siteName}`,
@@ -18,25 +20,28 @@ export default async function Packages({
 }: {
   searchParams: { key?: string; filter?: string; operator?: string };
 }) {
-  const data = await getPackages(searchParams);
+  const data = await getProjects({});
   console.log(data);
   return (
     <section>
-      <TestBanner title={"Packages"} desc="lorem" bgImage={bgImage} />
+      <Banner title="Projects" desc="lorem" bgImage={bgImage} />
       <div className="container relative lg:mt-40">
         <Suspense>
           <PackageFilter />
         </Suspense>
         <Suspense fallback={<PackageCardSkeleton />}>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-            {!data || data?.data.length === 0 ? (
-              <span>No packages are available</span>
+            {!data || data?.data?.length === 0 ? (
+              <span>No projects are available</span>
             ) : (
-              data?.data?.map((pkg, index) => (
-                <Suspense key={index}>
-                  <PackageCard variant="default" key={index} pkg={pkg} />
-                </Suspense>
-              ))
+              data?.data?.map(
+                (project, index) =>
+                  project.attributes.package && (
+                    <Suspense key={index}>
+                      <ProjectCard key={index} project={project} />
+                    </Suspense>
+                  ),
+              )
             )}
           </div>
         </Suspense>
@@ -44,7 +49,7 @@ export default async function Packages({
     </section>
   );
 }
-const TestBanner = ({
+const Banner = ({
   title,
   bgImage,
   desc,

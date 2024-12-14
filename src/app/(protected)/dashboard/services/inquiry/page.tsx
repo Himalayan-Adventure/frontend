@@ -3,31 +3,38 @@ import Link from "next/link";
 import { GrUpgrade } from "react-icons/gr";
 
 import { TbMessageCircleSearch } from "react-icons/tb";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Workflow } from "lucide-react";
 import { getServices } from "@/server/services/get-services";
 import DataTable from "./_table/data-table";
 import { columns } from "./_table/columns-def";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
+import { GoBackButton } from "@/components/profile/go-back-button";
+import { getInquiries } from "@/server/inquiry/get-inquiries";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: `Services Dashboard | ${siteConfig.siteName}`,
+  title: `Inquiry of Services | Dashboard | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,
 };
-export default async function ServicesPage({
+export default async function ServicesInquiryPage({
   searchParams,
 }: {
   searchParams: { name?: string; page?: number; date?: string };
 }) {
+  const { name, page, date } = searchParams;
   const user = await getCurrentUserData();
-  const data = await getServices({ ...searchParams, id: user?.id });
+  if (!user) {
+    redirect("/home");
+  }
+  const data = await getInquiries({ id: user?.id, page, date });
 
   return (
     <section className="space-y-4">
       <span className="flex items-center gap-x-3 font-poppins">
         <Text variant="display-sm" bold>
-          Services
+          Services Inquiry
         </Text>
 
         {user?.userType === "merchant" && (
@@ -43,10 +50,10 @@ export default async function ServicesPage({
           Service Request
         </div>
 
-        <Link href="/dashboard/services/inquiry" prefetch={true}>
+        <Link href="/dashboard/services/" prefetch={true}>
           <div className="btn-primary font-semibold">
-            <TbMessageCircleSearch size={16} />
-            Service Inquiry
+            <Workflow size={16} />
+            Services
           </div>
         </Link>
       </span>

@@ -19,23 +19,28 @@ import bgImage from "/public/images/packageBanner.png";
 import Video from "@/components/packagespage/video";
 import { Dot } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { getSingleProject } from "@/server/projects/get-single-project";
+import { format } from "date-fns";
+import { Text } from "@/components/ui/text";
+import { PastClimbersCard } from "../past-climbers-card";
+import SimilarProjects from "../similar-projects";
 
-interface Params {
-  slug: string;
-}
-
-export default async function PackageDetail({ params }: { params: Params }) {
+export default async function ProjectDetail({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const { slug } = params;
-  const data = await getSinglePackage(slug);
+  const data = await getSingleProject(slug);
   if (data.status === 404) {
     return (
       <div className="h-96">
-        <CommonBanner title={`Package not found`} bgImage={bgImage} />
+        <CommonBanner title={`Project not found`} bgImage={bgImage} />
       </div>
     );
   }
 
-  const pkg = data.data?.attributes;
+  const pkg = data.data?.attributes.package?.data.attributes;
   const images: GalleryImageProp[] | null = pkg?.image
     ? pkg?.image.data?.map((image) => ({
         src: image.attributes.url,
@@ -88,9 +93,17 @@ export default async function PackageDetail({ params }: { params: Params }) {
       />
 
       <div className="container relative z-10 flex min-h-60 flex-col justify-center space-y-3 text-white lg:space-y-6">
+        <h3 className="text-lg font-bold text-primary md:text-xl lg:text-3xl">
+          Project
+        </h3>
         <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
           {pkg?.package_name}
         </h1>
+        {data.data?.attributes.createdAt && (
+          <h5 className="text-md text-gray-700">
+            {format(new Date(data.data?.attributes.createdAt), "MMM, yyyy")}
+          </h5>
+        )}
       </div>
       <section className="container overflow-hidden">
         <div className="grid gap-x-4 space-y-8 md:gap-x-8 lg:grid-cols-3 lg:gap-x-24 lg:space-y-0">
@@ -161,8 +174,22 @@ export default async function PackageDetail({ params }: { params: Params }) {
               <Video packageName={pkg?.package_name} videolink={pkg?.video} />
             )}
             {pkg?.itinerary?.timeline && (
-              <Itenerary data={pkg?.itinerary?.timeline} packageName={pkg?.package_name} />
+              <Itenerary
+                data={pkg?.itinerary?.timeline}
+                packageName={pkg?.package_name}
+              />
             )}
+            <div className="">
+              <h2 className="mb-6 text-lg font-semibold md:text-xl lg:text-2xl">
+                Members
+              </h2>
+              <div className="grid grid-cols-[repeat(auto-fiill,minmax(20em,1fr))]">
+                {data.data?.attributes.guides?.data && (
+                  <PastClimbersCard user={data.data.attributes.guides.data} />
+                )}
+              </div>
+            </div>
+
             <InfoTabs content={infoTabsData} />
           </div>
           <div className="hidden space-y-8 lg:col-span-1 lg:block">
@@ -183,7 +210,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
       )}
       {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
       <Reviews />
-      <SimilarPackages />
+      <SimilarProjects />
       {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
       {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (
         <ThingsToKnow data={pkg?.things_to_know} />

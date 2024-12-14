@@ -1,17 +1,13 @@
-import CommonBanner from "@/components/ui/common-banner";
-import serviceImg from "/public/images/travel.jpeg";
 import { SideFilter, TopFilter } from "./filters";
 
 import fallbackImg from "/public/images/packageBanner.png";
 import { ServiceCard } from "./service-card";
-import { getPackages } from "@/server/packages/get-packages";
 import Image from "next/image";
 import { SortFilters } from "./sort-filters";
 import { Text } from "@/components/ui/text";
 import { getServices } from "@/server/services/get-services";
-import { getUsers, getUsersDeep } from "@/server/users/get-users";
+import { getUsers } from "@/server/users/get-users";
 import { ServicesPagination } from "@/components/services/pagination";
-import { APIResponseCollection } from "@/types/types";
 import { GuideCard } from "@/components/services/guide-card";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";

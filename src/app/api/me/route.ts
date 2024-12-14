@@ -12,9 +12,13 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 
   const populate = searchParams?.get("populate");
+  const populateSingle = searchParams?.get("populate[0]");
   const params = new URLSearchParams();
   if (populate) {
     params.set("populate", populate);
+  }
+  if (populateSingle) {
+    params.set("populate[0]", populateSingle);
   }
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?${params.toString()}`,

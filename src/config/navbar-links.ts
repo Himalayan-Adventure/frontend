@@ -7,6 +7,11 @@ export const navLinks = [
     name: "Packages",
     href: "/packages",
   },
+
+  {
+    name: "Projects",
+    href: "/projects",
+  },
   {
     name: "About Us",
     href: "/about-us",

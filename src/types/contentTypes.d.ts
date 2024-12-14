@@ -872,6 +872,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'api::quote.quote'
     >;
     work: Attribute.Component<'work.work', true>;
+    product_order: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::product-order.product-order'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1004,6 +1009,50 @@ export interface ApiAdminAppointmentAdminAppointment
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::admin-appointment.admin-appointment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiAdminInquiryAdminInquiry extends Schema.CollectionType {
+  collectionName: 'admin_inquiries';
+  info: {
+    singularName: 'admin-inquiry';
+    pluralName: 'admin-inquiries';
+    displayName: 'Admin Inquiry';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    phone: Attribute.String & Attribute.Required;
+    email: Attribute.Email & Attribute.Required;
+    subject: Attribute.String & Attribute.Required;
+    message: Attribute.Text & Attribute.Required;
+    package: Attribute.Relation<
+      'api::admin-inquiry.admin-inquiry',
+      'oneToOne',
+      'api::package.package'
+    >;
+    service: Attribute.Relation<
+      'api::admin-inquiry.admin-inquiry',
+      'oneToOne',
+      'api::service.service'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::admin-inquiry.admin-inquiry',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::admin-inquiry.admin-inquiry',
       'oneToOne',
       'admin::user'
     > &
@@ -1256,6 +1305,36 @@ export interface ApiCouponCoupon extends Schema.CollectionType {
   };
 }
 
+export interface ApiHomePageHomePage extends Schema.SingleType {
+  collectionName: 'home_pages';
+  info: {
+    singularName: 'home-page';
+    pluralName: 'home-pages';
+    displayName: 'Home Page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    testimonials: Attribute.Component<'home-testimonials.testimonials', true>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::home-page.home-page',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::home-page.home-page',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiIconIcon extends Schema.CollectionType {
   collectionName: 'icons';
   info: {
@@ -1457,6 +1536,7 @@ export interface ApiPackageCategoryPackageCategory
     singularName: 'package-category';
     pluralName: 'package-categories';
     displayName: 'Package Category';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1468,6 +1548,7 @@ export interface ApiPackageCategoryPackageCategory
       'manyToMany',
       'api::package.package'
     >;
+    image: Attribute.Media<'images' | 'files'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1602,6 +1683,8 @@ export interface ApiPackageRegionPackageRegion extends Schema.CollectionType {
       'oneToOne',
       'api::package.package'
     >;
+    image: Attribute.Media<'images'>;
+    is_popular: Attribute.Boolean & Attribute.DefaultTo<false>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1764,6 +1847,50 @@ export interface ApiPlanWithUsPlanWithUs extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::plan-with-us.plan-with-us',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductOrderProductOrder extends Schema.CollectionType {
+  collectionName: 'product_orders';
+  info: {
+    singularName: 'product-order';
+    pluralName: 'product-orders';
+    displayName: 'Product Order';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    products: Attribute.Relation<
+      'api::product-order.product-order',
+      'manyToMany',
+      'api::shop.shop'
+    >;
+    user: Attribute.Relation<
+      'api::product-order.product-order',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    is_rented: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+    rent_description: Attribute.Text;
+    quantity: Attribute.Integer;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-order.product-order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-order.product-order',
       'oneToOne',
       'admin::user'
     > &
@@ -1937,6 +2064,7 @@ export interface ApiServiceCategoryServiceCategory
     singularName: 'service-category';
     pluralName: 'service-categories';
     displayName: 'Service Category';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1948,6 +2076,7 @@ export interface ApiServiceCategoryServiceCategory
       'manyToMany',
       'api::service.service'
     >;
+    image: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2009,6 +2138,11 @@ export interface ApiShopShop extends Schema.CollectionType {
       'api::shop.shop',
       'manyToOne',
       'api::coupon.coupon'
+    >;
+    product_orders: Attribute.Relation<
+      'api::shop.shop',
+      'manyToMany',
+      'api::product-order.product-order'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -2185,7 +2319,7 @@ export interface ApiTeamTeam extends Schema.CollectionType {
     thumbnail: Attribute.Media<'images'>;
     team_categories: Attribute.Relation<
       'api::team.team',
-      'oneToMany',
+      'manyToMany',
       'api::team-category.team-category'
     >;
     createdAt: Attribute.DateTime;
@@ -2210,9 +2344,9 @@ export interface ApiTeamCategoryTeamCategory extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    team: Attribute.Relation<
+    team_members: Attribute.Relation<
       'api::team-category.team-category',
-      'manyToOne',
+      'manyToMany',
       'api::team.team'
     >;
     name: Attribute.String & Attribute.Required;
@@ -2288,12 +2422,14 @@ declare module '@strapi/types' {
       'api::about-us.about-us': ApiAboutUsAboutUs;
       'api::accommodation-preference.accommodation-preference': ApiAccommodationPreferenceAccommodationPreference;
       'api::admin-appointment.admin-appointment': ApiAdminAppointmentAdminAppointment;
+      'api::admin-inquiry.admin-inquiry': ApiAdminInquiryAdminInquiry;
       'api::appointment.appointment': ApiAppointmentAppointment;
       'api::blog.blog': ApiBlogBlog;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::blog-tag.blog-tag': ApiBlogTagBlogTag;
       'api::calendar.calendar': ApiCalendarCalendar;
       'api::coupon.coupon': ApiCouponCoupon;
+      'api::home-page.home-page': ApiHomePageHomePage;
       'api::icon.icon': ApiIconIcon;
       'api::inquiry.inquiry': ApiInquiryInquiry;
       'api::package.package': ApiPackagePackage;
@@ -2305,6 +2441,7 @@ declare module '@strapi/types' {
       'api::package-type.package-type': ApiPackageTypePackageType;
       'api::plan-with.plan-with': ApiPlanWithPlanWith;
       'api::plan-with-us.plan-with-us': ApiPlanWithUsPlanWithUs;
+      'api::product-order.product-order': ApiProductOrderProductOrder;
       'api::project.project': ApiProjectProject;
       'api::quote.quote': ApiQuoteQuote;
       'api::service.service': ApiServiceService;

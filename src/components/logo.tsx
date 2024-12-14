@@ -16,7 +16,7 @@ export default function Logo({
   theme?: "light" | "dark";
 }): JSX.Element {
   return (
-    <Link href={"/"} className="block w-fit" prefetch={true}>
+    <Link href={"/home"} className="block w-fit" prefetch={true}>
       <p className="sr-only">Himalayan Adventures logo</p>
       <Image
         src={theme === "dark" ? logo : logoLight}
@@ -38,7 +38,7 @@ export function BlackLogo({
   theme?: "light" | "dark";
 }): JSX.Element {
   return (
-    <Link href={"/"} className="block w-fit" prefetch={true}>
+    <Link href={"/home"} className="block w-fit" prefetch={true}>
       <p className="sr-only">Himalayan Adventures logo</p>
       <Image
         src={theme === "light" ? logo : logoBlack}

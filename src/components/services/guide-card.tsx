@@ -1,36 +1,23 @@
 "use client";
 
-import { format, isSameMonth, isSameYear } from "date-fns";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Text } from "../ui/text";
-import { TUser, TUserDeep } from "@/types/auth";
+import { TUserDeep } from "@/types/auth";
 import EverestImg from "/public/images/everest.png";
 import { Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronLeftCircle, UserIcon } from "lucide-react";
+import { ChevronLeftCircle, UserIcon } from "lucide-react";
 import {
   TGuideDialogType,
   useGuideDialog,
 } from "@/store/get-guide-dialog-type";
 import { MessageDialog } from "./message-dialog";
 import { cn } from "@/lib/utils";
-import { BookAppointmentDialog } from "./book-appointment";
+import { AppointmentDialog } from "./book-appointment";
 import { useQuery } from "@tanstack/react-query";
-import { getUsers, getUsersDeep } from "@/server/users/get-users";
-import { getSingleUser } from "@/server/users/get-single-user";
-import axios from "axios";
-import { Skeleton } from "../ui/skeleton";
 import DynamicReactIcon from "../icons/strapi-icon";
 import { Oval } from "react-loader-spinner";
 
@@ -95,7 +82,7 @@ const GuideCardOverlay = ({
   const typeMap: { [key in TGuideDialogType]: React.ReactNode } = {
     details: <UserDetails id={user.id} />,
     message: <MessageDialog guide={user} />,
-    appointments: <BookAppointmentDialog user={user} />,
+    appointments: <AppointmentDialog guide={user} />,
   };
   return (
     <DialogContent
@@ -147,7 +134,6 @@ const UserDetails = ({ id }: { id: number }) => {
       try {
         const res = await fetch(`/api/users/${id}`);
         const data = await res.json();
-        console.log("Hello", data);
         return data;
       } catch (error) {
         console.error("Error fetching user data", error);

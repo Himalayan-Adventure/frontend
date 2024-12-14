@@ -1,21 +1,6 @@
 "use client";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
+import React, { useMemo, useState, type CSSProperties } from "react";
 import {
   Table,
   TableBody,
@@ -24,8 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
+import { format, subDays } from "date-fns";
 import {
   flexRender,
   getCoreRowModel,
@@ -43,20 +28,12 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { SelectValue } from "@radix-ui/react-select";
-import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
 import SearchBar from "@/components/ui/search-bar";
-import useUpdateQueryString from "@/hooks/use-update-query-string";
-import { setPriority } from "os";
 import { APIResponseCollectionMetadata } from "@/types/types";
-import { useMutation } from "@tanstack/react-query";
-import { Mukta } from "next/font/google";
-import { deleteService } from "@/server/services/delete-service";
-import { toast } from "sonner";
 import TablePagination from "@/components/table/table-pagination";
-import { deleteAppointment } from "@/server/appointments/delete-appointment";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
 import DateFilter from "@/components/dashboard/date-filter";
 
 interface DataTableProps<TData, TValue> {
@@ -80,6 +57,7 @@ function DataTable<TData, TValue>({
   className,
   isLoading,
 }: DataTableProps<TData, TValue>) {
+  const [date, setDate] = useState(null);
   const paddingX = gap === "sm" ? "px-4" : gap === "md" ? "px-6" : "px-8";
   const alignTextClassName =
     alignText === "left"
@@ -121,14 +99,8 @@ function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     enableRowSelection: true,
-
     onRowSelectionChange: setRowSelection,
-    // onRowSelectionChange: (updaterOrValue) => {
-    //   console.log(typeof updaterOrValue);
-    //   setRowSelection;
-    // },
     getPaginationRowModel: getPaginationRowModel(),
-    //debugTable: true,
     state: {
       sorting,
       columnFilters,
@@ -136,27 +108,13 @@ function DataTable<TData, TValue>({
     },
     initialState: {
       columnPinning: {
-        left: ["stock_symbol"],
-        // right: ['actions-column'],
+        left: ["name"],
       },
     },
   });
-  const [bulkAction, setBulkAction] = useState("");
-  const { mutate: deleteAppointmentMutation } = useMutation({
-    mutationKey: ["appointments"],
-    mutationFn: async () => {
-      const iterable = Object.entries(rowSelection);
-      for (const [key, value] of iterable) {
-        await deleteAppointment(Number(key));
-      }
-    },
-    onSuccess(data, variables, context) {
-      toast.success("Service deleted successfully");
-    },
-    onError(error, variables, context) {
-      toast.error(`Action couldn't be performed ${error}`);
-    },
-  });
+  const updateQueryString = useUpdateQueryString();
+  const d = subDays(new Date(), 365);
+  console.log(format(d, "yyyy-MM-dd"));
 
   return (
     <div className="w-full space-y-4">
@@ -165,32 +123,6 @@ function DataTable<TData, TValue>({
       */}
       <span className="flex items-center justify-between">
         <span className="flex items-center gap-x-4">
-          <Select
-            onValueChange={(e) => setBulkAction(e)}
-            defaultValue={bulkAction}
-          >
-            <SelectTrigger className="max-w-36 whitespace-nowrap">
-              <SelectValue placeholder="Bulk action" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                className="flex flex-row items-center hover:!bg-red-100"
-                value="delete"
-              >
-                <span className="flex items-center gap-x-1">
-                  <Trash className="text-red-500" size={16} />
-                  Delete
-                </span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            disabled={bulkAction === ""}
-            variant="outline"
-            onClick={() => deleteAppointmentMutation()}
-          >
-            Apply
-          </Button>
           <DateFilter />
         </span>
         <SearchBar selector="name" />
@@ -207,7 +139,7 @@ function DataTable<TData, TValue>({
         )}
       >
         <Table className="relative">
-          <TableHeader className="sticky top-0 z-20 m-0 bg-background">
+          <TableHeader className="sticky top-0 z-20 bg-background">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -215,7 +147,7 @@ function DataTable<TData, TValue>({
                     <TableHead
                       className={cn(
                         header.id === "select" && "!w-[20px]",
-                        "border-b border-gray-200 !bg-gray-100 font-semibold uppercase text-gray-600 [&>*]:font-semibold",
+                        "border-b border-gray-200 !bg-gray-100 font-semibold text-gray-600 [&>*]:font-semibold",
                         paddingX,
                         alignTextClassName.includes("text-right") &&
                           "[&>button]:justify-end",

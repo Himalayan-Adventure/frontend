@@ -26,6 +26,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DepartureFact } from "../departure";
 import Image from "next/image";
 import { Overlay } from "./overlay";
+import { format } from "date-fns";
 
 const MainPackageCard = ({
   pkg,
@@ -47,7 +48,10 @@ const MainPackageCard = ({
     0;
     setIsOverlayVisible(!isOverlayVisible);
   };
-  const [currentTarget, setCurrentTarget] = useState<Element | null>(null);
+  const departureData = {
+    start: attr?.adventure_specification?.travel_dates?.[0]?.date || new Date(),
+    end: attr?.adventure_specification?.travel_dates?.[1]?.date || new Date(),
+  };
   const cardRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -205,14 +209,24 @@ const MainPackageCard = ({
                 </div>
               </div>
 
-              <p className="text-sm text-gray-600">Beach and ocean views</p>
-              <p className="text-sm text-gray-600">
-                6 - 21 Sep. · Individual Host
-              </p>
-
-              <p className="mt-2 text-lg font-[900] text-primary underline">
-                Rs. 40000
-              </p>
+              {attr.brief_description && (
+                <p className="text-sm text-gray-600">
+                  {attr?.brief_description}
+                </p>
+              )}
+              {departureData.start && departureData.end && (
+                <p className="text-sm text-gray-600">
+                  {format(departureData.start, "dd")}-
+                  {format(departureData.end, "dd MMM")}6 - 21 Sep. · Individual
+                  Host
+                </p>
+              )}
+              {attr?.cost_and_budgeting?.[0] && (
+                <p className="mt-2 text-lg font-[900] text-primary underline">
+                  Rs.{attr.cost_and_budgeting?.[0]?.lowest}-
+                  {attr.cost_and_budgeting?.[0]?.highest}
+                </p>
+              )}
             </Link>
           )}
         </div>

@@ -475,18 +475,6 @@ export interface PackageAdventureCulturalExperiencesCulturalExperiences
   };
 }
 
-export interface PackageAdventureAddonsAddOns extends Schema.Component {
-  collectionName: 'components_package_adventure_addons_add_ons';
-  info: {
-    displayName: 'Add-ons';
-  };
-  attributes: {
-    name: Attribute.Enumeration<
-      ['Helicopter rides', 'Private guides ', 'Spa days ']
-    >;
-  };
-}
-
 export interface PackageAdventureActivitiesAdventureActivities
   extends Schema.Component {
   collectionName: 'components_package_adventure_activities_adventure_activities';
@@ -496,6 +484,18 @@ export interface PackageAdventureActivitiesAdventureActivities
   attributes: {
     name: Attribute.Enumeration<
       ['Rock climbing ', 'River rafting ', 'Bungee jumping']
+    >;
+  };
+}
+
+export interface PackageAdventureAddonsAddOns extends Schema.Component {
+  collectionName: 'components_package_adventure_addons_add_ons';
+  info: {
+    displayName: 'Add-ons';
+  };
+  attributes: {
+    name: Attribute.Enumeration<
+      ['Helicopter rides', 'Private guides ', 'Spa days ']
     >;
   };
 }
@@ -558,6 +558,23 @@ export interface PackageAccommodationAccommodation extends Schema.Component {
       'oneToOne',
       'api::accommodation-preference.accommodation-preference'
     >;
+  };
+}
+
+export interface HomeTestimonialsTestimonials extends Schema.Component {
+  collectionName: 'components_home_testimonials_testimonials';
+  info: {
+    displayName: 'testimonials';
+  };
+  attributes: {
+    image: Attribute.Media<'images'>;
+    description: Attribute.Text &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 5;
+        maxLength: 500;
+      }>;
+    name: Attribute.String & Attribute.Required;
   };
 }
 
@@ -690,11 +707,12 @@ declare module '@strapi/types' {
       'package-adventure-specifications.adventure-specifications': PackageAdventureSpecificationsAdventureSpecifications;
       'package-adventure-customization.adventure-customization': PackageAdventureCustomizationAdventureCustomization;
       'package-adventure-cultural-experiences.cultural-experiences': PackageAdventureCulturalExperiencesCulturalExperiences;
-      'package-adventure-addons.add-ons': PackageAdventureAddonsAddOns;
       'package-adventure-activities.adventure-activities': PackageAdventureActivitiesAdventureActivities;
+      'package-adventure-addons.add-ons': PackageAdventureAddonsAddOns;
       'package-accommodation-preferences.accommodation-preferences': PackageAccommodationPreferencesAccommodationPreferences;
       'package-accommodation-location.location': PackageAccommodationLocationLocation;
       'package-accommodation.accommodation': PackageAccommodationAccommodation;
+      'home-testimonials.testimonials': HomeTestimonialsTestimonials;
       'faq.faq': FaqFaq;
       'color.shop-color': ColorShopColor;
       'accommodation-preference.preference': AccommodationPreferencePreference;

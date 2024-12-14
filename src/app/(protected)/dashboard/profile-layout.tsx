@@ -4,13 +4,7 @@ import { SetStateAction, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo, { BlackLogo } from "@/components/logo";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
@@ -23,6 +17,7 @@ import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
 import { TUser } from "@/types/auth";
 import { toast } from "sonner";
 import { logout } from "@/server/auth/logout";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // This is the whole layout for the dashboard which includes the sidebar and the main content which is passed as children
 export default function ProfileSidebarLayout({
@@ -79,37 +74,6 @@ export default function ProfileSidebarLayout({
                 <span className="sr-only">Open sidebar</span>
                 <Menu className="h-6 w-6" aria-hidden="true" />
               </Button>
-
-              {/* This one's only for desktop devices, where sidebar is hidden based on the state */}
-              {/* <Button */}
-              {/*   variant="ghost" */}
-              {/*   type="button" */}
-              {/*   className={cn( */}
-              {/*     "-m-2.5 hidden p-2.5", */}
-              {/*     sidebarHidden && "lg:flex", */}
-              {/**/}
-              {/*   )} */}
-              {/*   onClick={() => setSidebarHidden((prev) => !prev)} */}
-              {/* > */}
-              {/*   <span className="sr-only">Open sidebar</span> */}
-              {/*   <Menu className="h-6 w-6" aria-hidden="true" /> */}
-              {/* </Button> */}
-              {/*
-              <Text
-                bold
-                variant="text-xl"
-                className="font-poppins capitalize leading-none"
-              >
-                {user?.userType}
-              </Text>
-
-                */}
-
-              <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                <div className="ml-auto flex items-center gap-x-4 lg:gap-x-6">
-                  {/* <UserDropdown user={user} /> */}
-                </div>
-              </div>
             </div>
 
             <main className="min-h-[calc(100dvh-var(--profile-header-height))] bg-gray-50 py-10">
@@ -146,6 +110,18 @@ function SidebarContent({
       <li className="mt-auto w-full list-none">
         <div className="flex w-full items-center gap-2 rounded-lg">
           <div className="h-10 max-w-10 overflow-hidden rounded-full">
+            <Avatar>
+              {user?.profilePicture && (
+                <AvatarImage
+                  src={user?.profilePicture.url}
+                  alt={user.username}
+                  className="object-cover"
+                />
+              )}
+              <AvatarFallback className="bg-gray-400 text-black">
+                {user?.username?.[0]}
+              </AvatarFallback>
+            </Avatar>
             <Image
               src={"https://picsum.photos/200/200"}
               alt="avatar"
