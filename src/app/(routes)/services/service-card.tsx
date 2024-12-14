@@ -1,4 +1,6 @@
 "use client";
+
+import EverestImg from "/public/images/everest.png";
 import Logo from "@/components/logo";
 import { cn, formatDate } from "@/lib/utils";
 import { Heart, Star } from "lucide-react";
@@ -8,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { APIResponseData } from "@/types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { MessageDialog } from "@/components/services/message-dialog";
 
 export const ServiceCard = ({
   data,
@@ -65,9 +69,32 @@ export const ServiceCard = ({
           <Button className="w-auto rounded-xl bg-black px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2">
             Request Service
           </Button>
-          <Button className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2">
-            Make Inquiry
-          </Button>
+          <Dialog>
+            <DialogTrigger
+              disabled={!data?.attributes?.service_provider?.data}
+              asChild
+            >
+              <Button className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2">
+                Make Inquiry
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              className={cn(
+                "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+              )}
+            >
+              <Image
+                src={EverestImg}
+                alt="Cover image"
+                className="absolute -z-10 h-full w-full object-cover opacity-90"
+              />
+              {data.attributes.service_provider?.data && (
+                <MessageDialog
+                  guideId={data.attributes.service_provider?.data?.id}
+                />
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

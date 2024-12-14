@@ -1,4 +1,5 @@
-import { revalidateTag } from "next/cache";
+"use server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
@@ -20,10 +21,6 @@ export async function POST(req: Request) {
       },
       method: "POST",
       body: JSON.stringify({ data }),
-      next: {
-        tags: ["services"],
-      },
-      cache: "no-cache",
     },
   );
   revalidateTag("services");

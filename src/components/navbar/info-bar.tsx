@@ -59,7 +59,9 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const res = await axios.get<TUser>("/api/me");
+        const res = await axios.get<TUser>(
+          "/api/me?populate[0]=profilePicture",
+        );
 
         if (!res?.data) {
           return null;
@@ -129,9 +131,17 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
+                <Avatar className="cursor-pointer border-2 border-white/40">
+                  {user?.profilePicture && (
+                    <AvatarImage
+                      src={user?.profilePicture.url}
+                      alt={user.username}
+                      className="object-cover"
+                    />
+                  )}
+                  <AvatarFallback className="bg-gray-400 text-black">
+                    {user?.username?.[0]}
+                  </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">

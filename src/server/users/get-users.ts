@@ -28,7 +28,35 @@ type TUser = {
 };
 type UserObject =
   APIResponseData<"plugin::users-permissions.role">["attributes"];
-export const getUsers = async (type?: "merchant" | "customer") => {
+export const getUsers = async (
+  type?: "merchant" | "customer",
+  name?: string,
+) => {
+  try {
+    const filter = type
+      ? `?filters[userType][$eqi]=${type}&populate[0]=profilePicture`
+      : "";
+
+    const params = new URLSearchParams();
+    if (type) {
+      params.set("filters[userType][$eqi]", type);
+      params.set("populate[0]", "profilePicture");
+    }
+
+    if (name) {
+      params.set("filters[username][$contains]", name);
+    }
+    const res = await axiosInstance.get(`api/users?${params.toString()}`);
+    return res.data as TUser[];
+  } catch (error: AxiosError | any) {
+    console.log(error);
+  }
+};
+
+export const getUsersDeep = async (
+  type?: "merchant" | "customer",
+  name?: string,
+) => {
   try {
     const filter = type
       ? `?filters[userType][$eqi]=${type}&populate[0]=profilePicture`
@@ -38,23 +66,8 @@ export const getUsers = async (type?: "merchant" | "customer") => {
       params.set("filters[userType][$eqi]", type);
       params.set("populate[0]", "profilePicture");
     }
-
-    const res = await axiosInstance.get(`api/users?${params.toString()}`);
-    return res.data as TUser[];
-  } catch (error: AxiosError | any) {
-    console.log(error);
-  }
-};
-
-export const getUsersDeep = async (type?: "merchant" | "customer") => {
-  try {
-    const filter = type
-      ? `?filters[userType][$eqi]=${type}&populate[0]=profilePicture`
-      : "";
-    const params = new URLSearchParams();
-    if (type) {
-      params.set("filters[userType][$eqi]", type);
-      params.set("populate[0]", "profilePicture");
+    if (name) {
+      params.set("filters[username][$contains]", name);
     }
     params.set("populate", "deep");
 

@@ -17,10 +17,6 @@ import { CostBudgeting, TDepartureData } from "@/types/packages/departure";
 import Image from "next/image";
 import bgImage from "/public/images/packageBanner.png";
 import Video from "@/components/packagespage/video";
-import { FaFlag } from "react-icons/fa";
-import Link from "next/link";
-import { TInfoTabs } from "@/types/packages/info-tabs";
-import { BlocksContent } from "@strapi/blocks-react-renderer";
 import { Dot } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 

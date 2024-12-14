@@ -79,7 +79,7 @@ export async function getCurrentUserData() {
     const cookieStore = cookies();
     const token = cookieStore.get("jwt")?.value;
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate[0]=profilePicture`,
       {
         headers: {
           Authorization: `Bearer ${token}` || "",

@@ -12,6 +12,7 @@ import { Mail, Phone, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { HTMLProps } from "react";
+import DeleteButton from "./delete-button";
 
 export const columns: ColumnDef<
   APIResponseData<"api::appointment.appointment">,
@@ -134,6 +135,18 @@ export const columns: ColumnDef<
           ) : (
             "-"
           )}
+        </span>
+      );
+    },
+  },
+
+  {
+    header: "ACTIONS",
+    accessorKey: "edit",
+    cell({ row }) {
+      return (
+        <span className="flex gap-x-2">
+          <DeleteButton id={row.original.id} />
         </span>
       );
     },

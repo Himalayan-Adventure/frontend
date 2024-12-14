@@ -1,20 +1,18 @@
-import CommonBanner from "@/components/ui/common-banner";
-import serviceImg from "/public/images/travel.jpeg";
 import { SideFilter, TopFilter } from "./filters";
-
+import { Loading } from "@/components/loading";
 import fallbackImg from "/public/images/packageBanner.png";
 import { ServiceCard } from "./service-card";
-import { getPackages } from "@/server/packages/get-packages";
 import Image from "next/image";
 import { SortFilters } from "./sort-filters";
 import { Text } from "@/components/ui/text";
 import { getServices } from "@/server/services/get-services";
-import { getUsers, getUsersDeep } from "@/server/users/get-users";
+import { getUsers } from "@/server/users/get-users";
 import { ServicesPagination } from "@/components/services/pagination";
-import { APIResponseCollection } from "@/types/types";
 import { GuideCard } from "@/components/services/guide-card";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { Suspense } from "react";
+import { Oval } from "react-loader-spinner";
 type TSearchParams = {
   searchParams: { type?: string; category?: string; name?: string };
 };
@@ -51,12 +49,16 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
           <TopFilter />
           <SortFilters />
         </div>
-        <div className="flex flex-col gap-5 md:flex-row">
+        <div className="flex w-full flex-col gap-5 md:flex-row">
           <SideFilter />
           {searchParams.type === "Packages" ? (
-            <ServicesPackages searchParams={searchParams} />
+            <Suspense fallback={<Loading className="h-48" />}>
+              <ServicesPackages searchParams={searchParams} />
+            </Suspense>
           ) : (
-            <ServicesGuides />
+            <Suspense fallback={<Loading className="h-48" />}>
+              <ServicesGuides searchParams={searchParams} />
+            </Suspense>
           )}
         </div>
       </section>
@@ -77,11 +79,11 @@ async function ServicesPackages({ searchParams }: TSearchParams) {
     </div>
   );
 }
-async function ServicesGuides() {
-  const data = await getUsersDeep("merchant");
+async function ServicesGuides({ searchParams }: TSearchParams) {
+  const data = await getUsers("merchant", searchParams.name);
 
   return (
-    <div className="flex flex-col gap-y-5 py-10">
+    <div className="flex w-full flex-col gap-y-5 py-10">
       <Text variant="text-xl" bold>
         All members
       </Text>

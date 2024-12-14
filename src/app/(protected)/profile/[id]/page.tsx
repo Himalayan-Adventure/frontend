@@ -1,37 +1,14 @@
-"use client";
 import Image from "next/image";
 import bgImage from "/public/images/packagesBanner.png";
-import { useQuery } from "@tanstack/react-query";
-import { TUserDeep } from "@/types/auth";
-import axios from "axios";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
-export default function PublicProfilePage({
+import { getSingleUser } from "@/server/users/get-single-user";
+export default async function PublicProfilePage({
   params,
 }: {
-  params: { id: string };
+  params: { id: number };
 }) {
-  console.log(params.id);
-  const { data: user, isPending } = useQuery({
-    queryKey: ["public-user", params.id],
-    queryFn: async () => {
-      try {
-        const res = await axios.get<TUserDeep>(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${params.id}?populate=deep`,
-        );
-
-        if (!res?.data) {
-          return null;
-        }
-        console.log(res.data);
-
-        return res.data;
-      } catch (error) {
-        console.error("Error fetching user data", error);
-        return null;
-      }
-    },
-    retry: 1,
-  });
+  const { id } = params;
+  const user = await getSingleUser(id);
   return (
     <section className="container space-y-8 font-poppins">
       <Image

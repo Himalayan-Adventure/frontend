@@ -11,12 +11,9 @@ export const getBlogs = async () => {
         next: {
           tags: ["blogs"],
         },
-        cache: "no-store",
       },
     );
     const data: APIResponseCollection<"api::blog.blog"> = await res.json();
-    // const res: AxiosResponse<APIResponseCollection<"api::blog.blog">> =
-    //   await axiosInstance.get("api/blogs?populate=*");
 
     return {
       data: data?.data ?? [],

@@ -67,7 +67,6 @@ export const CalendarAddOrEditForm = ({
     const payload = {
       ...form.getValues(),
     };
-    console.log(payload);
     if (type === "edit") {
       const res = await editCalendar(payload, id);
       if (res.status === 200) {

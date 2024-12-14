@@ -1,29 +1,25 @@
 "use client";
+
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Text } from "../ui/text";
-import { TUser, TUserDeep } from "@/types/auth";
+import { TUserDeep } from "@/types/auth";
 import EverestImg from "/public/images/everest.png";
 import { Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronLeftCircle, UserIcon } from "lucide-react";
+import { ChevronLeftCircle, UserIcon } from "lucide-react";
 import {
   TGuideDialogType,
   useGuideDialog,
 } from "@/store/get-guide-dialog-type";
 import { MessageDialog } from "./message-dialog";
 import { cn } from "@/lib/utils";
-import { BookAppointmentDialog } from "./book-appointment";
+import { AppointmentDialog } from "./book-appointment";
+import { useQuery } from "@tanstack/react-query";
+import DynamicReactIcon from "../icons/strapi-icon";
+import { Oval } from "react-loader-spinner";
 
 export const GuideCard = ({ user }: { user: TUserDeep }) => {
   const [showCard, setShowCard] = useState(false);
@@ -84,9 +80,9 @@ const GuideCardOverlay = ({
   const { type, setType, setDialogOpen } = useGuideDialog();
 
   const typeMap: { [key in TGuideDialogType]: React.ReactNode } = {
-    details: <UserDetails user={user} />,
-    message: <MessageDialog user={user} />,
-    appointments: <BookAppointmentDialog user={user} />,
+    details: <UserDetails id={user.id} />,
+    message: <MessageDialog guideId={user.id} />,
+    appointments: <AppointmentDialog guide={user} />,
   };
   return (
     <DialogContent
@@ -126,8 +122,34 @@ const GuideCardOverlay = ({
     </DialogContent>
   );
 };
-const UserDetails = ({ user }: { user: TUserDeep }) => {
+const UserDetails = ({ id }: { id: number }) => {
   const { type, setType, setDialogOpen } = useGuideDialog();
+  const {
+    data: user,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: [`user-${id}`],
+    queryFn: async () => {
+      try {
+        const res = await fetch(`/api/users/${id}`);
+        const data = await res.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    },
+    retry: 1,
+  });
+  if (isPending) {
+    return (
+      <div className="grid w-full place-items-center">
+        <Oval height="32" width="32" color="#FD9100" ariaLabel="oval-loading" />
+      </div>
+    );
+  } else if (!user || isError) {
+    return <p>Something went wrong</p>;
+  }
   const socialMedia = {
     facebook: user.about?.facebook,
     instagram: user.about?.instagram,
@@ -141,7 +163,7 @@ const UserDetails = ({ user }: { user: TUserDeep }) => {
             Date of birth
           </Text>
           <Button className="bg-white text-black hover:bg-white/80">
-            {user.contact?.birthday}
+            {format(user.contact?.birthday, "MMM dd, yyyy")}
           </Button>
         </span>
       )}
@@ -168,6 +190,24 @@ const UserDetails = ({ user }: { user: TUserDeep }) => {
           </>
         )}
 
+        <>
+          <Text variant="text-sm">Contact no.</Text>
+          <Text variant="text-sm">:</Text>
+          <span className="flex gap-x-2">
+            {Object.entries(socialMedia)
+              .filter(([key, value]) => {
+                console.log(key);
+                if (value) return true;
+              })
+              .map(([key, value]) => (
+                <Link href={value} key={`social-${key}`}>
+                  <DynamicReactIcon
+                    name={`Fa${key[0].toUpperCase() + key.slice(1)}`}
+                  />
+                </Link>
+              ))}
+          </span>
+        </>
         {user?.contact?.address && (
           <>
             <Text variant="text-sm">Address</Text>

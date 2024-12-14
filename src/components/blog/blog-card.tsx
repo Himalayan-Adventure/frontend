@@ -23,12 +23,10 @@ export default function BlogCard({
   const slug = blog?.id;
   const image = blog?.attributes?.thumbnail?.data?.attributes;
   const tags = blog?.attributes?.blog_categories?.data?.[0]?.attributes?.name;
-  console.log(blog.attributes.blog_categories);
   const { mutate: deleteAction, isPending } = useMutation({
     mutationKey: ["blogs", blog.id],
     mutationFn: async () => await deleteBlog(blog.id),
     onSuccess(data, variables, context) {
-      console.log(data);
       toast.success("Blog successfully deleted");
     },
   });

@@ -56,6 +56,7 @@ import { Mukta } from "next/font/google";
 import { deleteService } from "@/server/services/delete-service";
 import { toast } from "sonner";
 import TablePagination from "@/components/table/table-pagination";
+import DateFilter from "@/components/dashboard/date-filter";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -194,12 +195,7 @@ function DataTable<TData, TValue>({
           >
             Apply
           </Button>
-          <Select>
-            <SelectTrigger className="max-w-36">All dates</SelectTrigger>
-            <SelectContent>
-              <SelectItem value="today">Today</SelectItem>
-            </SelectContent>
-          </Select>
+          <DateFilter />
         </span>
         <SearchBar selector="name" />
       </span>

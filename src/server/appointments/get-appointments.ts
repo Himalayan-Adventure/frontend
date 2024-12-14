@@ -9,9 +9,11 @@ import qs from "qs";
 export const getAppointments = async ({
   user,
   page,
+  date,
 }: {
   user: TUser;
   page?: number;
+  date?: string;
 }) => {
   const cookieStore = cookies();
   const token = cookieStore.get("jwt")?.value;
@@ -25,6 +27,10 @@ export const getAppointments = async ({
           id: {
             $eq: user.id,
           },
+        },
+
+        createdAt: {
+          $gte: date,
         },
       };
     }

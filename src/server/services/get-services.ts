@@ -3,18 +3,22 @@
 import { axiosInstance } from "@/lib/server-axios-instance";
 import { APIResponseCollection, APIResponseData } from "@/types/types";
 import { AxiosResponse, type AxiosError } from "axios";
+import { cookies } from "next/headers";
 import qs from "qs";
 export const getServices = async ({
   id,
   category,
   name,
   page,
+  date,
 }: {
   id?: number;
   category?: string;
   name?: string;
   page?: number;
+  date?: string;
 }) => {
+  const cookieStore = cookies();
   try {
     const query = qs.stringify(
       {
@@ -26,6 +30,10 @@ export const getServices = async ({
           },
           title: {
             $containsi: name,
+          },
+
+          createdAt: {
+            $gte: date,
           },
           categories: {
             name: {
@@ -49,13 +57,12 @@ export const getServices = async ({
         next: {
           tags: ["services"],
         },
-        cache: "no-store",
+
+        headers: {
+          Authorization: `Bearer ${cookieStore?.get("jwt")?.value}`,
+        },
       },
     );
-    // const res: AxiosResponse<APIResponseCollection<"api::service.service">> =
-    //   await axiosInstance.get(
-    //     `api/services?populate[0]=image&populate[1]=service_provider&populate[2]=categories&populate[3]=associated_packages&${query}`,
-    //   );
     const data: APIResponseCollection<"api::service.service"> =
       await res.json();
 

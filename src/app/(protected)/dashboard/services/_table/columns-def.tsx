@@ -6,9 +6,11 @@ import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Tag } from "lucide-react";
+import { PencilLine, Tag } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { HTMLProps } from "react";
+import DeleteButton from "./delete-button";
 
 export const columns: ColumnDef<
   APIResponseData<"api::service.service">,
@@ -153,6 +155,24 @@ export const columns: ColumnDef<
             </span>
           ))}
         </div>
+      );
+    },
+  },
+
+  {
+    header: "ACTIONS",
+    accessorKey: "edit",
+    cell({ row }) {
+      return (
+        <span className="flex gap-x-2">
+          <Link
+            href={`/dashboard/services/edit/${row.original.id}`}
+            className="flex h-10 w-fit flex-wrap place-items-center gap-1 rounded-lg border border-blue-500 bg-blue-100 px-2 text-blue-900 hover:bg-blue-900 hover:text-blue-100"
+          >
+            <PencilLine size={18} />
+          </Link>
+          <DeleteButton id={row.original.id} />
+        </span>
       );
     },
   },
