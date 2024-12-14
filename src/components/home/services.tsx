@@ -1,25 +1,34 @@
 "use client";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { Button } from "../ui/button";
-import serviceImg from "/public/images/travel.jpeg";
 import { m, domMax, LazyMotion } from "framer-motion";
-
-const services = [
-  {
-    name: "Travel and Tour",
-    image: serviceImg,
-  },
-  {
-    name: "Mountaineering Expedition",
-    image: serviceImg,
-  },
-  {
-    name: "Luxury Travel",
-    image: serviceImg,
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { APIResponseCollection, APIResponseData } from "@/types/types";
+import { Text } from "../ui/text";
+import { Loading } from "../loading";
 
 export default function Services() {
+  const {
+    data: services,
+    isPending,
+    isError,
+  } = useQuery<APIResponseCollection<"api::service.service">>({
+    queryKey: ["services"],
+    queryFn: async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/services?populate=*&pagination[page]=1&pagination[pageSize]=3`,
+        );
+        if (!res.ok) {
+          throw new Error("Error fetching services");
+        }
+        const data = await res.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
   return (
     <LazyMotion features={domMax}>
       <m.section className="py-8 lg:py-16">
@@ -38,28 +47,43 @@ export default function Services() {
           </div>
           {/* services Grid */}
           <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3 lg:mt-16">
-            {services.map((svc, index) => (
-              <ServiceCard svc={svc} key={svc.name}/>
-            ))}
+            {isPending ? (
+              <Loading className="col-span-3" />
+            ) : isError || !services || services?.data?.length == 0 ? (
+              <Text variant="text-md">No services found</Text>
+            ) : (
+              services?.data?.map((svc, index) => (
+                <ServiceCard svc={svc} key={`services-${svc.id}`} />
+              ))
+            )}
           </div>
         </div>
       </m.section>
     </LazyMotion>
   );
 }
-const ServiceCard = ({svc}:{svc:{name:string;image:StaticImageData}}) => {
+const ServiceCard = ({
+  svc,
+}: {
+  svc: APIResponseData<"api::service.service">;
+}) => {
+  const image = svc?.attributes?.image?.data?.attributes;
   return (
     <div className="space-y-4 lg:space-y-8">
       <div className="group relative">
-        <Image
-          src={svc.image}
-          alt={svc.name}
-          className="max-h-96 w-full rounded-2xl border border-gray-600 object-cover brightness-75 grayscale transition duration-300 lg:h-80"
-        />
+        {image && (
+          <Image
+            src={image.url}
+            alt={image.name}
+            className="max-h-96 w-full rounded-2xl border border-gray-600 object-cover brightness-75 grayscale transition duration-300 lg:h-80"
+            height={image.height}
+            width={image.width}
+          />
+        )}
         {/* Overlay */}
         <div className="absolute inset-0 flex items-end rounded-2xl bg-black bg-opacity-40">
           <h2 className="mb-4 w-full text-center text-base font-semibold text-white md:text-lg lg:text-2xl">
-            {svc.name}
+            {svc.attributes.title}
           </h2>
         </div>
       </div>

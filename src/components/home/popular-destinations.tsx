@@ -7,6 +7,7 @@ import { Skeleton } from "../ui/skeleton";
 import { APIResponseCollection } from "@/types/types";
 import { de } from "date-fns/locale";
 import { Text } from "../ui/text";
+import { Loading } from "../loading";
 // const destinations = [
 //   {
 //     name: "Mustang Region",
