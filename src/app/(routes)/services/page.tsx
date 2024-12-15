@@ -44,8 +44,8 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
         </p>
       </div>
 
-      <section className="relative z-20 md:top-52">
-        <div className="relative flex items-center justify-between">
+      <section className="relative z-20 space-y-2 md:top-52">
+        <div className="relative flex flex-wrap items-center justify-between gap-2">
           <TopFilter />
           <SortFilters />
         </div>
