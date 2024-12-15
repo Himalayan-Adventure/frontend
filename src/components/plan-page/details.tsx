@@ -1,4 +1,4 @@
-import { usePlanContext } from "./plan-context";
+import { usePlanContext } from "@/components/plan-page/plan-context";
 
 // Define the TravelDates type if it's not already defined
 type TravelDates = {
@@ -8,7 +8,11 @@ type TravelDates = {
   flexible_date_end: string;
 };
 
-export default function Details({ setSelectedOption }: any) {
+interface DetailsProps {
+  setSelectedOption: (option: string) => void;
+}
+
+export default function Details({ setSelectedOption }: DetailsProps) {
   const {
     group,
     budget,
@@ -20,7 +24,7 @@ export default function Details({ setSelectedOption }: any) {
     fixedAmount,
     minBudget,
     maxBudget,
-    grade,
+    selectedPackageNames,
   } = usePlanContext();
 
   const handleConfirmClick = () => {
@@ -40,6 +44,13 @@ export default function Details({ setSelectedOption }: any) {
     }
 
     return "No travel dates specified.";
+  };
+
+  const renderPackages = () => {
+    if (selectedPackageNames.length > 0) {
+      return selectedPackageNames.join(", ");
+    }
+    return "No packages selected.";
   };
 
   console.log("test", budget);
@@ -96,8 +107,8 @@ export default function Details({ setSelectedOption }: any) {
         </p>
       </div>
       <div className="flex flex-col">
-        <h2 className="text-sm font-semibold md:text-base">Grade:</h2>
-        <p className="text-sm text-gray-700 md:text-base">{grade}</p>
+        <h2 className="text-sm font-semibold md:text-base">Packages :</h2>
+        <p className="text-sm text-gray-700 md:text-base">{renderPackages()}</p>
       </div>
 
       {/*  "Check & Confirm" button */}

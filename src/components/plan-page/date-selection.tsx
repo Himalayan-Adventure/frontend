@@ -1,5 +1,6 @@
+"use client";
 import { useEffect } from "react";
-import { usePlanContext } from "./plan-context";
+import { usePlanContext } from "@/components/plan-page/plan-context";
 import { FaCalendarAlt, FaQuestionCircle } from "react-icons/fa";
 import { MdDateRange } from "react-icons/md";
 import { Calendar } from "../ui/calendar";
@@ -77,9 +78,7 @@ export default function DateSelection() {
 
   return (
     <div className="p-2 lg:p-4">
-      <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        Select your Travel Dates
-      </h2>
+      
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:gap-8">
         {options.map((option) => (
           <div

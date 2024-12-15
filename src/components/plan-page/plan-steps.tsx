@@ -2,7 +2,7 @@
 import { stepsData } from "@/data/planSteps";
 import { useState, useMemo } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { usePlanContext } from "./plan-context";
+import { usePlanContext } from "@/components/plan-page/plan-context";
 
 export default function PlanSteps() {
   const { selectedStep, setSelectedStep } = usePlanContext();
@@ -31,7 +31,7 @@ export default function PlanSteps() {
   }, [selectedStep]);
 
   return (
-    <section className="container relative flex flex-row space-x-6 lg:flex-col lg:space-x-0 lg:mt-32">
+    <section className="container relative flex flex-row space-x-6 lg:mt-32 lg:flex-col lg:space-x-0">
       <div className="lg:w-auto">
         <div className="sticky top-32 lg:static">
           <div className="relative mb-8 flex flex-col space-y-6 overflow-hidden lg:flex-row lg:justify-between lg:space-x-6 lg:space-y-0">

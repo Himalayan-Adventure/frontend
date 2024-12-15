@@ -1,14 +1,17 @@
-import CommonBanner from "@/components/ui/common-banner";
-import bgImage from "/public/images/planPgBg.png";
-import PlanSteps from "@/components/plan-page/plan-steps";
 import { PlanProvider } from "@/components/plan-page/plan-context";
+import TestPlan from "@/components/plan-page/TestPlan";
+import CommonBanner from "@/components/ui/common-banner";
+import { getPlanSteps } from "@/server/steps/get-steps";
+import bgImage from "/public/images/planPgBg.png";
 
-export default function PlanWithUsPage() {
+export default async function PlanWithUsPage() {
+  const steps = await getPlanSteps();
+
   return (
     <main>
       <PlanProvider>
         <CommonBanner title="Plan With Us" bgImage={bgImage} />
-        <PlanSteps />
+        <TestPlan />
       </PlanProvider>
     </main>
   );
