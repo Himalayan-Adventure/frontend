@@ -1,15 +1,22 @@
 "use server";
 
 import { APIResponseCollection, APIResponseData } from "@/types/types";
+
+import qs from "qs";
 import { AxiosResponse, type AxiosError } from "axios";
 export const getProjects = async ({
   key,
   filter,
   operator,
+  limit,
+  title,
 }: {
   key?: string;
   filter?: string;
   operator?: string;
+
+  title?: string;
+  limit?: number;
 }) => {
   try {
     // const queryGenerator = (key?: string, filter?: string) => {
@@ -28,9 +35,20 @@ export const getProjects = async ({
     //   }
     // };
     // const query = queryGenerator(key, filter);
+    const additionalQuery = qs.stringify({
+      filters: {
+        title: {
+          $contains: title,
+        },
+      },
+      pagination: {
+        pageSize: limit || 20,
+        page: 1,
+      },
+    });
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/projects?fields[0]=title&populate[package][populate][0]=image&populate[package][populate][1]=adventure_specification`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/projects?fields[0]=title&populate[package][populate][0]=image&populate[package][populate][1]=adventure_specification&${additionalQuery}`,
       {
         next: {
           tags: ["projects"],

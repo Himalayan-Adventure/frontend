@@ -52,7 +52,10 @@ export default async function Packages({
             )}
           </div>
         </Suspense>
-        <LoadMorePagination className="mt-40" />
+        <LoadMorePagination
+          className="mt-40"
+          disabled={!data || data?.meta?.pagination.total < 8}
+        />
       </div>
     </section>
   );

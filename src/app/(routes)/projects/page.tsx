@@ -10,6 +10,8 @@ import { PackageCardSkeleton } from "@/components/packagespage/package-card-skel
 import PackageCard from "@/components/packagespage/package-card/index";
 import { getProjects } from "@/server/projects/get-projects";
 import ProjectCard from "./project-card";
+import SearchBar from "@/components/ui/search-bar";
+import { LoadMorePagination } from "@/components/services/pagination";
 
 export const metadata: Metadata = {
   title: `Projects | ${siteConfig.siteName}`,
@@ -18,18 +20,30 @@ export const metadata: Metadata = {
 export default async function Packages({
   searchParams,
 }: {
-  searchParams: { key?: string; filter?: string; operator?: string };
+  searchParams: {
+    key?: string;
+    filter?: string;
+    operator?: string;
+    title?: string;
+    limit?: number;
+  };
 }) {
-  const data = await getProjects({});
+  const data = await getProjects(searchParams);
 
-  console.log(data);
   return (
     <section>
       <Banner title="Projects" desc="lorem" bgImage={bgImage} />
-      <div className="container relative lg:mt-40">
+      <div className="container relative space-y-10 lg:mt-40">
+        <Suspense>
+          <div className="flex justify-end [&>div]:w-fit">
+            <SearchBar selector="title" className="max-w-48 justify-end" />
+          </div>
+        </Suspense>
+        {/*
         <Suspense>
           <PackageFilter />
         </Suspense>
+          */}
         <Suspense fallback={<PackageCardSkeleton />}>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(0,300px))] gap-4">
             {!data || data?.data?.length === 0 ? (
@@ -46,6 +60,11 @@ export default async function Packages({
             )}
           </div>
         </Suspense>
+
+        <LoadMorePagination
+          className="mt-40"
+          disabled={!data || data?.meta?.pagination.total < 8}
+        />
       </div>
     </section>
   );
