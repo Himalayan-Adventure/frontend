@@ -5,6 +5,11 @@ import packageImg from "/public/images/package1.jpeg";
 import { m, domMax, LazyMotion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { APIResponseCollection, APIResponseData } from "@/types/types";
+import EverestImg from "/public/images/everest.png";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { MessageDialog } from "../services/message-dialog";
 const packages = [
   {
     name: "Expedition Over 8000m",
@@ -107,12 +112,36 @@ const PackageCategoryCard = ({
           {data?.attributes?.name}
         </h2>
         <div className="flex flex-col items-center space-y-3">
-          <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
-            Inquire
-          </Button>
-          <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
-            View More
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
+                Inquire
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              className={cn(
+                "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+              )}
+            >
+              <Image
+                src={EverestImg}
+                alt="Cover image"
+                className="absolute -z-10 h-full w-full object-cover opacity-90"
+              />
+              {/*
+              {data.attributes. && (
+                <MessageDialog
+                  guideId={data.attributes.service_provider?.data?.id}
+                />
+              )}
+                */}
+            </DialogContent>
+          </Dialog>
+          <Link href={`/packages?key=category&filter=${data.id}`}>
+            <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
+              View More
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

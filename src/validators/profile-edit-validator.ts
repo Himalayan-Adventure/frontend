@@ -22,7 +22,11 @@ export const EditProfileFormSchema = z.object({
   about: z.string().optional(),
   location: z.string().optional(),
   portfolio: z.string().url().optional(),
-  education: z.object({ key: z.string(), value: z.string() }).array(),
+  //  education: z.object({ education: z.string() }).array(),
+  education: z.string().optional(),
+  hard_skill: z.string().optional(),
+  technical_skill: z.string().optional(),
+  interest: z.string().optional(),
   birthday: z
     .string()
     .refine(

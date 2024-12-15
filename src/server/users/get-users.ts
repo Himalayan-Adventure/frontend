@@ -31,6 +31,7 @@ type UserObject =
 export const getUsers = async (
   type?: "merchant" | "customer",
   name?: string,
+  limit?: number,
 ) => {
   try {
     const filter = type
@@ -41,6 +42,10 @@ export const getUsers = async (
     if (type) {
       params.set("filters[userType][$eqi]", type);
       params.set("populate[0]", "profilePicture");
+    }
+    if (limit) {
+      params.set("pagination[pageSize]", limit.toString());
+      params.set("pagination[page]", "1");
     }
 
     if (name) {

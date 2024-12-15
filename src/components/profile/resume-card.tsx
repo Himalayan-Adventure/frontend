@@ -38,6 +38,7 @@ export const ResumeCard = ({ user }: { user: TUserDeep }) => {
     //   dribbble: "https://www.dribbble.com/mehedihasan5851",
     // },
     portfolio: user?.resume?.portfolio,
+    education: user?.resume?.education,
     // education: {
     //   institution:
     //     "Model Institute of Science and Technology (Under National University)",
@@ -54,16 +55,16 @@ export const ResumeCard = ({ user }: { user: TUserDeep }) => {
     //   "Prototyping",
     //   "High Fidelity Design",
     // ],
-    hardSkills: user?.resume?.hard_skill?.split("\\n"),
-
-    technicalSkill: [
-      { skillName: "Figma", skillLevel: 80 },
-      { skillName: "Adobe XD", skillLevel: 70 },
-      { skillName: "Adobe Photoshop", skillLevel: 85 },
-      { skillName: "Adobe Illustrator", skillLevel: 75 },
-    ],
-    languages: ["English", "Bangla", "Hindi"],
-    interests: user?.resume?.interest?.split("\\n"),
+    hardSkills: user?.resume?.hard_skill?.split("\n"),
+    technicalSkill: user?.resume?.technical_skill?.split("\n"),
+    interests: user?.resume?.interest?.split("\n"),
+    // technicalSkill: [
+    //   { skillName: "Figma", skillLevel: 80 },
+    //   { skillName: "Adobe XD", skillLevel: 70 },
+    //   { skillName: "Adobe Photoshop", skillLevel: 85 },
+    //   { skillName: "Adobe Illustrator", skillLevel: 75 },
+    // ],
+    //languages: ["English", "Bangla", "Hindi"],
   };
   const contactIconMap = {
     email: <Mail size={24} />,
@@ -161,32 +162,32 @@ export const ResumeCard = ({ user }: { user: TUserDeep }) => {
         )}
 
         {/* Education details */}
-        {/* 
         <div className="space-y-3">
           <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Education
           </Text>
           <div className="space-y-2">
-            {Object.entries(resumeData.education).map(([key, value]) => (
-              <span key={`education-${key}`} className="flex items-start">
+            {resumeData?.education?.map((i, index) => (
+              <span key={`education-${index}`} className="flex items-start">
                 <Text
                   variant="text-lg"
                   className="whitespace-nowrap text-sm first-letter:capitalize md:text-base lg:text-lg"
                 >
-                  {key}:&nbsp;
+                  {i?.education}&nbsp;
                 </Text>
 
+                {/*
                 <Text
                   variant="text-lg"
                   className="text-sm first-letter:capitalize md:text-base lg:text-lg"
                 >
                   {value}
                 </Text>
+*/}
               </span>
             ))}
           </div>
         </div>
-          */}
 
         {/* Hard details */}
         <div className="space-y-3">
@@ -212,24 +213,29 @@ export const ResumeCard = ({ user }: { user: TUserDeep }) => {
             Technical Skills
           </Text>
           <div className="space-y-5">
-            {resumeData.technicalSkill.map(({ skillLevel, skillName }) => (
-              <div key={`technical-skill-${skillName}`} className="space-y-2">
+            {resumeData?.technicalSkill?.map((name, index) => (
+              <div
+                key={`technical-skill-${name}${index}`}
+                className="space-y-2"
+              >
                 <span className="flex items-center gap-x-4">
+                  {/*
                   {technicalSkillconMap[skillName]}
+                  */}
                   <Text
                     variant="text-lg"
                     className="whitespace-nowrap first-letter:capitalize"
                   >
-                    {skillName}
+                    {name}
                   </Text>
                 </span>
-                <div className="relative w-80">
-                  <Separator className="realtive h-1 w-full bg-black" />
+                <div className="relative hidden w-80">
+                  <Separator className="h-1 w-full bg-black" />
                   <Circle
                     fill="#000"
                     size={14}
                     className="absolute top-1/2 -translate-y-1/2"
-                    style={{ left: `${skillLevel}%` }}
+                    style={{ left: 0 }}
                   />
                 </div>
               </div>
@@ -242,6 +248,7 @@ export const ResumeCard = ({ user }: { user: TUserDeep }) => {
           <Text variant="text-xl" className="font-semibold lg:text-2xl">
             Languages
           </Text>
+          {/*
           <div className="space-y-2">
             {resumeData.languages.map((lang) => (
               <Text
@@ -253,6 +260,7 @@ export const ResumeCard = ({ user }: { user: TUserDeep }) => {
               </Text>
             ))}
           </div>
+*/}
         </div>
 
         {/* Interests */}
@@ -265,7 +273,7 @@ export const ResumeCard = ({ user }: { user: TUserDeep }) => {
               <Text
                 variant="text-md"
                 key={`languages-${lang}`}
-                className="grid place-items-center whitespace-nowrap first-letter:capitalize"
+                className="grid place-items-center whitespace-nowrap capitalize"
               >
                 {InterestslconMap[lang]}
                 {lang}

@@ -11,12 +11,14 @@ export const getServices = async ({
   name,
   page,
   date,
+  limit = 8,
 }: {
   id?: number;
   category?: string;
   name?: string;
   page?: number;
   date?: string;
+  limit?: number;
 }) => {
   const cookieStore = cookies();
   try {
@@ -43,7 +45,7 @@ export const getServices = async ({
         },
 
         pagination: {
-          pageSize: 8,
+          pageSize: limit ? limit : 8,
           page: page,
         },
       },
@@ -58,9 +60,9 @@ export const getServices = async ({
           tags: ["services"],
         },
 
-        headers: {
-          Authorization: `Bearer ${cookieStore?.get("jwt")?.value}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${cookieStore?.get("jwt")?.value}`,
+        // },
       },
     );
     const data: APIResponseCollection<"api::service.service"> =

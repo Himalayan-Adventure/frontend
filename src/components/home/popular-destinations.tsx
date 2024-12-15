@@ -5,7 +5,7 @@ import { m, domMax, LazyMotion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
 import { APIResponseCollection } from "@/types/types";
-import { de } from "date-fns/locale";
+import Link from "next/link";
 import { Text } from "../ui/text";
 import { Loading } from "../loading";
 // const destinations = [
@@ -89,7 +89,8 @@ export default function PopularDestinations() {
               destinations?.data.map((destination, index) => {
                 const image = destination.attributes.image?.data;
                 return (
-                  <div
+                  <Link
+                    href={`/packages?key=region&filter=${destination.id}`}
                     key={index}
                     className="destination-card relative rounded-3xl border border-gray-200 bg-white"
                   >
@@ -124,7 +125,7 @@ export default function PopularDestinations() {
                         <div className="h-3 w-3 rounded border bg-gray-200 lg:h-6 lg:w-6"></div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 );
               })
             )}

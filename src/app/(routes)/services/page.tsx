@@ -7,14 +7,19 @@ import { SortFilters } from "./sort-filters";
 import { Text } from "@/components/ui/text";
 import { getServices } from "@/server/services/get-services";
 import { getUsers } from "@/server/users/get-users";
-import { ServicesPagination } from "@/components/services/pagination";
+import { LoadMorePagination as ServicesPagination } from "@/components/services/pagination";
 import { GuideCard } from "@/components/services/guide-card";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { Suspense } from "react";
 import { Oval } from "react-loader-spinner";
 type TSearchParams = {
-  searchParams: { type?: string; category?: string; name?: string };
+  searchParams: {
+    type?: string;
+    category?: string;
+    name?: string;
+    limit?: number;
+  };
 };
 
 export const metadata: Metadata = {
@@ -44,8 +49,8 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
         </p>
       </div>
 
-      <section className="relative z-20 md:top-52">
-        <div className="relative flex items-center justify-between">
+      <section className="relative z-20 space-y-2 md:top-52">
+        <div className="relative flex flex-wrap items-center justify-between gap-2">
           <TopFilter />
           <SortFilters />
         </div>
@@ -75,12 +80,18 @@ async function ServicesPackages({ searchParams }: TSearchParams) {
           <ServiceCard data={svc} key={index} />
         ))}
       </div>
-      <ServicesPagination />
+      {data && data?.meta.pagination.total > 8 && (
+        <ServicesPagination title="Continue exploring amazing views" />
+      )}
     </div>
   );
 }
 async function ServicesGuides({ searchParams }: TSearchParams) {
-  const data = await getUsers("merchant", searchParams.name);
+  const data = await getUsers(
+    "merchant",
+    searchParams.name,
+    searchParams.limit || 20,
+  );
 
   return (
     <div className="flex w-full flex-col gap-y-5 py-10">
@@ -93,7 +104,7 @@ async function ServicesGuides({ searchParams }: TSearchParams) {
           <GuideCard user={user} key={`guide-${index}`} />
         ))}
       </div>
-      <ServicesPagination />
+      {data && data?.length > 20 && <ServicesPagination />}
     </div>
   );
 }

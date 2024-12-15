@@ -185,7 +185,7 @@ const ProjectCard = ({
               <div>
                 <Link prefetch={true} href={`/projects/${project.id}`}>
                   <p className="text-lg font-medium text-primary">
-                    {attr?.package_name}
+                    {project.attributes.title}
                   </p>
 
                   {attr?.package_host?.hostname && (
