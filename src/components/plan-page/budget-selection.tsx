@@ -1,7 +1,8 @@
+"use client";
 import { useState } from "react";
 import { FaDollarSign, FaRegQuestionCircle } from "react-icons/fa";
 import { RiSlideshowFill } from "react-icons/ri";
-import { usePlanContext } from "./plan-context";
+import { usePlanContext } from "@/components/plan-page/plan-context";
 import { toast } from "sonner";
 
 interface Budget {
@@ -103,9 +104,7 @@ export default function BudgetSelection() {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        Budget
-      </h2>
+     
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
         {options.map((option) => (
           <div

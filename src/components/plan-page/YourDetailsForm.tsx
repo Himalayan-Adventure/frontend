@@ -1,12 +1,20 @@
 "use client";
-import { useState } from "react";
-import { usePlanContext } from "./plan-context";
 import axios from "axios";
+import { useState } from "react";
 import { toast } from "sonner";
+import { usePlanContext } from "./plan-context";
+import OptimizedPackagesModal from "./optimize-packages-modal";
 
 export default function YourDetailsForm() {
-  const { group, budget, travelDates, experience, accommodation, grade } =
-    usePlanContext();
+  const {
+    group,
+    budget,
+    travelDates,
+    destination,
+    experience,
+    accommodation,
+    selectedPackageNames,
+  } = usePlanContext();
 
   const [detailsFormData, setDetailsFormData] = useState({
     name: "",
@@ -25,7 +33,6 @@ export default function YourDetailsForm() {
   };
 
   const handleSubmit = async () => {
-    // Basic validation
     if (
       !detailsFormData.name.trim() ||
       !detailsFormData.email.trim() ||
@@ -44,10 +51,11 @@ export default function YourDetailsForm() {
     const payload = {
       data: {
         group: group,
-        grade: grade,
+        travel_dates: travelDates,
+        destination: destination,
+        packages: [],
         accommodation_preferences: accommodation.join(", "),
         customized_experience: experience.join(", "),
-        travel_dates: travelDates,
         budget: budget,
         finalize: {
           name: detailsFormData.name,
@@ -61,18 +69,9 @@ export default function YourDetailsForm() {
     setError("");
 
     try {
-      const token = process.env.NEXT_PUBLIC_API_TOKEN;
       const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
 
-      const response = await axios.post(
-        `${apiUrl}api/plan-with-uses`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const response = await axios.post(`${apiUrl}api/plan-with-uses`, payload);
 
       toast.success("Form submitted successfully!");
       setDetailsFormData({ name: "", email: "", message: "" });
@@ -121,6 +120,7 @@ export default function YourDetailsForm() {
         required
       />
       <div className="flex flex-wrap justify-center gap-4">
+        <OptimizedPackagesModal packages={[]} />
         <button
           onClick={() => handleSubmit()}
           disabled={loading}
@@ -128,16 +128,7 @@ export default function YourDetailsForm() {
             loading ? "cursor-not-allowed opacity-50" : ""
           }`}
         >
-          {loading ? "Submitting..." : "Get Quotes"}
-        </button>
-        <button
-          onClick={() => handleSubmit()}
-          disabled={loading}
-          className={`rounded-lg bg-primary px-4 py-2 text-sm text-white shadow-lg shadow-gray-500 transition-colors duration-300 hover:bg-opacity-80 md:text-base ${
-            loading ? "cursor-not-allowed opacity-50" : ""
-          }`}
-        >
-          {loading ? "Submitting..." : "Optimize Package"}
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </div>
     </div>

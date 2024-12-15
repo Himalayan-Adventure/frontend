@@ -1,4 +1,5 @@
-// Existing import statements
+"use client";
+
 import { useState } from "react";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { FaRedo } from "react-icons/fa";
@@ -42,9 +43,6 @@ export default function ReviewFinal() {
 
   return (
     <div className="">
-      <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        Review and Finalize
-      </h2>
       <div className="grid gap-4 lg:grid-cols-6 lg:gap-8">
         {/* Tabs */}
         <div className="flex flex-col pr-4 lg:col-span-2">
@@ -76,7 +74,7 @@ export default function ReviewFinal() {
         </div>
 
         {/* Content */}
-        <div className="flex items-center justify-center lg:col-span-4">
+        <div className="flex  justify-center lg:col-span-4">
           {selectedContent && (
             <div className="w-full">
               {typeof selectedContent === "string" ? (

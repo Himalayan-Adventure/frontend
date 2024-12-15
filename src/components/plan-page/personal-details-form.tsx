@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-import { usePlanContext } from "./plan-context";
+import { usePlanContext } from "@/components/plan-page/plan-context";
 import axios from "axios";
 import { toast } from "sonner";
 
 export default function YourDetailsForm() {
-  const { group, budget, travelDates, experience, accommodation, grade } =
+  const { group, budget, travelDates, experience, accommodation } =
     usePlanContext();
 
   const [detailsFormData, setDetailsFormData] = useState({
@@ -44,7 +44,6 @@ export default function YourDetailsForm() {
     const combinedData = {
       data: {
         group: group,
-        grade: grade,
         accommodation_preferences: accommodation.join(", "),
         customized_experience: experience.join(", "),
         travel_dates: travelDates,
@@ -73,7 +72,7 @@ export default function YourDetailsForm() {
           },
         },
       );
-      
+
       toast.success("Form submitted successfully!");
       setDetailsFormData({ name: "", email: "", message: "" });
     } catch (error: any) {

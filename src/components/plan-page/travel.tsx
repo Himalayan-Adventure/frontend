@@ -1,7 +1,7 @@
 // Travel.tsx
-import { usePlanContext } from "./plan-context";
 import { FaUser, FaQuestion } from "react-icons/fa";
 import { MdGroups2 } from "react-icons/md";
+import { usePlanContext } from "./plan-context";
 
 export const travelOptions = [
   {
@@ -30,9 +30,6 @@ export default function Travel() {
 
   return (
     <div className="p-2 lg:p-4">
-      <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        How do you want to travel?
-      </h2>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:gap-8">
         {travelOptions.map((option) => (
           <div

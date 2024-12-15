@@ -1,67 +1,200 @@
-import { useState } from "react";
-import { GiHiking, GiStairsGoal } from "react-icons/gi";
-import { MdHiking } from "react-icons/md";
+/* eslint-disable @next/next/no-img-element */
+"use client";
+
+import axios from "axios";
+import { useEffect, useState } from "react";
+import DynamicReactIcon from "../icons/strapi-icon";
 import { usePlanContext } from "./plan-context";
+import {
+  FaCloudRain,
+  FaLeaf,
+  FaSnowflake,
+  FaStopwatch,
+  FaSun,
+  FaTimesCircle,
+  FaTree,
+} from "react-icons/fa";
+import { MdUpgrade } from "react-icons/md";
+import { FaMountain } from "react-icons/fa6";
 
-const levels = [
-  {
-    name: "Beginner",
-    icon: <GiStairsGoal />,
-    value: "beginner",
-  },
-  {
-    name: "Intermediate",
-    icon: <MdHiking />,
-    value: "intermediate",
-  },
-  {
-    name: "Advanced",
-    icon: <GiHiking />,
-    value: "advanced",
-  },
-];
+export default function PackageSelection() {
+  const [types, setTypes] = useState<any>([]);
+  const [packages, setPackages] = useState<any>([]);
+  const [selectedType, setSelectedType] = useState("");
+  const { selectedPackageNames, setSelectedPackageNames } = usePlanContext();
 
-export default function GradeSelection() {
-  const [selectedLevel, setSelectedLevel] = useState<string>("beginner");
-  const { setGrade } = usePlanContext();
+  console.log("Selected Package", selectedPackageNames);
 
-  const handleLevelClick = (levelValue: string) => {
-    setSelectedLevel(levelValue);
-    setGrade(levelValue);
+  useEffect(() => {
+    const fetchTypes = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types?populate=*`,
+        );
+        setTypes(response?.data?.data || []);
+      } catch (error) {
+        console.error("Error fetching types:", error);
+      }
+    };
+
+    fetchTypes();
+  }, []);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      if (selectedType) {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?filters[package_types][name][$eq]=${selectedType}&fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=season&populate[package_host][populate][3]=package_host&populate[adventure_specification][populate][2]=grade`,
+          );
+          setPackages(response?.data?.data || []);
+        } catch (error) {
+          console.error("Error fetching packages:", error);
+        }
+      }
+    };
+
+    fetchPackages();
+  }, [selectedType]);
+
+  const handleOptionClick = (type: string) => {
+    setSelectedType(type);
+  };
+
+  const handleSelectPackage = (pkg: any) => {
+    if (selectedPackageNames.includes(pkg?.attributes?.package_name)) {
+      setSelectedPackageNames((prev) =>
+        prev.filter((name) => name !== pkg?.attributes?.package_name),
+      );
+    } else {
+      setSelectedPackageNames((prev) => [
+        ...prev,
+        pkg?.attributes?.package_name,
+      ]);
+    }
   };
 
   return (
     <div className="p-4 lg:p-8">
-      <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        Choose your Grade
-      </h2>
-      <div className="flex flex-wrap gap-4 lg:justify-center lg:space-x-6">
-        {levels.map((level) => (
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
+        {types.map((type: any) => (
           <div
-            key={level.value}
-            className="group flex cursor-pointer items-center space-x-2 text-primary"
-            onClick={() => handleLevelClick(level.value)}
+            key={type?.attributes?.name}
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out md:p-4 ${
+              selectedType === type?.attributes?.name
+                ? "bg-primary text-white"
+                : "bg-gray-100 hover:bg-gray-200"
+            }`}
+            onClick={() => handleOptionClick(type?.attributes?.name)}
           >
-            <div
-              className={`w-auto rounded-full border border-primary p-2 shadow-lg shadow-gray-400 transition duration-300 ease-in-out ${
-                selectedLevel === level.value
-                  ? "bg-primary text-white"
-                  : "group-hover:bg-gray-100"
+            <span
+              className={`text-xl lg:text-4xl ${
+                selectedType === type?.attributes?.name
+                  ? "text-white"
+                  : "text-primary"
               }`}
             >
-              {level.icon}
-            </div>
-            <div
-              className={`rounded-lg px-4 py-2 shadow-lg shadow-gray-400 transition-colors duration-300 ease-in-out ${
-                selectedLevel === level.value
-                  ? "bg-primary text-white"
-                  : "group-hover:bg-gray-100"
-              }`}
-            >
-              {level.name}
-            </div>
+              <DynamicReactIcon name={type?.attributes?.icon} />
+            </span>
+            <hr className="my-2 w-full border-gray-300" />
+            <span className="text-sm md:text-base">
+              {type?.attributes?.name}
+            </span>
           </div>
         ))}
+      </div>
+
+      {/* packages list according to selected type */}
+      <div className="my-4">
+        <h2 className="pb-2 text-left text-xl font-medium md:text-3xl">
+          {selectedType ? `${selectedType}` : ""}
+        </h2>
+        <hr />
+      </div>
+      <div className="space-y-4">
+        {packages.length > 0 ? (
+          packages.map((pkg: any) => (
+            <div key={pkg?.id} className="flex items-center gap-4">
+              <div className="max-h-48 w-1/4 overflow-hidden">
+                <img
+                  src={
+                    pkg?.attributes?.image?.data?.[0]?.attributes?.url ||
+                    "/placeholder.jpg"
+                  }
+                  alt={pkg?.attributes?.package_name}
+                  className="h-48 w-full rounded object-cover"
+                />
+              </div>
+              <div className="w-2/4 border-r border-black">
+                <h3 className="text-left text-lg font-semibold">
+                  {pkg?.attributes?.package_name}
+                </h3>
+                <ul className="mt-2 space-y-1 text-left text-sm">
+                  <li className="flex items-center gap-2">
+                    {pkg?.attributes?.adventure_specification?.season?.[0]
+                      ?.name && (
+                      <>
+                        {(() => {
+                          const season =
+                            pkg?.attributes?.adventure_specification?.season?.[0]?.name.toLowerCase();
+                          switch (season) {
+                            case "summer":
+                              return <FaSun />;
+                            case "winter":
+                              return <FaSnowflake />;
+                            case "spring":
+                              return <FaLeaf />;
+                            case "autumn":
+                              return <FaTree />;
+                            default:
+                              return null;
+                          }
+                        })()}
+                        <span className="font-medium capitalize">
+                          {
+                            pkg?.attributes?.adventure_specification
+                              ?.season?.[0]?.name
+                          }
+                        </span>
+                      </>
+                    )}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaStopwatch />
+                    <span className="font-medium">Duration:</span>{" "}
+                    {pkg?.attributes?.adventure_specification?.duration} days
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <MdUpgrade />
+                    <span className="font-medium">Grade:</span>{" "}
+                    {pkg?.attributes?.adventure_specification?.grade?.[0]?.name}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaMountain />
+                    <span className="font-medium">Max Altitude:</span>{" "}
+                    {pkg?.attributes?.adventure_specification?.max_altitude}
+                  </li>
+                </ul>
+              </div>
+              <div className="h-full">
+                <button
+                  onClick={() => handleSelectPackage(pkg)}
+                  className={`rounded-full px-4 py-2 text-white ${
+                    selectedPackageNames.includes(pkg?.attributes?.package_name)
+                      ? "bg-blue-500"
+                      : "bg-black"
+                  }`}
+                >
+                  {selectedPackageNames.includes(pkg?.attributes?.package_name)
+                    ? "Deselect"
+                    : "Select"}
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="py-8 text-left">No packages available for this type</p>
+        )}
       </div>
     </div>
   );

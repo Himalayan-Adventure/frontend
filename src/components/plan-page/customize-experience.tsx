@@ -1,4 +1,4 @@
-import { usePlanContext } from "./plan-context";
+import { usePlanContext } from "@/components/plan-page/plan-context";
 import { FaHelicopter } from "react-icons/fa";
 import { MdGroups2, MdOutlineFestival, MdParagliding } from "react-icons/md";
 import { IoIosPersonAdd } from "react-icons/io";
@@ -39,9 +39,6 @@ export default function CustomizeExperience() {
 
   return (
     <div className="p-2 lg:p-4">
-      <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-        Customize Your Experience
-      </h2>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
         {options.map((option) => (
           <div
