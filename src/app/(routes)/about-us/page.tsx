@@ -11,8 +11,8 @@ import { getProjects } from "@/server/projects/get-projects";
 
 const AboutUs = async () => {
   const data = await getAboutUs();
-  const projectsData = await getProjects();
-  
+  const projectsData = await getProjects({});
+
   if (!data || !data.data || !data.data.attributes) {
     return <CommonBanner title="Something Went Wrong" bgImage={bgImage} />;
   }
@@ -30,7 +30,7 @@ const AboutUs = async () => {
       />
 
       <Services services={data?.data?.attributes?.service} />
-      <Projects projectsData={projectsData?.data} />
+      {projectsData && <Projects projectsData={projectsData?.data} />}
       <ClientsReviews />
       <Contact />
     </main>
