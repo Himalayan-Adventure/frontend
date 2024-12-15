@@ -30,7 +30,7 @@ const AboutUs = async () => {
       />
 
       <Services services={data?.data?.attributes?.service} />
-      {projectsData && <Projects projectsData={projectsData?.data} />}
+      {projectsData?.data && <Projects projectsData={projectsData?.data} />}
       <ClientsReviews />
       <Contact />
     </main>
