@@ -154,6 +154,7 @@ const MainPackageCard = ({
             ref={overlayRef}
             pkg={pkg}
             isOverlayVisible={isOverlayVisible}
+            className="!top-1/2 h-[calc(100%-30px)] w-[calc(100%-30px)] -translate-y-1/2"
           />
         )}
         {cardState === 1 && (

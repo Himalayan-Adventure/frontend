@@ -30,7 +30,7 @@ export default async function Packages({
           <PackageFilter />
         </Suspense>
         <Suspense fallback={<PackageCardSkeleton />}>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(0,300px))] gap-4">
             {!data || data?.data?.length === 0 ? (
               <span>No projects are available</span>
             ) : (

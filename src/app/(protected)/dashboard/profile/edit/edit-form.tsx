@@ -68,10 +68,10 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       about: user?.about?.description || "",
       location: user?.resume?.location || "",
       portfolio: user?.resume?.portfolio || "",
-      education: user?.resume?.education?.map((e) => ({
-        key: e.id.toString(),
-        value: e.education || "",
-      })) || [{ key: "", value: "" }],
+      // education: user?.resume?.education?.map((e) => ({
+      //   education: e.education || "",
+      // })),
+      education: user?.resume?.education?.map((i) => i.education).join("\n"),
       birthday: user?.contact?.birthday || "",
       gender: user?.contact?.gender || "",
       citizenship_no: user?.contact?.citizenship || "",
@@ -354,10 +354,41 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
           </FormItem>
         )}
       />
-      <MultiInput title="Education" />
-      <MultiInput title="Hard Skills" />
-      <MultiInput title="Technical Skills" showSlider />
-      <MultiInput title="Interest" />
+      <FormField
+        control={control}
+        name="education"
+        render={({ field }) => (
+          <MultiInput title="Education" placeholder="e.g. SEE.." {...field} />
+        )}
+      />
+
+      <FormField
+        control={control}
+        name="hard_skill"
+        render={({ field }) => (
+          <MultiInput
+            title="Hard Skills"
+            placeholder="e.g. Designing.."
+            {...field}
+          />
+        )}
+      />
+
+      <FormField
+        control={control}
+        name="technical_skill"
+        render={({ field }) => (
+          <MultiInput title="Technical Skills" placeholder="e.g. coding" />
+        )}
+      />
+
+      <FormField
+        control={control}
+        name="interest"
+        render={({ field }) => (
+          <MultiInput title="Interests" placeholder="e.g. cricket" />
+        )}
+      />
     </>
   );
 };
