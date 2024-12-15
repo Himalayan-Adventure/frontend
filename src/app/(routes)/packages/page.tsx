@@ -8,6 +8,7 @@ import { getPackages } from "@/server/packages/get-packages";
 import { PackageFilter } from "./filter";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
 import PackageCard from "@/components/packagespage/package-card/index";
+import SearchBar from "@/components/ui/search-bar";
 
 export const metadata: Metadata = {
   title: `Packages | ${siteConfig.siteName}`,
@@ -16,14 +17,24 @@ export const metadata: Metadata = {
 export default async function Packages({
   searchParams,
 }: {
-  searchParams: { key?: string; filter?: string; operator?: string };
+  searchParams: {
+    key?: string;
+    filter?: string;
+    operator?: string;
+    title?: string;
+  };
 }) {
   const data = await getPackages(searchParams);
   console.log(data);
   return (
     <section>
       <TestBanner title={"Packages"} desc="lorem" bgImage={bgImage} />
-      <div className="container relative lg:mt-40">
+      <div className="container relative gap-y-2 lg:mt-40">
+        <Suspense>
+          <div className="flex justify-end [&>div]:w-fit">
+            <SearchBar selector="title" className="max-w-48 justify-end" />
+          </div>
+        </Suspense>
         <Suspense>
           <PackageFilter />
         </Suspense>

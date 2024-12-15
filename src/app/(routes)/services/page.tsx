@@ -14,7 +14,12 @@ import { siteConfig } from "@/config/site-config";
 import { Suspense } from "react";
 import { Oval } from "react-loader-spinner";
 type TSearchParams = {
-  searchParams: { type?: string; category?: string; name?: string };
+  searchParams: {
+    type?: string;
+    category?: string;
+    name?: string;
+    limit?: number;
+  };
 };
 
 export const metadata: Metadata = {
@@ -75,12 +80,16 @@ async function ServicesPackages({ searchParams }: TSearchParams) {
           <ServiceCard data={svc} key={index} />
         ))}
       </div>
-      <ServicesPagination />
+      {data && data?.meta.pagination.total > 8 && <ServicesPagination />}
     </div>
   );
 }
 async function ServicesGuides({ searchParams }: TSearchParams) {
-  const data = await getUsers("merchant", searchParams.name);
+  const data = await getUsers(
+    "merchant",
+    searchParams.name,
+    searchParams.limit || 20,
+  );
 
   return (
     <div className="flex w-full flex-col gap-y-5 py-10">
@@ -93,7 +102,7 @@ async function ServicesGuides({ searchParams }: TSearchParams) {
           <GuideCard user={user} key={`guide-${index}`} />
         ))}
       </div>
-      <ServicesPagination />
+      {data && data?.length > 20 && <ServicesPagination />}
     </div>
   );
 }
