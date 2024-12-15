@@ -12,7 +12,7 @@ import { getProjects } from "@/server/projects/get-projects";
 import ProjectCard from "./project-card";
 
 export const metadata: Metadata = {
-  title: `Packages | ${siteConfig.siteName}`,
+  title: `Projects | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,
 };
 export default async function Packages({
@@ -21,6 +21,7 @@ export default async function Packages({
   searchParams: { key?: string; filter?: string; operator?: string };
 }) {
   const data = await getProjects({});
+
   console.log(data);
   return (
     <section>

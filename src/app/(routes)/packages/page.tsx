@@ -9,6 +9,7 @@ import { PackageFilter } from "./filter";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
 import PackageCard from "@/components/packagespage/package-card/index";
 import SearchBar from "@/components/ui/search-bar";
+import { LoadMorePagination } from "@/components/services/pagination";
 
 export const metadata: Metadata = {
   title: `Packages | ${siteConfig.siteName}`,
@@ -22,10 +23,10 @@ export default async function Packages({
     filter?: string;
     operator?: string;
     title?: string;
+    limit?: number;
   };
 }) {
   const data = await getPackages(searchParams);
-  console.log(data);
   return (
     <section>
       <TestBanner title={"Packages"} desc="lorem" bgImage={bgImage} />
@@ -51,6 +52,7 @@ export default async function Packages({
             )}
           </div>
         </Suspense>
+        <LoadMorePagination className="mt-40" />
       </div>
     </section>
   );

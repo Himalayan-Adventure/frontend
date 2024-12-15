@@ -60,9 +60,9 @@ export const getServices = async ({
           tags: ["services"],
         },
 
-        headers: {
-          Authorization: `Bearer ${cookieStore?.get("jwt")?.value}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${cookieStore?.get("jwt")?.value}`,
+        // },
       },
     );
     const data: APIResponseCollection<"api::service.service"> =

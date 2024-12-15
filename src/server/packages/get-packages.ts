@@ -8,11 +8,13 @@ export const getPackages = async ({
   filter,
   operator,
   title,
+  limit,
 }: {
   key?: string;
   filter?: string;
   operator?: string;
   title?: string;
+  limit?: number;
 }) => {
   try {
     const queryGenerator = (key?: string, filter?: string) => {
@@ -40,6 +42,10 @@ export const getPackages = async ({
         package_name: {
           $contains: title,
         },
+      },
+      pagination: {
+        pageSize: limit || 20,
+        page: 1,
       },
     });
 

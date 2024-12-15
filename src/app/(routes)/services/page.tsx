@@ -7,7 +7,7 @@ import { SortFilters } from "./sort-filters";
 import { Text } from "@/components/ui/text";
 import { getServices } from "@/server/services/get-services";
 import { getUsers } from "@/server/users/get-users";
-import { ServicesPagination } from "@/components/services/pagination";
+import { LoadMorePagination as ServicesPagination } from "@/components/services/pagination";
 import { GuideCard } from "@/components/services/guide-card";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
@@ -80,7 +80,9 @@ async function ServicesPackages({ searchParams }: TSearchParams) {
           <ServiceCard data={svc} key={index} />
         ))}
       </div>
-      {data && data?.meta.pagination.total > 8 && <ServicesPagination />}
+      {data && data?.meta.pagination.total > 8 && (
+        <ServicesPagination title="Continue exploring amazing views" />
+      )}
     </div>
   );
 }
