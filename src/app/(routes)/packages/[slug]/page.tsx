@@ -116,6 +116,13 @@ export default async function PackageDetail({ params }: { params: Params }) {
                   */}
 
                   <ul className="flex list-disc space-x-1 text-sm md:text-base">
+                    {pkg.package_types?.data?.[0] && (
+                      <h2>
+                        {pkg?.package_types?.data?.[0]?.attributes?.name}{" "}
+                      </h2>
+                    )}
+
+                    <Dot />
                     {/*
                     {pkg?.numberOfLeaders && (
                       <li>{pkg.numberOfLeaders} leaders</li>
@@ -161,7 +168,10 @@ export default async function PackageDetail({ params }: { params: Params }) {
               <Video packageName={pkg?.package_name} videolink={pkg?.video} />
             )}
             {pkg?.itinerary?.timeline && (
-              <Itenerary data={pkg?.itinerary?.timeline} packageName={pkg?.package_name} />
+              <Itenerary
+                data={pkg?.itinerary?.timeline}
+                packageName={pkg?.package_name}
+              />
             )}
             <InfoTabs content={infoTabsData} />
           </div>

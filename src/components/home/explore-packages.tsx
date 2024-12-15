@@ -3,6 +3,8 @@ import Image, { StaticImageData } from "next/image";
 import { Button } from "../ui/button";
 import packageImg from "/public/images/package1.jpeg";
 import { m, domMax, LazyMotion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { APIResponseCollection, APIResponseData } from "@/types/types";
 const packages = [
   {
     name: "Expedition Over 8000m",
@@ -23,6 +25,30 @@ const packages = [
 ];
 
 export default function ExplorePackages() {
+  const {
+    data: packages,
+    isPending,
+    isError,
+  } = useQuery<APIResponseCollection<"api::package-category.package-category">>(
+    {
+      queryKey: ["package-category"],
+      queryFn: async () => {
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=3`,
+          );
+          if (!res.ok) {
+            throw new Error("Error fetching package categories");
+          }
+          const data = await res.json();
+          return data;
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    },
+  );
+
   return (
     <LazyMotion features={domMax}>
       <m.section
@@ -47,8 +73,11 @@ export default function ExplorePackages() {
           </div>
           {/* Packages Grid */}
           <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16">
-            {packages.map((pkg, index) => (
-              <ServiceCard data={pkg} key={pkg.name} />
+            {packages?.data?.map((pkg, index) => (
+              <PackageCategoryCard
+                data={pkg}
+                key={`package-category-${pkg.id}`}
+              />
             ))}
           </div>
         </div>
@@ -56,20 +85,27 @@ export default function ExplorePackages() {
     </LazyMotion>
   );
 }
-const ServiceCard = ({
+const PackageCategoryCard = ({
   data,
 }: {
-  data: { name: string; image: StaticImageData };
+  data: APIResponseData<"api::package-category.package-category">;
 }) => {
+  const image = data?.attributes?.image?.data?.attributes;
   return (
     <div className="">
-      <Image
-        src={data.image}
-        alt={data.name}
-        className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-none"
-      />
+      {image && (
+        <Image
+          src={image.url}
+          alt={image.name}
+          className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-none"
+          height={image.height}
+          width={image.width}
+        />
+      )}
       <div className="py-2 text-center">
-        <h2 className="mb-2 text-base font-semibold lg:text-xl">{data.name}</h2>
+        <h2 className="mb-2 text-base font-semibold lg:text-xl">
+          {data?.attributes?.name}
+        </h2>
         <div className="flex flex-col items-center space-y-3">
           <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
             Inquire

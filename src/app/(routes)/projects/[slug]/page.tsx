@@ -129,11 +129,11 @@ export default async function ProjectDetail({
                   */}
 
                   <ul className="flex list-disc space-x-1 text-sm md:text-base">
-                    {/*
-                    {pkg?.numberOfLeaders && (
-                      <li>{pkg.numberOfLeaders} leaders</li>
+                    {pkg.package_types?.data?.[0] && (
+                      <h2>
+                        {pkg?.package_types?.data?.[0]?.attributes?.name}{" "}
+                      </h2>
                     )}
-                    */}
                     <p>Fixed Departure</p>
                     <Dot />
                     {pkg?.adventure_specification?.season && (
