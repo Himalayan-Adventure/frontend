@@ -12,15 +12,42 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MessageDialog } from "@/components/services/message-dialog";
+import { useMutation } from "@tanstack/react-query";
+import { postRequestService } from "@/server/services/post-request-serivce";
+import { getCurrentUserData } from "@/server/auth/get-me";
+import { toast } from "sonner";
 
 export const ServiceCard = ({
   data,
+  userId,
 }: {
   data: APIResponseData<"api::service.service">;
+  userId?: number;
 }) => {
   const [isFav, setIsFav] = useState(false);
   const image = data?.attributes?.image?.data?.attributes;
   const service_provider = data?.attributes?.service_provider?.data;
+  const {
+    mutate: requestSerivceMutation,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationKey: ["request-service"],
+    mutationFn: async () => {
+      if (userId) {
+        await postRequestService({ userId: userId, serviceId: data.id });
+      }
+    },
+    onSuccess: () => {
+      toast.success("Service Request sent successfully");
+    },
+    onError: (error) => {
+      toast.error(
+        "Service Request could not be sent " + error.message.toString(),
+      );
+    },
+    retry: 1,
+  });
   return (
     <div className="relative z-10 grid max-w-[300px] grid-rows-[auto_auto] rounded-lg bg-white px-2 pt-2 shadow-2xl md:px-3 md:pt-3">
       <div className="relative h-full">
@@ -66,12 +93,17 @@ export const ServiceCard = ({
           {data?.attributes?.title}
         </h2>
         <div className="flex flex-col items-stretch space-y-2">
-          <Button className="w-auto rounded-xl bg-black px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2">
+          <Button
+            disabled={!userId}
+            className="w-auto rounded-xl bg-black px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2"
+            onClick={() => requestSerivceMutation()}
+            isLoading={isPending}
+          >
             Request Service
           </Button>
           <Dialog>
             <DialogTrigger
-              disabled={!data?.attributes?.service_provider?.data}
+              disabled={!data?.attributes?.service_provider?.data || !userId}
               asChild
             >
               <Button className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2">

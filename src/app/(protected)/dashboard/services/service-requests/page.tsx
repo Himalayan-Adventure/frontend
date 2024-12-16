@@ -3,31 +3,39 @@ import Link from "next/link";
 import { GrUpgrade } from "react-icons/gr";
 
 import { TbMessageCircleSearch } from "react-icons/tb";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Workflow } from "lucide-react";
 import { getServices } from "@/server/services/get-services";
 import DataTable from "./_table/data-table";
 import { columns } from "./_table/columns-def";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
+import { GoBackButton } from "@/components/profile/go-back-button";
+import { getInquiries } from "@/server/inquiry/get-inquiries";
+import { redirect } from "next/navigation";
+import { getServiceRequests } from "@/server/services/get-service-request-for-guide";
 
 export const metadata: Metadata = {
-  title: `Services Dashboard | ${siteConfig.siteName}`,
+  title: `Services Requests | Dashboard | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,
 };
-export default async function ServicesPage({
+export default async function ServicesRequestsPage({
   searchParams,
 }: {
   searchParams: { name?: string; page?: number; date?: string };
 }) {
+  const { name, page, date } = searchParams;
   const user = await getCurrentUserData();
-  const data = await getServices({ ...searchParams, id: user?.id });
+  if (!user) {
+    redirect("/home");
+  }
+  const data = await getServiceRequests({ id: user?.id, page, date });
 
   return (
     <section className="space-y-4">
       <span className="flex items-center gap-x-3 font-poppins">
         <Text variant="display-sm" bold>
-          Services
+          Services Requests
         </Text>
 
         {user?.userType === "merchant" && (
@@ -38,23 +46,19 @@ export default async function ServicesPage({
             </div>
           </Link>
         )}
-        {user?.userType === "merchant" && (
-          <Link href="/dashboard/services/service-requests" prefetch={true}>
-            <div className="btn-primary font-semibold">
-              <GrUpgrade size={16} />
-              Service Request
-            </div>
-          </Link>
-        )}
+        <Link href="/dashboard/services/" prefetch={true}>
+          <div className="btn-primary font-semibold">
+            <TbMessageCircleSearch size={16} />
+            Inquiry
+          </div>
+        </Link>
 
-        {user?.userType === "merchant" && (
-          <Link href="/dashboard/services/inquiry" prefetch={true}>
-            <div className="btn-primary font-semibold">
-              <TbMessageCircleSearch size={16} />
-              Service Inquiry
-            </div>
-          </Link>
-        )}
+        <Link href="/dashboard/services/" prefetch={true}>
+          <div className="btn-primary font-semibold">
+            <Workflow size={16} />
+            Services
+          </div>
+        </Link>
       </span>
       <div className="relative flex flex-col gap-5 md:flex-row">
         <DataTable

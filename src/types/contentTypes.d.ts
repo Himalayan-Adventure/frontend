@@ -841,11 +841,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::service.service'
     >;
-    calendar: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'api::calendar.calendar'
-    >;
     appointments: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToMany',
@@ -876,6 +871,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'oneToOne',
       'api::product-order.product-order'
+    >;
+    calendars: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
+      'api::calendar.calendar'
+    >;
+    service_request: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::service-request.service-request'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1238,9 +1243,9 @@ export interface ApiCalendarCalendar extends Schema.CollectionType {
     is_available: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<true>;
-    guide: Attribute.Relation<
+    guides: Attribute.Relation<
       'api::calendar.calendar',
-      'oneToOne',
+      'manyToMany',
       'plugin::users-permissions.user'
     >;
     heading: Attribute.String;
@@ -1511,6 +1516,9 @@ export interface ApiPackagePackage extends Schema.CollectionType {
       'oneToOne',
       'api::admin-appointment.admin-appointment'
     >;
+    is_popular: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1925,6 +1933,12 @@ export interface ApiProjectProject extends Schema.CollectionType {
       'oneToOne',
       'api::package.package'
     >;
+    users: Attribute.Relation<
+      'api::project.project',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    user_review: Attribute.Component<'user-review.user-review', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2039,6 +2053,11 @@ export interface ApiServiceService extends Schema.CollectionType {
       'oneToOne',
       'api::admin-appointment.admin-appointment'
     >;
+    service_request: Attribute.Relation<
+      'api::service.service',
+      'manyToOne',
+      'api::service-request.service-request'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2088,6 +2107,45 @@ export interface ApiServiceCategoryServiceCategory
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::service-category.service-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiServiceRequestServiceRequest extends Schema.CollectionType {
+  collectionName: 'service_requests';
+  info: {
+    singularName: 'service-request';
+    pluralName: 'service-requests';
+    displayName: 'Service Request';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    services: Attribute.Relation<
+      'api::service-request.service-request',
+      'oneToMany',
+      'api::service.service'
+    >;
+    users_permissions_user: Attribute.Relation<
+      'api::service-request.service-request',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::service-request.service-request',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::service-request.service-request',
       'oneToOne',
       'admin::user'
     > &
@@ -2446,6 +2504,7 @@ declare module '@strapi/types' {
       'api::quote.quote': ApiQuoteQuote;
       'api::service.service': ApiServiceService;
       'api::service-category.service-category': ApiServiceCategoryServiceCategory;
+      'api::service-request.service-request': ApiServiceRequestServiceRequest;
       'api::shop.shop': ApiShopShop;
       'api::shop-category.shop-category': ApiShopCategoryShopCategory;
       'api::shop-sub-category.shop-sub-category': ApiShopSubCategoryShopSubCategory;

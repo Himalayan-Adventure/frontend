@@ -13,6 +13,7 @@ import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { Suspense } from "react";
 import { Oval } from "react-loader-spinner";
+import { getCurrentUserData } from "@/server/auth/get-me";
 type TSearchParams = {
   searchParams: {
     type?: string;
@@ -73,15 +74,19 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
 async function ServicesPackages({ searchParams }: TSearchParams) {
   const { category } = searchParams;
   const data = await getServices(searchParams);
+  const user = await getCurrentUserData();
   return (
     <div className="z-10 w-full space-y-10 py-10">
       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
         {data?.data?.map((svc, index) => (
-          <ServiceCard data={svc} key={index} />
+          <ServiceCard data={svc} key={index} userId={user?.id} />
         ))}
       </div>
       {data && data?.meta.pagination.total > 8 && (
-        <ServicesPagination title="Continue exploring amazing views" />
+        <ServicesPagination
+          title="Continue exploring amazing views"
+          disabled={data.meta.pagination.total <= data.meta.pagination.pageSize}
+        />
       )}
     </div>
   );
