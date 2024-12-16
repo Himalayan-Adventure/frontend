@@ -1,26 +1,30 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
-import { toast } from "sonner"; // Sonner for success notifications
 import { type BlocksContent } from "@strapi/blocks-react-renderer";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 import BlockRendererClient from "../ui/block-renderer-client";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 interface RentalProductProps {
+  product_id: number;
   product_name: string;
   category: string;
   size: string;
   manufacturer: string;
-  quantity: string;
+  quantity: number;
   condition: string;
   termsAndConditions: BlocksContent;
   rentalDetails: BlocksContent;
   images: any[];
+  stock_count: number;
 }
 
-const RentDialog: React.FC<RentalProductProps> = ({
+const RentDialog = ({
+  product_id,
   product_name,
   category,
   size,
@@ -30,7 +34,40 @@ const RentDialog: React.FC<RentalProductProps> = ({
   termsAndConditions,
   rentalDetails,
   images,
-}) => {
+  stock_count,
+}: RentalProductProps) => {
+  const [userId, setUserId] = useState<number | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isStockSufficient, setIsStockSufficient] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get("/api/users/me", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.data) {
+          setUserId(response.data.id);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    if (stock_count < quantity) {
+      setIsStockSufficient(false);
+    }
+  }, [quantity]);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -45,22 +82,48 @@ const RentDialog: React.FC<RentalProductProps> = ({
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Show the form data using toast notification
-    toast.success(
-      `Rental request for ${product_name} submitted successfully! `,
-    );
-    console.log("Form Data:", formData);
+    if (!isAuthenticated) {
+      toast.error("You are not authenticated. Please log in to proceed.");
+      return;
+    }
 
-    // Reset the form after submission
-    setFormData({
-      firstName: "",
-      lastName: "",
-      message: "",
-      email: "",
-    });
+    if (!isStockSufficient) {
+      toast.error(
+        "Stock is insufficient. The requested quantity is not available.",
+      );
+      return;
+    }
+
+    try {
+      const payload = {
+        data: {
+          is_rented: true,
+          rent_description: formData.message,
+          quantity: quantity,
+          products: [product_id],
+          user: userId,
+        },
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}api/product-orders`,
+        payload,
+      );
+
+      toast.success("Rental request submitted successfully!");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        message: "",
+        email: "",
+      });
+    } catch (error) {
+      console.error("Error submitting rental request:", error);
+      toast.error("Failed to submit rental request. Please try again later.");
+    }
   };
 
   const productDetails = [
@@ -80,10 +143,10 @@ const RentDialog: React.FC<RentalProductProps> = ({
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[80vh] overflow-auto sm:max-w-[800px]">
-        <div className="p-4 md:p-8 lg:space-y-8">
+        <div className="mb-8 p-4 md:p-8">
           {/* Product Details Section */}
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
+            <div className="space-y-8">
               <div className="grid grid-cols-4 gap-4 overflow-hidden">
                 <div className="col-span-1 grid gap-2">
                   {images?.map((image, index) => (
@@ -148,7 +211,7 @@ const RentDialog: React.FC<RentalProductProps> = ({
           </div>
 
           {/* Rental Form Section */}
-          <div className="mt-8 md:mt-0 md:px-8">
+          <div className="md:mt-0 md:px-8">
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
               {[
                 {
@@ -175,6 +238,7 @@ const RentDialog: React.FC<RentalProductProps> = ({
                     value={formData[input.name as keyof typeof formData]}
                     onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border p-2 text-sm outline-none"
+                    required
                   />
                 </div>
               ))}
@@ -190,6 +254,7 @@ const RentDialog: React.FC<RentalProductProps> = ({
                   value={formData.message}
                   onChange={handleInputChange}
                   className="mt-1 block w-full resize-none rounded-md border p-2 text-sm outline-none"
+                  required
                 />
               </div>
 
@@ -205,6 +270,7 @@ const RentDialog: React.FC<RentalProductProps> = ({
                     value={formData.email}
                     onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border p-2 text-sm outline-none"
+                    required
                   />
                 </div>
                 <div className="w-full">

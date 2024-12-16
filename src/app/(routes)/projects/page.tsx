@@ -32,7 +32,7 @@ export default async function Packages({
 
   return (
     <section>
-      <Banner title="Projects" desc="lorem" bgImage={bgImage} />
+      <Banner title="Projects" desc="" bgImage={bgImage} />
       <div className="container relative space-y-10 lg:mt-40">
         <Suspense>
           <div className="flex justify-end [&>div]:w-fit">

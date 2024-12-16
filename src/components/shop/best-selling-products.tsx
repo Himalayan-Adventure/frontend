@@ -38,7 +38,7 @@ export default function BestSellingProducts({ products }: any) {
               discountRate={product?.attributes?.discount_rate}
               rentAvailable={product?.attributes?.rentAvailable}
               rentPrice={product?.attributes?.rentPrice}
-              stockCount={product?.attributes?.stockCount}
+              stockCount={product?.attributes?.stock_count}
               colors={product?.attributes?.colors}
               rating={4}
               reviews={54}

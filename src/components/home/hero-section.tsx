@@ -1,20 +1,18 @@
 "use client";
-import Image from "next/image";
-import bgImage from "/public/images/home-bg-1.png";
-import cloudImage from "/public/images/cloud.png";
-import lhotseImage from "/public/images/lhotse.png";
-import climberImage from "/public/images/climber-bg.png";
-import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { Search } from "lucide-react";
-import Link from "next/link";
-import { socialIcons } from "@/config/constants";
+import Image from "next/image";
+import climberImage from "/public/images/climber-bg.png";
+import cloudImage from "/public/images/cloud.png";
+import bgImage from "/public/images/home-bg-1.png";
+import lhotseImage from "/public/images/lhotse.png";
 
-import { m, domMax, LazyMotion } from "framer-motion";
-import { Dialog, DialogTrigger } from "../ui/dialog";
-import FilterBox from "./Filters";
+import { domMax, LazyMotion, m } from "framer-motion";
 import { Toaster } from "sonner";
+import { useRouter } from "next/navigation";
 export function HeroSection() {
+  const router = useRouter();
   return (
     <LazyMotion features={domMax}>
       <section className="flex h-[calc(50dvh-var(--navbar-height))] flex-col sm:h-[80vh] sm:overflow-hidden">
@@ -115,21 +113,17 @@ export function HeroSection() {
             Not sure where to go? Perfect.
           </Text>
 
-          <Dialog>
-            <DialogTrigger asChild>
-              {/* Wrapping both the button and the icon inside a single element */}
-              <div>
-                <Button className="flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white sm:w-auto md:px-10 md:py-8">
-                  <Search />
-                  <Text variant="text-md" bold>
-                    Find your Adventure
-                  </Text>
-                </Button>
-              </div>
-            </DialogTrigger>
-            {/* FilterBox will be rendered inside DialogContent */}
-            <FilterBox />
-          </Dialog>
+          <div>
+            <Button
+              onClick={() => router.push("/packages")}
+              className="flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white sm:w-auto md:px-10 md:py-8"
+            >
+              <Search />
+              <Text variant="text-md" bold>
+                Find your Adventure
+              </Text>
+            </Button>
+          </div>
         </m.header>
         <Toaster position="bottom-right" />
       </section>

@@ -4,13 +4,13 @@ import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  CreditCard,
   LogOut,
   MapPin,
   Menu,
   Phone,
   Settings,
   User,
+  ShoppingCart,
   UserCheck,
 } from "lucide-react";
 import Image from "next/image";
@@ -161,9 +161,11 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                       <span>Dashboard</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    <span>Billing</span>
+                  <DropdownMenuItem asChild>
+                    <Link href="/my-cart" className="cursor-pointer">
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      <span>My Cart</span>
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

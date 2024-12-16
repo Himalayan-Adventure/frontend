@@ -9,24 +9,12 @@ import { FaArrowLeft } from "react-icons/fa";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import { LiaSyncSolid } from "react-icons/lia";
 import { TbTruckDelivery } from "react-icons/tb";
-import RentDialog from "./rent-dialog";
 import { StarRating } from "./star-rating";
 import { Toaster } from "../ui/sonner";
 import { useCart } from "@/contexts/CartContext";
+import RentDialog from "./rent-dialog";
 
 export default function ProductDetail({ product }: any) {
-  const rentdetails = {
-    product_name: product?.attributes?.name,
-    category: product?.attributes?.shop_categories?.data?.[0]?.attributes?.name,
-    size: "Medium",
-    manufacturer: "lorem",
-    quantity: "10",
-    condition: "New",
-    termsAndConditions: product?.attributes?.terms_and_condition,
-    rentalDetails: product?.attributes?.rental_detail,
-    images: product?.attributes?.image?.data,
-  };
-
   const router = useRouter();
   const { addToCart, removeFromCart, isInCart, updateCartItemQuantity } =
     useCart();
@@ -72,34 +60,19 @@ export default function ProductDetail({ product }: any) {
   };
 
   const handleAddToCart = () => {
-    if (typeof window !== "undefined") {
-      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-      const price = product?.attributes?.price || 0;
-      const cartItem = {
-        id: product?.id,
-        name: product?.attributes?.name,
-        quantity,
-        price: product?.attributes?.price,
-        img: product?.attributes?.image?.data?.[0]?.attributes?.url,
-        color: selectedColor,
-        subtotal: quantity * price,
-      };
+    const price = product?.attributes?.price || 0;
+    const cartItem = {
+      id: product?.id,
+      name: product?.attributes?.name,
+      quantity,
+      price: discountedPrice || product?.attributes?.price,
+      img: product?.attributes?.image?.data?.[0]?.attributes?.url,
+      color: selectedColor,
+      subtotal: quantity * price,
+      stock_count: product?.attributes?.stock_count,
+    };
 
-      const existingItemIndex = cartItems.findIndex(
-        (item: any) => item.id === product?.id,
-      );
-
-      if (existingItemIndex > -1) {
-        const updatedCartItems = [...cartItems];
-        updatedCartItems[existingItemIndex].quantity = quantity;
-        localStorage.setItem("cart", JSON.stringify(updatedCartItems));
-        updateCartItemQuantity(product?.id, quantity);
-      } else {
-        cartItems.push(cartItem);
-        localStorage.setItem("cart", JSON.stringify(cartItems));
-        addToCart(cartItem);
-      }
-    }
+    addToCart(cartItem);
   };
 
   const handleRemoveFromCart = () => {
@@ -119,6 +92,7 @@ export default function ProductDetail({ product }: any) {
   );
 
   const handleGoBack = () => router.back();
+
   const increment = () => {
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
@@ -147,6 +121,28 @@ export default function ProductDetail({ product }: any) {
         updateCartItemQuantity(product?.id, newQuantity);
       }
     }
+  };
+
+  const discountRate = product?.attributes?.discount_rate;
+  const originalPrice = product?.attributes?.price;
+
+  const discountedPrice =
+    discountRate && !isNaN(discountRate)
+      ? originalPrice - (originalPrice * discountRate) / 100
+      : originalPrice;
+
+  const rentdetails = {
+    product_id: product?.id,
+    product_name: product?.attributes?.name,
+    category: product?.attributes?.shop_categories?.data?.[0]?.attributes?.name,
+    size: "Medium",
+    manufacturer: "lorem",
+    quantity: quantity,
+    condition: "New",
+    termsAndConditions: product?.attributes?.terms_and_condition,
+    rentalDetails: product?.attributes?.rental_detail,
+    images: product?.attributes?.image?.data,
+    stock_count: product?.attributes?.stock_count,
   };
   return (
     <section className="container relative mx-auto p-8 lg:mt-32 lg:py-16">
@@ -197,7 +193,7 @@ export default function ProductDetail({ product }: any) {
           <h1 className="mb-2 text-xl font-semibold sm:text-2xl">
             {product?.attributes?.name}
           </h1>
-          <div className="mb-4 flex flex-wrap items-center space-x-3 text-sm sm:text-base">
+          {/* <div className="mb-4 flex flex-wrap items-center space-x-3 text-sm sm:text-base">
             <StarRating rating={4} reviews={155} />
             <span className="hidden text-gray-800 sm:inline">|</span>
             <p
@@ -211,10 +207,33 @@ export default function ProductDetail({ product }: any) {
                 ? "In Stock"
                 : "Not Available in stock"}
             </p>
-          </div>
-          <p className="mb-2 text-lg md:text-2xl">
-            Rs. {product?.attributes?.price}
+          </div> */}
+          <p className="my-4 flex items-center gap-4 text-lg md:text-2xl">
+            <span className="font-medium text-primary">
+              Rs {discountedPrice}
+            </span>
+
+            {discountRate && discountRate > 0 && (
+              <span className="text-gray-400 line-through">
+                Rs {originalPrice}
+              </span>
+            )}
+
+            <span className="hidden text-gray-500 sm:inline">|</span>
+
+            <span
+              className={
+                parseInt(product?.attributes?.stock_count, 10) > 0
+                  ? "text-green-500 text-base"
+                  : "text-red-500 text-base"
+              }
+            >
+              {parseInt(product?.attributes?.stock_count, 10) > 0
+                ? "In Stock"
+                : "Not Available in stock"}
+            </span>
           </p>
+
           <p className="mb-4 font-poppins text-sm text-gray-800 md:text-base">
             {product?.attributes?.description}
           </p>

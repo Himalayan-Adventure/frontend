@@ -80,7 +80,7 @@ export default async function ProjectDetail({
     };
   });
   if (!pkg) {
-    return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
+    return <CommonBanner title={`Project not found`} bgImage={bgImage} />;
   }
   return (
     <main className="font-poppins" id="pdfContent">

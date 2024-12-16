@@ -5,41 +5,49 @@ import { useState } from "react";
 import { FaChevronRight, FaSearch, FaSort } from "react-icons/fa";
 import BlockRendererClient from "../ui/block-renderer-client";
 import { BlocksContent } from "@strapi/blocks-react-renderer";
+import Link from "next/link";
+import Image from "next/image";
 
 interface Project {
+  id: number;
   title: string;
   date: string;
   description: BlocksContent;
   imageUrl: string;
 }
 
-const ProjectCard = ({ title, date, description, imageUrl }: Project) => {
+const ProjectCard = ({ id, title, date, description, imageUrl }: Project) => {
   return (
-    <div className="relative font-poppins">
-      <div className="absolute inset-0 -z-10 bg-gray-500 blur-lg"></div>
-      <div className="shadow-3xl h-full w-full overflow-hidden rounded-lg bg-white shadow-gray-300">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="h-52 w-full object-cover object-top grayscale"
-        />
-        <div className="space-y-3 p-3 lg:space-y-4 lg:p-5">
-          <h3 className="font-medium">{title}</h3>
-          <p className="text-xs font-medium text-gray-500">{date}</p>
-          <p className="line-clamp-3 text-sm text-gray-600">
-            <BlockRendererClient content={description} />
-          </p>
-          <button className="mt-2 flex w-full items-center justify-center space-x-1 text-xs text-primary hover:underline">
-            <span> Continue Reading</span>
-            <FaChevronRight size={8} />
-          </button>
+    <Link href={`/projects/${id}`}>
+      <div className="relative font-poppins">
+        <div className="absolute inset-0 -z-10 bg-gray-500 blur-lg"></div>
+        <div className="shadow-3xl h-full w-full overflow-hidden rounded-lg bg-white shadow-gray-300">
+          <Image
+            src={imageUrl}
+            alt={title}
+            className="h-52 w-full object-cover object-top grayscale"
+            width={1000}
+            height={1000}
+          />
+          <div className="space-y-3 p-3 lg:space-y-4 lg:p-5">
+            <h3 className="font-medium">{title}</h3>
+            <p className="text-xs font-medium text-gray-500">{date}</p>
+            <p className="line-clamp-3 text-sm text-gray-600">
+              <BlockRendererClient content={description} />
+            </p>
+            <button className="mt-2 flex w-full items-center justify-center space-x-1 text-xs text-primary hover:underline">
+              <span> Continue Reading</span>
+              <FaChevronRight size={8} />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
 export default function Projects({ projectsData }: { projectsData: any[] }) {
+  console.log("test", projectsData);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("Sort by");
   const [showMore, setShowMore] = useState(false);
@@ -134,12 +142,13 @@ export default function Projects({ projectsData }: { projectsData: any[] }) {
                       ?.map((project, index) => (
                         <ProjectCard
                           key={index}
+                          id={project?.id}
                           title={project?.attributes?.title}
                           date={project?.attributes?.date}
                           description={project?.attributes?.about_work}
                           imageUrl={
-                            project?.attributes?.image?.data?.[0]?.attributes
-                              ?.url
+                            project?.attributes?.package?.data?.attributes
+                              ?.image?.data?.[0]?.attributes?.url
                           }
                         />
                       ))}
@@ -162,11 +171,13 @@ export default function Projects({ projectsData }: { projectsData: any[] }) {
                     {filteredProjects?.map((project, index) => (
                       <ProjectCard
                         key={index}
+                        id={project?.id}
                         title={project?.attributes?.title}
                         date={project?.attributes?.date}
                         description={project?.attributes?.about_work}
                         imageUrl={
-                          project?.attributes?.image?.data?.[0]?.attributes?.url
+                          project?.attributes?.package?.data?.attributes?.image
+                            ?.data?.[0]?.attributes?.url
                         }
                       />
                     ))}

@@ -36,13 +36,13 @@ const Services = ({ user }: { user: TUserDeep }) => {
       <div className="mx-auto max-w-3xl space-y-5">
         <h2 className="text-2xl font-bold text-gray-900">My Services</h2>
         <div>
-          {!data || data.data.length === 0 ? (
+          {!data || data?.data?.length === 0 ? (
             <div> No services found</div>
           ) : isPending ? (
             <div> Loading...</div>
           ) : (
             <div className="mt-12 grid grid-cols-[repeat(auto-fill,minmax(10em,1fr))] gap-4 divide-x md:mt-0 lg:grid-cols-2 xl:divide-x-0">
-              {data?.data.map((i, index) => (
+              {data?.data?.map((i, index) => (
                 <ServiceItem
                   key={i.id + "services"}
                   title={i.attributes.title}
