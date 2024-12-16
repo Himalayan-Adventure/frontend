@@ -17,7 +17,7 @@ export default function CalendarSection({
   if (!data?.attributes) {
     return <Text variant="text-lg">No data available</Text>;
   }
-  const { start_date, end_date, is_available, notes, heading, guide } =
+  const { start_date, end_date, is_available, notes, heading, guides } =
     data?.attributes || {};
 
   const startDate = new Date(start_date);
