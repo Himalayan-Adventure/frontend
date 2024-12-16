@@ -7,10 +7,10 @@ import { usePlanContext } from "@/components/plan-page/plan-context";
 import axios from "axios";
 
 export default function DestinationSelection() {
-  const { destination, setDestination } = usePlanContext();
+  const { selectedDestinationId, setSelectedDestinationId } = usePlanContext();
   const [countries, setCountries] = useState<any[]>();
-  const [selectedOption, setSelectedOption] = useState<string | null>(
-    destination || null,
+  const [selectedId, setSelectedId] = useState<number | undefined>(
+    selectedDestinationId,
   );
 
   useEffect(() => {
@@ -21,20 +21,22 @@ export default function DestinationSelection() {
         );
         setCountries(response?.data?.data || []);
       } catch (error) {
-        console.error("Error fetching types:", error);
+        console.error("Error fetching countries:", error);
       }
     };
 
     fetchCountries();
   }, []);
 
-  const handleOptionClick = (country: string) => {
-    setSelectedOption(country);
-    setDestination(country);
+  // Update the state with the selected destination ID
+  const handleOptionClick = (countryId: number) => {
+    setSelectedId(countryId); // Store the destination ID
+    setSelectedDestinationId(countryId); // Update the context with the selected destination ID
   };
 
-  const selectedOptionData = countries?.find(
-    (country) => country?.attributes?.name === selectedOption,
+  // Find selected country data by the destination ID
+  const selectedCountryData = countries?.find(
+    (country) => country?.id === selectedId,
   );
 
   return (
@@ -42,18 +44,18 @@ export default function DestinationSelection() {
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
         {countries?.map((country) => (
           <div
-            key={country?.attributes?.name}
+            key={country?.id} // Use the country ID here
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg transition-colors duration-300 ease-in-out md:p-4 ${
-              selectedOption === country?.attributes?.name
+              selectedId === country?.id // Compare with destination ID
                 ? "bg-primary text-white"
                 : "bg-gray-100 hover:bg-gray-200"
             }`}
-            onClick={() => handleOptionClick(country?.attributes?.name)}
+            onClick={() => handleOptionClick(country?.id)} // Pass the country ID here
           >
             <div>
               <img
                 src={country?.attributes?.flag?.data?.attributes?.url}
-                alt=""
+                alt={country?.attributes?.name}
                 className="w-6 md:w-12"
               />
             </div>
@@ -67,11 +69,11 @@ export default function DestinationSelection() {
 
       <div>
         {/* Show map image based on selected country */}
-        {selectedOptionData && (
+        {selectedCountryData && (
           <div className="mt-8 text-center">
             <img
-              src={selectedOptionData?.attributes?.map?.data?.attributes?.url}
-              alt={`${selectedOptionData?.attributes?.name} map`}
+              src={selectedCountryData?.attributes?.map?.data?.attributes?.url}
+              alt={`${selectedCountryData?.attributes?.name} map`}
               className="mx-auto h-64 w-64 object-contain"
             />
           </div>
