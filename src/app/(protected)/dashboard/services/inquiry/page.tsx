@@ -45,10 +45,15 @@ export default async function ServicesInquiryPage({
             </div>
           </Link>
         )}
-        <div className="btn-primary font-semibold">
-          <GrUpgrade size={16} />
-          Service Request
-        </div>
+
+        {user?.userType === "merchant" && (
+          <Link href="/dashboard/services/service-requests" prefetch={true}>
+            <div className="btn-primary font-semibold">
+              <GrUpgrade size={16} />
+              Service Request
+            </div>
+          </Link>
+        )}
 
         <Link href="/dashboard/services/" prefetch={true}>
           <div className="btn-primary font-semibold">
