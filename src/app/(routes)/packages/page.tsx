@@ -29,7 +29,7 @@ export default async function Packages({
   const data = await getPackages(searchParams);
   return (
     <section>
-      <TestBanner title={"Packages"} desc="lorem" bgImage={bgImage} />
+      <TestBanner title={"Packages"} desc="" bgImage={bgImage} />
       <div className="container relative gap-y-2 lg:mt-40">
         <Suspense>
           <div className="flex justify-end [&>div]:w-fit">

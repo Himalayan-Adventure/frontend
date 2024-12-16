@@ -36,12 +36,17 @@ const ProductCard: React.FC<ProductProps> = ({
   rating,
   reviews,
   img,
+  stockCount,
 }) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const { cartItems, addToCart, removeFromCart } = useCart();
 
   const isInCart = cartItems.some((item) => item.id === id);
+
+  const discountedPrice = discountRate
+    ? price - (price * discountRate) / 100
+    : price;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -75,11 +80,12 @@ const ProductCard: React.FC<ProductProps> = ({
       addToCart({
         id,
         name,
-        price,
+        price: discountedPrice,
         img,
         quantity: 1,
         color: "",
         subtotal: price * 1,
+        stock_count: stockCount,
       });
     }
   };
@@ -131,9 +137,16 @@ const ProductCard: React.FC<ProductProps> = ({
       <div className="mt-4">
         <h3 className="text-lg font-semibold">{name}</h3>
         <div className="flex items-center space-x-2">
-          <span className="text-primary">Rs {price}</span>
+          {discountRate > 0 ? (
+            <>
+              <span className="font-medium text-primary">Rs {discountedPrice}</span>
+              <span className="text-gray-400 line-through">Rs {price}</span>
+            </>
+          ) : (
+            <span className="text-primary">Rs {price}</span>
+          )}
         </div>
-        <StarRating rating={rating} reviews={reviews} />
+        {/* <StarRating rating={rating} reviews={reviews} /> */}
       </div>
     </div>
   );

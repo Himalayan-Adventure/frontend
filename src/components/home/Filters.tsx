@@ -21,13 +21,7 @@ import { FaChevronUp } from "react-icons/fa6";
 import { GiFlowerEmblem, GiHiking, GiStairsGoal } from "react-icons/gi";
 import { MdHiking } from "react-icons/md";
 import { toast } from "sonner";
-
-const AdventureTypes = [
-  { name: "Expedition", icon: <FaMountain size={32} /> },
-  { name: "Trekking", icon: <FaHiking size={32} /> },
-  { name: "Climbing", icon: <FaSkiingNordic size={32} /> },
-  { name: "Driving", icon: <FaCarAlt size={32} /> },
-];
+import DynamicReactIcon from "../icons/strapi-icon";
 
 const experiences = [
   {
@@ -100,6 +94,42 @@ const seasons = [
   },
 ];
 
+interface AdventureType {
+  name: string;
+  icon: string;
+}
+
+const AdventureTypes = (): AdventureType[] => {
+  const [types, setTypes] = useState<AdventureType[]>([]);
+
+  useEffect(() => {
+    const fetchTypes = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types?populate=*`,
+        );
+
+        const fetchedTypes = response?.data?.data || [];
+
+        const mappedTypes: AdventureType[] = fetchedTypes.map(
+          (type: any, index: number) => ({
+            name: type?.attributes?.name,
+            icon: type?.attributes?.icon,
+          }),
+        );
+
+        setTypes(mappedTypes);
+      } catch (error) {
+        console.error("Error fetching types:", error);
+      }
+    };
+
+    fetchTypes();
+  }, []);
+
+  return types;
+};
+
 export default function FilterBox() {
   const [countries, setCountries] = useState<any>();
   const [loading, setLoading] = useState(true);
@@ -134,6 +164,8 @@ export default function FilterBox() {
 
     fetchCountries();
   }, []);
+
+  const adventureTypes = AdventureTypes();
 
   if (loading) {
     return <p>Loading...</p>;
@@ -181,7 +213,9 @@ export default function FilterBox() {
       {/* Choosing Country (Regions) */}
       <div className="mt-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold md:text-2xl">Choose by Month</h2>
+          <h2 className="text-xl font-semibold md:text-2xl">
+            Choose by Region
+          </h2>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-4 md:mt-8 md:grid-cols-3">
           {countries?.map((country: any, index: number) => (
@@ -213,15 +247,23 @@ export default function FilterBox() {
       <div className="mt-4 md:mt-8">
         <h2 className="text-xl font-semibold md:text-2xl">Adventure Type</h2>
         <div className="mt-4 flex flex-wrap gap-6">
-          {AdventureTypes.map((adventure) => (
+          {adventureTypes.map((adventure) => (
             <div
               key={adventure.name}
               onClick={() => setSelectedAdventureType(adventure.name)}
-              className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border p-3 shadow-lg hover:shadow-xl ${selectedAdventureType === adventure.name ? "bg-primary text-white" : ""}`}
+              className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border p-3 shadow-lg hover:shadow-xl ${
+                selectedAdventureType === adventure.name
+                  ? "bg-primary text-white"
+                  : ""
+              }`}
             >
-              <span>{adventure.icon}</span>
+              <DynamicReactIcon name={adventure.icon} />
               <span
-                className={`border-t pt-1 text-sm font-medium ${selectedAdventureType === adventure?.name ? "border-white" : "border-primary"}`}
+                className={`border-t pt-1 text-sm font-medium ${
+                  selectedAdventureType === adventure.name
+                    ? "border-white"
+                    : "border-primary"
+                }`}
               >
                 {adventure.name}
               </span>

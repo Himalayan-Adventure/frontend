@@ -48,7 +48,7 @@ export const getProjects = async ({
     });
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/projects?fields[0]=title&populate[package][populate][0]=image&populate[package][populate][1]=adventure_specification&${additionalQuery}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/projects?fields[0]=title&fields[1]=date&fields[2]=about_work&populate[package][populate][0]=image&populate[package][populate][1]=adventure_specification&${additionalQuery}`,
       {
         next: {
           tags: ["projects"],

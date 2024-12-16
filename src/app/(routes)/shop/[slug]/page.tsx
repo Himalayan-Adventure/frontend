@@ -1,10 +1,10 @@
-import { getSingleProduct } from "@/server/products/get-single-product";
-import bgImage from "/public/images/planPgBg.png";
-import CommonBanner from "@/components/ui/common-banner";
-import { IProduct } from "@/types/products/products";
 import ProductDetail from "@/components/shop/product-detail";
 import RelatedItems from "@/components/shop/related-items";
+import CommonBanner from "@/components/ui/common-banner";
 import { getProducts } from "@/server/products/get-products";
+import { getSingleProduct } from "@/server/products/get-single-product";
+import { IProduct } from "@/types/products/products";
+import bgImage from "/public/images/planPgBg.png";
 
 interface Params {
   slug: string;
