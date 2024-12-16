@@ -44,7 +44,7 @@ export default function WhatWeDo() {
             </p>
             <p className="flex w-fit justify-center lg:justify-start">
               <Link
-                href="/learn-more"
+                href="/about-us"
                 className="inline-block w-fit rounded-full border border-black px-4 py-2 text-sm font-semibold text-black transition md:text-base"
               >
                 Learn More

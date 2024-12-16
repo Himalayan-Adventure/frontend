@@ -44,7 +44,7 @@ export const CalendarAddOrEditForm = ({
   data,
   id,
 }: CalendarAddOrEditProps) => {
-  const { start_date, end_date, is_available, notes, heading, guide } =
+  const { start_date, end_date, is_available, notes, heading, guides } =
     data?.data?.attributes || {};
   const calendar: TCalendarForm = {
     start_date: start_date ? new Date(start_date) : new Date(),
@@ -52,7 +52,7 @@ export const CalendarAddOrEditForm = ({
     is_available: is_available || false,
     heading: heading,
     notes: notes,
-    guide: guide?.data?.id || user?.id,
+    guide: guides?.data?.[0]?.id || user?.id,
   };
 
   const [loading, setLoading] = useState(false);

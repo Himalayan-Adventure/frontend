@@ -61,7 +61,7 @@ export async function GET(
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          //Authorization: `Bearer ${token}`,
         },
         method: "GET",
         next: {
@@ -69,6 +69,7 @@ export async function GET(
         },
       },
     );
+    console.log(res);
 
     const value = await res.json();
     return Response.json(value);
