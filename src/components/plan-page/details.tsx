@@ -1,4 +1,6 @@
 import { usePlanContext } from "@/components/plan-page/plan-context";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 // Define the TravelDates type if it's not already defined
 type TravelDates = {
@@ -18,14 +20,33 @@ export default function Details({ setSelectedOption }: DetailsProps) {
     budget,
     travelDates,
     experience,
-    destination,
+    selectedDestinationId,
     accommodation,
     selectedBudgetOption,
     fixedAmount,
     minBudget,
     maxBudget,
-    selectedPackageNames,
+    selectedPackageIds,
   } = usePlanContext();
+
+  const [packages, setPackages] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        if (selectedPackageIds.length > 0) {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages`,
+          );
+          setPackages(response?.data?.data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching packages:", error);
+      }
+    };
+
+    fetchPackages();
+  }, [selectedPackageIds]);
 
   const handleConfirmClick = () => {
     setSelectedOption("Your Details");
@@ -47,14 +68,13 @@ export default function Details({ setSelectedOption }: DetailsProps) {
   };
 
   const renderPackages = () => {
-    if (selectedPackageNames.length > 0) {
-      return selectedPackageNames.join(", ");
+    if (packages.length > 0) {
+      return packages
+        .map((pkg: any) => pkg?.attributes?.package_name)
+        .join(", ");
     }
     return "No packages selected.";
   };
-
-  console.log("test", budget);
-  console.log("datteee", travelDates);
 
   return (
     <div className="grid gap-6 text-left capitalize md:grid-cols-2 md:gap-8">
@@ -96,7 +116,9 @@ export default function Details({ setSelectedOption }: DetailsProps) {
       </div>
       <div className="flex flex-col">
         <h2 className="text-sm font-semibold md:text-base">Destination:</h2>
-        <p className="text-sm text-gray-700 md:text-base">{destination}</p>
+        <p className="text-sm text-gray-700 md:text-base">
+          {selectedDestinationId}
+        </p>
       </div>
       <div className="flex flex-col">
         <h2 className="text-sm font-semibold md:text-base">Accommodation:</h2>

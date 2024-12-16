@@ -10,10 +10,10 @@ export default function YourDetailsForm() {
     group,
     budget,
     travelDates,
-    destination,
+    selectedDestinationId,
     experience,
     accommodation,
-    selectedPackageNames,
+    selectedPackageIds,
   } = usePlanContext();
 
   const [detailsFormData, setDetailsFormData] = useState({
@@ -52,8 +52,8 @@ export default function YourDetailsForm() {
       data: {
         group: group,
         travel_dates: travelDates,
-        destination: destination,
-        packages: [],
+        destination_country: selectedDestinationId,
+        packages: selectedPackageIds,
         accommodation_preferences: accommodation.join(", "),
         customized_experience: experience.join(", "),
         budget: budget,

@@ -21,9 +21,7 @@ export default function PackageSelection() {
   const [types, setTypes] = useState<any>([]);
   const [packages, setPackages] = useState<any>([]);
   const [selectedType, setSelectedType] = useState("");
-  const { selectedPackageNames, setSelectedPackageNames } = usePlanContext();
-
-  console.log("Selected Package", selectedPackageNames);
+  const { selectedPackageIds, setSelectedPackageIds } = usePlanContext();
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -62,15 +60,10 @@ export default function PackageSelection() {
   };
 
   const handleSelectPackage = (pkg: any) => {
-    if (selectedPackageNames.includes(pkg?.attributes?.package_name)) {
-      setSelectedPackageNames((prev) =>
-        prev.filter((name) => name !== pkg?.attributes?.package_name),
-      );
+    if (selectedPackageIds.includes(pkg?.id)) {
+      setSelectedPackageIds((prev) => prev.filter((name) => name !== pkg?.id));
     } else {
-      setSelectedPackageNames((prev) => [
-        ...prev,
-        pkg?.attributes?.package_name,
-      ]);
+      setSelectedPackageIds((prev) => [...prev, pkg?.id]);
     }
   };
 
@@ -180,14 +173,12 @@ export default function PackageSelection() {
                 <button
                   onClick={() => handleSelectPackage(pkg)}
                   className={`rounded-full px-4 py-2 text-white ${
-                    selectedPackageNames.includes(pkg?.attributes?.package_name)
+                    selectedPackageIds.includes(pkg?.id)
                       ? "bg-blue-500"
                       : "bg-black"
                   }`}
                 >
-                  {selectedPackageNames.includes(pkg?.attributes?.package_name)
-                    ? "Deselect"
-                    : "Select"}
+                  {selectedPackageIds.includes(pkg?.id) ? "Deselect" : "Select"}
                 </button>
               </div>
             </div>

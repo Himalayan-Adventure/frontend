@@ -20,8 +20,8 @@ interface TravelDates {
 interface PlanContextType {
   group: string;
   setGroup: (group: string) => void;
-  destination: string;
-  setDestination: (value: string) => void;
+  selectedDestinationId: number | undefined;
+  setSelectedDestinationId: (id: number | undefined) => void;
   accommodation: string[];
   setAccommodation: (preferences: string[]) => void;
   experience: string[];
@@ -50,15 +50,15 @@ interface PlanContextType {
   selectedStep: string;
   setSelectedStep: (value: string) => void;
 
-  selectedPackageNames: string[];
-  setSelectedPackageNames: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedPackageIds: string[];
+  setSelectedPackageIds: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const PlanContext = createContext<PlanContextType | undefined>(undefined);
 
 export const PlanProvider = ({ children }: { children: ReactNode }) => {
   const [group, setGroup] = useState<string>("solo");
-  const [destination, setDestination] = useState<string>("");
+  const [selectedDestinationId, setSelectedDestinationId] = useState<number>();
   const [accommodation, setAccommodation] = useState<string[]>([]);
   const [experience, setExperience] = useState<string[]>([]);
 
@@ -86,17 +86,15 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
 
   const [selectedStep, setSelectedStep] = useState<string>("Travel");
 
-  const [selectedPackageNames, setSelectedPackageNames] = useState<string[]>(
-    [],
-  );
+  const [selectedPackageIds, setSelectedPackageIds] = useState<string[]>([]);
 
   return (
     <PlanContext.Provider
       value={{
         travelDates,
         setTravelDates,
-        destination,
-        setDestination,
+        selectedDestinationId,
+        setSelectedDestinationId,
         accommodation,
         setAccommodation,
         experience,
@@ -121,8 +119,8 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
         setBudget,
         selectedStep,
         setSelectedStep,
-        selectedPackageNames,
-        setSelectedPackageNames,
+        selectedPackageIds,
+        setSelectedPackageIds,
       }}
     >
       {children}
