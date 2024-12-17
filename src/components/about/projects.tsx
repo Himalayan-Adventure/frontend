@@ -47,7 +47,6 @@ const ProjectCard = ({ id, title, date, description, imageUrl }: Project) => {
 };
 
 export default function Projects({ projectsData }: { projectsData: any[] }) {
-  console.log("test", projectsData);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("Sort by");
   const [showMore, setShowMore] = useState(false);
