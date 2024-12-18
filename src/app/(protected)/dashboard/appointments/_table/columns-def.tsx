@@ -77,34 +77,41 @@ export const columns: ColumnDef<
     },
   },
 
-  {
-    header: "priority",
-    accessorKey: "attributes.priority",
-    cell({ row }) {
-      return "-";
-    },
-  },
+  // {
+  //   header: "priority",
+  //   accessorKey: "attributes.priority",
+  //   cell({ row }) {
+  //     return "-";
+  //   },
+  // },
 
   {
     header: "package",
     accessorKey: "attributes.package",
     cell({ row }) {
+      const selectedPackage = row?.original?.attributes?.package;
       return (
-        <Text variant="text-sm">
-          {row?.original?.attributes?.package?.data?.attributes?.package_name ||
-            "-"}
-        </Text>
+        selectedPackage?.data && (
+          <Link href={`/packages/${selectedPackage.data.id}`} target={"_blank"}>
+            <span className="btn-primary bg-primary">
+              <Tag size={16} />
+              <Text variant="text-xs">
+                {selectedPackage.data?.attributes?.package_name || "-"}
+              </Text>
+            </span>
+          </Link>
+        )
       );
     },
   },
 
-  {
-    header: "status",
-    //accessorKey: "attributes.expectation",
-    cell({ row }) {
-      return "-";
-    },
-  },
+  // {
+  //   header: "status",
+  //   //accessorKey: "attributes.expectation",
+  //   cell({ row }) {
+  //     return "-";
+  //   },
+  // },
 
   {
     header: "creator",

@@ -1268,6 +1268,38 @@ export interface ApiCalendarCalendar extends Schema.CollectionType {
   };
 }
 
+export interface ApiContactUsContactUs extends Schema.CollectionType {
+  collectionName: 'contact_uses';
+  info: {
+    singularName: 'contact-us';
+    pluralName: 'contact-uses';
+    displayName: 'Contact Us';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    email: Attribute.Email;
+    message: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::contact-us.contact-us',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::contact-us.contact-us',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiCouponCoupon extends Schema.CollectionType {
   collectionName: 'coupons';
   info: {
@@ -1787,12 +1819,14 @@ export interface ApiPlanWithPlanWith extends Schema.SingleType {
     singularName: 'plan-with';
     pluralName: 'plan-withs';
     displayName: 'Plan With';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
     steps: Attribute.Component<'steps.steps', true>;
+    flags: Attribute.Component<'flag.flags', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2486,6 +2520,7 @@ declare module '@strapi/types' {
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::blog-tag.blog-tag': ApiBlogTagBlogTag;
       'api::calendar.calendar': ApiCalendarCalendar;
+      'api::contact-us.contact-us': ApiContactUsContactUs;
       'api::coupon.coupon': ApiCouponCoupon;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::icon.icon': ApiIconIcon;
