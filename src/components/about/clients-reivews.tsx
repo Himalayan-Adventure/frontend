@@ -10,63 +10,38 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { LazyMotion, domMax, m } from "framer-motion";
+import axios from "axios";
 
 interface ClientReview {
   name: string;
-  message: string;
-  image: string;
-  designation: string;
+  description: string;
+  image: any;
 }
 
-const clientReviews: ClientReview[] = [
-  {
-    name: "John Doe",
-    message:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla imperdiet nisi non urna scelerisque, sit amet condimentum enim posuere.",
-    image: "https://randomuser.me/api/portraits/men/1.jpg",
-    designation: "Mr. Doe",
-  },
-  {
-    name: "Jane Smith",
-    message:
-      "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.",
-    image: "https://randomuser.me/api/portraits/women/2.jpg",
-    designation: "Ms. Smith",
-  },
-  {
-    name: "Michael Brown",
-    message:
-      "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.",
-    image: "https://randomuser.me/api/portraits/men/3.jpg",
-    designation: "Mr. Brown",
-  },
-  {
-    name: "Emily Davis",
-    message:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec lacus id ipsum cursus auctor.",
-    image: "https://randomuser.me/api/portraits/women/4.jpg",
-    designation: "Ms. Davis",
-  },
-  {
-    name: "William Johnson",
-    message:
-      "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?",
-    image: "https://randomuser.me/api/portraits/men/5.jpg",
-    designation: "Mr. Johnson",
-  },
-  {
-    name: "Sophia Martinez",
-    message:
-      "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem.",
-    image: "https://randomuser.me/api/portraits/women/6.jpg",
-    designation: "Ms. Martinez",
-  },
-];
-
 export default function ClientsReviews() {
-  const [activeCard, setActiveCard] = useState<ClientReview | null>(
-    clientReviews[0],
-  );
+  const [clientReviews, setClientReviews] = useState<ClientReview[]>([]);
+  const [activeCard, setActiveCard] = useState<ClientReview | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/home-page?populate=deep`,
+        );
+        const testimonials =
+          response?.data?.data?.attributes?.testimonials || [];
+        setClientReviews(testimonials);
+        setActiveCard(testimonials[0] || null);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load reviews. Please try again later.");
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <LazyMotion features={domMax}>
@@ -85,20 +60,32 @@ export default function ClientsReviews() {
             </div>
           </div>
 
+          {/* Loading state */}
+          {loading && (
+            <div className="text-center text-xl">Loading reviews...</div>
+          )}
+
+          {/* Error state */}
+          {error && (
+            <div className="my-6 text-center">
+              <p>No client reviews available. Please check back later.</p>
+            </div>
+          )}
+
           {/* Active client's name and message */}
-          {activeCard && (
+          {activeCard && !loading && !error && (
             <div className="mt-8 flex flex-col md:flex-row md:space-x-8">
-              <div>
+              <div className="mb-4 h-24 w-32 overflow-hidden rounded-lg object-cover shadow-md transition-transform duration-300 md:h-40 md:w-96">
                 <img
-                  src={activeCard.image}
+                  src={activeCard?.image?.data?.attributes?.url}
                   alt={activeCard.name}
-                  className="mb-4 h-24 w-32 rounded-lg object-cover shadow-md transition-transform duration-300 md:h-40 md:w-52"
+                  className="h-full w-full object-cover"
                 />
               </div>
 
               <div>
                 <p className="mt-2 text-sm text-gray-600 sm:text-base md:text-lg lg:text-xl">
-                  {activeCard.message}
+                  {activeCard?.description}
                 </p>
                 <div className="mt-4 flex flex-row items-center space-x-4">
                   <div className="h-1 w-16 rounded-lg bg-black md:w-32" />
@@ -110,45 +97,47 @@ export default function ClientsReviews() {
             </div>
           )}
 
-          {/* Review cards carousel */}
-          <div className="relative">
-            <Carousel
-              className="relative w-full"
-              setApi={(api: any) => {
-                api.on("select", () => {
-                  const selectedIndex = api.selectedScrollSnap();
-                  setActiveCard(clientReviews[selectedIndex]);
-                });
-              }}
-            >
-              <CarouselContent className="flex space-x-3 py-16">
-                {clientReviews.map((review, index) => (
-                  <CarouselItem
-                    key={index}
-                    className="w-full md:basis-1/2 lg:basis-1/3"
-                  >
-                    <MessageCard
-                      review={review}
-                      isActive={activeCard?.name === review.name}
-                      onClick={() => setActiveCard(review)}
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+          {/* Carousel only appears if reviews are available and no error */}
+          {!loading && !error && clientReviews?.length > 0 && (
+            <div className="relative">
+              <Carousel
+                className="relative w-full"
+                setApi={(api: any) => {
+                  api.on("select", () => {
+                    const selectedIndex = api.selectedScrollSnap();
+                    setActiveCard(clientReviews[selectedIndex]);
+                  });
+                }}
+              >
+                <CarouselContent className="flex space-x-3 py-16">
+                  {clientReviews?.map((review, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="w-full md:basis-1/2 lg:basis-1/3"
+                    >
+                      <MessageCard
+                        review={review}
+                        isActive={activeCard?.name === review.name}
+                        onClick={() => setActiveCard(review)}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-              {/* Navigation Arrows */}
-              <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 p-2">
-                <button className="rounded-full bg-gray-200 p-2 text-black shadow-lg hover:bg-gray-300">
-                  &larr;
-                </button>
-              </CarouselPrevious>
-              <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 p-2">
-                <button className="rounded-full bg-gray-200 p-2 text-black shadow-lg hover:bg-gray-300">
-                  &rarr;
-                </button>
-              </CarouselNext>
-            </Carousel>
-          </div>
+                {/* Navigation Arrows */}
+                <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 p-2">
+                  <button className="rounded-full bg-gray-200 p-2 text-black shadow-lg hover:bg-gray-300">
+                    &larr;
+                  </button>
+                </CarouselPrevious>
+                <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 p-2">
+                  <button className="rounded-full bg-gray-200 p-2 text-black shadow-lg hover:bg-gray-300">
+                    &rarr;
+                  </button>
+                </CarouselNext>
+              </Carousel>
+            </div>
+          )}
         </section>
       </m.section>
     </LazyMotion>
@@ -175,9 +164,9 @@ function MessageCard({
       <div className="flex justify-center">
         <div className="absolute -top-10">
           <img
-            src={review.image}
+            src={review?.image?.data?.attributes?.url}
             alt={review.name}
-            className="h-20 w-20 rounded-full border border-gray-500 shadow-lg"
+            className="h-20 w-20 rounded-full border border-gray-500 object-cover shadow-lg"
           />
         </div>
       </div>
@@ -186,22 +175,22 @@ function MessageCard({
       <p
         className={`mt-12 line-clamp-3 text-sm lg:text-base ${isActive ? "text-gray-100" : "text-gray-600"}`}
       >
-        {review.message}
+        {review?.description}
       </p>
 
       {/* Name and Designation */}
-      <h3
+      {/* <h3
         className={`mb-2 mt-4 text-sm font-semibold md:text-base ${isActive ? "text-gray-100" : "text-orange-600"} `}
       >
         {review.name}
-      </h3>
+      </h3> */}
 
       {/* Button */}
       <div className="flex">
         <button
-          className={`rounded-lg px-4 py-2 text-sm font-medium md:text-base ${isActive ? "bg-white text-black" : "bg-black text-white"}`}
+          className={`mt-4 rounded-lg px-4 py-2 text-sm font-medium md:text-base ${isActive ? "bg-white text-black" : "bg-black text-white"}`}
         >
-          {review.designation}
+          {review?.name}
         </button>
       </div>
     </div>
