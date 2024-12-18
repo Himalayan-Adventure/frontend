@@ -1,12 +1,10 @@
 "use client";
-import BlogCard from "@/components/blog/blog-card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import { getWorksOfUser } from "@/server/work/get-works-of-user";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PenLine, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,14 +12,18 @@ import { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { WorkCard } from "../work/work-card";
 import { TUser } from "@/types/auth";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
+import { LoadMorePagination } from "../services/pagination";
 export const WorkCards = ({ user }: { user: TUser }) => {
-  console.log(user);
+  const [limit, setLimit] = useState(5);
   const { data: works, isPending } = useQuery({
-    queryKey: ["works"],
-    queryFn: async () => await getWorksOfUser({ id: user.id }),
+    queryKey: ["works", limit],
+    //queryFn: async () => {await getWorksOfUser({ id: user.id })}
+    queryFn: async () => await getWorksOfUser({ id: user.id, limit }),
+    placeholderData: keepPreviousData,
   });
+  const updateQueryString = useUpdateQueryString();
 
-  const [limit, setLimit] = useState(6);
   return (
     <div className="rounded-xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-8">
@@ -42,28 +44,48 @@ export const WorkCards = ({ user }: { user: TUser }) => {
         {/* Works*/}
         <div className="flex flex-col space-y-8">
           <div className="flex flex-col space-y-8">
-            {works?.data
-              ?.slice(0, limit)
-              ?.map((work, index) => (
-                <WorkCard
-                  type="default"
-                  data={work}
-                  index={index}
-                  key={`work-${index}`}
-                />
-              ))}
+            {works?.data && works?.data?.length ? (
+              works?.data
+                ?.slice(0, limit)
+                ?.map((work, index) => (
+                  <WorkCard
+                    type="default"
+                    data={work}
+                    index={index}
+                    key={`work-${index}`}
+                  />
+                ))
+            ) : (
+              <Text variant={"text-md"}>No works found.</Text>
+            )}
           </div>
 
-          {works?.data && (
+          {/*
             <Button
               className="self-center bg-foreground px-8 py-4"
-              onClick={() =>
-                setLimit((prev) => {
-                  return limit < works?.data?.length ? prev + 2 : prev - 2;
-                })
+              disabled={
+                works.meta.pagination.total <= works.meta.pagination.pageSize
               }
+              onClick={() => {
+                setLimit(limit + 10);
+                updateQueryString({ limit: limit.toString() });
+              }}
             >
-              {limit < works?.data?.length ? "More..." : "Less..."}
+            </Button>
+*/}
+
+          {works?.data && works?.data.length >= 1 && (
+            <Button
+              onClick={() => {
+                setLimit(limit + 10);
+                updateQueryString({ limit: (limit + 10).toString() });
+              }}
+              disabled={
+                works.meta.pagination.total <= works.meta.pagination.pageSize
+              }
+              className="self-center bg-foreground px-8 py-4"
+            >
+              Show more...
             </Button>
           )}
         </div>

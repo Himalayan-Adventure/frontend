@@ -9,12 +9,16 @@ export function LoadMorePagination({
   title,
   disabled,
   className,
+  paginationText,
+  defaultLimit,
 }: {
   title?: string;
   disabled?: boolean;
   className?: string;
+  paginationText?: string;
+  defaultLimit?: number;
 }) {
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(defaultLimit || 10);
   const updateQueryString = useUpdateQueryString();
   return (
     <span className={cn("flex flex-col items-center gap-y-5", className)}>
@@ -31,7 +35,7 @@ export function LoadMorePagination({
         disabled={disabled}
         className=""
       >
-        Show more
+        {paginationText || "Show more"}
       </Button>
     </span>
   );

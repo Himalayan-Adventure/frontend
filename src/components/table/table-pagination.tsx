@@ -16,14 +16,16 @@ import useUpdateQueryString from "@/hooks/use-update-query-string";
 export default function TablePagination({
   meta,
   dataLen,
+  className,
 }: {
   dataLen: number;
   meta: APIResponseCollectionMetadata;
+  className?: string;
 }) {
   const [page, setPage] = useState(meta.pagination.page);
   const updateQueryString = useUpdateQueryString();
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent>
         <Text variant="text-xs">{dataLen} items</Text>
         <PaginationItem>
