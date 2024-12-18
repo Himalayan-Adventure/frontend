@@ -121,26 +121,22 @@ export const columns: ColumnDef<
       const email = row?.original?.attributes?.email;
       return (
         <span className="flex gap-x-2">
-          {phone ? (
+          {phone && (
             <Link
               href={`tel:+977 ${phone}`}
               className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
             >
               <Phone size={18} />
             </Link>
-          ) : (
-            "-"
           )}
 
-          {email ? (
+          {email && (
             <Link
               href={`mailto:${email}`}
               className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
             >
               <Mail size={18} />
             </Link>
-          ) : (
-            "-"
           )}
         </span>
       );
