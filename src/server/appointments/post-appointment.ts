@@ -8,7 +8,8 @@ export const makeAppointment = async (
   appointment: TBookAppointmentSchemaProvider,
 ) => {
   const cookieStore = cookies();
-  const token = cookieStore?.get("jwt");
+  const token = cookieStore?.get("jwt")?.value;
+  console.log(appointment);
   try {
     const validatedFields = BookAppointmentFormSchema.safeParse(appointment);
 

@@ -52,7 +52,7 @@ export const CalendarAddOrEditForm = ({
     is_available: is_available || false,
     heading: heading,
     notes: notes,
-    guide: guides?.data?.[0]?.id || user?.id,
+    guides: guides?.data?.[0]?.id || user?.id,
   };
 
   const [loading, setLoading] = useState(false);

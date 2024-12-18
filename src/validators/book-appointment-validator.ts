@@ -6,7 +6,7 @@ function isValidPhoneNumber(phone: string): boolean {
 }
 
 export const BookAppointmentFormSchema = z.object({
-  date: z.coerce.date(),
+  appointment_date: z.coerce.date(),
   name: z
     .string({
       required_error: "Name is required.",
@@ -19,7 +19,7 @@ export const BookAppointmentFormSchema = z.object({
     .refine(isValidPhoneNumber, { message: "Invalid phone number" })
     .or(z.literal("")),
   email: z.string({ required_error: "Email is required" }).email(),
-  subject: z.string({ required_error: "Subject is required" }).min(10),
+  //subject: z.string({ required_error: "Subject is required" }).min(10),
   expectation: z
     .string({ required_error: "Expectation is required" })
     .min(10)

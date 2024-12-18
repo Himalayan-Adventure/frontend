@@ -28,7 +28,6 @@ import {
   BookAppointmentFormSchema,
   TBookAppointmentSchemaProvider,
 } from "@/validators/book-appointment-validator";
-import DateTimePicker from "react-datetime-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { addDays, format, subDays } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -56,36 +55,46 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
       name: "",
       email: "",
       phone: "",
-      subject: "",
+      //      subject: "",
       expectation: "",
-      date: new Date(),
+      appointment_date: new Date(),
       guide: guide.id,
     },
   });
 
   const [date, setDate] = useState<Date>();
   const [activeTime, setActiveTime] = useState(0);
+  useEffect(() => {
+    setActiveTime(0);
+  }, [date]);
+  useEffect(() => {
+    console.log(activeTime);
+  }, [activeTime]);
 
   const {
     data: availableTime,
     isLoading,
     isError,
   } = useQuery<APIResponseCollection<"api::calendar.calendar">>({
-    queryKey: ["calendars", `guide-calendar-${guide.id}`, form.watch("date")],
+    queryKey: [
+      "calendars",
+      `guide-calendar-${guide.id}`,
+      form.watch("appointment_date"),
+    ],
     queryFn: async () => {
       try {
         const query = qs.stringify({
           filters: {
-            guide: {
+            guides: {
               id: guide.id,
             },
             is_available: true,
             "[$and][0][start_date][$lte]": format(
-              form.getValues("date"),
+              form.getValues("appointment_date"),
               "yyyy-MM-dd",
             ),
             "filters[$and][1][end_date][$gte]": format(
-              form.getValues("date"),
+              form.getValues("appointment_date"),
               "yyyy-MM-dd",
             ),
           },
@@ -102,7 +111,19 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
   });
   async function onSubmit(values: TBookAppointmentSchemaProvider) {
     setLoading(true);
-    const payload = form.getValues();
+    const appointment_date = availableTime?.data.find(
+      (i) => i.id === activeTime,
+    )?.attributes.start_date;
+    if (!appointment_date) {
+      setLoading(false);
+      toast.success("Appointment date is invalid");
+      return;
+    }
+    console.log(appointment_date, activeTime, availableTime);
+    const payload = {
+      ...form.getValues(),
+      appointment_date: new Date(appointment_date),
+    };
     const res = await makeAppointment(payload);
     if (res.status === 200) {
       setLoading(false);
@@ -125,7 +146,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
         >
           <FormField
             control={form.control}
-            name="date"
+            name="appointment_date"
             render={({ field }) => (
               <FormItem>
                 <Label className="text-white" required>
@@ -237,6 +258,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
             )}
           />
 
+          {/*
           <FormField
             control={form.control}
             name="subject"
@@ -252,7 +274,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
               </FormItem>
             )}
           />
-
+*/}
           <FormField
             control={form.control}
             name="expectation"
@@ -273,20 +295,22 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
               Available Time SLots
             </Label>
             {availableTime?.data && availableTime?.data?.length > 0 ? (
-              availableTime?.data.map((time) => (
-                <Badge
-                  onClick={() => setActiveTime(time.id)}
-                  className={cn(
-                    time.id === activeTime
-                      ? "bg-primary text-white"
-                      : "bg-white text-black",
-                    "cursor-pointer rounded-full font-bold transition ease-linear hover:bg-primary hover:text-white",
-                  )}
-                  key={`availabletime-${time.id}`}
-                >
-                  {format(time.attributes.start_date, "hh:MM a")}
-                </Badge>
-              ))
+              <span className="flex flex-wrap items-center gap-x-2">
+                {availableTime?.data.map((time) => (
+                  <Badge
+                    onClick={() => setActiveTime(time.id)}
+                    className={cn(
+                      time.id === activeTime
+                        ? "bg-primary text-white"
+                        : "bg-white text-black",
+                      "cursor-pointer rounded-full font-bold transition ease-linear hover:bg-primary hover:text-white",
+                    )}
+                    key={`availabletime-${time.id}`}
+                  >
+                    {format(time.attributes.start_date, "hh:MM a")}
+                  </Badge>
+                ))}
+              </span>
             ) : isLoading ? (
               <Skeleton className="flex flex-row gap-x-2 bg-background/10">
                 <Skeleton className="h-10 w-24 rounded-full bg-primary/10" />
@@ -304,7 +328,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
             <Button
               isLoading={loading}
               type="submit"
-              disabled={!form.formState.isValid || !activeTime}
+              disabled={!activeTime}
               className="w-full gap-x-3 self-end !bg-white px-10 py-4 font-poppins font-bold text-foreground sm:py-6"
             >
               Send

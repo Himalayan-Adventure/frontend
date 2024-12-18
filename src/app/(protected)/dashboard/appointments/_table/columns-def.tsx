@@ -77,6 +77,21 @@ export const columns: ColumnDef<
     },
   },
 
+  {
+    header: "appointment Date",
+    accessorKey: "attributes.appointment_date",
+    cell({ row }) {
+      return (
+        <p>
+          {format(
+            new Date(row?.original?.attributes?.appointment_date),
+            "yyyy-MM-dd hh:mm a",
+          )}
+        </p>
+      );
+    },
+  },
+
   // {
   //   header: "priority",
   //   accessorKey: "attributes.priority",

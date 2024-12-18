@@ -24,7 +24,7 @@ export const addCalendar = async (calendar: TCalendarForm) => {
     const res = await axios({
       method: "POST",
       url: "/api/calendars",
-      data: calendar,
+      data: { ...calendar, guides: [calendar.guides] },
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
