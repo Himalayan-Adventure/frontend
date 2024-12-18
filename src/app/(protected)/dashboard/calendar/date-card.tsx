@@ -49,8 +49,8 @@ export const DateCard = ({
       <CardTitle className="text-base font-normal">
         {data?.attributes?.is_available ? "Available" : "Busy"}
       </CardTitle>
-      <CardDescription className="flex flex-col gap-y-4">
-        <span className="flex gap-x-2">
+      <div className="flex flex-col gap-y-4">
+        <span className="flex flex-row gap-x-2">
           <Calendar size={18} />
           <Text variant="text-sm">
             {formatDateRange(
@@ -73,12 +73,12 @@ export const DateCard = ({
             </Text>
           </span>
         </span>
-      </CardDescription>
+      </div>
     </Card>
   );
 };
 
-import { format, isSameMonth, isSameYear } from "date-fns";
+import { format, isSameDay, isSameMonth, isSameYear } from "date-fns";
 import { cn } from "@/lib/utils";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
 import Link from "next/link";
@@ -92,7 +92,12 @@ function formatDateRange(start: Date | string, end: Date | string) {
   const startDate = new Date(start);
   const endDate = new Date(end);
 
-  if (isSameMonth(startDate, endDate) && isSameYear(startDate, endDate)) {
+  if (isSameDay(startDate, endDate)) {
+    return `${format(endDate, "d MMM yyyy")}`;
+  } else if (
+    isSameMonth(startDate, endDate) &&
+    isSameYear(startDate, endDate)
+  ) {
     return `${format(startDate, "d")}-${format(endDate, "d MMM yyyy")}`;
   } else if (isSameYear(startDate, endDate)) {
     return `${format(startDate, "d MMM")} - ${format(endDate, "d MMM yyyy")}`;

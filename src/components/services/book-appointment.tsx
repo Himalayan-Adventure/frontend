@@ -41,7 +41,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { makeAppointment } from "@/server/appointments/post-appointment";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { APIResponseCollection } from "@/types/types";
 import { Skeleton } from "../ui/skeleton";
 export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
@@ -67,9 +67,6 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
   useEffect(() => {
     setActiveTime(0);
   }, [date]);
-  useEffect(() => {
-    console.log(activeTime);
-  }, [activeTime]);
 
   const {
     data: availableTime,
@@ -82,6 +79,19 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
       form.watch("appointment_date"),
     ],
     queryFn: async () => {
+      const getDateBounds = (dateStr: string) => {
+        const startOfDay = new Date(dateStr);
+        startOfDay.setUTCHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(dateStr);
+        endOfDay.setUTCHours(23, 59, 59, 999);
+
+        return {
+          startOfDay: startOfDay.toISOString(),
+          endOfDay: endOfDay.toISOString(),
+        };
+      };
+      const { startOfDay, endOfDay } = getDateBounds("2024-12-12");
       try {
         const query = qs.stringify({
           filters: {
@@ -89,14 +99,25 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
               id: guide.id,
             },
             is_available: true,
-            "[$and][0][start_date][$lte]": format(
-              form.getValues("appointment_date"),
-              "yyyy-MM-dd",
-            ),
-            "filters[$and][1][end_date][$gte]": format(
-              form.getValues("appointment_date"),
-              "yyyy-MM-dd",
-            ),
+            // "[$and][0][start_date][$lte]": format(
+            //   form.getValues("appointment_date").toISOString(),
+            //   "yyyy-MM-dd",
+            // "filters[$and][1][end_date][$gte]": new Date(
+            // ),
+            //   form.getValues("appointment_date").toISOString(),
+            // ),
+            $and: [
+              {
+                start_date: {
+                  $lte: endOfDay, // Calendar starts before or at end of the day
+                },
+              },
+              {
+                end_date: {
+                  $gte: startOfDay, // Calendar ends after or at start of the day
+                },
+              },
+            ],
           },
         });
         const res = await fetch(
@@ -108,6 +129,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
         console.log(err);
       }
     },
+    placeholderData: keepPreviousData,
   });
   async function onSubmit(values: TBookAppointmentSchemaProvider) {
     setLoading(true);
@@ -119,7 +141,6 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
       toast.success("Appointment date is invalid");
       return;
     }
-    console.log(appointment_date, activeTime, availableTime);
     const payload = {
       ...form.getValues(),
       appointment_date: new Date(appointment_date),
@@ -307,7 +328,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
                     )}
                     key={`availabletime-${time.id}`}
                   >
-                    {format(time.attributes.start_date, "hh:MM a")}
+                    {format(new Date(time.attributes.start_date), "h:mm aa")}
                   </Badge>
                 ))}
               </span>
