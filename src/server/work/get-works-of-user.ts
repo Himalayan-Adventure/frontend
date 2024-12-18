@@ -4,11 +4,20 @@ import { AxiosResponse, AxiosError } from "axios";
 //import { cookies } from "next/headers";
 import qs from "qs";
 
-export const getWorksOfUser = async ({ id }: { id: number }) => {
-  console.log("hello", id);
+export const getWorksOfUser = async ({
+  id,
+  limit,
+}: {
+  id: number;
+  limit?: number;
+}) => {
   try {
     const query = qs.stringify(
       {
+        pagination: {
+          pageSize: limit || 5,
+          page: 1,
+        },
         filters: {
           user_works: {
             id,
@@ -28,9 +37,9 @@ export const getWorksOfUser = async ({ id }: { id: number }) => {
       },
     );
     const data: APIResponseCollection<"api::work.work"> = await res.json();
-    return data;
+    return { data: data.data, meta: data.meta };
   } catch (error: any) {
     console.log(error);
-    return { data: [], status: 500 };
+    //    return { data: [], status: 500 };
   }
 };

@@ -58,10 +58,10 @@ export default async function WorkPage({
             {/* Works*/}
             <div className="flex flex-col gap-y-32">
               <div className="flex flex-col gap-y-16">
-                {(!works.data || works.data.length) === 0 ? (
-                  <div>No works found of user</div>
+                {(!works?.data || works.data.length) === 0 ? (
+                  <Text variant={"text-md"}>No works found.</Text>
                 ) : (
-                  works.data
+                  works?.data
                     ?.slice(0, limit)
                     ?.map((work, index) => (
                       <WorkCard
@@ -73,8 +73,7 @@ export default async function WorkPage({
                     ))
                 )}
               </div>
-
-              <WorkPagination />
+              {works?.data && works?.data.length >= 1 && <WorkPagination />}
             </div>
           </div>
         </div>

@@ -82,7 +82,7 @@ async function ServicesPackages({ searchParams }: TSearchParams) {
           <ServiceCard data={svc} key={index} userId={user?.id} />
         ))}
       </div>
-      {data && data?.meta.pagination.total > 8 && (
+      {data && data?.meta.pagination.total > 10 && (
         <ServicesPagination
           title="Continue exploring amazing views"
           disabled={data.meta.pagination.total <= data.meta.pagination.pageSize}

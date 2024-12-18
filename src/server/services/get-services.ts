@@ -11,7 +11,7 @@ export const getServices = async ({
   name,
   page,
   date,
-  limit = 8,
+  limit,
 }: {
   id?: number;
   category?: string;
@@ -45,8 +45,8 @@ export const getServices = async ({
         },
 
         pagination: {
-          pageSize: limit ? limit : 8,
-          page: page,
+          pageSize: limit ? limit : 10,
+          page: page || 1,
         },
       },
       {

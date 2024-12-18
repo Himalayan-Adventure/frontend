@@ -17,6 +17,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache, no-store, must-revalidate",
       },
       method: "POST",
       body: JSON.stringify({ data }),
