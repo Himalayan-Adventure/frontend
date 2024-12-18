@@ -9,6 +9,8 @@ const guideOnlyRoutes = [
   "/dashboard/calendar",
   "/dashboard/services/write",
   "/dashboard/services/edit",
+  "/dashboard/services/inquiry",
+  "/dashboard/services/service-requests",
 ];
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
