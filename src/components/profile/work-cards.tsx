@@ -18,7 +18,6 @@ export const WorkCards = ({ user }: { user: TUser }) => {
   const [limit, setLimit] = useState(5);
   const { data: works, isPending } = useQuery({
     queryKey: ["works", limit],
-    //queryFn: async () => {await getWorksOfUser({ id: user.id })}
     queryFn: async () => await getWorksOfUser({ id: user.id, limit }),
     placeholderData: keepPreviousData,
   });
@@ -60,20 +59,6 @@ export const WorkCards = ({ user }: { user: TUser }) => {
             )}
           </div>
 
-          {/*
-            <Button
-              className="self-center bg-foreground px-8 py-4"
-              disabled={
-                works.meta.pagination.total <= works.meta.pagination.pageSize
-              }
-              onClick={() => {
-                setLimit(limit + 10);
-                updateQueryString({ limit: limit.toString() });
-              }}
-            >
-            </Button>
-*/}
-
           {works?.data && works?.data.length >= 1 && (
             <Button
               onClick={() => {
@@ -94,7 +79,7 @@ export const WorkCards = ({ user }: { user: TUser }) => {
   );
 };
 
-export const LegacyWorkCard = ({
+const LegacyWorkCard = ({
   work,
   index,
   type = "default",

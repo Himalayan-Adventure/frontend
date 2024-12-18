@@ -15,6 +15,7 @@ export default function CalendarSection({
 }) {
   const updateQueryString = useUpdateQueryString();
   if (!data?.attributes) {
+    updateQueryString({}, ["active"]);
     return <Text variant="text-lg">No data available</Text>;
   }
   const { start_date, end_date, is_available, notes, heading, guides } =

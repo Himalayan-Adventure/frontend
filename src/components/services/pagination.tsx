@@ -29,8 +29,11 @@ export function LoadMorePagination({
       )}
       <Button
         onClick={() => {
-          setLimit(limit + 10);
-          updateQueryString({ limit: limit.toString() });
+          setLimit((currentLimit) => {
+            const newLimit = currentLimit + 10;
+            updateQueryString({ limit: newLimit.toString() });
+            return newLimit;
+          });
         }}
         disabled={disabled}
         className=""

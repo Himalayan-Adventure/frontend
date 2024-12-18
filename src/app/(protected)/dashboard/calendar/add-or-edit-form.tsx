@@ -78,8 +78,8 @@ export const CalendarAddOrEditForm = ({
       const res = await addCalendar(payload);
       if (res.status === 200) {
         toast.success("Added calendar successfully");
-        router.refresh();
         router.back();
+        router.refresh();
       }
     }
     setLoading(false);

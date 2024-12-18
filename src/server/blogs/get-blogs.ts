@@ -4,12 +4,18 @@ import { APIResponseCollection } from "@/types/types";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
 
-export const getBlogs = async ({ page }: { page?: number }) => {
+export const getBlogs = async ({
+  page,
+  limit,
+}: {
+  page?: number;
+  limit?: number;
+}) => {
   try {
     const query = qs.stringify(
       {
         pagination: {
-          pageSize: 20,
+          pageSize: limit || 20,
           page: page || 1,
         },
       },

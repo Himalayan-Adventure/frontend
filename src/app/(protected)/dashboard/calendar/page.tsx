@@ -4,14 +4,15 @@ import { DateCard } from "./date-card";
 import CalendarSection from "./calendar-section";
 import { getCalendars } from "@/server/calendar/get-calendars";
 import Link from "next/link";
+import { LoadMorePagination } from "@/components/services/pagination";
 
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams: { available: boolean; active?: number };
+  searchParams: { available: boolean; active?: number; limit?: number };
 }) {
-  const { available, active } = searchParams;
-  const calendars = await getCalendars({ available });
+  const { available, active, limit } = searchParams;
+  const calendars = await getCalendars({ available, limit });
   return (
     <section className="space-y-8 font-poppins @container">
       <span className="flex gap-x-3">
@@ -28,24 +29,39 @@ export default async function CalendarPage({
         </Link>
       </span>
       <span className="flex flex-col items-start gap-x-4 gap-y-10 @4xl:flex-row">
-        {calendars.data && (
-          <CalendarSection
-            data={
-              active
-                ? calendars?.data?.find((i) => i.id === Number(active))
-                : calendars?.data?.[0]
-            }
-          />
-        )}
-        <div className="flex flex-wrap gap-4">
-          {calendars.data.map((i, index) => (
-            <DateCard
-              key={`calendar-${i.id}`}
-              data={i}
-              active={active ? i.id === Number(active) : index === 0}
+        {calendars.data && calendars.data.length > 0 ? (
+          <>
+            <CalendarSection
+              data={
+                active
+                  ? calendars?.data?.find((i) => i.id === Number(active))
+                  : calendars?.data?.[0]
+              }
             />
-          ))}
-        </div>
+            <div className="flex flex-col items-start gap-y-5">
+              <div className="flex flex-wrap gap-4">
+                {calendars.data.map((i, index) => (
+                  <DateCard
+                    key={`calendar-${i.id}`}
+                    data={i}
+                    active={active ? i.id === Number(active) : index === 0}
+                  />
+                ))}
+              </div>
+              {calendars?.meta && (
+                <LoadMorePagination
+                  defaultLimit={20}
+                  disabled={
+                    calendars.meta?.pagination.total <=
+                    calendars.meta?.pagination.pageSize
+                  }
+                />
+              )}
+            </div>
+          </>
+        ) : (
+          <Text variant={"text-md"}>No calendars found</Text>
+        )}
       </span>
     </section>
   );

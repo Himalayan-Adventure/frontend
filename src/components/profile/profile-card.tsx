@@ -1,7 +1,8 @@
+"use client";
 import { socialIcons } from "@/config/constants";
 import { TUser, TUserDeep } from "@/types/auth";
 import Link from "next/link";
-import { UserIcon } from "lucide-react";
+import { Mail, Phone, UserIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import UserFallbackImg from "/public/images/user.png";
@@ -10,7 +11,35 @@ import UserImg from "/public/images/user.png";
 import fbIcon from "/public/icons/facebook-bw.png";
 import WhatsAppIcon from "/public/icons/whatsApp-bw.png";
 import IgImage from "/public/icons/instagram-bw.png";
+import generatePDF, { Resolution, Margin } from "react-to-pdf";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useState } from "react";
+import { PopoverArrow } from "@radix-ui/react-popover";
 export const ProfileCard = ({ user }: { user: TUserDeep | null }) => {
+  const getTargetElement = () => document.getElementById("profile-page");
+  const [isLoading, setIsLoading] = useState(false);
+  const handleGeneratePDF = async () => {
+    setIsLoading(true);
+    try {
+      await generatePDF(getTargetElement, {
+        filename: `${user?.username} Resume`,
+        method: "save",
+        page: {
+          orientation: "portrait",
+          margin: Margin.SMALL,
+        },
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="relative h-[600px] w-full overflow-hidden rounded-xl bg-black text-white shadow-lg sm:min-w-[300px] md:aspect-square md:h-auto md:min-h-[580px] md:w-auto md:max-w-sm">
       <div className="relative h-full w-full">
@@ -83,13 +112,46 @@ export const ProfileCard = ({ user }: { user: TUserDeep | null }) => {
           </div>
           <div className="flex justify-between uppercase">
             {user?.userType === "merchant" && (
-              <Button className="rounded-md bg-transparent px-2 py-1 uppercase md:px-4 md:py-2">
+              <Button
+                className="rounded-md bg-transparent px-2 py-1 uppercase md:px-4 md:py-2"
+                onClick={handleGeneratePDF}
+              >
                 Download CV
               </Button>
             )}
-            <Button className="rounded-md bg-transparent px-4 py-2 uppercase text-white">
-              Contact Me
-            </Button>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button className="rounded-md bg-transparent px-4 py-2 uppercase text-white">
+                  Contact Me
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                side="top"
+                className="flex w-fit items-center justify-center gap-x-2 bg-gray-100"
+              >
+                {user?.email && (
+                  <Link
+                    href={`mailto:${user.email}`}
+                    className="grid w-fit place-items-center rounded-full border border-blue-300 bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
+                  >
+                    <Mail size={18} />
+                  </Link>
+                )}
+
+                {user?.contact && user?.contact.phone && (
+                  <Link
+                    href={`tel:+977 ${user.contact.phone}`}
+                    className="grid w-fit place-items-center rounded-full border border-blue-300 bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
+                  >
+                    <Phone size={18} />
+                  </Link>
+                )}
+                {!(user?.email && user?.contact?.phone) && (
+                  <Text variant="text-sm">No contact details provided</Text>
+                )}
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>
