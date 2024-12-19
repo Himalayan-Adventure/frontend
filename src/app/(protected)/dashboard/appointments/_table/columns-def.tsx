@@ -42,14 +42,14 @@ export const columns: ColumnDef<
       </div>
     ),
   },
-  {
-    header: "time",
-    accessorKey: "attributes.appointment_date",
-    cell({ row }) {
-      const time = row?.original?.attributes?.appointment_date;
-      return time ? format(new Date(time), "hh:mm a") : "-";
-    },
-  },
+  // {
+  //  header: "time",
+  // accessorKey: "attributes.appointment_date",
+  //cell({ row }) {
+  // const time = row?.original?.attributes?.appointment_date;
+  //return time ? format(new Date(time), "hh:mm a") : "-";
+  //},
+  //},
 
   {
     header: "client",
@@ -78,7 +78,16 @@ export const columns: ColumnDef<
   },
 
   {
-    header: "appointment Date",
+    header: ({ column }) => {
+      return (
+        <SortableHeaderButton
+          sortOnClient
+          column={column}
+          label="Appointment date"
+          className="justify-start"
+        />
+      );
+    },
     accessorKey: "attributes.appointment_date",
     cell({ row }) {
       return (

@@ -29,7 +29,7 @@ import {
   TBookAppointmentSchemaProvider,
 } from "@/validators/book-appointment-validator";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { addDays, format, subDays } from "date-fns";
+import { addDays, endOfDay, format, startOfDay, subDays } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
@@ -76,22 +76,29 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
     queryKey: [
       "calendars",
       `guide-calendar-${guide.id}`,
+      date,
       form.watch("appointment_date"),
     ],
     queryFn: async () => {
       const getDateBounds = (dateStr: string) => {
-        const startOfDay = new Date(dateStr);
-        startOfDay.setUTCHours(0, 0, 0, 0);
+        console.log(dateStr);
+        const date = new Date(dateStr);
+        // const startOfDay = new Date(dateStr);
+        // console.log(startOfDay);
+        // startOfDay.setUTCHours(0, 0, 0, 0);
+        // const beginningOfDay = startOfDay(new Date(dateStr));
 
-        const endOfDay = new Date(dateStr);
-        endOfDay.setUTCHours(23, 59, 59, 999);
+        // const endOfDay = new Date(dateStr);
+        // endOfDay.setUTCHours(23, 59, 59, 999);
 
         return {
-          startOfDay: startOfDay.toISOString(),
-          endOfDay: endOfDay.toISOString(),
+          start: startOfDay(date),
+          end: endOfDay(date),
         };
       };
-      const { startOfDay, endOfDay } = getDateBounds("2024-12-12");
+      const { start, end } = getDateBounds(
+        form.getValues("appointment_date").toString(),
+      );
       try {
         const query = qs.stringify({
           filters: {
@@ -109,12 +116,12 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
             $and: [
               {
                 start_date: {
-                  $lte: endOfDay, // Calendar starts before or at end of the day
+                  $lte: end, // Calendar starts before or at end of the day
                 },
               },
               {
                 end_date: {
-                  $gte: startOfDay, // Calendar ends after or at start of the day
+                  $gte: start, // Calendar ends after or at start of the day
                 },
               },
             ],
@@ -155,6 +162,9 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
       toast.error(`${res?.error?.message}`);
     }
   }
+  useEffect(() => {
+    console.log(form.getValues("appointment_date"), date);
+  }, [form.getValues("appointment_date"), date]);
   return (
     <div className="relative space-y-4">
       <Text className="w-full text-center" variant={"text-md"}>
