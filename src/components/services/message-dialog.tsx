@@ -149,7 +149,7 @@ export const MessageDialog = ({ guideId }: { guideId: number }) => {
             <Button
               isLoading={loading}
               type="submit"
-              disabled={!form.formState.isValid}
+              //disabled={!form.formState.isValid}
               className="w-full gap-x-3 self-end !bg-white px-10 py-4 font-poppins font-bold text-foreground sm:py-6"
             >
               Send
