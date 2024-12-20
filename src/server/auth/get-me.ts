@@ -9,7 +9,7 @@ import { TUserDeep, type TUser } from "@/types/auth";
  */
 import { axiosInstance } from "@/lib/server-axios-instance";
 import { LoginFormSchema, type TLoginForm } from "@/validators/login-validator";
-import { AxiosResponse, type AxiosError } from "axios";
+import axios, { AxiosResponse, type AxiosError } from "axios";
 import { TLoginResponse } from "@/types/auth";
 import { cookies } from "next/headers";
 // export const getMe = async () => {
@@ -129,3 +129,17 @@ export async function getCurrentUserDataDeep() {
     return null;
   }
 }
+
+const getUser = async () => {
+  try {
+    const res = await axios.get<TUserDeep>("/api/me?populate=deep");
+
+    if (!res?.data) {
+      return null;
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching user data", error);
+    return null;
+  }
+};

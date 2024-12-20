@@ -1,7 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
+import { APIResponseCollection } from "@/types/types";
+async function getPackageRegion() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-regions?populate=*`,
+    );
+    if (!res.ok) {
+      throw new Error("Error fetching package region");
+    }
+    const data: APIResponseCollection<"api::package-region.package-region"> =
+      await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
 
-export default function UsefulLinksSection() {
+export default async function UsefulLinksSection() {
   const socialLinks = [
     { href: "#", src: "/icons/facebook.png", alt: "Facebook" },
     { href: "#", src: "/icons/instagram.png", alt: "Instagram" },
@@ -88,6 +105,7 @@ export default function UsefulLinksSection() {
     { src: "/images/visa.png", alt: "Recommendation 1" },
     { src: "/images/visa.png", alt: "Recommendation 2" },
   ];
+  const packageRegion = await getPackageRegion();
 
   const renderList = (items: { src: string; alt: string }[]) =>
     items.map((item, index) => (
@@ -101,9 +119,12 @@ export default function UsefulLinksSection() {
       <div className="container">
         <div className="flex flex-col justify-between gap-4 py-4 md:flex-row md:py-8">
           <div className="flex">
-            <button className="rounded-lg border border-white px-6 py-2 text-sm text-white md:text-base">
+            <Link
+              href={"/about-us"}
+              className="border border-white px-6 py-2 text-sm text-white md:text-base"
+            >
               About Us
-            </button>
+            </Link>
           </div>
           <div className="flex gap-6">
             {socialLinks.map((social, index) => (

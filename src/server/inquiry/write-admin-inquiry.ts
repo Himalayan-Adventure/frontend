@@ -1,17 +1,18 @@
 "use server";
+import { errorMsg } from "@/lib/utils";
 import {
-  BookAppointmentFormSchema,
-  TBookAppointmentSchemaProvider,
-} from "@/validators/book-appointment-validator";
+  AdminInquiryFormSchema,
+  TAdminInquiryForm,
+} from "@/validators/admin-inquiry-form";
 import { cookies } from "next/headers";
-export const makeAppointment = async (
-  appointment: TBookAppointmentSchemaProvider,
-) => {
+export const addAdminInquiry = async (inquiry: TAdminInquiryForm) => {
   const cookieStore = cookies();
   const token = cookieStore?.get("jwt")?.value;
-  console.log(appointment);
+  if (!token) {
+    throw new Error("You are not authorized or logged in");
+  }
   try {
-    const validatedFields = BookAppointmentFormSchema.safeParse(appointment);
+    const validatedFields = AdminInquiryFormSchema.safeParse(inquiry);
 
     if (!validatedFields.success) {
       return {
@@ -24,10 +25,10 @@ export const makeAppointment = async (
       };
     }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/appointments`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/admin-inquiries`,
       {
         method: "POST",
-        body: JSON.stringify({ data: appointment }),
+        body: JSON.stringify({ data: inquiry }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

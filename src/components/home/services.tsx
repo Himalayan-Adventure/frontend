@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { APIResponseCollection, APIResponseData } from "@/types/types";
 import { Text } from "../ui/text";
 import { Loading } from "../loading";
+import { useCurrentUser } from "@/hooks/user-current-user";
+import { toast } from "sonner";
 
 export default function Services() {
   const {
@@ -29,6 +31,7 @@ export default function Services() {
       }
     },
   });
+
   return (
     <LazyMotion features={domMax}>
       <m.section className="py-8 lg:py-16">
@@ -68,6 +71,7 @@ const ServiceCard = ({
   svc: APIResponseData<"api::service.service">;
 }) => {
   const image = svc?.attributes?.image?.data?.attributes;
+  const { data: user, isLoading } = useCurrentUser();
   return (
     <div className="space-y-4 lg:space-y-8">
       <div className="group relative">
@@ -88,7 +92,14 @@ const ServiceCard = ({
         </div>
       </div>
       <div className="text-center">
-        <Button className="w-auto rounded-full border border-black bg-transparent px-12 text-sm text-black">
+        <Button
+          className="w-auto rounded-full border border-black bg-transparent px-12 text-sm text-black"
+          onClick={() => {
+            if (!user) {
+              toast.error("Please login to book a service");
+            }
+          }}
+        >
           Book Now
         </Button>
       </div>

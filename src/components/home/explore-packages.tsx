@@ -10,47 +10,52 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { MessageDialog } from "../services/message-dialog";
-// const packages = [
-//   {
-//     name: "Expedition Over 8000m",
-//     image: packageImg,
-//   },
-//   {
-//     name: "Expedition Over 8000m",
-//     image: packageImg,
-//   },
-//   {
-//     name: "Peak Climbing",
-//     image: packageImg,
-//   },
-//   {
-//     name: "Trekking",
-//     image: packageImg,
-//   },
-// ];
+import { AdminInquiryDialog } from "./admin-inquiry-dialog";
+import { useCurrentUser } from "@/hooks/user-current-user";
+import { toast } from "sonner";
+const packages = [
+  {
+    name: "Expedition Over 8000m",
+    image: packageImg,
+  },
+  {
+    name: "Expedition Over 8000m",
+    image: packageImg,
+  },
+  {
+    name: "Peak Climbing",
+    image: packageImg,
+  },
+  {
+    name: "Trekking",
+    image: packageImg,
+  },
+];
 
 export default function ExplorePackages() {
   const {
-    data: projects,
+    data: packages,
     isPending,
     isError,
-  } = useQuery<APIResponseCollection<"api::project.project">>({
-    queryKey: ["project"],
-    queryFn: async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/projects?fields[0]=title&fields[1]=date&populate[0]=image&pagination[pageSize]=4&pagination[page]=1&populate[1]=guides`,
-        );
-        if (!res.ok) {
-          throw new Error("Error fetching projects");
+  } = useQuery<APIResponseCollection<"api::package-category.package-category">>(
+    {
+      queryKey: ["package-category"],
+      queryFn: async () => {
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=3`,
+          );
+          if (!res.ok) {
+            throw new Error("Error fetching package categories");
+          }
+          const data = await res.json();
+          return data;
+        } catch (error) {
+          console.log(error);
         }
-        const data = await res.json();
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
+      },
     },
-  });
+  );
 
   return (
     <LazyMotion features={domMax}>
@@ -76,7 +81,7 @@ export default function ExplorePackages() {
           </div>
           {/* Packages Grid */}
           <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16">
-            {projects?.data?.map((pkg, index) => (
+            {packages?.data?.map((pkg, index) => (
               <PackageCategoryCard
                 data={pkg}
                 key={`package-category-${pkg.id}`}
@@ -91,10 +96,10 @@ export default function ExplorePackages() {
 const PackageCategoryCard = ({
   data,
 }: {
-  data: APIResponseData<"api::project.project">;
+  data: APIResponseData<"api::package-category.package-category">;
 }) => {
-  console.log(data);
-  const image = data?.attributes?.image?.data?.[0].attributes;
+  const image = data?.attributes?.image?.data?.attributes;
+  const { data: user, isLoading } = useCurrentUser();
   return (
     <div className="">
       {image && (
@@ -108,31 +113,38 @@ const PackageCategoryCard = ({
       )}
       <div className="py-2 text-center">
         <h2 className="mb-2 text-base font-semibold lg:text-xl">
-          {data?.attributes?.title}
+          {data?.attributes?.name}
         </h2>
         <div className="flex flex-col items-center space-y-3">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
-                Inquire
-              </Button>
-            </DialogTrigger>
-            <DialogContent
-              className={cn(
-                "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
-              )}
+          {user ? (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
+                  Inquire
+                </Button>
+              </DialogTrigger>
+              <DialogContent
+                className={cn(
+                  "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+                )}
+              >
+                <Image
+                  src={EverestImg}
+                  alt="Cover image"
+                  className="absolute -z-10 h-full w-full object-cover opacity-90"
+                />
+                <AdminInquiryDialog />
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Button
+              className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2"
+              onClick={() => toast.error("Please login to inquire")}
             >
-              <Image
-                src={EverestImg}
-                alt="Cover image"
-                className="absolute -z-10 h-full w-full object-cover opacity-90"
-              />
-              {data.attributes.guides?.data.id && (
-                <MessageDialog guideId={data.attributes.guides?.data.id} />
-              )}
-            </DialogContent>
-          </Dialog>
-          <Link href={`/projects/${data.id}`}>
+              Inquire
+            </Button>
+          )}
+          <Link href={`/packages?key=category&filter=${data.id}`}>
             <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
               View More
             </Button>

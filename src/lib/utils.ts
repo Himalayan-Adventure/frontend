@@ -33,3 +33,15 @@ export async function urlToFile(url: string, filename: string): Promise<File> {
 
   return new File([blob], filename, { type: mimeType });
 }
+
+export const errorMsg = (status: number, fallback?: string) => {
+  switch (status) {
+    case 401:
+      return "You are not authorized. Please login/register to continue!";
+
+    case 403:
+      return "Your roles are not enough to perform this action";
+    default:
+      return fallback || "Error occureed. Please try again";
+  }
+};

@@ -53,12 +53,19 @@ import { Textarea } from "../ui/textarea";
 import { cn } from "@/lib/utils";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  TriangleAlert,
+} from "lucide-react";
 import { TUser } from "@/types/auth";
 import axios from "axios";
 import { getUsers } from "@/server/users/get-users";
 import { axiosInstance } from "@/lib/server-axios-instance";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { getCurrentUserData } from "@/server/auth/get-me";
+import { useCurrentUser } from "@/hooks/user-current-user";
 const CloudImage = ({ src, alt, position }: any) => (
   <div className={`absolute ${position} w-full`}>
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
@@ -67,6 +74,8 @@ const CloudImage = ({ src, alt, position }: any) => (
 
 export default function BookAppointment() {
   const [book, setBook] = useState(false);
+
+  const { data: user, isLoading } = useCurrentUser();
   return (
     <LazyMotion features={domMax}>
       <m.section
@@ -90,7 +99,13 @@ export default function BookAppointment() {
               <h1 className="comp-heading mb-6">Talk to Experts</h1>
               <Button
                 className="rounded-full border border-white bg-transparent px-10 py-8 text-base text-white lg:text-xl"
-                onClick={() => setBook(true)}
+                onClick={() => {
+                  if (user) {
+                    setBook(true);
+                  } else {
+                    toast.error("You must be logged in to book an appointment");
+                  }
+                }}
               >
                 Book An Appointment
               </Button>
