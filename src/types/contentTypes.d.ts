@@ -877,9 +877,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToMany',
       'api::calendar.calendar'
     >;
-    service_request: Attribute.Relation<
+    service_requests: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'manyToMany',
       'api::service-request.service-request'
     >;
     createdAt: Attribute.DateTime;
@@ -2154,6 +2154,7 @@ export interface ApiServiceRequestServiceRequest extends Schema.CollectionType {
     singularName: 'service-request';
     pluralName: 'service-requests';
     displayName: 'Service Request';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -2164,9 +2165,9 @@ export interface ApiServiceRequestServiceRequest extends Schema.CollectionType {
       'oneToMany',
       'api::service.service'
     >;
-    users_permissions_user: Attribute.Relation<
+    users_permissions_users: Attribute.Relation<
       'api::service-request.service-request',
-      'oneToOne',
+      'manyToMany',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;

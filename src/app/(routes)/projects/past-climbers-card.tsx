@@ -8,10 +8,14 @@ import fbIcon from "/public/icons/facebook.png";
 import WhatsAppIcon from "/public/icons/whatsApp.png";
 import IgImage from "/public/icons/instagram.png";
 import { APIResponseData } from "@/types/types";
+import { DateValue } from "@/types/packages/departure";
+import { format } from "date-fns";
 export const PastClimbersCard = ({
   user: data,
+  summitDate,
 }: {
   user: APIResponseData<"plugin::users-permissions.user">;
+  summitDate?: DateValue;
 }) => {
   const user = data.attributes;
   const profilePicture = user?.profilePicture?.data?.attributes;
@@ -28,7 +32,7 @@ export const PastClimbersCard = ({
           />
         ) : (
           <div className="grid h-full w-full place-items-center bg-gray-600">
-            <UserIcon size={100} />
+            <UserIcon size={100} className="text-white" />
           </div>
         )}
         <div className="w-full space-y-2">
@@ -46,14 +50,17 @@ export const PastClimbersCard = ({
         <Text className="text-gray-500" variant="text-md">
           {user?.about?.description}
         </Text>
-        <div className="relative flex w-[70%] flex-col items-center space-y-0.5 rounded-md border border-gray-300 py-2">
-          <Text semibold variant="text-sm">
-            Summit Date
-          </Text>
-          <Text className="text-gray-600" variant="text-sm">
-            07 Apr 2022 - 31 May 2022
-          </Text>
-        </div>
+        {summitDate && (
+          <div className="relative flex w-[70%] flex-col items-center space-y-0.5 rounded-md border border-gray-300 py-2">
+            <Text semibold variant="text-sm">
+              Summit Date
+            </Text>
+
+            <Text className="text-gray-600" variant="text-sm">
+              {format(new Date(summitDate), "dd MMM yyyy")}
+            </Text>
+          </div>
+        )}
       </div>
       <div className="flex justify-center space-x-4">
         <span className="flex items-center justify-center gap-x-2">
