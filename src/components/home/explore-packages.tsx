@@ -13,6 +13,7 @@ import { MessageDialog } from "../services/message-dialog";
 import { AdminInquiryDialog } from "./admin-inquiry-dialog";
 import { useCurrentUser } from "@/hooks/user-current-user";
 import { toast } from "sonner";
+import { useState } from "react";
 const packages = [
   {
     name: "Expedition Over 8000m",
@@ -100,6 +101,7 @@ const PackageCategoryCard = ({
 }) => {
   const image = data?.attributes?.image?.data?.attributes;
   const { data: user, isLoading } = useCurrentUser();
+  const [open, setOpen] = useState(false);
   return (
     <div className="">
       {image && (
@@ -117,7 +119,7 @@ const PackageCategoryCard = ({
         </h2>
         <div className="flex flex-col items-center space-y-3">
           {user ? (
-            <Dialog>
+            <Dialog open={open} onOpenChange={(e) => setOpen(e)}>
               <DialogTrigger asChild>
                 <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
                   Inquire
@@ -133,7 +135,7 @@ const PackageCategoryCard = ({
                   alt="Cover image"
                   className="absolute -z-10 h-full w-full object-cover opacity-90"
                 />
-                <AdminInquiryDialog />
+                <AdminInquiryDialog setOpen={setOpen} />
               </DialogContent>
             </Dialog>
           ) : (

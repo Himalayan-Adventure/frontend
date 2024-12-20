@@ -2,13 +2,17 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { m, domMax, LazyMotion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { APIResponseCollection, APIResponseData } from "@/types/types";
 import { Text } from "../ui/text";
 import { Loading } from "../loading";
 import { useCurrentUser } from "@/hooks/user-current-user";
 import { toast } from "sonner";
-
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { MessageDialog } from "@/components/services/message-dialog";
+import EverestImg from "/public/images/everest.png";
+import { cn } from "@/lib/utils";
+import { postRequestService } from "@/server/services/post-request-serivce";
 export default function Services() {
   const {
     data: services,
@@ -72,6 +76,28 @@ const ServiceCard = ({
 }) => {
   const image = svc?.attributes?.image?.data?.attributes;
   const { data: user, isLoading } = useCurrentUser();
+  const service_provider = svc?.attributes?.service_provider?.data;
+  const {
+    mutate: requestSerivceMutation,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationKey: ["request-service"],
+    mutationFn: async () => {
+      if (user) {
+        await postRequestService({ userId: user.id, serviceId: svc.id });
+      }
+    },
+    onSuccess: () => {
+      toast.success("Service Request sent successfully");
+    },
+    onError: (error) => {
+      toast.error(
+        "Service Request could not be sent " + error.message.toString(),
+      );
+    },
+    retry: 1,
+  });
   return (
     <div className="space-y-4 lg:space-y-8">
       <div className="group relative">
@@ -97,6 +123,8 @@ const ServiceCard = ({
           onClick={() => {
             if (!user) {
               toast.error("Please login to book a service");
+            }else{
+              requestSerivceMutation();
             }
           }}
         >
