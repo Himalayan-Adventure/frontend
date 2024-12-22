@@ -20,7 +20,7 @@ export const updateUser = async (user: TEditProfileForm, id: number) => {
         status: 400,
       };
     }
-    const uploadPfp = await uploadMedia(user.profile_picture);
+    const uploadPfp = await uploadMedia(user.profilePicture);
     if (!uploadPfp) {
       return {
         error: {
@@ -29,7 +29,17 @@ export const updateUser = async (user: TEditProfileForm, id: number) => {
         status: 500,
       };
     }
-    const data = { ...user, profile_picture: uploadPfp };
+    const data = {
+      ...user,
+      profilePicture: uploadPfp,
+      resume: {
+        ...user.resume,
+        education: user.resume.education
+          ?.split("\n")
+          .map((i) => ({ education: i })),
+      },
+    };
+    console.log(data);
 
     const res = await axios({
       method: "PUT",
@@ -37,6 +47,7 @@ export const updateUser = async (user: TEditProfileForm, id: number) => {
       data: data,
       withCredentials: true,
     });
+    console.log(res)
     return {
       data: res.data,
       status: res.status,
