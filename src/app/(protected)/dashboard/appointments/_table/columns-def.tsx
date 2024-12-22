@@ -13,6 +13,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { HTMLProps } from "react";
 import DeleteButton from "./delete-button";
+import { StatusSelectCell } from "@/components/table/status-select-cell";
+import { PriorityCell } from "@/components/table/priority-cell";
 
 export const columns: ColumnDef<
   APIResponseData<"api::appointment.appointment">,
@@ -91,7 +93,7 @@ export const columns: ColumnDef<
     accessorKey: "attributes.appointment_date",
     cell({ row }) {
       return (
-        <p>
+        <p className="text-sm font-medium">
           {format(
             new Date(row?.original?.attributes?.appointment_date),
             "yyyy-MM-dd hh:mm a",
@@ -101,13 +103,13 @@ export const columns: ColumnDef<
     },
   },
 
-  // {
-  //   header: "priority",
-  //   accessorKey: "attributes.priority",
-  //   cell({ row }) {
-  //     return "-";
-  //   },
-  // },
+  {
+    header: "priority",
+    accessorKey: "attributes.priority",
+    cell({ row }) {
+      return <PriorityCell id={row.original.id} />;
+    },
+  },
 
   {
     header: "package",
@@ -129,13 +131,13 @@ export const columns: ColumnDef<
     },
   },
 
-  // {
-  //   header: "status",
-  //   //accessorKey: "attributes.expectation",
-  //   cell({ row }) {
-  //     return "-";
-  //   },
-  // },
+  {
+    header: "status",
+    accessorKey: "attributes.status",
+    cell({ row }) {
+      return <StatusSelectCell id={row.original.id} />;
+    },
+  },
 
   {
     header: "creator",
