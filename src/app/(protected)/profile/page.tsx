@@ -21,7 +21,6 @@ export default function ProfilePage() {
         if (!res?.data) {
           return null;
         }
-        console.log(res.data);
 
         return res.data;
       } catch (error) {

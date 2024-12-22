@@ -1,11 +1,6 @@
 "use client";
 
-import { useGuideDialog } from "@/store/get-guide-dialog-type";
-import { TUserDeep } from "@/types/auth";
-import { InquiryFormSchema, TInquiryForm } from "@/validators/inquiry-form";
-import { Text } from "../ui/text";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -14,38 +9,50 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { toast } from "sonner";
+import { addAdminInquiry } from "@/server/inquiry/write-admin-inquiry";
+import {
+  AdminInquiryFormSchema,
+  TAdminInquiryForm,
+} from "@/validators/admin-inquiry-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { addInquiry } from "@/server/inquiry/write-inquiry";
-import { Textarea } from "../ui/textarea";
+import { SetStateAction, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Label } from "../ui/label";
-export const MessageDialog = ({ guideId }: { guideId: number }) => {
-  const { type, setType, setDialogOpen } = useGuideDialog();
-
+import { Text } from "../ui/text";
+import { Textarea } from "../ui/textarea";
+import { getCurrentUserData } from "@/server/auth/get-me";
+import { useQuery } from "@tanstack/react-query";
+import { TUser } from "@/types/auth";
+import { TriangleAlert } from "lucide-react";
+import { useCurrentUser } from "@/hooks/user-current-user";
+export const AdminInquiryDialog = ({
+  setOpen,
+}: {
+  setOpen: React.Dispatch<SetStateAction<boolean>>;
+}) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const form = useForm<TInquiryForm>({
-    resolver: zodResolver(InquiryFormSchema),
+  const form = useForm<TAdminInquiryForm>({
+    resolver: zodResolver(AdminInquiryFormSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       subject: "",
       message: "",
-      guide: guideId,
     },
   });
-  async function onSubmit(values: TInquiryForm) {
+  async function onSubmit(values: TAdminInquiryForm) {
     setLoading(true);
     const payload = form.getValues();
-    const res = await addInquiry(payload);
+    const res = await addAdminInquiry(payload);
     if (res.status === 200) {
       setLoading(false);
-      setType("details");
-      toast.success("Successfully sent a message!");
+      toast.success("Successfully sent an inquiry to admin!");
+      setOpen(false);
     } else {
       setLoading(false);
       toast.error(`${res?.error?.message}`);
@@ -149,7 +156,6 @@ export const MessageDialog = ({ guideId }: { guideId: number }) => {
             <Button
               isLoading={loading}
               type="submit"
-              //disabled={!form.formState.isValid}
               className="w-full gap-x-3 self-end !bg-white px-10 py-4 font-poppins font-bold text-foreground sm:py-6"
             >
               Send

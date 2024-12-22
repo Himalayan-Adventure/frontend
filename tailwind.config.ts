@@ -1,4 +1,15 @@
 import type { Config } from "tailwindcss";
+const plugin = require("tailwindcss/plugin");
+import { PluginCreator } from "tailwindcss/types/config";
+const textShadowPlugin: PluginCreator = ({ matchUtilities, theme }) =>
+  matchUtilities(
+    {
+      "text-shadow": (value) => ({
+        textShadow: value,
+      }),
+    },
+    { values: theme("textShadow") },
+  );
 
 const config = {
   darkMode: ["class"],
@@ -34,6 +45,12 @@ const config = {
       },
     },
     extend: {
+      textShadow: {
+        sm: "0 1px 2px hsl(var(--foreground))",
+        DEFAULT: "0 2px 4px var(--gray-400)",
+        lg: "0 8px 16px var(--gray-400)",
+      },
+
       fontFamily: {
         overpass: ["var(--font-overpass)"],
         poppins: ["var(--font-poppins)"],
@@ -107,6 +124,7 @@ const config = {
     require("tailwindcss-animate"),
     require("@tailwindcss/container-queries"),
     require("@tailwindcss/typography"),
+    textShadowPlugin,
   ],
 } satisfies Config;
 

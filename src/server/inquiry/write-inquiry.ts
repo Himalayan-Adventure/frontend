@@ -45,10 +45,8 @@ export const addInquiry = async (inquiry: TInquiryForm) => {
     console.log(error);
     return {
       error: {
-        message:
-          error.status === 403
-            ? "You are not authorized or logged in"
-            : "Couldn't submit message",
+        // @ts-ignore
+        message: errorMsg(error.status, "Couldn't submit message"),
       },
       status: error?.response?.status || 500,
     };

@@ -90,7 +90,6 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
       ...form.getValues(),
       description: content || "",
     };
-    console.log(payload);
     if (type === "edit") {
       const res = await editBlog(payload, id);
       if (res.status === 200) {

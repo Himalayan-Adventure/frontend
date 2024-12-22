@@ -42,14 +42,14 @@ export const columns: ColumnDef<
       </div>
     ),
   },
-  {
-    header: "time",
-    accessorKey: "attributes.appointment_date",
-    cell({ row }) {
-      const time = row?.original?.attributes?.appointment_date;
-      return time ? format(new Date(time), "hh:mm a") : "-";
-    },
-  },
+  // {
+  //  header: "time",
+  // accessorKey: "attributes.appointment_date",
+  //cell({ row }) {
+  // const time = row?.original?.attributes?.appointment_date;
+  //return time ? format(new Date(time), "hh:mm a") : "-";
+  //},
+  //},
 
   {
     header: "client",
@@ -73,6 +73,30 @@ export const columns: ColumnDef<
     cell({ row }) {
       return (
         <ReadMoreCell message={row?.original?.attributes?.expectation || "-"} />
+      );
+    },
+  },
+
+  {
+    header: ({ column }) => {
+      return (
+        <SortableHeaderButton
+          sortOnClient
+          column={column}
+          label="Appointment date"
+          className="justify-start"
+        />
+      );
+    },
+    accessorKey: "attributes.appointment_date",
+    cell({ row }) {
+      return (
+        <p>
+          {format(
+            new Date(row?.original?.attributes?.appointment_date),
+            "yyyy-MM-dd hh:mm a",
+          )}
+        </p>
       );
     },
   },
@@ -121,26 +145,22 @@ export const columns: ColumnDef<
       const email = row?.original?.attributes?.email;
       return (
         <span className="flex gap-x-2">
-          {phone ? (
+          {phone && (
             <Link
               href={`tel:+977 ${phone}`}
               className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
             >
               <Phone size={18} />
             </Link>
-          ) : (
-            "-"
           )}
 
-          {email ? (
+          {email && (
             <Link
               href={`mailto:${email}`}
               className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
             >
               <Mail size={18} />
             </Link>
-          ) : (
-            "-"
           )}
         </span>
       );

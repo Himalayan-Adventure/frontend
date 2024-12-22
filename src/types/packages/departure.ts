@@ -1,4 +1,4 @@
-type DateValue = globalThis.Date | string;
+export type DateValue = globalThis.Date | string;
 export type ListItem = {
   type: "list-item";
   children: { type: "text"; text: string }[];
