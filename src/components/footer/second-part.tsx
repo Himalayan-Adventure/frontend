@@ -1,24 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { APIResponseCollection } from "@/types/types";
-async function getPackageRegion() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-regions?populate=*`,
-    );
-    if (!res.ok) {
-      throw new Error("Error fetching package region");
-    }
-    const data: APIResponseCollection<"api::package-region.package-region"> =
-      await res.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-}
+import { getPackageRegions } from "@/server/packages/get-package-regionts";
+import { getPackageCategories } from "@/server/packages/get-package-categories";
+import { getPackageTypes } from "@/server/packages/get-package-types";
 
 export default async function UsefulLinksSection() {
+  // TODO: add is popular in package category and package types
+  const packageRegion = await getPackageRegions({ isPopular: true });
+  const packageCategory = await getPackageCategories();
+  const packageTypes = await getPackageTypes();
   const socialLinks = [
     { href: "#", src: "/icons/facebook.png", alt: "Facebook" },
     { href: "#", src: "/icons/instagram.png", alt: "Instagram" },
@@ -27,67 +18,95 @@ export default async function UsefulLinksSection() {
     { href: "#", src: "/icons/youtube.png", alt: "YouTube" },
   ];
 
+  const baseUsefulLinks = [
+    {
+      title: "Popular Regions",
+      links: packageRegion?.data?.map((i) => ({
+        name: i.attributes.name,
+        href: `/packages?key=region&filter=${i.id}`,
+      })),
+    },
+
+    // {
+    //   title: "Expeditions",
+    //   links: [
+    //     { name: "8000m", href: "#" },
+    //     { name: "7000m", href: "#" },
+    //     { name: "Peak climbing", href: "#" },
+    //   ],
+    // },
+    // {
+    //   title: "Other Activities",
+    //   links: [
+    //     { name: "Helicopter tour", href: "#" },
+    //     { name: "Mountain bike", href: "#" },
+    //     { name: "Tours", href: "#" },
+    //   ],
+    // },
+    // {
+    //   title: "Peak Climbing",
+    //   links: [
+    //     { name: "Helicopter tour", href: "#" },
+    //     { name: "Mountain bike", href: "#" },
+    //     { name: "Tours", href: "#" },
+    //   ],
+    // },
+    // {
+    //   title: "14 X 8000M",
+    //   links: [
+    //     { name: "Everest (8,848.86 m)", href: "#" },
+    //     { name: "K2 (8,611 m)", href: "#" },
+    //     { name: "Kanchenjunga (8,586 m)", href: "#" },
+    //     { name: "Lhotse (8,516 m)", href: "#" },
+    //     { name: "Makalu (8,485 m)", href: "#" },
+    //     { name: "Cho Oyu (8,188 m)", href: "#" },
+    //     { name: "Dhaulagiri (8,167 m)", href: "#" },
+    //   ],
+    // },
+    // {
+    //   title: "Manaslu",
+    //   links: [
+    //     { name: "Nanga Parbat (8,126 m)", href: "#" },
+    //     { name: "Annapurna I (8,091 m)", href: "#" },
+    //     { name: "Gasherbrum I (8,080 m)", href: "#" },
+    //     { name: "Broad Peak (8,051 m)", href: "#" },
+    //     { name: "Gasherbrum II (8,035 m)", href: "#" },
+    //     { name: "Shishapangma (8,027 m)", href: "#" },
+    //   ],
+    // },
+  ];
+  const transformedCategories =
+    packageCategory?.data && packageCategory.data.length > 0
+      ? packageCategory?.data.map((i) => ({
+          title: i.attributes.name,
+          links:
+            i.attributes.packages?.data &&
+            i.attributes.packages?.data.length > 0
+              ? i.attributes.packages?.data.map((j) => ({
+                  name: j.attributes.package_name,
+                  href: `/packages/${j.id}`,
+                }))
+              : [],
+        }))
+      : [];
+  const transformedPackageTypes =
+    packageTypes?.data && packageTypes.data.length > 0
+      ? packageTypes.data.map((i) => ({
+          title: i.attributes.name,
+          links:
+            i.attributes.packages?.data && i.attributes.packages.data.length > 0
+              ? i.attributes.packages.data.map((j) => ({
+                  name: j.attributes.package_name,
+                  href: `/packages/${j.id}`,
+                }))
+              : [],
+        }))
+      : [];
+  console.log(transformedCategories);
   const usefulLinks = [
-    {
-      title: "Trekking In Nepal",
-      links: [
-        { name: "Everest region", href: "#" },
-        { name: "Makalu region", href: "#" },
-        { name: "Langtang region", href: "#" },
-        { name: "Mustang region", href: "#" },
-        { name: "Kanchenjanga region", href: "#" },
-        { name: "Annapurna region", href: "#" },
-        { name: "Manslu region", href: "#" },
-        { name: "Dhaulagiri region", href: "#" },
-      ],
-    },
-    {
-      title: "Expeditions",
-      links: [
-        { name: "8000m", href: "#" },
-        { name: "7000m", href: "#" },
-        { name: "Peak climbing", href: "#" },
-      ],
-    },
-    {
-      title: "Other Activities",
-      links: [
-        { name: "Helicopter tour", href: "#" },
-        { name: "Mountain bike", href: "#" },
-        { name: "Tours", href: "#" },
-      ],
-    },
-    {
-      title: "Peak Climbing",
-      links: [
-        { name: "Helicopter tour", href: "#" },
-        { name: "Mountain bike", href: "#" },
-        { name: "Tours", href: "#" },
-      ],
-    },
-    {
-      title: "14 X 8000M",
-      links: [
-        { name: "Everest (8,848.86 m)", href: "#" },
-        { name: "K2 (8,611 m)", href: "#" },
-        { name: "Kanchenjunga (8,586 m)", href: "#" },
-        { name: "Lhotse (8,516 m)", href: "#" },
-        { name: "Makalu (8,485 m)", href: "#" },
-        { name: "Cho Oyu (8,188 m)", href: "#" },
-        { name: "Dhaulagiri (8,167 m)", href: "#" },
-      ],
-    },
-    {
-      title: "Manaslu",
-      links: [
-        { name: "Nanga Parbat (8,126 m)", href: "#" },
-        { name: "Annapurna I (8,091 m)", href: "#" },
-        { name: "Gasherbrum I (8,080 m)", href: "#" },
-        { name: "Broad Peak (8,051 m)", href: "#" },
-        { name: "Gasherbrum II (8,035 m)", href: "#" },
-        { name: "Shishapangma (8,027 m)", href: "#" },
-      ],
-    },
+    ...baseUsefulLinks,
+    ...transformedCategories,
+    ...transformedPackageTypes,
   ];
 
   const paymentMethods = [
@@ -105,7 +124,6 @@ export default async function UsefulLinksSection() {
     { src: "/images/visa.png", alt: "Recommendation 1" },
     { src: "/images/visa.png", alt: "Recommendation 2" },
   ];
-  const packageRegion = await getPackageRegion();
 
   const renderList = (items: { src: string; alt: string }[]) =>
     items.map((item, index) => (
@@ -157,7 +175,7 @@ export default async function UsefulLinksSection() {
                   {column.title}
                 </h2>
                 <ul className="space-y-2">
-                  {column.links.map((link, index) => (
+                  {column?.links?.map((link, index) => (
                     <li key={index}>
                       <Link href={link.href}>
                         <div className="text-sm hover:underline md:text-base">

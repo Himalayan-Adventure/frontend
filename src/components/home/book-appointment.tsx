@@ -9,7 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage as RawFormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -45,12 +45,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { makeAppointment } from "@/server/appointments/post-appointment";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { APIResponseCollection } from "@/types/types";
-import { endOfDay, format, startOfDay, subDays } from "date-fns";
+import { endOfDay, format, isSameDay, startOfDay, subDays } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { cn } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Calendar } from "../ui/calendar";
 import {
@@ -67,7 +67,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { useCurrentUser } from "@/hooks/user-current-user";
 const CloudImage = ({ src, alt, position }: any) => (
-  <div className={`absolute ${position} w-full`}>
+  <div className={`absolute ${position} w-full brightness-100`}>
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
   </div>
 );
@@ -142,9 +142,12 @@ const AppointmentForm = () => {
       phone: "",
       expectation: "",
       appointment_date: new Date(),
-      //guide: 14,
     },
   });
+
+  const {
+    formState: { errors },
+  } = form;
   const {
     data: guides,
     isLoading: isLoadingGuides,
@@ -190,11 +193,22 @@ const AppointmentForm = () => {
     isLoading,
     isError,
   } = useQuery<APIResponseCollection<"api::calendar.calendar">>({
-    queryKey: ["calendars", form.watch("appointment_date")],
+    queryKey: [
+      "calendars",
+      form.watch("appointment_date"),
+      form.watch("guide"),
+    ],
     queryFn: async () => {
+      if (!form.getValues("guide")) return [];
       const getDateBounds = (dateStr: string) => {
-        console.log(dateStr);
         const date = new Date(dateStr);
+        const today = new Date();
+        if (isSameDay(date, today)) {
+          return {
+            start: new Date(),
+            end: endOfDay(date),
+          };
+        }
 
         return {
           start: startOfDay(date),
@@ -238,14 +252,15 @@ const AppointmentForm = () => {
   });
 
   async function onSubmit(values: TBookAppointmentSchemaProvider) {
-    console.log("Not even here");
     setLoading(true);
     const appointment_date = availableTime?.data.find(
       (i) => i.id === activeTime,
     )?.attributes.start_date;
     if (!appointment_date) {
       setLoading(false);
-      toast.success("Appointment date is invalid");
+      toast.error(
+        "Appointment date is invalid. Please select both time and date.",
+      );
       return;
     }
     const payload = {
@@ -262,26 +277,27 @@ const AppointmentForm = () => {
     }
   }
   const tw =
-    "rounded-none border-0 border-b-2 bg-transparent text-base placeholder:text-white text-white";
+    "rounded-none border-0 border-b-2 bg-transparent text-base !placeholder:text-white text-white";
   return (
     <div className="container relative py-8 lg:py-16">
       <div className="relative z-10 space-y-6 text-white lg:text-center">
-        <h1 className="comp-heading uppercase tracking-wider">
+        <h1 className="comp-heading text-shadow-sm uppercase tracking-wider">
           Book an Appointment
         </h1>
         <Text
           as="h3"
           variant="display-sm"
-          className="text-3xl uppercase tracking-wide"
+          className="text-shadow-sm text-2xl uppercase tracking-wide md:text-3xl"
           bold
         >
           {step === 1 ? "Select package & date" : "Contact Details"}
         </Text>
         <Form {...form}>
           <form
-            className="relative z-20 mx-auto max-w-screen-md space-y-3 text-black md:space-y-4"
+            className="[&>label]:text-shadow-sm relative z-20 mx-auto max-w-screen-md space-y-3 font-poppins text-black md:space-y-4"
             onSubmit={form.handleSubmit(onSubmit)}
           >
+            {/* First step, for appointment details */}
             <span
               className={cn(
                 step === 1 ? "flex" : "hidden",
@@ -375,7 +391,7 @@ const AppointmentForm = () => {
                         </SelectContent>
                       </Select>
                     </FormControl>
-                    <FormMessage />
+                    {/* <FormMessage className="text-white text-shadow-sm" /> */}
                   </FormItem>
                 )}
               />
@@ -423,6 +439,7 @@ const AppointmentForm = () => {
                 )}
               />
             </span>
+            {/* Second page, for personal information */}
             <span
               className={cn(step === 2 ? "grid grid-cols-2 gap-4" : "hidden")}
             >
@@ -502,6 +519,7 @@ const AppointmentForm = () => {
                 )}
               />
             </span>
+            {/* Time slots information */}
 
             <div className={cn(step === 1 ? "block" : "hidden")}>
               <Text
@@ -536,40 +554,84 @@ const AppointmentForm = () => {
                   <Skeleton className="h-10 w-24 rounded-full bg-primary/10" />
                 </Skeleton>
               ) : (
-                <Text variant="text-sm" className="italic text-yellow-500">
-                  No time slots available, select another date
+                <Text
+                  variant="text-sm"
+                  className="relative z-10 mx-auto text-center font-bold italic text-white drop-shadow-sm"
+                >
+                  {form.getValues("guide")
+                    ? "No time slots available, select another date"
+                    : "Select a guide to view available time slots"}
                 </Text>
               )}
             </div>
+            {/* Third stage, showing details */}
             <div
               className={cn(
                 step === 3 ? "grid" : "hidden",
-                "grid-cols-2 gap-5 text-left text-white",
+                "[&>*]:text-shadow-sm gap-5 text-left text-white md:grid-cols-2",
               )}
             >
               {Object.entries(form.getValues()).map(([key, value]) => (
-                <div key={`appointment-${key}`} className="space-y-2">
-                  <Text variant="text-xl" className="capitalize tracking-wide">
+                <div key={`appointment-${key}`} className="w-fit space-y-2">
+                  <Text
+                    variant="text-xl"
+                    className="w-fit capitalize tracking-wide"
+                  >
                     {key}:
                   </Text>
 
-                  <Text variant="text-md" className="tracking-wide">
+                  <Text
+                    variant="text-md"
+                    className="w-fit max-w-[300px] whitespace-pre-wrap break-words tracking-wide"
+                  >
                     {value &&
-                      (key === "appointment_date"
-                        ? format(value, "yyyy-MM-dd (EEEE)")
-                        : value.toString())}
+                      (() => {
+                        switch (key) {
+                          case "appointment_date":
+                            return format(value, "yyyy-MM-dd (EEEE)");
+                          case "package":
+                            return value
+                              ? packages?.data.find(
+                                  (i) => i.id === Number(value),
+                                )?.attributes.package_name
+                              : "Not selected";
+
+                          case "guide":
+                            return guides?.find((i) => i.id === Number(value))
+                              ?.username;
+                          default:
+                            return value.toString();
+                        }
+                      })()}
                   </Text>
                 </div>
               ))}
             </div>
 
+            {/* Submit button */}
             <Button
               isLoading={loading}
               type="submit"
+              onClick={() => {
+                if (!form.formState.isValid) {
+                  const firstError = Object.keys(errors).reduce((field, a) => {
+                    console.log(errors);
+                    return !!errors[
+                      field as keyof TBookAppointmentSchemaProvider
+                    ]
+                      ? field
+                      : a;
+                  }, "");
+                  console.log(firstError);
+                  toast.error(`${capitalize(firstError)} field is invalid`, {
+                    className: "bg-red-100",
+                  });
+                }
+              }}
               //disabled={!activeTime}
               className={cn(
                 step === 3 ? "flex" : "hidden",
-                "mx-auto w-fit gap-x-3 self-end rounded-full border border-white !bg-transparent px-10 py-4 font-poppins font-bold text-white drop-shadow-xl sm:py-6",
+                "mx-auto w-fit gap-x-3 self-end rounded-full border border-white !bg-transparent/10 px-10 py-4 font-poppins font-bold text-white shadow-sm shadow-black/30 drop-shadow-2xl sm:py-6",
               )}
             >
               Send
@@ -605,36 +667,6 @@ const AppointmentForm = () => {
     </div>
   );
 };
-
-const ConfirmDetails = ({
-  values,
-  step,
-}: {
-  values: UseFormGetValues<TBookAppointmentSchemaProvider>;
-  step: number;
-}) => {
-  //: key==="guide"?guides && (guides?.find(i=>i.id===value).username)||'':value.toString())}
-  return (
-    <div
-      className={cn(
-        step === 3 ? "grid" : "hidden",
-        "grid-cols-2 gap-5 text-left text-white",
-      )}
-    >
-      {Object.entries(values()).map(([key, value]) => (
-        <div key={`appointment-${key}`} className="space-y-2">
-          <Text variant="text-xl" className="capitalize tracking-wide">
-            {key}:
-          </Text>
-
-          <Text variant="text-md" className="tracking-wide">
-            {value &&
-              (key === "appointment_date"
-                ? format(value, "yyyy-MM-dd (EEEE)")
-                : value.toString())}
-          </Text>
-        </div>
-      ))}
-    </div>
-  );
+const FormMessage = () => {
+  return <RawFormMessage className="text-white" />;
 };

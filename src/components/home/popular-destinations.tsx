@@ -92,7 +92,7 @@ export default function PopularDestinations() {
                   <Link
                     href={`/packages?key=region&filter=${destination.id}`}
                     key={index}
-                    className="destination-card relative rounded-3xl border border-gray-200 bg-white"
+                    className="destination-card relative rounded-3xl border border-gray-200 bg-white grid grid-rows-[60%_auto]"
                   >
                     <div className="absolute top-12 -z-10 w-full">
                       <div className="h-16 w-full bg-gray-700 blur-lg lg:h-36"></div>
@@ -106,17 +106,17 @@ export default function PopularDestinations() {
                         alt={image.attributes.url}
                         height={image.attributes.height}
                         width={image.attributes.width}
-                        className="w-full rounded-t-3xl object-cover grayscale transition duration-300 lg:h-60"
+                        className="w-full rounded-t-3xl object-cover grayscale transition duration-300 lg:h-60 h-full max-h-60"
                       />
                     )}
                     <div className="space-y-1 py-4 text-center lg:space-y-3">
-                      <p className="text-xs text-gray-500 md:text-sm">
+                      <p className="text-xs text-gray-500 md:text-sm line-clamp-1">
                         {
                           destination?.attributes?.package_country?.data
                             ?.attributes.name
                         }
                       </p>
-                      <h2 className="text-sm md:text-lg lg:text-[22px]">
+                      <h2 className="text-sm md:text-lg lg:text-[22px] line-clamp-1">
                         {destination.attributes.name}
                       </h2>
                       <div className="flex items-center justify-center space-x-3">

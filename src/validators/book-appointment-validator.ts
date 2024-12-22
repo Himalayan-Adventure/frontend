@@ -22,8 +22,8 @@ export const BookAppointmentFormSchema = z.object({
   //subject: z.string({ required_error: "Subject is required" }).min(10),
   expectation: z
     .string({ required_error: "Expectation is required" })
-    .min(10)
-    .max(500),
+    .min(10, { message: "Expectation must be at least 10 characters." })
+    .max(500, { message: "Expectation must be at most 500 characters." }),
 
   guide: z.coerce.number({ required_error: "Guide is required" }),
   package: z.coerce.number().optional(),
