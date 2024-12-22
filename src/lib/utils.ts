@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import { enUS } from "date-fns/locale";
-import { format } from "date-fns";
+import { endOfDay, format, isSameDay, startOfDay } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -47,6 +47,23 @@ export const errorMsg = (status: number, fallback?: string) => {
 };
 
 export function capitalize(str: string) {
-  if (!str || typeof str !== 'string') return str;
+  if (!str || typeof str !== "string") return str;
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export const getDateBounds = (dateStr: string) => {
+  const date = new Date(dateStr);
+
+  const today = new Date();
+  if (isSameDay(date, today)) {
+    return {
+      start: new Date(),
+      end: endOfDay(date),
+    };
+  }
+
+  return {
+    start: startOfDay(date),
+    end: endOfDay(date),
+  };
+};

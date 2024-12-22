@@ -29,10 +29,17 @@ import {
   TBookAppointmentSchemaProvider,
 } from "@/validators/book-appointment-validator";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { addDays, endOfDay, format, startOfDay, subDays } from "date-fns";
+import {
+  addDays,
+  endOfDay,
+  format,
+  isSameDay,
+  startOfDay,
+  subDays,
+} from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
-import { cn } from "@/lib/utils";
+import { cn, getDateBounds } from "@/lib/utils";
 import {
   Select,
   SelectItem,
@@ -80,22 +87,6 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
       form.watch("appointment_date"),
     ],
     queryFn: async () => {
-      const getDateBounds = (dateStr: string) => {
-        console.log(dateStr);
-        const date = new Date(dateStr);
-        // const startOfDay = new Date(dateStr);
-        // console.log(startOfDay);
-        // startOfDay.setUTCHours(0, 0, 0, 0);
-        // const beginningOfDay = startOfDay(new Date(dateStr));
-
-        // const endOfDay = new Date(dateStr);
-        // endOfDay.setUTCHours(23, 59, 59, 999);
-
-        return {
-          start: startOfDay(date),
-          end: endOfDay(date),
-        };
-      };
       const { start, end } = getDateBounds(
         form.getValues("appointment_date").toString(),
       );

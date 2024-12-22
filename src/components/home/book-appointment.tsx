@@ -50,7 +50,7 @@ import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { capitalize, cn } from "@/lib/utils";
+import { capitalize, cn, getDateBounds } from "@/lib/utils";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Calendar } from "../ui/calendar";
 import {
@@ -200,21 +200,6 @@ const AppointmentForm = () => {
     ],
     queryFn: async () => {
       if (!form.getValues("guide")) return [];
-      const getDateBounds = (dateStr: string) => {
-        const date = new Date(dateStr);
-        const today = new Date();
-        if (isSameDay(date, today)) {
-          return {
-            start: new Date(),
-            end: endOfDay(date),
-          };
-        }
-
-        return {
-          start: startOfDay(date),
-          end: endOfDay(date),
-        };
-      };
       const { start, end } = getDateBounds(
         form.getValues("appointment_date").toString(),
       );
