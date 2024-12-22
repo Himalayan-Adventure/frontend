@@ -9,7 +9,6 @@ export const makeAppointment = async (
 ) => {
   const cookieStore = cookies();
   const token = cookieStore?.get("jwt")?.value;
-  console.log(appointment);
   try {
     const validatedFields = BookAppointmentFormSchema.safeParse(appointment);
 

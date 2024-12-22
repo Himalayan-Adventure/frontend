@@ -168,5 +168,4 @@ const filterCategories: filter[] = [
   // },
 ];
 filterCategories.push(...gradeFilters);
-console.log(filterCategories);
 export default filterCategories;

@@ -44,7 +44,7 @@ export default function ExplorePackages() {
       queryFn: async () => {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=3`,
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=4`,
           );
           if (!res.ok) {
             throw new Error("Error fetching package categories");
@@ -81,7 +81,7 @@ export default function ExplorePackages() {
             </div>
           </div>
           {/* Packages Grid */}
-          <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16">
+          <div className="mt-8 w-fit mx-auto gri grid-cols-2 gap-8 lg:mt-16 flex-wrap lg:grid-cols-4 lg:gap-16 flex items-stretch [&>div]:flex-1 justify-center">
             {packages?.data?.map((pkg, index) => (
               <PackageCategoryCard
                 data={pkg}
@@ -103,18 +103,18 @@ const PackageCategoryCard = ({
   const { data: user, isLoading } = useCurrentUser();
   const [open, setOpen] = useState(false);
   return (
-    <div className="">
+    <div className="grid place-items-center">
       {image && (
         <Image
           src={image.url}
           alt={image.name}
-          className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-none"
+          className="aspect-[0.65] h-auto max-h-96 w-full lg:w-auto rounded-2xl border border-gray-600 object-cover lg:max-h-96"
           height={image.height}
           width={image.width}
         />
       )}
       <div className="py-2 text-center">
-        <h2 className="mb-2 text-base font-semibold lg:text-xl">
+        <h2 className="mb-2 text-sm md:text-base font-semibold lg:text-xl">
           {data?.attributes?.name}
         </h2>
         <div className="flex flex-col items-center space-y-3">
@@ -140,14 +140,14 @@ const PackageCategoryCard = ({
             </Dialog>
           ) : (
             <Button
-              className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2"
+              className="w-auto rounded-full border border-black bg-transparent !px-2 !py-0.5 md:px-6 md:py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2"
               onClick={() => toast.error("Please login to inquire")}
             >
               Inquire
             </Button>
           )}
           <Link href={`/packages?key=category&filter=${data.id}`}>
-            <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
+            <Button className="w-auto rounded-full md:px-6 md:py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
               View More
             </Button>
           </Link>

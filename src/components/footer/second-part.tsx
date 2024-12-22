@@ -102,7 +102,6 @@ export default async function UsefulLinksSection() {
               : [],
         }))
       : [];
-  console.log(transformedCategories);
   const usefulLinks = [
     ...baseUsefulLinks,
     ...transformedCategories,

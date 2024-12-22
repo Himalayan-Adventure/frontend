@@ -33,9 +33,7 @@ const SimilarPackageCard = ({
   const end = attr?.adventure_specification?.travel_dates?.[1]?.date;
   if (start && end) {
     const a = formatDateRange(start, end);
-    console.log(a);
   }
-  console.log(attr?.adventure_specification);
 
   const toggleOverlay = () => {
     0;
@@ -112,7 +110,6 @@ export const SliderComponent = ({
   isOverlayVisible: boolean;
 }) => {
   const attr = pkg?.attributes;
-  console.log(attr);
   return (
     <Swiper
       spaceBetween={30}

@@ -88,10 +88,8 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       ...form.getValues(),
       profile_picture: file,
     };
-    console.log(payload);
     try {
       const res = await updateUser(payload, user.id);
-      console.log(res);
       if (res.status === 200) {
         toast.success("Profile updated");
         {
@@ -107,9 +105,6 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
 
     setLoading(false);
   }
-  useEffect(() => {
-    console.log(form, form.formState);
-  }, [form.formState]);
   const formContentMap: Record<string, React.ReactNode> = {
     about: <AboutForm control={form.control} />,
     resume: <ResumeForm control={form.control} />,

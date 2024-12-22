@@ -114,7 +114,6 @@ function DataTable<TData, TValue>({
   });
   const updateQueryString = useUpdateQueryString();
   const d = subDays(new Date(), 365);
-  console.log(format(d, "yyyy-MM-dd"));
 
   return (
     <div className="w-full space-y-4">

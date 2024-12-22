@@ -266,20 +266,20 @@ const AppointmentForm = () => {
   return (
     <div className="container relative py-8 lg:py-16">
       <div className="relative z-10 space-y-6 text-white lg:text-center">
-        <h1 className="comp-heading text-shadow-sm uppercase tracking-wider">
+        <h1 className="comp-heading uppercase tracking-wider text-shadow-sm">
           Book an Appointment
         </h1>
         <Text
           as="h3"
           variant="display-sm"
-          className="text-shadow-sm text-2xl uppercase tracking-wide md:text-3xl"
+          className="text-2xl uppercase tracking-wide text-shadow-sm md:text-3xl"
           bold
         >
           {step === 1 ? "Select package & date" : "Contact Details"}
         </Text>
         <Form {...form}>
           <form
-            className="[&>label]:text-shadow-sm relative z-20 mx-auto max-w-screen-md space-y-3 font-poppins text-black md:space-y-4"
+            className="relative z-20 mx-auto max-w-screen-md space-y-3 font-poppins text-black md:space-y-4 [&>label]:text-shadow-sm"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             {/* First step, for appointment details */}
@@ -553,7 +553,7 @@ const AppointmentForm = () => {
             <div
               className={cn(
                 step === 3 ? "grid" : "hidden",
-                "[&>*]:text-shadow-sm gap-5 text-left text-white md:grid-cols-2",
+                "gap-5 text-left text-white md:grid-cols-2 [&>*]:text-shadow-sm",
               )}
             >
               {Object.entries(form.getValues()).map(([key, value]) => (
@@ -570,6 +570,7 @@ const AppointmentForm = () => {
                     className="w-fit max-w-[300px] whitespace-pre-wrap break-words tracking-wide"
                   >
                     {value &&
+                      // @ts-ignore
                       (() => {
                         switch (key) {
                           case "appointment_date":
@@ -607,7 +608,6 @@ const AppointmentForm = () => {
                       ? field
                       : a;
                   }, "");
-                  console.log(firstError);
                   toast.error(`${capitalize(firstError)} field is invalid`, {
                     className: "bg-red-100",
                   });
