@@ -21,7 +21,7 @@ export const postRequestService = async ({
       data: {
         data: {
           services: serviceId,
-          users_permissions_user: userId,
+          users_permissions_users: [userId],
         },
       },
       headers: {
@@ -30,7 +30,7 @@ export const postRequestService = async ({
       },
     });
     if (res.status !== 200) {
-      if (res.status === 403) {
+      if (res.status === 403 || res.status === 401) {
         throw new Error("Not authenticated");
       }
       throw new Error("Couldn't send request");
