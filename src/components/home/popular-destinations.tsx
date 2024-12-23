@@ -41,7 +41,7 @@ export default function PopularDestinations() {
     queryFn: async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-regions?populate=*`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-regions?populate=*&filters[is_popular]=true`,
         );
         if (!res.ok) {
           throw new Error("Error fetching package region");
@@ -92,7 +92,7 @@ export default function PopularDestinations() {
                   <Link
                     href={`/packages?key=region&filter=${destination.id}`}
                     key={index}
-                    className="destination-card relative rounded-3xl border border-gray-200 bg-white grid grid-rows-[60%_auto]"
+                    className="destination-card relative grid grid-rows-[60%_auto] rounded-3xl border border-gray-200 bg-white"
                   >
                     <div className="absolute top-12 -z-10 w-full">
                       <div className="h-16 w-full bg-gray-700 blur-lg lg:h-36"></div>
@@ -106,17 +106,17 @@ export default function PopularDestinations() {
                         alt={image.attributes.url}
                         height={image.attributes.height}
                         width={image.attributes.width}
-                        className="w-full rounded-t-3xl object-cover grayscale transition duration-300 lg:h-60 h-full max-h-60"
+                        className="h-full max-h-60 w-full rounded-t-3xl object-cover grayscale transition duration-300 lg:h-60"
                       />
                     )}
                     <div className="space-y-1 py-4 text-center lg:space-y-3">
-                      <p className="text-xs text-gray-500 md:text-sm line-clamp-1">
+                      <p className="line-clamp-1 text-xs text-gray-500 md:text-sm">
                         {
                           destination?.attributes?.package_country?.data
                             ?.attributes.name
                         }
                       </p>
-                      <h2 className="text-sm md:text-lg lg:text-[22px] line-clamp-1">
+                      <h2 className="line-clamp-1 text-sm md:text-lg lg:text-[22px]">
                         {destination.attributes.name}
                       </h2>
                       <div className="flex items-center justify-center space-x-3">

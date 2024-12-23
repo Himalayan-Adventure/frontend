@@ -150,13 +150,14 @@ const UserDetails = ({ id }: { id: number }) => {
         <Oval height="32" width="32" color="#FD9100" ariaLabel="oval-loading" />
       </div>
     );
-  } else if (!user || isError) {
-    return <p>Something went wrong</p>;
-  }
+  } 
+  // else if (!user || isError) {
+  //   return <p>Something went wrong</p>;
+  // }
   const socialMedia = {
-    facebook: user.about?.facebook,
-    instagram: user.about?.instagram,
-    whatsapp: user.about?.whatsapp,
+    facebook: user?.about?.facebook,
+    instagram: user?.about?.instagram,
+    whatsapp: user?.about?.whatsapp,
   };
   return (
     <div className="relative space-y-8">
