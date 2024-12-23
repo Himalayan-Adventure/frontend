@@ -956,6 +956,7 @@ export interface ApiAccommodationPreferenceAccommodationPreference
       'api::package.package'
     >;
     name: Attribute.String & Attribute.Required;
+    icon: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1091,6 +1092,11 @@ export interface ApiAppointmentAppointment extends Schema.CollectionType {
       'api::appointment.appointment',
       'oneToOne',
       'api::package.package'
+    >;
+    services: Attribute.Relation<
+      'api::appointment.appointment',
+      'manyToMany',
+      'api::service.service'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1682,6 +1688,7 @@ export interface ApiPackageCustomizationPackageCustomization
       'api::package.package'
     >;
     name: Attribute.String;
+    icon: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1784,6 +1791,7 @@ export interface ApiPackageTypePackageType extends Schema.CollectionType {
     singularName: 'package-type';
     pluralName: 'package-types';
     displayName: 'Package Type';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1795,6 +1803,7 @@ export interface ApiPackageTypePackageType extends Schema.CollectionType {
       'manyToMany',
       'api::package.package'
     >;
+    icon: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2091,6 +2100,11 @@ export interface ApiServiceService extends Schema.CollectionType {
       'api::service.service',
       'manyToOne',
       'api::service-request.service-request'
+    >;
+    appointments: Attribute.Relation<
+      'api::service.service',
+      'manyToMany',
+      'api::appointment.appointment'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

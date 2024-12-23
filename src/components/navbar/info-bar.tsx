@@ -12,6 +12,7 @@ import {
   User,
   ShoppingCart,
   UserCheck,
+  Settings2,
 } from "lucide-react";
 import Image from "next/image";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -214,8 +215,23 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   </span>
                 </div>
               ))}
-            </div>
 
+              <div className="flex flex-col items-start gap-4">
+                <Link href={"/profile"}>
+                  <div className="flex items-center gap-x-6">
+                    <User className="size-6 lg:size-7" />
+                    <Text variant="text-sm">Profile</Text>
+                  </div>
+                </Link>
+
+                <Link href={"/dashboard/profile"}>
+                  <div className="flex items-center gap-x-6">
+                    <Settings2 className="size-6 lg:size-7" />
+                    <Text variant="text-sm">Dashboard</Text>
+                  </div>
+                </Link>
+              </div>
+            </div>
             <span className="flex flex-col items-start gap-3 py-5 lg:hidden">
               <Link href="/plan-with-us">
                 <Button className="rounded-full border border-gray-50 bg-transparent px-10 py-3 text-base font-semibold capitalize leading-5 text-gray-50">

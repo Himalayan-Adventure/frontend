@@ -13,10 +13,13 @@ import { format } from "date-fns";
 export const PastClimbersCard = ({
   user: data,
   summitDate,
+  testimonial,
 }: {
   user: APIResponseData<"plugin::users-permissions.user">;
   summitDate?: DateValue;
+  testimonial?: string;
 }) => {
+  // TODO: 2 summit dates
   const user = data.attributes;
   const profilePicture = user?.profilePicture?.data?.attributes;
   return (
@@ -47,9 +50,11 @@ export const PastClimbersCard = ({
             Climber
           </div>
         </div>
-        <Text className="text-gray-500" variant="text-md">
-          {user?.about?.description}
-        </Text>
+        {testimonial && (
+          <Text className="text-gray-500" variant="text-md">
+            {testimonial}
+          </Text>
+        )}
         {summitDate && (
           <div className="relative flex w-[70%] flex-col items-center space-y-0.5 rounded-md border border-gray-300 py-2">
             <Text semibold variant="text-sm">

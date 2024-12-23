@@ -2,7 +2,7 @@ import { SideFilter, TopFilter } from "./filters";
 import { Loading } from "@/components/loading";
 import fallbackImg from "/public/images/packageBanner.png";
 import { ServiceCard } from "./service-card";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { SortFilters } from "./sort-filters";
 import { Text } from "@/components/ui/text";
 import { getServices } from "@/server/services/get-services";
@@ -12,7 +12,8 @@ import { GuideCard } from "@/components/services/guide-card";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { Suspense } from "react";
-import { Oval } from "react-loader-spinner";
+import cloudImage from "/public/images/cloud.png";
+import bgImage from "/public/images/packagesBanner.png";
 import { getCurrentUserData } from "@/server/auth/get-me";
 type TSearchParams = {
   searchParams: {
@@ -30,25 +31,7 @@ export const metadata: Metadata = {
 export default async function ServicesPage({ searchParams }: TSearchParams) {
   return (
     <main className="container space-y-4">
-      <Image
-        src={fallbackImg}
-        alt="Background Image"
-        objectFit="cover"
-        quality={100}
-        className="absolute inset-0 -z-10 h-64 w-full object-cover lg:h-auto"
-      />
-
-      <div className="container relative z-10 flex min-h-60 flex-col justify-center space-y-3 text-white lg:space-y-6">
-        <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
-          Services
-        </h1>
-
-        <p className="max-w-xl text-sm md:text-[16px]">
-          In dui magna, posuere eget, vestibulum et, tempor auctor, justo. Etiam
-          ultricies nisi vel augue. Suspendisse eu ligula. Cum sociis natoque
-          penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-        </p>
-      </div>
+      <Banner title="Services" bgImage={bgImage} />
 
       <section className="relative z-20 space-y-2 md:top-52">
         <div className="relative flex flex-wrap items-center justify-between gap-2">
@@ -113,3 +96,46 @@ async function ServicesGuides({ searchParams }: TSearchParams) {
     </div>
   );
 }
+
+const Banner = ({
+  title,
+  bgImage,
+  desc,
+}: {
+  title: string;
+  bgImage: string | StaticImageData;
+  desc?: string;
+}) => {
+  return (
+    <>
+      <div className="absolute inset-0 h-[40vh] w-full lg:h-[80vh]">
+        <Image
+          src={bgImage}
+          alt="Background Image"
+          objectFit="cover"
+          quality={100}
+          className="inset-0 h-full object-cover"
+        />
+
+        <Image
+          src={cloudImage}
+          alt="Cloud Image"
+          className="sm:mix-blend-light absolute -bottom-[45%] h-1/2 w-full object-cover md:-bottom-0 md:h-[40vh] lg:bottom-0 lg:h-auto lg:object-contain"
+        />
+        <Image
+          src={cloudImage}
+          alt="Cloud Image"
+          className="sm:mix-blend-light absolute -bottom-[45%] h-1/2 w-full object-cover mix-blend-multiply md:bottom-0 md:h-[40vh]"
+        />
+      </div>
+      <div className="relative">
+        <div className="container relative z-10 flex min-h-60 flex-col justify-center space-y-3 text-white lg:space-y-6">
+          <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
+            {title}
+          </h1>
+          {desc && <p className="max-w-xl text-sm md:text-[16px]">{desc}</p>}
+        </div>
+      </div>
+    </>
+  );
+};

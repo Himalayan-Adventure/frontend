@@ -193,6 +193,7 @@ export default async function ProjectDetail({
                           key={`past-climbers-${i.user?.data.id}`}
                           user={i.user?.data}
                           summitDate={i.summit_date}
+                          testimonial={i.testimonial}
                         />
                       ),
                   )}
