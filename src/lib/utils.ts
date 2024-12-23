@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import { enUS } from "date-fns/locale";
-import { format } from "date-fns";
+import { endOfDay, format, isSameDay, startOfDay } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -33,3 +33,37 @@ export async function urlToFile(url: string, filename: string): Promise<File> {
 
   return new File([blob], filename, { type: mimeType });
 }
+
+export const errorMsg = (status: number, fallback?: string) => {
+  switch (status) {
+    case 401:
+      return "You are not authorized. Please login/register to continue!";
+
+    case 403:
+      return "Your roles are not enough to perform this action";
+    default:
+      return fallback || "Error occureed. Please try again";
+  }
+};
+
+export function capitalize(str: string) {
+  if (!str || typeof str !== "string") return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export const getDateBounds = (dateStr: string) => {
+  const date = new Date(dateStr);
+
+  const today = new Date();
+  if (isSameDay(date, today)) {
+    return {
+      start: new Date(),
+      end: endOfDay(date),
+    };
+  }
+
+  return {
+    start: startOfDay(date),
+    end: endOfDay(date),
+  };
+};

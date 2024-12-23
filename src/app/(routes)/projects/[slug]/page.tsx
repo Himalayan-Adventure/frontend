@@ -179,14 +179,24 @@ export default async function ProjectDetail({
                 packageName={pkg?.package_name}
               />
             )}
-            <div className="">
+            <div className="w-full">
               <h2 className="mb-6 text-lg font-semibold md:text-xl lg:text-2xl">
                 Members
               </h2>
-              <div className="grid grid-cols-[repeat(auto-fiill,minmax(20em,1fr))]">
-                {data.data?.attributes.guides?.data && (
-                  <PastClimbersCard user={data.data.attributes.guides.data} />
-                )}
+              <div className="grid w-full grid-cols-[repeat(auto-fill,minmax(25em,1fr))] gap-4">
+                {data.data?.attributes.users?.data &&
+                  data?.data?.attributes?.user_review &&
+                  data.data.attributes.user_review.map(
+                    (i) =>
+                      i.user?.data && (
+                        <PastClimbersCard
+                          key={`past-climbers-${i.user?.data.id}`}
+                          user={i.user?.data}
+                          summitDate={i.summit_date}
+                          testimonial={i.testimonial}
+                        />
+                      ),
+                  )}
               </div>
             </div>
 

@@ -2,12 +2,23 @@
 import { APIResponseCollection } from "@/types/types";
 import { AxiosError } from "axios";
 import qs from "qs";
-export const getCalendars = async ({ available }: { available?: boolean }) => {
+export const getCalendars = async ({
+  available,
+  limit,
+}: {
+  available?: boolean;
+  limit?: number;
+}) => {
   try {
     const query = qs.stringify({
       populate: "*",
       filters: {
         is_available: available,
+      },
+
+      pagination: {
+        pageSize: limit || 20,
+        page: 1,
       },
     });
     const res = await fetch(
@@ -24,6 +35,7 @@ export const getCalendars = async ({ available }: { available?: boolean }) => {
 
     return {
       data: data?.data ?? [],
+      meta: data?.meta,
       status: res?.status ?? 500,
     };
   } catch (error: AxiosError | any) {

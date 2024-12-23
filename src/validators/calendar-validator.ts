@@ -5,7 +5,7 @@ export const CalendarFormSchema = z.object({
   is_available: z.boolean(),
   heading: z.string().optional(),
   notes: z.string().optional(),
-  guide: z.number().optional(),
+  guides: z.number().optional(),
 });
 
 export type TCalendarForm = z.infer<typeof CalendarFormSchema>;

@@ -45,10 +45,10 @@ export default async function WorkPage({
             Add Project
           </div>
         </Link>
-        <div className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+        {/* <div className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
           <PlusIcon size={16} />
           Upcoming projects
-        </div>
+        </div> */}
       </span>
 
       {/* Works */}
@@ -58,10 +58,10 @@ export default async function WorkPage({
             {/* Works*/}
             <div className="flex flex-col gap-y-32">
               <div className="flex flex-col gap-y-16">
-                {(!works.data || works.data.length) === 0 ? (
-                  <div>No works found of user</div>
+                {(!works?.data || works.data.length) === 0 ? (
+                  <Text variant={"text-md"}>No works found.</Text>
                 ) : (
-                  works.data
+                  works?.data
                     ?.slice(0, limit)
                     ?.map((work, index) => (
                       <WorkCard
@@ -73,8 +73,7 @@ export default async function WorkPage({
                     ))
                 )}
               </div>
-
-              <WorkPagination />
+              {works?.data && works?.data.length >= 1 && <WorkPagination />}
             </div>
           </div>
         </div>

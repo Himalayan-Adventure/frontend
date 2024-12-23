@@ -63,3 +63,63 @@ export const getServiceRequests = async ({
     console.log(error);
   }
 };
+
+export const getServiceRequestedByUser = async ({
+  id,
+  page,
+  date,
+  limit = 30,
+}: {
+  id?: number;
+  page?: number;
+  date?: string;
+  limit?: number;
+}) => {
+  const cookieStore = cookies();
+  try {
+    const query = qs.stringify(
+      {
+        filters: {
+          users_permissions_users: {
+            id: id,
+          },
+
+          createdAt: {
+            $gte: date,
+          },
+        },
+        populate: {
+          services: {
+            populate: { [1]: "image" },
+          },
+        },
+
+        pagination: {
+          pageSize: limit ? limit : 8,
+          page: page,
+        },
+      },
+      {
+        encodeValuesOnly: true, // prettify URL
+      },
+    );
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/service-requests?populate[services][populate][0]=service_provider&populate[users_permissions_user][populate][1]=name&${query}`,
+      {
+        next: {
+          tags: ["services-requests"],
+        },
+
+        headers: {
+          Authorization: `Bearer ${cookieStore?.get("jwt")?.value}`,
+        },
+      },
+    );
+    const data: APIResponseCollection<"api::service-request.service-request"> =
+      await res.json();
+
+    return data;
+  } catch (error: AxiosError | any) {
+    console.log(error);
+  }
+};

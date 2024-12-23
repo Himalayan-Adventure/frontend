@@ -20,6 +20,8 @@ import { AppointmentDialog } from "./book-appointment";
 import { useQuery } from "@tanstack/react-query";
 import DynamicReactIcon from "../icons/strapi-icon";
 import { Oval } from "react-loader-spinner";
+import { useCurrentUser } from "@/hooks/user-current-user";
+import { toast } from "sonner";
 
 export const GuideCard = ({ user }: { user: TUserDeep }) => {
   const [showCard, setShowCard] = useState(false);
@@ -35,7 +37,7 @@ export const GuideCard = ({ user }: { user: TUserDeep }) => {
             width={user.profilePicture.width}
             height={user.profilePicture.height}
             alt={user.profilePicture.name || user.username + " profile picture"}
-            className="aspect-square rounded-tr-[35px] object-cover"
+            className="aspect-square rounded-tr-[35px] object-cover w-full"
           />
         ) : (
           <div className="relative mx-auto grid w-fit place-items-center rounded-full bg-white p-5">
@@ -123,6 +125,7 @@ const GuideCardOverlay = ({
   );
 };
 const UserDetails = ({ id }: { id: number }) => {
+  const { data: loggedInUser, isLoading } = useCurrentUser();
   const { type, setType, setDialogOpen } = useGuideDialog();
   const {
     data: user,
@@ -171,9 +174,9 @@ const UserDetails = ({ id }: { id: number }) => {
         <Text variant="text-sm">{user.about.description}</Text>
       )}
       <div className="grid grid-cols-[auto_14px_auto] gap-4">
-        <Text variant="text-sm">Service Provided</Text>
+        {/* <Text variant="text-sm">Service Provided</Text>
         <Text variant="text-sm">:</Text>
-        <Text variant="text-sm">Lorem</Text>
+        <Text variant="text-sm">Lorem</Text> */}
 
         {user?.email && (
           <>
@@ -224,13 +227,25 @@ const UserDetails = ({ id }: { id: number }) => {
         </Link>
         <Button
           className="w-full rounded-xl"
-          onClick={() => setType("message")}
+          onClick={() => {
+            if (loggedInUser) {
+              setType("message");
+            } else {
+              toast.error("Please login to message");
+            }
+          }}
         >
           Message
         </Button>
         <Button
           className="w-full rounded-xl bg-gray-200 text-black"
-          onClick={() => setType("appointments")}
+          onClick={() => {
+            if (loggedInUser) {
+              setType("appointments");
+            } else {
+              toast.error("Please login to book an appointment");
+            }
+          }}
         >
           Book an appointment
         </Button>

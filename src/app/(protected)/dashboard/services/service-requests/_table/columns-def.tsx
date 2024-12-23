@@ -38,14 +38,17 @@ export const columns: ColumnDef<
     header: "Requested By",
     accessorKey: "attributes.users_permissions_user.username",
     cell({ row }) {
-      const user = row?.original?.attributes?.users_permissions_user?.data;
-
-      return user ? (
-        <Link href={`/profile/${user.id}`}>
-          <Text variant="text-sm">{user.attributes.username}</Text>
-        </Link>
-      ) : (
-        "No user found"
+      const users = row?.original?.attributes?.users_permissions_users?.data;
+      return (
+        <span className="flex flex-col gap-y-1">
+          {users && users.length
+            ? users.map((user) => (
+                <Link key={`user-${user.id}`} href={`/profile/${user.id}`}>
+                  <Text variant="text-sm">{user.attributes.username}</Text>
+                </Link>
+              ))
+            : "No user found"}
+        </span>
       );
     },
   },
@@ -54,26 +57,32 @@ export const columns: ColumnDef<
     header: "Requestee Contact",
     accessorKey: "attributes.users_permissions_user.email",
     cell({ row }) {
-      const user = row?.original?.attributes?.users_permissions_user?.data;
+      const users = row?.original?.attributes?.users_permissions_users?.data;
       return (
-        <span className="flex gap-x-2">
-          {user?.attributes?.contact?.phone && (
-            <Link
-              href={`tel:+977 ${user?.attributes?.contact?.phone}`}
-              className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
-            >
-              <Phone size={18} />
-            </Link>
-          )}
+        <span className="flex flex-col gap-x-2">
+          {users &&
+            users.length > 0 &&
+            users.map((user) => (
+              <span className="flex gap-x-2" key={`user-contact-${user.id}`}>
+                {user?.attributes?.contact?.phone && (
+                  <Link
+                    href={`tel:+977 ${user?.attributes?.contact?.phone}`}
+                    className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
+                  >
+                    <Phone size={18} />
+                  </Link>
+                )}
 
-          {user?.attributes?.email && (
-            <Link
-              href={`mailto:${user?.attributes?.email}`}
-              className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
-            >
-              <Mail size={18} />
-            </Link>
-          )}
+                {user?.attributes?.email && (
+                  <Link
+                    href={`mailto:${user?.attributes?.email}`}
+                    className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
+                  >
+                    <Mail size={18} />
+                  </Link>
+                )}
+              </span>
+            ))}
         </span>
       );
     },

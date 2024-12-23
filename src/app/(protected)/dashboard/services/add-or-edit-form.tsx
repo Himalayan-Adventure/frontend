@@ -102,7 +102,6 @@ export const ServiceAddOrEditForm = ({
     const payload = {
       ...form.getValues(),
     };
-    console.log(payload);
     if (type === "edit") {
       const res = await editService(payload, data.data.id);
       if (res.status === 200) {

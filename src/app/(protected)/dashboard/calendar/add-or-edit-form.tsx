@@ -52,7 +52,7 @@ export const CalendarAddOrEditForm = ({
     is_available: is_available || false,
     heading: heading,
     notes: notes,
-    guide: guides?.data?.[0]?.id || user?.id,
+    guides: guides?.data?.[0]?.id || user?.id,
   };
 
   const [loading, setLoading] = useState(false);
@@ -78,8 +78,8 @@ export const CalendarAddOrEditForm = ({
       const res = await addCalendar(payload);
       if (res.status === 200) {
         toast.success("Added calendar successfully");
-        router.refresh();
         router.back();
+        router.refresh();
       }
     }
     setLoading(false);

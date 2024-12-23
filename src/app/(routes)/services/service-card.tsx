@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { postRequestService } from "@/server/services/post-request-serivce";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { toast } from "sonner";
+import { useCurrentUser } from "@/hooks/user-current-user";
 
 export const ServiceCard = ({
   data,
@@ -94,39 +95,53 @@ export const ServiceCard = ({
         </h2>
         <div className="flex flex-col items-stretch space-y-2">
           <Button
-            disabled={!userId}
             className="w-auto rounded-xl bg-black px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2"
-            onClick={() => requestSerivceMutation()}
+            onClick={() => {
+              if (userId) {
+                requestSerivceMutation();
+              } else {
+                toast.error("Please login to request service");
+              }
+            }}
             isLoading={isPending}
           >
             Request Service
           </Button>
-          <Dialog>
-            <DialogTrigger
-              disabled={!data?.attributes?.service_provider?.data || !userId}
-              asChild
-            >
-              <Button className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2">
-                Make Inquiry
-              </Button>
-            </DialogTrigger>
-            <DialogContent
-              className={cn(
-                "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
-              )}
-            >
-              <Image
-                src={EverestImg}
-                alt="Cover image"
-                className="absolute -z-10 h-full w-full object-cover opacity-90"
-              />
-              {data.attributes.service_provider?.data && (
-                <MessageDialog
-                  guideId={data.attributes.service_provider?.data?.id}
+          {userId ? (
+            <Dialog>
+              <DialogTrigger
+                //disabled={!data?.attributes?.service_provider?.data || !userId}
+                asChild
+              >
+                <Button className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2">
+                  Make Inquiry
+                </Button>
+              </DialogTrigger>
+              <DialogContent
+                className={cn(
+                  "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+                )}
+              >
+                <Image
+                  src={EverestImg}
+                  alt="Cover image"
+                  className="absolute -z-10 h-full w-full object-cover opacity-90"
                 />
-              )}
-            </DialogContent>
-          </Dialog>
+                {data.attributes.service_provider?.data && (
+                  <MessageDialog
+                    guideId={data.attributes.service_provider?.data?.id}
+                  />
+                )}
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Button
+              className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2"
+              onClick={() => toast.error("Please login to make inquiry")}
+            >
+              Make Inquiry
+            </Button>
+          )}
         </div>
       </div>
     </div>

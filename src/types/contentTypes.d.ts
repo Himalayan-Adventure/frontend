@@ -877,9 +877,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToMany',
       'api::calendar.calendar'
     >;
-    service_request: Attribute.Relation<
+    service_requests: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'manyToMany',
       'api::service-request.service-request'
     >;
     createdAt: Attribute.DateTime;
@@ -956,6 +956,7 @@ export interface ApiAccommodationPreferenceAccommodationPreference
       'api::package.package'
     >;
     name: Attribute.String & Attribute.Required;
+    icon: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1091,6 +1092,11 @@ export interface ApiAppointmentAppointment extends Schema.CollectionType {
       'api::appointment.appointment',
       'oneToOne',
       'api::package.package'
+    >;
+    services: Attribute.Relation<
+      'api::appointment.appointment',
+      'manyToMany',
+      'api::service.service'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1261,6 +1267,38 @@ export interface ApiCalendarCalendar extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::calendar.calendar',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiContactUsContactUs extends Schema.CollectionType {
+  collectionName: 'contact_uses';
+  info: {
+    singularName: 'contact-us';
+    pluralName: 'contact-uses';
+    displayName: 'Contact Us';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    email: Attribute.Email;
+    message: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::contact-us.contact-us',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::contact-us.contact-us',
       'oneToOne',
       'admin::user'
     > &
@@ -1650,6 +1688,7 @@ export interface ApiPackageCustomizationPackageCustomization
       'api::package.package'
     >;
     name: Attribute.String;
+    icon: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1752,6 +1791,7 @@ export interface ApiPackageTypePackageType extends Schema.CollectionType {
     singularName: 'package-type';
     pluralName: 'package-types';
     displayName: 'Package Type';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1763,6 +1803,7 @@ export interface ApiPackageTypePackageType extends Schema.CollectionType {
       'manyToMany',
       'api::package.package'
     >;
+    icon: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1787,12 +1828,14 @@ export interface ApiPlanWithPlanWith extends Schema.SingleType {
     singularName: 'plan-with';
     pluralName: 'plan-withs';
     displayName: 'Plan With';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
     steps: Attribute.Component<'steps.steps', true>;
+    flags: Attribute.Component<'flag.flags', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2058,6 +2101,11 @@ export interface ApiServiceService extends Schema.CollectionType {
       'manyToOne',
       'api::service-request.service-request'
     >;
+    appointments: Attribute.Relation<
+      'api::service.service',
+      'manyToMany',
+      'api::appointment.appointment'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2120,6 +2168,7 @@ export interface ApiServiceRequestServiceRequest extends Schema.CollectionType {
     singularName: 'service-request';
     pluralName: 'service-requests';
     displayName: 'Service Request';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -2130,9 +2179,9 @@ export interface ApiServiceRequestServiceRequest extends Schema.CollectionType {
       'oneToMany',
       'api::service.service'
     >;
-    users_permissions_user: Attribute.Relation<
+    users_permissions_users: Attribute.Relation<
       'api::service-request.service-request',
-      'oneToOne',
+      'manyToMany',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
@@ -2486,6 +2535,7 @@ declare module '@strapi/types' {
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::blog-tag.blog-tag': ApiBlogTagBlogTag;
       'api::calendar.calendar': ApiCalendarCalendar;
+      'api::contact-us.contact-us': ApiContactUsContactUs;
       'api::coupon.coupon': ApiCouponCoupon;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::icon.icon': ApiIconIcon;

@@ -21,7 +21,6 @@ export default function ProfilePage() {
         if (!res?.data) {
           return null;
         }
-        console.log(res.data);
 
         return res.data;
       } catch (error) {
@@ -72,7 +71,7 @@ export default function ProfilePage() {
     return () => containerRef?.current?.removeEventListener("scroll", scrollFn);
   }, []);
   return (
-    <section className="container space-y-8 font-poppins">
+    <section className="container space-y-8 font-poppins" id="profile-page">
       <Image
         src={bgImage}
         alt="Background Image"

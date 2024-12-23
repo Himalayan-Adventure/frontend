@@ -16,10 +16,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { AboutCard } from "@/components/profile/about-card";
 import { ResumeCard } from "@/components/profile/resume-card";
-import { BlogCards } from "@/components/profile/blog";
+import { BlogCards } from "@/components/profile/blog-cards";
 import { ContactCard } from "@/components/profile/contact-card";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
-import { WorkCards } from "@/components/profile/work-card";
+import { WorkCards } from "@/components/profile/work-cards";
 import { ProfileCard } from "@/components/profile/profile-card";
 import { TUserDeep } from "@/types/auth";
 

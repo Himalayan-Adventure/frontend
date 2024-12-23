@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
+import axios from "axios";
 import { socialIcons } from "@/config/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { LazyMotion, domMax, m } from "framer-motion";
+import { toast } from "sonner";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -11,7 +13,11 @@ export default function Contact() {
     email: "",
     message: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
+  // Handles input field changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -19,16 +25,46 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handles form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    setFormData({ name: "", email: "", message: "" });
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      // Sending POST request to the API
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}api/contact-uses`,
+        { data: formData },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      // Handling successful form submission
+      if (response.status === 200) {
+        setSuccess(true);
+        toast.success("Form Submitted Successfully");
+        setFormData({ name: "", email: "", message: "" }); // Clear form after success
+      } else {
+        throw new Error("Something went wrong");
+      }
+    } catch (error) {
+      // Error handling
+      setError("Failed to send the message. Please try again later.");
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setLoading(false); // End loading state
+    }
   };
 
   return (
     <LazyMotion features={domMax}>
       <section className="container py-8 lg:py-16">
-        <div className="text-center text-lg font-[600] uppercase md:text-2xl lg:text-[40px]">
+        <div className="text-center text-lg font-semibold uppercase md:text-2xl lg:text-[40px]">
           <h2 className="text-black">Get in Touch</h2>
           <div className="mt-3 flex justify-center lg:mt-6">
             <div className="h-1 w-40 rounded-xl bg-black" />
@@ -38,6 +74,7 @@ export default function Contact() {
         <div className="relative mx-auto mt-8 grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2 lg:mt-16">
           <div className="absolute inset-y-0 left-1/2 my-8 hidden w-[1px] -translate-x-1/2 transform bg-gray-400 md:block"></div>
 
+          {/* Form Section */}
           <m.div
             initial={{ opacity: 0, x: "-10%" }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -46,6 +83,7 @@ export default function Contact() {
           >
             <div className="pr-8">
               <form className="space-y-6" onSubmit={handleSubmit}>
+                {/* Name Input */}
                 <div>
                   <input
                     type="text"
@@ -57,6 +95,7 @@ export default function Contact() {
                     required
                   />
                 </div>
+                {/* Email Input */}
                 <div>
                   <input
                     type="email"
@@ -68,6 +107,7 @@ export default function Contact() {
                     required
                   />
                 </div>
+                {/* Message Input */}
                 <div>
                   <textarea
                     name="message"
@@ -79,18 +119,28 @@ export default function Contact() {
                     required
                   />
                 </div>
+                {/* Submit Button */}
                 <div>
                   <button
                     type="submit"
                     className="w-full rounded-md bg-black py-3 text-sm font-bold text-white md:text-base"
+                    disabled={loading}
                   >
-                    SUBMIT
+                    {loading ? "Sending..." : "SUBMIT"}
                   </button>
                 </div>
+                {/* Error and Success Messages */}
+                {error && <p className="text-sm text-red-500">{error}</p>}
+                {success && (
+                  <p className="text-sm text-green-500">
+                    Message sent successfully!
+                  </p>
+                )}
               </form>
             </div>
           </m.div>
 
+          {/* Contact Information Section */}
           <m.div
             initial={{ opacity: 0, x: "10%" }}
             whileInView={{ opacity: 1, x: 0 }}

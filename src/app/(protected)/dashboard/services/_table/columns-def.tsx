@@ -143,18 +143,20 @@ export const columns: ColumnDef<
     header: "ASSOCIATED PACKAGES",
     accessorKey: "attributes.associated_packages",
     cell({ row }) {
+      const selectedPackage = row?.original?.attributes?.associated_packages;
       return (
-        <div className="flex flex-wrap gap-1">
-          {row.original.attributes.associated_packages?.data.map((i) => (
-            <span
-              key={`package-tag-${i.id}`}
-              className="btn-primary bg-primary"
-            >
-              <Tag size={16} />
-              <Text variant="text-xs">{i.attributes.package_name}</Text>
-            </span>
-          ))}
-        </div>
+        selectedPackage?.data && (
+          <div className="flex flex-wrap gap-1">
+            {row.original.attributes.associated_packages?.data.map((i) => (
+              <Link href={`/packages/${i.id}`} key={`package-tag-${i.id}`}>
+                <span className="btn-primary bg-primary">
+                  <Tag size={16} />
+                  <Text variant="text-xs">{i.attributes.package_name}</Text>
+                </span>
+              </Link>
+            ))}
+          </div>
+        )
       );
     },
   },

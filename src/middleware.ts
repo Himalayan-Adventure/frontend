@@ -9,7 +9,11 @@ const guideOnlyRoutes = [
   "/dashboard/calendar",
   "/dashboard/services/write",
   "/dashboard/services/edit",
+  "/dashboard/services/inquiry",
+  "/dashboard/services/service-requests",
+  "/dashboard/services/",
 ];
+const customerOnlyRoutes = ["/dashboard/services/services-requested"];
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const hostname = request.headers.get("host");

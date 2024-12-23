@@ -80,11 +80,7 @@ export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
         router.back();
       }
     }
-    toast.success("Edited successfully");
   }
-  useEffect(() => {
-    console.log(form.getValues());
-  }, [form]);
   return (
     <section className="container mx-auto max-w-4xl">
       <Suspense>

@@ -42,42 +42,59 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
   const image = user.profilePicture;
 
   useEffect(() => {
-    const getBlob = async () => {
-      if (!image?.url) return;
-      const imageBlob = await urlToFile(
-        image?.url,
-        image?.name || user?.username + " profile picture",
-      );
-      setFile(imageBlob);
-    };
-    //eslint-disable-next-line
-    getBlob();
+    try {
+      const getBlob = async () => {
+        if (!image?.url) return;
+        const imageBlob = await urlToFile(
+          image?.url,
+          image?.name || user?.username + " profile picture",
+        );
+        setFile(imageBlob);
+      };
+      //eslint-disable-next-line
+      getBlob();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
   const form = useForm<TEditProfileForm>({
     resolver: zodResolver(EditProfileFormSchema),
     defaultValues: {
-      firstname: user?.resume?.first_name || "",
-      lastname: user?.resume?.last_name || "",
-      email: user?.resume?.email || user?.contact?.email || "",
-      post: "",
-      profile_picture: file,
-      phone: user?.resume?.phone || user?.contact?.phone || "",
-      facebook_link: user?.about?.facebook || "",
-      instagram_link: user?.about?.instagram || "",
-      whatsapp_link: user?.about?.whatsapp || "",
-      about: user?.about?.description || "",
-      location: user?.resume?.location || "",
-      portfolio: user?.resume?.portfolio || "",
-      // education: user?.resume?.education?.map((e) => ({
-      //   education: e.education || "",
-      // })),
-      education: user?.resume?.education?.map((i) => i.education).join("\n"),
-      birthday: user?.contact?.birthday || "",
-      gender: user?.contact?.gender || "",
-      citizenship_no: user?.contact?.citizenship || "",
-      nationality: user?.contact?.nationality || "",
-      religion: user?.contact?.religion || "",
-      marital_status: user?.contact?.marital_status || "",
+      username: user?.username || "",
+      email: user?.email || "",
+      profilePicture: file,
+      about: {
+        facebook: user?.about?.facebook || "",
+        instagram: user?.about?.instagram || "",
+        whatsapp: user?.about?.whatsapp || "",
+        description: user?.about?.description || "",
+      },
+      resume: {
+        first_name: user?.resume?.first_name || "",
+        last_name: user?.resume?.last_name || "",
+        email: user?.resume?.email || "",
+        phone: user?.resume?.phone || user?.contact?.phone || "",
+        location: user.resume?.location || "",
+        portfolio: user.resume?.portfolio || "",
+        hard_skill: user?.resume?.hard_skill || "",
+        technical_skill: user?.resume?.technical_skill || "",
+        education: user?.resume?.education?.map((i) => i.education).join("\n"),
+
+        // education: user?.resume?.education?.map((e) => ({
+        //   education: e.education || "",
+        // })),
+        interest: user?.resume?.interest || "",
+      },
+      contact: {
+        phone: user?.resume?.phone || user?.contact?.phone || "",
+        address: user?.resume?.location || "",
+        birthday: user?.contact?.birthday || "",
+        gender: user?.contact?.gender || "",
+        citizenship: user?.contact?.citizenship || "",
+        nationality: user?.contact?.nationality || "",
+        religion: user?.contact?.religion || "",
+        marital_status: user?.contact?.marital_status || "",
+      },
     },
   });
   const tabs = ["about", "resume", "contact"];
@@ -86,12 +103,11 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
     setLoading(true);
     const payload: TEditProfileForm = {
       ...form.getValues(),
-      profile_picture: file,
+      profilePicture: file,
     };
-    console.log(payload);
+    console.log(payload.resume.education);
     try {
       const res = await updateUser(payload, user.id);
-      console.log(res);
       if (res.status === 200) {
         toast.success("Profile updated");
         {
@@ -108,8 +124,9 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
     setLoading(false);
   }
   useEffect(() => {
-    console.log(form, form.formState);
-  }, [form.formState]);
+    //@ts-ignore
+    console.log(form.getValues("resume.education"));
+  }, [form.watch('resume.education'), form.watch('resume.portfolio')]);
   const formContentMap: Record<string, React.ReactNode> = {
     about: <AboutForm control={form.control} />,
     resume: <ResumeForm control={form.control} />,
@@ -120,31 +137,18 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       <form className="space-y-7" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="firstname"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First Name</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Enter first name" {...field} />
+                <Input placeholder="Enter username" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="lastname"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter last name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"
@@ -220,7 +224,7 @@ const AboutForm = ({ control }: { control: Control<TEditProfileForm> }) => {
     <>
       <FormField
         control={control}
-        name="facebook_link"
+        name="about.facebook"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Facebook Link</FormLabel>
@@ -234,7 +238,7 @@ const AboutForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
       <FormField
         control={control}
-        name="instagram_link"
+        name="about.instagram"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Instagram Link</FormLabel>
@@ -248,7 +252,7 @@ const AboutForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
       <FormField
         control={control}
-        name="whatsapp_link"
+        name="about.whatsapp"
         render={({ field }) => (
           <FormItem>
             <FormLabel>WhatsApp Link</FormLabel>
@@ -262,7 +266,7 @@ const AboutForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
       <FormField
         control={control}
-        name="about"
+        name="about.description"
         render={({ field }) => (
           <FormItem>
             <FormLabel>About</FormLabel>
@@ -274,7 +278,7 @@ const AboutForm = ({ control }: { control: Control<TEditProfileForm> }) => {
         )}
       />
 
-      <FormField
+      {/* <FormField
         control={control}
         name="about"
         render={({ field }) => (
@@ -284,7 +288,7 @@ const AboutForm = ({ control }: { control: Control<TEditProfileForm> }) => {
             <FormMessage />
           </FormItem>
         )}
-      />
+      /> */}
     </>
   );
 };
@@ -292,6 +296,32 @@ const AboutForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
   return (
     <>
+      <FormField
+        control={control}
+        name="resume.first_name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>First Name</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter first name" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name="resume.last_name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Last Name</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter last name" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <FormField
         control={control}
         name="email"
@@ -311,9 +341,10 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
       />
       <FormField
         control={control}
-        name="phone"
+        name="resume.phone"
         render={({ field }) => (
           <FormItem>
+            <FormLabel>Phone</FormLabel>
             <FormControl>
               <PhoneInput
                 defaultCountry="NP"
@@ -330,9 +361,10 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
       <FormField
         control={control}
-        name="location"
+        name="resume.location"
         render={({ field }) => (
           <FormItem>
+            <FormLabel>Location</FormLabel>
             <FormControl>
               <Input placeholder="Enter location" {...field} />
             </FormControl>
@@ -343,7 +375,7 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
       <FormField
         control={control}
-        name="portfolio"
+        name="resume.portfolio"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Portfolio</FormLabel>
@@ -356,7 +388,7 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
       />
       <FormField
         control={control}
-        name="education"
+        name="resume.education"
         render={({ field }) => (
           <MultiInput title="Education" placeholder="e.g. SEE.." {...field} />
         )}
@@ -364,7 +396,7 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
       <FormField
         control={control}
-        name="hard_skill"
+        name="resume.hard_skill"
         render={({ field }) => (
           <MultiInput
             title="Hard Skills"
@@ -376,17 +408,21 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
       <FormField
         control={control}
-        name="technical_skill"
+        name="resume.technical_skill"
         render={({ field }) => (
-          <MultiInput title="Technical Skills" placeholder="e.g. coding" />
+          <MultiInput
+            title="Technical Skills"
+            placeholder="e.g. coding"
+            {...field}
+          />
         )}
       />
 
       <FormField
         control={control}
-        name="interest"
+        name="resume.interest"
         render={({ field }) => (
-          <MultiInput title="Interests" placeholder="e.g. cricket" />
+          <MultiInput title="Interests" placeholder="e.g. cricket" {...field} />
         )}
       />
     </>
@@ -400,7 +436,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
       <div className="relative ml-4 space-y-8">
         <FormField
           control={control}
-          name="phone"
+          name="contact.phone"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Phone</FormLabel>
@@ -420,10 +456,10 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
         <FormField
           control={control}
-          name="email"
+          name="contact.email"
           render={({ field }) => (
             <FormItem className="top-2">
-              <FormLabel>Contact</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -438,7 +474,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
         <FormField
           control={control}
-          name="birthday"
+          name="contact.birthday"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Birthday</FormLabel>
@@ -452,7 +488,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
         <FormField
           control={control}
-          name="location"
+          name="contact.address"
           render={({ field }) => (
             <FormItem className="top-2">
               <FormLabel>Address</FormLabel>
@@ -465,7 +501,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
         />
         <FormField
           control={control}
-          name="gender"
+          name="contact.gender"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Gender</FormLabel>
@@ -478,7 +514,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
                 <SelectContent>
                   <SelectItem value="male">Male</SelectItem>
                   <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="others">Others</SelectItem>
+                  <SelectItem value="other">Others</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>
@@ -487,7 +523,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
 
         <FormField
           control={control}
-          name="citizenship_no"
+          name="contact.citizenship"
           render={({ field }) => (
             <FormItem className="top-2">
               <FormLabel>Citizenship no.</FormLabel>
@@ -500,7 +536,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
         />
         <FormField
           control={control}
-          name="nationality"
+          name="contact.nationality"
           render={({ field }) => (
             <FormItem className="top-2">
               <FormLabel>Nationality</FormLabel>
@@ -513,7 +549,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
         />
         <FormField
           control={control}
-          name="religion"
+          name="contact.religion"
           render={({ field }) => (
             <FormItem className="top-2">
               <FormLabel>Relgiion </FormLabel>
@@ -526,7 +562,7 @@ const ContactForm = ({ control }: { control: Control<TEditProfileForm> }) => {
         />
         <FormField
           control={control}
-          name="marital_status"
+          name="contact.marital_status"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Marital status</FormLabel>

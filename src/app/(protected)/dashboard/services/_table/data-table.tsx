@@ -154,7 +154,6 @@ function DataTable<TData, TValue>({
       }
     },
     onSuccess(data, variables, context) {
-      console.log(data);
       toast.success("Service deleted successfully");
     },
     onError(error, variables, context) {

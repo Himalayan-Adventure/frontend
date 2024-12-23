@@ -9,6 +9,7 @@ import { PlusIcon } from "lucide-react";
 
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
+import TablePagination from "@/components/table/table-pagination";
 
 export const metadata: Metadata = {
   title: `Blog Dashboard | ${siteConfig.siteName}`,
@@ -18,11 +19,11 @@ export const metadata: Metadata = {
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: { code?: string; tag?: string };
+  searchParams: { code?: string; tag?: string; page?: number };
 }) {
-  const { code, tag } = searchParams;
+  const { code, tag, page } = searchParams;
 
-  const data = await getBlogs();
+  const data = await getBlogs({ page });
   const blogs = data.data;
   return (
     <section className="space-y-8 font-poppins">
@@ -62,6 +63,7 @@ export default async function BlogPage({
           ))}
         </div>
       </div>
+      {data.meta && <TablePagination meta={data.meta} dataLen={blogs.length} />}
     </section>
   );
 }

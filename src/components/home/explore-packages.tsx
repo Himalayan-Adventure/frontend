@@ -10,6 +10,10 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { MessageDialog } from "../services/message-dialog";
+import { AdminInquiryDialog } from "./admin-inquiry-dialog";
+import { useCurrentUser } from "@/hooks/user-current-user";
+import { toast } from "sonner";
+import { useState } from "react";
 const packages = [
   {
     name: "Expedition Over 8000m",
@@ -40,7 +44,7 @@ export default function ExplorePackages() {
       queryFn: async () => {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=3`,
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=4`,
           );
           if (!res.ok) {
             throw new Error("Error fetching package categories");
@@ -77,7 +81,7 @@ export default function ExplorePackages() {
             </div>
           </div>
           {/* Packages Grid */}
-          <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16">
+          <div className="mt-8 w-fit mx-auto gri grid-cols-2 gap-8 lg:mt-16 flex-wrap lg:grid-cols-4 lg:gap-16 flex items-stretch [&>div]:flex-1 justify-center">
             {packages?.data?.map((pkg, index) => (
               <PackageCategoryCard
                 data={pkg}
@@ -96,49 +100,54 @@ const PackageCategoryCard = ({
   data: APIResponseData<"api::package-category.package-category">;
 }) => {
   const image = data?.attributes?.image?.data?.attributes;
+  const { data: user, isLoading } = useCurrentUser();
+  const [open, setOpen] = useState(false);
   return (
-    <div className="">
+    <div className="grid place-items-center">
       {image && (
         <Image
           src={image.url}
           alt={image.name}
-          className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-none"
+          className="aspect-[0.65] h-auto max-h-96 w-full lg:w-auto rounded-2xl border border-gray-600 object-cover lg:max-h-96"
           height={image.height}
           width={image.width}
         />
       )}
       <div className="py-2 text-center">
-        <h2 className="mb-2 text-base font-semibold lg:text-xl">
+        <h2 className="mb-2 text-sm md:text-base font-semibold lg:text-xl">
           {data?.attributes?.name}
         </h2>
         <div className="flex flex-col items-center space-y-3">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
-                Inquire
-              </Button>
-            </DialogTrigger>
-            <DialogContent
-              className={cn(
-                "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
-              )}
-            >
-              <Image
-                src={EverestImg}
-                alt="Cover image"
-                className="absolute -z-10 h-full w-full object-cover opacity-90"
-              />
-              {/*
-              {data.attributes. && (
-                <MessageDialog
-                  guideId={data.attributes.service_provider?.data?.id}
+          {user ? (
+            <Dialog open={open} onOpenChange={(e) => setOpen(e)}>
+              <DialogTrigger asChild>
+                <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
+                  Inquire
+                </Button>
+              </DialogTrigger>
+              <DialogContent
+                className={cn(
+                  "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+                )}
+              >
+                <Image
+                  src={EverestImg}
+                  alt="Cover image"
+                  className="absolute -z-10 h-full w-full object-cover opacity-90"
                 />
-              )}
-                */}
-            </DialogContent>
-          </Dialog>
+                <AdminInquiryDialog setOpen={setOpen} />
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Button
+              className="w-auto rounded-full border border-black bg-transparent !px-2 !py-0.5 md:px-6 md:py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2"
+              onClick={() => toast.error("Please login to inquire")}
+            >
+              Inquire
+            </Button>
+          )}
           <Link href={`/packages?key=category&filter=${data.id}`}>
-            <Button className="w-auto rounded-full px-6 py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
+            <Button className="w-auto rounded-full md:px-6 md:py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
               View More
             </Button>
           </Link>
