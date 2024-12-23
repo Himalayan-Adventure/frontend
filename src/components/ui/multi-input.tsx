@@ -17,50 +17,78 @@ interface MultiInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const MultiInput = React.forwardRef<HTMLInputElement, MultiInputProps>(
-  ({ title, showSlider = false, placeholder, ...props }, ref) => {
+  ({ title, showSlider = false, placeholder, onChange, ...props }, ref) => {
     const { value } = props;
-    console.log(value);
+
+    const initialValue = value?.toString()?.split("\n");
+    const [values, setValues] = React.useState<string[]>(initialValue || [""]);
     const [count, setCount] = React.useState<number>(
       value ? value.toString().split("\n").length : 1,
     );
-    const initialValue: string[] = Array.from(
-      { length: count },
-      (_, index) => value?.toString().split("\n")[index] || "",
-    );
-    value
-      ?.toString()
-      ?.split("\n")
-      ?.map((i) => initialValue.push(i));
-    console.log(initialValue);
-
-    const [values, setValues] = React.useState<string[]>(initialValue || [""]);
-    React.useEffect(() => {
+    const handleAdd = () => {
       setValues([...values, ""]);
-    }, [count]);
+    };
+    const handleRemove = (index: number) => {
+      const updatedValues = values.filter((_, i) => i !== index);
+      setValues(updatedValues);
+      handleChange(updatedValues);
+    };
+
+    const handleChange = (updatedValues: string[]) => {
+      const formatted = updatedValues.join("\n");
+      setValues(updatedValues);
+      if (onChange) {
+        onChange({
+          target: { value: formatted },
+        } as React.ChangeEvent<HTMLInputElement>);
+      }
+    };
+    const handleInputChange = (index: number, inputValue: string) => {
+      const updatedValues = values.map((v, i) =>
+        i === index ? inputValue : v,
+      );
+      handleChange(updatedValues);
+    };
+    // const initialValue: string[] = Array.from(
+    //   { length: count },
+    //   (_, index) => value?.toString().split("\n")[index] || "",
+    // );
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [formattedValue, setFormattedValue] = React.useState<string>(
+      value?.toString() || "",
+    );
+
+    React.useEffect(() => {
+      setFormattedValue(values.join("\n"));
+      if (inputRef.current) {
+        inputRef.current.value = values.join("\n");
+      }
+      console.log(value);
+    }, [values, ref]);
     return (
       <FormItem className="space-y-3">
-        <span className="flex justify-between">
+        <span className="grid grid-cols-[90%_auto] items-center gap-x-4">
           <FormLabel className="font-poppins">{title}</FormLabel>
-          <Button
-            className="h-auto rounded-full bg-foreground px-4 py-1"
-            onClick={() => setCount(count + 1)}
+          <span
+            className="btn-primary h-auto items-center justify-center rounded-full bg-foreground px-4 py-1 transition-all ease-in-out hover:bg-primary cursor-pointer"
+            onClick={() => setValues([...values, ""])}
           >
             <Plus size={16} />
-          </Button>
+          </span>
         </span>
         <input className="hidden" type="text" ref={ref} {...props} />
-        {Array.from({ length: count }, (_, i) => i).map((i) => (
-          <div key={`multi-${title}-${i}`} className="flex flex-col gap-y-3">
-            <span className="grid grid-cols-[auto_5%] gap-x-2">
+        {values.map((value, index) => (
+          <div key={index} className="flex items-center gap-x-2">
+            <span className="grid w-full grid-cols-[90%_auto] gap-x-4">
               <Input
-                name="value"
-                type="text"
-                value={values[i]}
-                placeholder={placeholder || "Enter"}
+                value={value}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+                placeholder={placeholder || "Enter value"}
               />
               <Button
-                className="h-full border border-red-200 bg-red-50 p-1 text-red-900 hover:bg-red-500 hover:text-white"
-                onClick={() => setCount(count - 1)}
+                className="h-full border bg-red-50 p-1 text-red-900 hover:bg-red-500 hover:text-white"
+                onClick={() => handleRemove(index)}
+                type="button"
               >
                 <Trash size={16} />
               </Button>

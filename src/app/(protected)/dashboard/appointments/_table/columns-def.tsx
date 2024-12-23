@@ -13,6 +13,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { HTMLProps } from "react";
 import DeleteButton from "./delete-button";
+import { StatusSelectCell } from "@/components/table/status-select-cell";
+import { PriorityCell } from "@/components/table/priority-cell";
 
 export const columns: ColumnDef<
   APIResponseData<"api::appointment.appointment">,
@@ -91,7 +93,7 @@ export const columns: ColumnDef<
     accessorKey: "attributes.appointment_date",
     cell({ row }) {
       return (
-        <p>
+        <p className="text-sm font-medium">
           {format(
             new Date(row?.original?.attributes?.appointment_date),
             "yyyy-MM-dd hh:mm a",
@@ -101,13 +103,13 @@ export const columns: ColumnDef<
     },
   },
 
-  // {
-  //   header: "priority",
-  //   accessorKey: "attributes.priority",
-  //   cell({ row }) {
-  //     return "-";
-  //   },
-  // },
+  {
+    header: "priority",
+    accessorKey: "attributes.priority",
+    cell({ row }) {
+      return <PriorityCell id={row.original.id} />;
+    },
+  },
 
   {
     header: "package",
@@ -129,13 +131,13 @@ export const columns: ColumnDef<
     },
   },
 
-  // {
-  //   header: "status",
-  //   //accessorKey: "attributes.expectation",
-  //   cell({ row }) {
-  //     return "-";
-  //   },
-  // },
+  {
+    header: "status",
+    accessorKey: "attributes.status",
+    cell({ row }) {
+      return <StatusSelectCell id={row.original.id} />;
+    },
+  },
 
   {
     header: "creator",
@@ -179,6 +181,165 @@ export const columns: ColumnDef<
     },
   },
 ];
+
+export const userColumns: ColumnDef<
+  APIResponseData<"api::appointment.appointment">,
+  "id"
+>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <IndeterminateCheckbox
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <IndeterminateCheckbox
+          {...{
+            checked: row.getIsSelected(),
+            disabled: !row.getCanSelect(),
+            indeterminate: row.getIsSomeSelected(),
+            onChange: row.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  // {
+  //  header: "time",
+  // accessorKey: "attributes.appointment_date",
+  //cell({ row }) {
+  // const time = row?.original?.attributes?.appointment_date;
+  //return time ? format(new Date(time), "hh:mm a") : "-";
+  //},
+  //},
+
+  {
+    header: "guide",
+    accessorKey: "attributes.guide",
+    cell({ row }) {
+      const guide = row?.original?.attributes?.guide?.data;
+      return (
+        guide && (
+          <Link href={`/profile/${guide.id}`}>
+            <Text variant="text-sm">{guide.attributes.username}</Text>
+          </Link>
+        )
+      );
+    },
+  },
+
+  // {
+  //   header: "subject",
+  //   accessorKey: "attributes.name",
+  //   cell({ row }) {
+  //     return <Text variant="text-sm">{row?.original?.attributes?.name}</Text>;
+  //   },
+  // },
+
+  {
+    header: "message",
+    accessorKey: "attributes.expectation",
+    cell({ row }) {
+      return (
+        <ReadMoreCell message={row?.original?.attributes?.expectation || "-"} />
+      );
+    },
+  },
+
+  {
+    header: ({ column }) => {
+      return (
+        <SortableHeaderButton
+          sortOnClient
+          column={column}
+          label="Appointment date"
+          className="justify-start"
+        />
+      );
+    },
+    accessorKey: "attributes.appointment_date",
+    cell({ row }) {
+      return (
+        <p className="text-sm font-medium">
+          {format(
+            new Date(row?.original?.attributes?.appointment_date),
+            "yyyy-MM-dd hh:mm a",
+          )}
+        </p>
+      );
+    },
+  },
+
+  {
+    header: "package",
+    accessorKey: "attributes.package",
+    cell({ row }) {
+      const selectedPackage = row?.original?.attributes?.package;
+      return (
+        selectedPackage?.data && (
+          <Link href={`/packages/${selectedPackage.data.id}`} target={"_blank"}>
+            <span className="btn-primary bg-primary">
+              <Tag size={16} />
+              <Text variant="text-xs">
+                {selectedPackage.data?.attributes?.package_name || "-"}
+              </Text>
+            </span>
+          </Link>
+        )
+      );
+    },
+  },
+
+  {
+    header: "Contact",
+    accessorKey: "attributes.phone",
+    cell({ row }) {
+      const guide = row.original.attributes.guide?.data.attributes;
+      //const phone = guide?.email.;
+      const email = row?.original?.attributes?.email;
+      return (
+        <span className="flex gap-x-2">
+          {/* {phone && (
+            <Link
+              href={`tel:+977 ${phone}`}
+              className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
+            >
+              <Phone size={18} />
+            </Link>
+          )} */}
+
+          {email && (
+            <Link
+              href={`mailto:${email}`}
+              className="grid w-fit place-items-center rounded-full bg-gray-100 p-3 text-blue-600 transition ease-in-out hover:bg-blue-600 hover:text-gray-100"
+            >
+              <Mail size={18} />
+            </Link>
+          )}
+        </span>
+      );
+    },
+  },
+
+  {
+    header: "ACTIONS",
+    accessorKey: "edit",
+    cell({ row }) {
+      return (
+        <span className="flex gap-x-2">
+          <DeleteButton id={row.original.id} />
+        </span>
+      );
+    },
+  },
+];
+
 function IndeterminateCheckbox({
   indeterminate,
   className = "",

@@ -117,7 +117,8 @@ export const ForgotPasswordDialog = () => {
 
               <DialogFooter className="mt-8 flex-row justify-start sm:justify-start">
                 <Button
-                  disabled={!emailForm.formState.isValid}
+                  // disabled={!emailForm.formState.isValid}
+                  isLoading={loading}
                   type="submit"
                   className="w-full self-end bg-foreground px-10 py-3 font-poppins font-bold sm:py-6"
                 >
@@ -160,19 +161,11 @@ export const ForgotPasswordDialog = () => {
 
               <DialogFooter className="mt-8 flex-row justify-start sm:justify-start">
                 <Button
-                  // disabled={!numberForm.formState.isValid}
+                  isLoading={loading}
                   type="submit"
                   className="w-full gap-x-3 self-end bg-foreground px-10 py-3 font-poppins font-bold sm:py-6"
                 >
                   Continue
-                  {loading && (
-                    <Oval
-                      height="16"
-                      width="16"
-                      color="#FD9100"
-                      ariaLabel="oval-loading"
-                    />
-                  )}
                 </Button>
               </DialogFooter>
             </form>

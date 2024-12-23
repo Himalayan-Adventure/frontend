@@ -14,32 +14,38 @@ export async function PUT(
     return Response.json({ error: "No token, Unauthorized" }, { status: 401 });
   }
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}`,
+  try {
+    console.log(data);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}`,
 
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PUT",
+        body: JSON.stringify({ data }),
+        cache: "no-store",
+        next: {
+          tags: ["me"],
+        },
       },
-      method: "PUT",
-      body: JSON.stringify({ data }),
-      cache: "no-cache",
-      next: {
-        tags: ["me"],
-      },
-    },
-  );
-  revalidateTag("me");
-
-  const value = await res.json();
-  if (!res.ok) {
-    return Response.json(
-      { error: value.error?.details?.errors?.[0] },
-      { status: res.status },
     );
+    revalidateTag("me");
+
+    const value = await res.json();
+    console.log(res, req);
+    if (!res.ok) {
+      return Response.json(
+        { error: value.error?.details?.errors?.[0] },
+        { status: res.status },
+      );
+    }
+    return Response.json(res);
+  } catch (error) {
+    console.log("Error updating user data");
   }
-  return Response.json(res);
 }
 
 export async function GET(
