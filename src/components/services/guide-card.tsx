@@ -37,7 +37,7 @@ export const GuideCard = ({ user }: { user: TUserDeep }) => {
             width={user.profilePicture.width}
             height={user.profilePicture.height}
             alt={user.profilePicture.name || user.username + " profile picture"}
-            className="aspect-square rounded-tr-[35px] object-cover"
+            className="aspect-square rounded-tr-[35px] object-cover w-full"
           />
         ) : (
           <div className="relative mx-auto grid w-fit place-items-center rounded-full bg-white p-5">
@@ -174,9 +174,9 @@ const UserDetails = ({ id }: { id: number }) => {
         <Text variant="text-sm">{user.about.description}</Text>
       )}
       <div className="grid grid-cols-[auto_14px_auto] gap-4">
-        <Text variant="text-sm">Service Provided</Text>
+        {/* <Text variant="text-sm">Service Provided</Text>
         <Text variant="text-sm">:</Text>
-        <Text variant="text-sm">Lorem</Text>
+        <Text variant="text-sm">Lorem</Text> */}
 
         {user?.email && (
           <>

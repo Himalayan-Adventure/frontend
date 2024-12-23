@@ -73,6 +73,11 @@ export const DateCard = ({
             </Text>
           </span>
         </span>
+        <span>
+          {data.attributes.heading && (
+            <Text variant="text-sm">{data.attributes.heading}</Text>
+          )}
+        </span>
       </div>
     </Card>
   );
@@ -87,6 +92,7 @@ import { useMutation } from "@tanstack/react-query";
 import { deleteCalendar } from "@/server/calendar/delete-calendar";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
+import { Popover } from "@/components/ui/popover";
 
 function formatDateRange(start: Date | string, end: Date | string) {
   const startDate = new Date(start);

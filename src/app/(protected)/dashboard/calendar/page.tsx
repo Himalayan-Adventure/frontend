@@ -28,7 +28,7 @@ export default async function CalendarPage({
           Add activity
         </Link>
       </span>
-      <span className="flex flex-col items-start gap-x-4 gap-y-10 @4xl:flex-row">
+      <span className="flex flex-col items-start gap-x-4 gap-y-10 @5xl:flex-row">
         {calendars.data && calendars.data.length > 0 ? (
           <>
             <CalendarSection
