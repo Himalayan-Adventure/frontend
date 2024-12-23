@@ -11,6 +11,7 @@ import Details from "./details";
 const options = [
   {
     icon: <FaRedo />,
+    
     name: "Make Adjustments",
     content: <MakeAdjustments />,
   },

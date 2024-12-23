@@ -107,8 +107,11 @@ export default function PackageSelection() {
       <div className="space-y-4">
         {packages.length > 0 ? (
           packages.map((pkg: any) => (
-            <div key={pkg?.id} className="flex items-center gap-4">
-              <div className="max-h-48 w-1/4 overflow-hidden">
+            <div
+              key={pkg?.id}
+              className="flex flex-col sm:items-center gap-4 sm:flex-row"
+            >
+              <div className="max-h-48 overflow-hidden sm:w-1/4">
                 <img
                   src={
                     pkg?.attributes?.image?.data?.[0]?.attributes?.url ||
@@ -118,7 +121,7 @@ export default function PackageSelection() {
                   className="h-48 w-full rounded object-cover"
                 />
               </div>
-              <div className="w-2/4 border-r border-black">
+              <div className="border-black sm:w-2/4 sm:border-r">
                 <h3 className="text-left text-lg font-semibold">
                   {pkg?.attributes?.package_name}
                 </h3>
@@ -174,11 +177,11 @@ export default function PackageSelection() {
                   onClick={() => handleSelectPackage(pkg)}
                   className={`rounded-full px-4 py-2 text-white ${
                     selectedPackageIds.includes(pkg?.id)
-                      ? "bg-blue-500"
+                      ? "bg-primary"
                       : "bg-black"
                   }`}
                 >
-                  {selectedPackageIds.includes(pkg?.id) ? "Deselect" : "Select"}
+                  {selectedPackageIds.includes(pkg?.id) ? "Selected" : "Select"}
                 </button>
               </div>
             </div>

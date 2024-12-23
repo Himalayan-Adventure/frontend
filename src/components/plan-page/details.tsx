@@ -2,7 +2,6 @@ import { usePlanContext } from "@/components/plan-page/plan-context";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-// Define the TravelDates type if it's not already defined
 type TravelDates = {
   exact_date_start: string;
   exact_date_end: string;
@@ -17,7 +16,6 @@ interface DetailsProps {
 export default function Details({ setSelectedOption }: DetailsProps) {
   const {
     group,
-    budget,
     travelDates,
     experience,
     selectedDestinationId,
@@ -30,6 +28,7 @@ export default function Details({ setSelectedOption }: DetailsProps) {
   } = usePlanContext();
 
   const [packages, setPackages] = useState<any[]>([]);
+  const [destinationName, setDestinationName] = useState<string>("");
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -38,7 +37,13 @@ export default function Details({ setSelectedOption }: DetailsProps) {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages`,
           );
-          setPackages(response?.data?.data || []);
+          const allPackages = response?.data?.data || [];
+
+          const selectedPackages = allPackages?.filter((pkg: any) =>
+            selectedPackageIds?.includes(pkg.id),
+          );
+
+          setPackages(selectedPackages);
         }
       } catch (error) {
         console.error("Error fetching packages:", error);
@@ -48,13 +53,51 @@ export default function Details({ setSelectedOption }: DetailsProps) {
     fetchPackages();
   }, [selectedPackageIds]);
 
+  useEffect(() => {
+    const fetchDestination = async () => {
+      try {
+        // Log the value of selectedDestinationId to confirm it's being set
+        console.log("Selected Destination ID:", selectedDestinationId);
+
+        if (selectedDestinationId) {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-countries`,
+          );
+          console.log("API Response:", response.data);
+
+          const allDestinations = response?.data?.data || [];
+          console.log("All Destinations:", allDestinations);
+
+          const selectedDestination = allDestinations.find(
+            (dest: any) => dest?.id === selectedDestinationId,
+          );
+
+          if (selectedDestination) {
+            setDestinationName(
+              selectedDestination?.attributes?.name ||
+                "Destination not selected",
+            );
+          } else {
+            setDestinationName("Destination not selected");
+          }
+        } else {
+          setDestinationName("Destination not selected");
+        }
+      } catch (error) {
+        console.error("Error fetching destination:", error);
+        setDestinationName("Error fetching destination");
+      }
+    };
+
+    fetchDestination();
+  }, [selectedDestinationId]);
+
   const handleConfirmClick = () => {
     setSelectedOption("Your Details");
   };
 
   const renderTravelDates = () => {
     const dates = travelDates as TravelDates;
-    console.log("Current travel dates:", dates);
 
     if (dates.exact_date_start && dates.exact_date_end) {
       return `${dates.exact_date_start} - ${dates.exact_date_end}`;
@@ -116,9 +159,7 @@ export default function Details({ setSelectedOption }: DetailsProps) {
       </div>
       <div className="flex flex-col">
         <h2 className="text-sm font-semibold md:text-base">Destination:</h2>
-        <p className="text-sm text-gray-700 md:text-base">
-          {selectedDestinationId}
-        </p>
+        <p className="text-sm text-gray-700 md:text-base">{destinationName}</p>
       </div>
       <div className="flex flex-col">
         <h2 className="text-sm font-semibold md:text-base">Accommodation:</h2>
@@ -133,7 +174,7 @@ export default function Details({ setSelectedOption }: DetailsProps) {
         <p className="text-sm text-gray-700 md:text-base">{renderPackages()}</p>
       </div>
 
-      {/*  "Check & Confirm" button */}
+      {/* "Check & Confirm" button */}
       <div className="flex justify-center md:col-span-2">
         <button
           onClick={handleConfirmClick}
