@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { getAppointments } from "@/server/appointments/get-appointments";
 import DataTable from "./_table/data-table";
-import { columns } from "./_table/columns-def";
+import { columns, userColumns } from "./_table/columns-def";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default async function ApppointmentsPage({
         <DataTable
           data={data?.data || []}
           meta={data?.meta}
-          columns={columns}
+          columns={user.userType === "customer" ? userColumns : columns}
           className="table-scrollbar relative max-h-[calc(100dvh-var(--navbar-height)-150px)] overflow-auto"
         />
       </div>

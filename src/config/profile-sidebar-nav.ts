@@ -19,6 +19,7 @@ export type TNavigation = {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   href: string;
   merchantOnly?: boolean;
+  customerOnly?: boolean;
 };
 export const navigations: TNavigation[] = [
   {
@@ -42,6 +43,14 @@ export const navigations: TNavigation[] = [
     name: "Services",
     href: "/dashboard/services",
     icon: Workflow,
+    merchantOnly:true,
+  },
+
+  {
+    name: "Services",
+    href: "/dashboard/services-requested",
+    icon: Workflow,
+    customerOnly:true,
   },
 
   {

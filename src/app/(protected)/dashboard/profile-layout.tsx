@@ -157,6 +157,10 @@ function SidebarContent({
                   isMerchant && (
                     <Item key={item.name} item={item} pathname={pathname} />
                   )
+                ) : item.customerOnly ? (
+                  !isMerchant && (
+                    <Item key={item.name} item={item} pathname={pathname} />
+                  )
                 ) : (
                   <Item key={item.name} item={item} pathname={pathname} />
                 ),

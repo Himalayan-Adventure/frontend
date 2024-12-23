@@ -35,7 +35,7 @@ export async function PUT(
     revalidateTag("me");
 
     const value = await res.json();
-    console.log(value, res.status, res.statusText);
+    console.log(res, req);
     if (!res.ok) {
       return Response.json(
         { error: value.error?.details?.errors?.[0] },
