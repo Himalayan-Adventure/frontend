@@ -151,9 +151,9 @@ const UserDetails = ({ id }: { id: number }) => {
       </div>
     );
   } 
-  // else if (!user || isError) {
-  //   return <p>Something went wrong</p>;
-  // }
+  else if (!user || isError) {
+    return <p>Something went wrong</p>;
+  }
   const socialMedia = {
     facebook: user?.about?.facebook,
     instagram: user?.about?.instagram,
