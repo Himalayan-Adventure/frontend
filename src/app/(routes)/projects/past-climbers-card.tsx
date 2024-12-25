@@ -9,17 +9,18 @@ import WhatsAppIcon from "/public/icons/whatsApp.png";
 import IgImage from "/public/icons/instagram.png";
 import { APIResponseData } from "@/types/types";
 import { DateValue } from "@/types/packages/departure";
-import { format } from "date-fns";
+import { format, isSameDay, isSameMonth, isSameYear } from "date-fns";
 export const PastClimbersCard = ({
   user: data,
-  summitDate,
+  startDate,
+  endDate,
   testimonial,
 }: {
   user: APIResponseData<"plugin::users-permissions.user">;
-  summitDate?: DateValue;
+  startDate?: DateValue;
+  endDate?: DateValue;
   testimonial?: string;
 }) => {
-  // TODO: 2 summit dates
   const user = data.attributes;
   const profilePicture = user?.profilePicture?.data?.attributes;
   return (
@@ -55,17 +56,21 @@ export const PastClimbersCard = ({
             {testimonial}
           </Text>
         )}
-        {summitDate && (
-          <div className="relative flex w-[70%] flex-col items-center space-y-0.5 rounded-md border border-gray-300 py-2">
-            <Text semibold variant="text-sm">
-              Summit Date
-            </Text>
+        <div className="relative flex w-[70%] flex-col items-center space-y-0.5 rounded-md border border-gray-300 py-2">
+          <Text semibold variant="text-sm">
+            Summit Date
+          </Text>
 
-            <Text className="text-gray-600" variant="text-sm">
-              {format(new Date(summitDate), "dd MMM yyyy")}
-            </Text>
-          </div>
-        )}
+          <Text className="text-gray-600" variant="text-sm">
+            {startDate && endDate
+              ? formatDateRange(startDate, endDate)
+              : startDate
+                ? format(startDate, "d MMM yyyy")
+                : endDate
+                  ? format(endDate, "d MMM yyyy")
+                  : ""}
+          </Text>
+        </div>
       </div>
       <div className="flex justify-center space-x-4">
         <span className="flex items-center justify-center gap-x-2">
@@ -105,3 +110,23 @@ export const PastClimbersCard = ({
     </div>
   );
 };
+
+import { cn } from "@/lib/utils";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
+function formatDateRange(start: Date | string, end: Date | string) {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  if (isSameDay(startDate, endDate)) {
+    return `${format(endDate, "d MMM yyyy")}`;
+  } else if (
+    isSameMonth(startDate, endDate) &&
+    isSameYear(startDate, endDate)
+  ) {
+    return `${format(startDate, "d")}-${format(endDate, "d MMM yyyy")}`;
+  } else if (isSameYear(startDate, endDate)) {
+    return `${format(startDate, "d MMM")} - ${format(endDate, "d MMM yyyy")}`;
+  } else {
+    return `${format(startDate, "d MMM")} - ${format(endDate, "d MMM")}, ${format(startDate, "yyyy")}/${format(endDate, "yy")}`;
+  }
+}

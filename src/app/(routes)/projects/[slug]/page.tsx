@@ -192,7 +192,8 @@ export default async function ProjectDetail({
                         <PastClimbersCard
                           key={`past-climbers-${i.user?.data.id}`}
                           user={i.user?.data}
-                          summitDate={i.summit_date}
+                          startDate={i.summit_date_start}
+                          endDate={i.summit_date_end}
                           testimonial={i.testimonial}
                         />
                       ),
