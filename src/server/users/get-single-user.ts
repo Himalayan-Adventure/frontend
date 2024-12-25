@@ -1,24 +1,30 @@
 import { TUserDeep } from "@/types/auth";
 import { cookies } from "next/headers";
 
-export const getSingleUser = async (id: number) => {
-  const cookieStore = cookies();
-  const token = cookieStore.get("jwt")?.value;
+export const getSingleUser = async ({
+  id,
+  query,
+}: {
+  id: number;
+  query?: string;
+}) => {
+  //  const cookieStore = cookies();
+  // const token = cookieStore.get("jwt")?.value;
 
-  if (!token) {
-    throw new Error("No token, Unauthorized");
-  }
+  // if (!token) {
+  //   throw new Error("No token, Unauthorized");
+  // }
 
   try {
     const params = new URLSearchParams();
     params.set("populate", "deep");
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?${params.toString()}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?${query || params.toString()}`,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          //        Authorization: `Bearer ${token}`,
         },
         next: {
           tags: [`user-${id}`],

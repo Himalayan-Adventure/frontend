@@ -1,5 +1,5 @@
 "use client";
-
+import qs from "qs";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -22,8 +22,9 @@ import DynamicReactIcon from "../icons/strapi-icon";
 import { Oval } from "react-loader-spinner";
 import { useCurrentUser } from "@/hooks/user-current-user";
 import { toast } from "sonner";
+import { getSingleUser } from "@/server/users/get-single-user";
 
-export const GuideCard = ({ user }: { user: TUserDeep }) => {
+export const GuideCard = ({ guide }: { guide: TUserDeep }) => {
   const [showCard, setShowCard] = useState(false);
   return (
     <Dialog>
@@ -31,13 +32,15 @@ export const GuideCard = ({ user }: { user: TUserDeep }) => {
         className="group rounded-tr-[43px] bg-neutral-100 pb-2 pl-2 pr-4 pt-4 text-center font-poppins transition-all ease-in-out hover:bg-primary"
         onClick={() => setShowCard(!showCard)}
       >
-        {user.profilePicture ? (
+        {guide?.profilePicture ? (
           <Image
-            src={user.profilePicture.url}
-            width={user.profilePicture.width}
-            height={user.profilePicture.height}
-            alt={user.profilePicture.name || user.username + " profile picture"}
-            className="aspect-square rounded-tr-[35px] object-cover w-full"
+            src={guide.profilePicture.url}
+            width={guide.profilePicture.width}
+            height={guide.profilePicture.height}
+            alt={
+              guide.profilePicture.name || guide.username + " profile picture"
+            }
+            className="aspect-square w-full rounded-tr-[35px] object-cover"
           />
         ) : (
           <div className="relative mx-auto grid w-fit place-items-center rounded-full bg-white p-5">
@@ -49,7 +52,7 @@ export const GuideCard = ({ user }: { user: TUserDeep }) => {
             variant={"text-lg"}
             className="font-extrabold capitalize group-hover:text-background"
           >
-            {user.username}
+            {guide.username}
           </Text>
           <span className="flex flex-col gap-y-2">
             <Text
@@ -68,23 +71,23 @@ export const GuideCard = ({ user }: { user: TUserDeep }) => {
           </span>
         </div>
       </DialogTrigger>
-      <GuideCardOverlay user={user} setShowCard={setShowCard} />
+      <GuideCardOverlay guide={guide} setShowCard={setShowCard} />
     </Dialog>
   );
 };
 const GuideCardOverlay = ({
-  user,
+  guide,
   setShowCard,
 }: {
-  user: TUserDeep;
+  guide: TUserDeep;
   setShowCard: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { type, setType, setDialogOpen } = useGuideDialog();
 
   const typeMap: { [key in TGuideDialogType]: React.ReactNode } = {
-    details: <UserDetails id={user.id} />,
-    message: <MessageDialog guideId={user.id} />,
-    appointments: <AppointmentDialog guide={user} />,
+    details: <GuideDetails id={guide.id} />,
+    message: <MessageDialog guideId={guide.id} />,
+    appointments: <AppointmentDialog guide={guide} />,
   };
   return (
     <DialogContent
@@ -109,34 +112,44 @@ const GuideCardOverlay = ({
         className="absolute -z-10 h-full w-full object-cover opacity-90"
       />
       <div className="flex flex-col place-items-center gap-y-8">
-        {user.profilePicture && (
+        {guide?.profilePicture && (
           <Image
-            src={user.profilePicture.url}
-            width={user.profilePicture.width}
-            height={user.profilePicture.height}
-            alt={user.profilePicture.name || user.username + " profile picture"}
+            src={guide.profilePicture.url}
+            width={guide.profilePicture.width}
+            height={guide.profilePicture.height}
+            alt={
+              guide.profilePicture.name || guide.username + " profile picture"
+            }
             className="aspect-square size-24 rounded-full border-2 border-primary object-cover"
           />
         )}
-        <Text variant="text-md">{user?.username}</Text>
+        <Text variant="text-md">{guide?.username}</Text>
       </div>
       {typeMap[type]}
     </DialogContent>
   );
 };
-const UserDetails = ({ id }: { id: number }) => {
+const GuideDetails = ({ id }: { id: number }) => {
   const { data: loggedInUser, isLoading } = useCurrentUser();
   const { type, setType, setDialogOpen } = useGuideDialog();
   const {
-    data: user,
+    data: guide,
     isPending,
     isError,
   } = useQuery({
     queryKey: [`user-${id}`],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/users/${id}`);
-        const data = await res.json();
+        //const res = await fetch(`/api/users/${id}`);
+        const query = qs.stringify({
+          populate: {
+            "[0]": "profilePicture",
+            "1": "contact",
+            "2": "about",
+          },
+        });
+        const data = await getSingleUser({ id, query });
+        //const data = await res.json();
         return data;
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -150,47 +163,46 @@ const UserDetails = ({ id }: { id: number }) => {
         <Oval height="32" width="32" color="#FD9100" ariaLabel="oval-loading" />
       </div>
     );
-  } 
-  else if (!user || isError) {
+  } else if (!guide || isError) {
     return <p>Something went wrong</p>;
   }
   const socialMedia = {
-    facebook: user?.about?.facebook,
-    instagram: user?.about?.instagram,
-    whatsapp: user?.about?.whatsapp,
+    facebook: guide?.about?.facebook,
+    instagram: guide?.about?.instagram,
+    whatsapp: guide?.about?.whatsapp,
   };
   return (
     <div className="relative space-y-8">
-      {user?.contact?.birthday && (
+      {guide?.contact?.birthday && (
         <span className="flex items-center gap-3">
           <Text variant="text-sm" bold>
             Date of birth
           </Text>
           <Button className="bg-white text-black hover:bg-white/80">
-            {format(user.contact?.birthday, "MMM dd, yyyy")}
+            {format(guide.contact?.birthday, "MMM dd, yyyy")}
           </Button>
         </span>
       )}
-      {user?.about?.description && (
-        <Text variant="text-sm">{user.about.description}</Text>
+      {guide?.about?.description && (
+        <Text variant="text-sm">{guide.about.description}</Text>
       )}
       <div className="grid grid-cols-[auto_14px_auto] gap-4">
         {/* <Text variant="text-sm">Service Provided</Text>
         <Text variant="text-sm">:</Text>
         <Text variant="text-sm">Lorem</Text> */}
 
-        {user?.email && (
+        {guide?.email && (
           <>
             <Text variant="text-sm">Email</Text>
             <Text variant="text-sm">:</Text>
-            <Text variant="text-sm">{user.email}</Text>
+            <Text variant="text-sm">{guide.email}</Text>
           </>
         )}
-        {user?.contact?.phone && (
+        {guide?.contact?.phone && (
           <>
             <Text variant="text-sm">Contact no.</Text>
             <Text variant="text-sm">:</Text>
-            <Text variant="text-sm">{user.contact.phone}</Text>
+            <Text variant="text-sm">{guide.contact.phone}</Text>
           </>
         )}
 
@@ -200,28 +212,31 @@ const UserDetails = ({ id }: { id: number }) => {
           <span className="flex gap-x-2">
             {Object.entries(socialMedia)
               .filter(([key, value]) => {
-                console.log(key);
                 if (value) return true;
               })
-              .map(([key, value]) => (
-                <Link href={value} key={`social-${key}`}>
-                  <DynamicReactIcon
-                    name={`Fa${key[0].toUpperCase() + key.slice(1)}`}
-                  />
-                </Link>
-              ))}
+              ?.map(
+                ([key, value]) =>
+                  value &&
+                  key && (
+                    <Link href={value} key={`social-${key}`}>
+                      <DynamicReactIcon
+                        name={`Fa${key[0].toUpperCase() + key.slice(1)}`}
+                      />
+                    </Link>
+                  ),
+              )}
           </span>
         </>
-        {user?.contact?.address && (
+        {guide?.contact?.address && (
           <>
             <Text variant="text-sm">Address</Text>
             <Text variant="text-sm">:</Text>
-            <Text variant="text-sm">{user.contact.address}</Text>
+            <Text variant="text-sm">{guide.contact.address}</Text>
           </>
         )}
       </div>
       <div className="flex flex-col gap-4 lg:gap-6 [&>button]:py-2 [&>button]:font-semibold [&>button]:lg:py-6">
-        <Link href={`/profile/${user.id}`}>
+        <Link href={`/profile/${guide.id}`}>
           <Button className="w-full rounded-xl py-2 font-semibold md:py-6">
             Full Profile
           </Button>

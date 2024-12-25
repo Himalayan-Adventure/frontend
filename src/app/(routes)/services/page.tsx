@@ -88,8 +88,8 @@ async function ServicesGuides({ searchParams }: TSearchParams) {
       </Text>
 
       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-        {data?.map((user, index) => (
-          <GuideCard user={user} key={`guide-${index}`} />
+        {data?.map((guide, index) => (
+          <GuideCard guide={guide} key={`guide-${index}`} />
         ))}
       </div>
       {data && data?.length > 20 && <ServicesPagination />}

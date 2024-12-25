@@ -196,7 +196,7 @@ const ProjectCard = ({
                 </Link>
                 <Button
                   variant="ghost"
-                  className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
+                  className="hidden h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
                   onClick={toggleOverlay}
                 >
                   Get Quote
@@ -398,7 +398,7 @@ const Overlay = forwardRef<
           </div>
         )}
 
-        <button className="mt-2 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
+        <button className="mt-2 hidden w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
           Get Quote
         </button>
       </div>

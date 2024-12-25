@@ -3,7 +3,7 @@ import { cn, formatDate } from "@/lib/utils";
 import { TDepartureData } from "@/types/packages/departure";
 import { APIResponseData } from "@/types/types";
 import Link from "next/link";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsBarChartFill } from "react-icons/bs";
@@ -12,7 +12,8 @@ import { LuStar } from "react-icons/lu";
 import { MdTimelapse } from "react-icons/md";
 import wordsToNumbers from "words-to-numbers";
 import { DepartureFact } from "../departure";
-
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { QuotesDialog } from "../quote";
 export const Overlay = forwardRef<
   HTMLDivElement,
   {
@@ -117,9 +118,12 @@ export const Overlay = forwardRef<
           </div>
         )}
 
-        <button className="mt-2 w-full rounded bg-primary py-2 font-semibold text-white hover:bg-orange-500">
-          Get Quote
-        </button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="h-10 w-full">Get Quote</Button>
+          </DialogTrigger>
+          <QuotesDialog />
+        </Dialog>
       </div>
       <div className="mt-2 space-y-2">
         <p className="mb-2 text-center text-sm">You won’t be charged yet</p>
