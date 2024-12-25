@@ -15,9 +15,9 @@ export async function PUT(
   }
 
   try {
-    console.log(data);
+    console.log(JSON.stringify({data}));
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?populate=deep`,
 
       {
         headers: {
@@ -25,16 +25,16 @@ export async function PUT(
           Authorization: `Bearer ${token}`,
         },
         method: "PUT",
-        body: JSON.stringify({ data }),
-        cache: "no-store",
-        next: {
-          tags: ["me"],
-        },
+        body: JSON.stringify( data ),
+        //cache: "no-store",
+        // next: {
+        //   tags: ["users"],
+        // },
       },
     );
     revalidateTag("me");
 
-    const value = await res.json();
+    const value = await res.json(); 
     console.log(res, req);
     if (!res.ok) {
       return Response.json(
@@ -42,7 +42,7 @@ export async function PUT(
         { status: res.status },
       );
     }
-    return Response.json(res);
+    return Response.json({message:"hello",status:res.status, statusText:res.statusText, body:res.body, value:value});
   } catch (error) {
     console.log("Error updating user data");
   }
