@@ -11,17 +11,20 @@ import {
 } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
+import { cn } from "@/lib/utils";
 import { getServiceCategories } from "@/server/services/get-services-categories";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 export function SortFilters() {
   const updateQueryString = useUpdateQueryString();
-  const { data: categories } = useQuery({
-    queryKey: ["services-categories"],
-    queryFn: async () => await getServiceCategories(),
-  });
+  // const { data: categories } = useQuery({
+  //   queryKey: ["services-categories"],
+  //   queryFn: async () => await getServiceCategories(),
+  // });
+  // const searchParams = useSearchParams();
   return (
     <div className="z-10 flex gap-x-4 rounded-lg border border-gray-200 bg-white p-2">
-      <Select
+      {/* <Select
         onValueChange={(value) => {
           if (value !== "all") {
             updateQueryString({ category: value });
@@ -30,7 +33,12 @@ export function SortFilters() {
           }
         }}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger
+          className={cn(
+            //searchParams.get("type") === "Packages" ? "flex" : "hidden",
+            "w-[180px] hidden",
+          )}
+        >
           <SelectValue placeholder="Filters" />
         </SelectTrigger>
         <SelectContent>
@@ -52,7 +60,7 @@ export function SortFilters() {
             )}
           </SelectGroup>
         </SelectContent>
-      </Select>
+      </Select> */}
       <SearchBar selector="name" />
     </div>
   );

@@ -10,7 +10,7 @@ export const getServiceCategories = async () => {
     > = await axiosInstance.get("api/service-categories");
     return {
       data: res?.data?.data,
-      status: res.status,
+      meta: res?.data?.meta,
     };
   } catch (error: AxiosError | any) {
     console.log(error);

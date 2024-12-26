@@ -7,6 +7,7 @@ interface ContactInfo {
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Text } from "@/components/ui/text";
 import { TUser, TUserDeep } from "@/types/auth";
+import { capitalize } from "@/lib/utils";
 interface ContactData {
   info: ContactInfo[];
   personalInfo: ContactInfo[];
@@ -20,15 +21,18 @@ export const ContactCard = ({ user }: { user: TUserDeep }) => {
       { label: "Email", value: user?.email },
       { label: "Birthday", value: data?.birthday },
       { label: "Address", value: data?.address },
-      { label: "Gender", value: data?.gender },
+      { label: "Gender", value: capitalize(data?.gender||'') },
       { label: "Reports to", value: data?.reports_to },
     ],
     personalInfo: [
       { label: "Citizenship No.", value: data?.citizenship },
       { label: "Phone", value: data?.phone },
-      { label: "Nationality", value: data?.nationality },
-      { label: "Religion", value: data?.religion },
-      { label: "Marital status", value: data?.religion },
+      { label: "Nationality", value: capitalize(data?.nationality || "") },
+      { label: "Religion", value: capitalize(data?.religion || "") },
+      {
+        label: "Marital status",
+        value: capitalize(data?.marital_status || ""),
+      },
     ],
   };
   return (

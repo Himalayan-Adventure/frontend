@@ -8,7 +8,7 @@ export default async function PublicProfilePage({
   params: { id: number };
 }) {
   const { id } = params;
-  const user = await getSingleUser(id);
+  const user = await getSingleUser({ id });
   return (
     <section className="container space-y-8 font-poppins">
       <Image

@@ -105,7 +105,6 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       ...form.getValues(),
       profilePicture: file,
     };
-    console.log(payload.resume.education);
     try {
       const res = await updateUser(payload, user.id);
       if (res.status === 200) {
@@ -126,7 +125,7 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
   useEffect(() => {
     //@ts-ignore
     console.log(form.getValues("resume.education"));
-  }, [form.watch('resume.education'), form.watch('resume.portfolio')]);
+  }, [form.watch("resume.education"), form.watch("resume.portfolio")]);
   const formContentMap: Record<string, React.ReactNode> = {
     about: <AboutForm control={form.control} />,
     resume: <ResumeForm control={form.control} />,

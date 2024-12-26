@@ -27,6 +27,8 @@ import { DepartureFact } from "../departure";
 import Image from "next/image";
 import { Overlay } from "./overlay";
 import { format } from "date-fns";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { QuotesDialog } from "../quote";
 
 const MainPackageCard = ({
   pkg,

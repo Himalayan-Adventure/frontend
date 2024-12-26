@@ -846,11 +846,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::appointment.appointment'
     >;
-    inquiries: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::inquiry.inquiry'
-    >;
     team: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToOne',
@@ -860,11 +855,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'oneToMany',
       'api::project.project'
-    >;
-    quote: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'api::quote.quote'
     >;
     work: Attribute.Component<'work.work', true>;
     product_order: Attribute.Relation<
@@ -881,6 +871,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'manyToMany',
       'api::service-request.service-request'
+    >;
+    blogs: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::blog.blog'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -957,6 +952,8 @@ export interface ApiAccommodationPreferenceAccommodationPreference
     >;
     name: Attribute.String & Attribute.Required;
     icon: Attribute.Media<'images'>;
+    react_icon: Attribute.String &
+      Attribute.CustomField<'plugin::react-icons.icon'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1145,6 +1142,11 @@ export interface ApiBlogBlog extends Schema.CollectionType {
       'api::blog.blog',
       'manyToMany',
       'api::blog-tag.blog-tag'
+    >;
+    user: Attribute.Relation<
+      'api::blog.blog',
+      'manyToOne',
+      'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1378,29 +1380,6 @@ export interface ApiHomePageHomePage extends Schema.SingleType {
   };
 }
 
-export interface ApiIconIcon extends Schema.CollectionType {
-  collectionName: 'icons';
-  info: {
-    singularName: 'icon';
-    pluralName: 'icons';
-    displayName: 'Icon';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String & Attribute.Required;
-    icon: Attribute.Media<'images' | 'files'> & Attribute.Required;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::icon.icon', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<'api::icon.icon', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-  };
-}
-
 export interface ApiInquiryInquiry extends Schema.CollectionType {
   collectionName: 'inquiries';
   info: {
@@ -1418,11 +1397,6 @@ export interface ApiInquiryInquiry extends Schema.CollectionType {
     email: Attribute.Email & Attribute.Required;
     subject: Attribute.String & Attribute.Required;
     message: Attribute.Text & Attribute.Required;
-    guide: Attribute.Relation<
-      'api::inquiry.inquiry',
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
     package: Attribute.Relation<
       'api::inquiry.inquiry',
       'oneToOne',
@@ -1595,6 +1569,9 @@ export interface ApiPackageCategoryPackageCategory
       'api::package.package'
     >;
     image: Attribute.Media<'images' | 'files'>;
+    is_popular: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1619,6 +1596,7 @@ export interface ApiPackageCountryPackageCountry extends Schema.CollectionType {
     singularName: 'package-country';
     pluralName: 'package-countries';
     displayName: 'Package Country';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1635,6 +1613,8 @@ export interface ApiPackageCountryPackageCountry extends Schema.CollectionType {
       'oneToMany',
       'api::package-region.package-region'
     >;
+    flag_icon: Attribute.Media<'images'>;
+    flag_map: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1804,6 +1784,11 @@ export interface ApiPackageTypePackageType extends Schema.CollectionType {
       'api::package.package'
     >;
     icon: Attribute.Media<'images'>;
+    is_popular: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+    react_icon: Attribute.String &
+      Attribute.CustomField<'plugin::react-icons.icon'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2027,11 +2012,6 @@ export interface ApiQuoteQuote extends Schema.CollectionType {
       'oneToOne',
       'api::package.package'
     >;
-    guide: Attribute.Relation<
-      'api::quote.quote',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2144,6 +2124,7 @@ export interface ApiServiceCategoryServiceCategory
       'api::service.service'
     >;
     image: Attribute.Media<'images'>;
+    icon: Attribute.String & Attribute.CustomField<'plugin::react-icons.icon'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2538,7 +2519,6 @@ declare module '@strapi/types' {
       'api::contact-us.contact-us': ApiContactUsContactUs;
       'api::coupon.coupon': ApiCouponCoupon;
       'api::home-page.home-page': ApiHomePageHomePage;
-      'api::icon.icon': ApiIconIcon;
       'api::inquiry.inquiry': ApiInquiryInquiry;
       'api::package.package': ApiPackagePackage;
       'api::package-category.package-category': ApiPackageCategoryPackageCategory;
