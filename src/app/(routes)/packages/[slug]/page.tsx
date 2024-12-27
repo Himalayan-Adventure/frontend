@@ -98,7 +98,13 @@ export default async function PackageDetail({ params }: { params: Params }) {
             <Gallery images={images} />
             <div className="space-y-8 lg:col-span-1 lg:hidden">
               <Map location={pkg.package_name} />
-              <Departure type="default" data={departureData} />
+              {data?.data?.id && (
+                <Departure
+                  type="default"
+                  data={departureData}
+                  id={data.data?.id}
+                />
+              )}
             </div>
             <div className="flex flex-wrap items-center justify-between gap-4 lg:gap-8">
               <div className="space-y-2">
@@ -177,7 +183,13 @@ export default async function PackageDetail({ params }: { params: Params }) {
           </div>
           <div className="hidden space-y-8 lg:col-span-1 lg:block">
             <Map location={pkg?.package_name} />
-            <Departure type={"default"} data={departureData} />
+            {data?.data?.id && (
+              <Departure
+                type={"default"}
+                data={departureData}
+                id={data?.data?.id}
+              />
+            )}
           </div>
         </div>
       </section>

@@ -34,7 +34,7 @@ export type DepartureProps =
   | {
       data: TDepartureData;
       type: "default";
-      id?: never;
+      id: number;
     }
   | {
       data: TDepartureData;

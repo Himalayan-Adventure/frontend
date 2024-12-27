@@ -8,8 +8,8 @@ import { getPackageTypes } from "@/server/packages/get-package-types";
 export default async function UsefulLinksSection() {
   // TODO: add is popular in package category and package types
   const packageRegion = await getPackageRegions({ isPopular: true });
-  const packageCategory = await getPackageCategories();
-  const packageTypes = await getPackageTypes();
+  const packageCategory = await getPackageCategories({ isPopular: true });
+  const packageTypes = await getPackageTypes({ isPopular: true });
   const socialLinks = [
     { href: "#", src: "/icons/facebook.png", alt: "Facebook" },
     { href: "#", src: "/icons/instagram.png", alt: "Instagram" },

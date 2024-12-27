@@ -127,10 +127,12 @@ export const ServiceCard = ({
                   alt="Cover image"
                   className="absolute -z-10 h-full w-full object-cover opacity-90"
                 />
-                {data.attributes.service_provider?.data && (
+                {data.attributes.service_provider?.data ? (
                   <MessageDialog
                     guideId={data.attributes.service_provider?.data?.id}
                   />
+                ) : (
+                  <Text variant="text-sm">No service provider available</Text>
                 )}
               </DialogContent>
             </Dialog>

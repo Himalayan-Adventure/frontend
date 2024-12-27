@@ -22,7 +22,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
+import { QuotesDialog } from "./quote";
 
 type ButtonStyleMap = {
   Standard: string;
@@ -229,9 +231,14 @@ export default function Departure({
           </Dialog>
 
           <hr className="my-4" />
-          <button className="w-full rounded-lg bg-primary py-2 font-semibold text-white hover:bg-orange-500">
-            Get Quote
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="w-full rounded-lg bg-primary py-2 font-semibold text-white hover:bg-orange-500">
+                Get Quote
+              </button>
+            </DialogTrigger>
+            <QuotesDialog packageId={id} />
+          </Dialog>
         </div>
         <div className="mt-4 space-y-2">
           <p className="mb-4 text-center text-sm">You won’t be charged yet</p>

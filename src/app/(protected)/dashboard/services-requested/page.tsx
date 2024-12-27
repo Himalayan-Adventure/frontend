@@ -45,7 +45,7 @@ export default async function ServicesRequestedPage({
       <span className="flex w-full gap-x-2">
         {user?.userType === "customer" && (
           <Link
-            href="/dashboard/services/services-requested"
+            href="/dashboard/services-requested"
             prefetch={true}
             className="w-fit"
           >
