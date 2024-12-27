@@ -52,16 +52,6 @@ export default async function ServicesRequestedPage({
             <div className="btn-primary w-fit font-semibold">Request</div>
           </Link>
         )}
-
-        {/* {user?.userType === "customer" && (
-          <Link
-            href="/dashboard/services/services-requested"
-            prefetch={true}
-            className="w-fit"
-          >
-            <div className="btn-primary w-fit font-semibold">Response</div>
-          </Link>
-        )} */}
       </span>
       <div className="relative flex flex-col gap-5 md:flex-row">
         <DataTable
