@@ -9,7 +9,7 @@ export async function getPackageTypes({ isPopular }: { isPopular?: boolean }) {
       searchParams.append("filters[is_popular]", "true");
     }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types?${searchParams.toString()}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types?populate[packages][limit]=6&${searchParams.toString()}`,
     );
     if (!res.ok) {
       throw new Error("Error fetching package types");

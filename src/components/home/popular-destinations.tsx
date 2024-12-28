@@ -92,7 +92,7 @@ export default function PopularDestinations() {
                   <Link
                     href={`/packages?key=region&filter=${destination.id}`}
                     key={index}
-                    className="destination-card relative grid grid-rows-[60%_auto] rounded-3xl border border-gray-200 bg-white"
+                    className="destination-card relative grid grid-rows-[60%_auto] gap-y-2 rounded-3xl border border-gray-200 bg-white"
                   >
                     <div className="absolute top-12 -z-10 w-full">
                       <div className="h-16 w-full bg-gray-700 blur-lg lg:h-36"></div>

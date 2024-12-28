@@ -14,7 +14,7 @@ export async function getPackageCategories({
       searchParams.append("filters[is_popular]", "true");
     }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?${searchParams.toString()}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[packages][limit]=6&${searchParams.toString()}`,
     );
     if (!res.ok) {
       throw new Error("Error fetching package categories");
