@@ -111,7 +111,13 @@ export default async function ProjectDetail({
             <Gallery images={images} />
             <div className="space-y-8 lg:col-span-1 lg:hidden">
               <Map location={pkg.package_name} />
-              <Departure type="default" data={departureData} />
+              {data.data?.attributes.package?.data.id && (
+                <Departure
+                  id={data.data?.attributes.package?.data.id}
+                  type="default"
+                  data={departureData}
+                />
+              )}
             </div>
             <div className="flex flex-wrap items-center justify-between gap-4 lg:gap-8">
               <div className="space-y-2">
@@ -205,7 +211,13 @@ export default async function ProjectDetail({
           </div>
           <div className="hidden space-y-8 lg:col-span-1 lg:block">
             <Map location={pkg?.package_name} />
-            <Departure type={"default"} data={departureData} />
+            {data.data?.attributes.package?.data.id && (
+              <Departure
+                id={data.data?.attributes.package?.data.id}
+                type="default"
+                data={departureData}
+              />
+            )}
           </div>
         </div>
       </section>
