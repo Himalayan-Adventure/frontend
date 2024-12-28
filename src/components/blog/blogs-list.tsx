@@ -46,7 +46,9 @@ export default function BlogsList({
             <BlogCard variant="default" blog={blog} key={index} />
           ))
         ) : (
-          <p>No blogs found.</p>
+          <p className="relative z-50 col-span-full text-center text-xl">
+            No blogs found.
+          </p>
         )}
       </div>
     </section>

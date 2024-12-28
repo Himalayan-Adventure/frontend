@@ -36,7 +36,11 @@ export default function BlogFilterBar({
               <ul>
                 <li
                   className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
-                  onClick={() => setSelectedCategory("Categories")}
+                  onClick={() => {
+                    setSelectedCategory("Categories");
+
+                    updateQueryString({}, ["categoryID"]);
+                  }}
                 >
                   Categories
                 </li>
