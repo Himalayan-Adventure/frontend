@@ -8,7 +8,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage as RawFormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -20,17 +19,6 @@ import {
   SelectValue,
 } from "./select-outline";
 
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
@@ -40,31 +28,22 @@ import {
   BookAppointmentFormSchema,
   TBookAppointmentSchemaProvider,
 } from "@/validators/book-appointment-validator";
-import { useForm, UseFormGetValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { makeAppointment } from "@/server/appointments/post-appointment";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { APIResponseCollection } from "@/types/types";
-import { endOfDay, format, isSameDay, startOfDay, subDays } from "date-fns";
+import { format, subDays } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { capitalize, cn, getDateBounds } from "@/lib/utils";
-import { PhoneInput } from "@/components/ui/phone-input";
 import { Calendar } from "../ui/calendar";
-import {
-  CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
-  TriangleAlert,
-} from "lucide-react";
+import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { TUser } from "@/types/auth";
 import axios from "axios";
-import { getUsers } from "@/server/users/get-users";
-import { axiosInstance } from "@/lib/server-axios-instance";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { getCurrentUserData } from "@/server/auth/get-me";
 import { useCurrentUser } from "@/hooks/user-current-user";
 const CloudImage = ({ src, alt, position }: any) => (
   <div className={`absolute ${position} w-full brightness-100`}>
@@ -112,7 +91,7 @@ export default function BookAppointment() {
             </div>
           </div>
         ) : (
-          <AppointmentForm />
+          user && <AppointmentForm user={user} />
         )}
 
         <CloudImage
@@ -129,7 +108,7 @@ export default function BookAppointment() {
     </LazyMotion>
   );
 }
-const AppointmentForm = () => {
+const AppointmentForm = ({ user }: { user: TUser }) => {
   const [step, setStep] = useState(1);
 
   const [activeTime, setActiveTime] = useState(0);
@@ -166,6 +145,7 @@ const AppointmentForm = () => {
         console.log(error);
       }
     },
+    select: (data) => data.filter((i) => i.id !== user.id),
   });
 
   const {

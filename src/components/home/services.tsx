@@ -101,7 +101,7 @@ const ServiceCard = ({
   return (
     <div className="space-y-4 lg:space-y-8">
       <div className="group relative">
-        {image && (
+        {image ? (
           <Image
             src={image.url}
             alt={image.name}
@@ -109,6 +109,8 @@ const ServiceCard = ({
             height={image.height}
             width={image.width}
           />
+        ) : (
+          <div className="h-full max-h-96 w-full rounded-2xl bg-gray-200 lg:h-80" />
         )}
         {/* Overlay */}
         <div className="absolute inset-0 flex items-end rounded-2xl bg-black bg-opacity-40">
@@ -120,10 +122,16 @@ const ServiceCard = ({
       <div className="text-center">
         <Button
           className="w-auto rounded-full border border-black bg-transparent px-12 text-sm text-black"
+          isLoading={isPending}
           onClick={() => {
             if (!user) {
               toast.error("Please login to book a service");
-            }else{
+            } else if (service_provider?.id === user.id) {
+              toast.error(
+                "You can't request your own service , " +
+                  service_provider?.attributes.username,
+              );
+            } else {
               requestSerivceMutation();
             }
           }}

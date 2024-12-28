@@ -132,6 +132,7 @@ const GuideCardOverlay = ({
 const GuideDetails = ({ id }: { id: number }) => {
   const { data: loggedInUser, isLoading } = useCurrentUser();
   const { type, setType, setDialogOpen } = useGuideDialog();
+  console.log(loggedInUser, id);
   const {
     data: guide,
     isPending,
@@ -195,7 +196,9 @@ const GuideDetails = ({ id }: { id: number }) => {
           <>
             <Text variant="text-sm">Email</Text>
             <Text variant="text-sm">:</Text>
-            <Text variant="text-sm">{guide.email}</Text>
+            <Text variant="text-sm">
+              {guide.email} {loggedInUser?.id === id && "(You)"}
+            </Text>
           </>
         )}
         {guide?.contact?.phone && (
@@ -245,7 +248,13 @@ const GuideDetails = ({ id }: { id: number }) => {
           className="w-full rounded-xl"
           onClick={() => {
             if (loggedInUser) {
-              setType("message");
+              if (loggedInUser.id === id) {
+                toast.error(
+                  "You can't message yourself, " + loggedInUser.username,
+                );
+              } else {
+                setType("message");
+              }
             } else {
               toast.error("Please login to message");
             }
@@ -257,7 +266,13 @@ const GuideDetails = ({ id }: { id: number }) => {
           className="w-full rounded-xl bg-gray-200 text-black"
           onClick={() => {
             if (loggedInUser) {
-              setType("appointments");
+              if (loggedInUser.id === id) {
+                toast.error(
+                  "You can't appoint yourself, " + loggedInUser.username,
+                );
+              } else {
+                setType("appointments");
+              }
             } else {
               toast.error("Please login to book an appointment");
             }
