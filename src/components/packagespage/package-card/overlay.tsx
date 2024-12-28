@@ -122,7 +122,7 @@ export const Overlay = forwardRef<
           <DialogTrigger asChild>
             <Button className="h-10 w-full">Get Quote</Button>
           </DialogTrigger>
-          <QuotesDialog />
+          <QuotesDialog packageId={pkg?.id} />
         </Dialog>
       </div>
       <div className="mt-2 space-y-2">

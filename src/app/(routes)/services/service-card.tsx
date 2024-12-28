@@ -49,6 +49,8 @@ export const ServiceCard = ({
     },
     retry: 1,
   });
+  // guide is the logged in user, to disable them from booking their own service
+  const guideIsCustomer = userId === service_provider?.id;
   return (
     <div className="relative z-10 grid max-w-[300px] grid-rows-[auto_auto] rounded-lg bg-white px-2 pt-2 shadow-2xl md:px-3 md:pt-3">
       <div className="relative h-full">
@@ -97,8 +99,19 @@ export const ServiceCard = ({
           <Button
             className="w-auto rounded-xl bg-black px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2"
             onClick={() => {
-              if (userId) {
-                requestSerivceMutation();
+              if (!service_provider) {
+                toast.error(
+                  "No service provider available. Please try again some other time!",
+                );
+              } else if (userId) {
+                if (guideIsCustomer) {
+                  toast.error(
+                    "You can't request your own service , " +
+                      service_provider?.attributes.username,
+                  );
+                } else {
+                  requestSerivceMutation();
+                }
               } else {
                 toast.error("Please login to request service");
               }
@@ -107,7 +120,27 @@ export const ServiceCard = ({
           >
             Request Service
           </Button>
-          {userId ? (
+          {!userId || guideIsCustomer || !service_provider ? (
+            <Button
+              className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2"
+              onClick={() => {
+                if (!userId) {
+                  toast.error("Please login to make inquiry");
+                } else if (guideIsCustomer) {
+                  toast.error(
+                    "You can't request your own service , " +
+                      service_provider?.attributes.username,
+                  );
+                } else if (!service_provider) {
+                  toast.error(
+                    "No service provider available. Please try again some other time!",
+                  );
+                }
+              }}
+            >
+              Make Inquiry
+            </Button>
+          ) : (
             <Dialog>
               <DialogTrigger
                 //disabled={!data?.attributes?.service_provider?.data || !userId}
@@ -127,20 +160,15 @@ export const ServiceCard = ({
                   alt="Cover image"
                   className="absolute -z-10 h-full w-full object-cover opacity-90"
                 />
-                {data.attributes.service_provider?.data && (
+                {data.attributes.service_provider?.data ? (
                   <MessageDialog
                     guideId={data.attributes.service_provider?.data?.id}
                   />
+                ) : (
+                  <Text variant="text-sm">No service provider available</Text>
                 )}
               </DialogContent>
             </Dialog>
-          ) : (
-            <Button
-              className="w-auto rounded-xl px-6 py-1 text-xs text-white md:text-base lg:px-12 lg:py-2"
-              onClick={() => toast.error("Please login to make inquiry")}
-            >
-              Make Inquiry
-            </Button>
           )}
         </div>
       </div>

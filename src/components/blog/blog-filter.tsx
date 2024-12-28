@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { MdCategory } from "react-icons/md";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
 
 interface BlogFilterBarProps {
   categories: { id: number; attributes: { name: string } }[];
@@ -18,6 +19,7 @@ export default function BlogFilterBar({
   searchQuery,
   setSearchQuery,
 }: BlogFilterBarProps) {
+  const updateQueryString = useUpdateQueryString();
   return (
     <section className="relative py-8 lg:mt-32 lg:py-16">
       <div className="flex w-full items-center justify-center">
@@ -34,7 +36,11 @@ export default function BlogFilterBar({
               <ul>
                 <li
                   className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
-                  onClick={() => setSelectedCategory("Categories")}
+                  onClick={() => {
+                    setSelectedCategory("Categories");
+
+                    updateQueryString({}, ["categoryID"]);
+                  }}
                 >
                   Categories
                 </li>
@@ -42,9 +48,13 @@ export default function BlogFilterBar({
                   <li
                     key={category.id}
                     className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
-                    onClick={() =>
-                      setSelectedCategory(category.attributes.name)
-                    }
+                    onClick={() => {
+                      updateQueryString({
+                        ["categoryID"]: category.id.toString(),
+                      });
+
+                      setSelectedCategory(category.attributes.name);
+                    }}
                   >
                     {category.attributes.name}
                   </li>

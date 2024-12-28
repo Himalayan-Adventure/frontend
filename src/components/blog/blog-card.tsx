@@ -12,6 +12,7 @@ import { APIResponseData } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { deleteBlog } from "@/server/blogs/delete-blog";
 import { toast } from "sonner";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
 
 export default function BlogCard({
   blog,
@@ -22,7 +23,10 @@ export default function BlogCard({
 }) {
   const slug = blog?.id;
   const image = blog?.attributes?.thumbnail?.data?.attributes;
-  const tags = blog?.attributes?.blog_categories?.data?.[0]?.attributes?.name;
+  const avatar =
+    blog?.attributes?.author_image?.data?.attributes ||
+    blog?.attributes?.user?.data?.attributes?.profilePicture?.data?.attributes;
+  const tags = blog?.attributes?.blog_categories?.data;
   const { mutate: deleteAction, isPending } = useMutation({
     mutationKey: ["blogs", blog.id],
     mutationFn: async () => await deleteBlog(blog.id),
@@ -30,6 +34,7 @@ export default function BlogCard({
       toast.success("Blog successfully deleted");
     },
   });
+  const updateQueryString = useUpdateQueryString();
 
   return (
     <article className="group relative flex w-full flex-col items-start justify-center gap-y-4 rounded-xl border bg-white p-4 pb-2">
@@ -68,11 +73,19 @@ export default function BlogCard({
       </Link>
 
       <div className="flex flex-col items-start gap-2 self-stretch">
-        {tags && (
+        {tags && tags.length > 0 && (
           <div className="items-center gap-4 self-start">
-            <Badge className="flex rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0">
-              {tags}
-            </Badge>
+            {tags.map((tag) => (
+              <Badge
+                key={`tag-${tag.id}-${blog.id}`}
+                onClick={() => {
+                  updateQueryString({ categoryID: tag.id.toString() });
+                }}
+                className="flex cursor-pointer rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0 transition ease-in-out hover:bg-blue-700 hover:text-white hover:underline"
+              >
+                {tag.attributes.name}
+              </Badge>
+            ))}
             <Text variant="text-sm" className="text-gray-500"></Text>
           </div>
         )}
@@ -94,13 +107,9 @@ export default function BlogCard({
 
         <div className="mt-4 flex items-center gap-2 self-stretch">
           {/*@ts-ignore*/}
-          {blog?.attributes?.author_image?.data && (
-            <Avatar>
-              <AvatarImage
-                //@ts-ignore
-                src={blog?.attributes.author_image?.data?.attributes?.url}
-                className="saturate-0"
-              />
+          {avatar && (
+            <Avatar className="size-6">
+              <AvatarImage src={avatar.url} className="saturate-0" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           )}

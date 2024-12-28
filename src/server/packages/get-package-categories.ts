@@ -1,12 +1,20 @@
 import { APIResponseCollection } from "@/types/types";
 
-export async function getPackageCategories() {
+export async function getPackageCategories({
+  isPopular,
+}: {
+  isPopular?: boolean;
+}) {
   try {
     const searchParams = new URLSearchParams();
     //searchParams.append("populate", "*");
-    searchParams.append("populate[packages][fields][0]","package_name")
+    searchParams.append("populate[packages][fields][0]", "package_name");
+
+    if (isPopular) {
+      searchParams.append("filters[is_popular]", "true");
+    }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?${searchParams.toString()}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[packages][limit]=6&${searchParams.toString()}`,
     );
     if (!res.ok) {
       throw new Error("Error fetching package categories");

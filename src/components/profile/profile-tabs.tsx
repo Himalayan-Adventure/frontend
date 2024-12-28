@@ -22,6 +22,8 @@ import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import { WorkCards } from "@/components/profile/work-cards";
 import { ProfileCard } from "@/components/profile/profile-card";
 import { TUserDeep } from "@/types/auth";
+import useUpdateQueryString from "@/hooks/use-update-query-string";
+import { useSearchParams } from "next/navigation";
 
 export function ProfileTabs({ user }: { user: TUserDeep }) {
   const [hideTabs, setHideTabs] = useState(false);
@@ -58,10 +60,16 @@ export function ProfileTabs({ user }: { user: TUserDeep }) {
     containerRef?.current?.addEventListener("scroll", scrollFn);
     return () => containerRef?.current?.removeEventListener("scroll", scrollFn);
   }, []);
+  const searchParams = useSearchParams();
+  const updateQueryString = useUpdateQueryString();
   return (
     <Tabs
-      defaultValue="about"
+      defaultValue={searchParams?.get("tab") || "about"}
       className="relative z-10 flex flex-col items-stretch gap-x-10 gap-y-10 xl:flex-row"
+      onValueChange={(value) => {
+        console.log(value);
+        updateQueryString({ tab: value });
+      }}
     >
       <TabsList className="flex h-fit w-full flex-col items-stretch gap-x-10 gap-y-10 bg-transparent md:w-fit md:flex-row">
         <div className="relative w-full">

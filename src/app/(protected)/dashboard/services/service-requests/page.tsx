@@ -46,7 +46,7 @@ export default async function ServicesRequestsPage({
             </div>
           </Link>
         )}
-        <Link href="/dashboard/services/" prefetch={true}>
+        <Link href="/dashboard/services/inquiry" prefetch={true}>
           <div className="btn-primary font-semibold">
             <TbMessageCircleSearch size={16} />
             Inquiry

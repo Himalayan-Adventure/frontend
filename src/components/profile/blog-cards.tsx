@@ -13,7 +13,7 @@ import { useSearchParams } from "next/navigation";
 export const BlogCards = () => {
   //const [limit, setLimit] = useState(10);
   const searchParams = useSearchParams();
-  const limit = Number(searchParams.get("limit")) || 2;
+  const limit = Number(searchParams.get("limit")) || 5;
   const {
     data: blogs,
     isPending,

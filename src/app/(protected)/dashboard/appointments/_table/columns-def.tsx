@@ -57,7 +57,18 @@ export const columns: ColumnDef<
     header: "client",
     accessorKey: "attributes.name",
     cell({ row }) {
-      return <Text variant="text-sm">{row?.original?.attributes?.name}</Text>;
+      const user = row.original;
+      return (
+        user && (
+          <Link
+            href={`/profile/${user.id}`}
+            className="hover:underline"
+            target="_blank"
+          >
+            <Text variant="text-sm">{row?.original?.attributes?.name}</Text>
+          </Link>
+        )
+      );
     },
   },
 

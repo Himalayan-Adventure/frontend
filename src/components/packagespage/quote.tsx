@@ -26,7 +26,7 @@ import { DialogContent } from "../ui/dialog";
 
 import EverestImg from "/public/images/everest.png";
 import Image from "next/image";
-export const QuotesDialog = () => {
+export const QuotesDialog = ({ packageId }: { packageId?: number }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const form = useForm<TQuoteForm>({
@@ -37,6 +37,7 @@ export const QuotesDialog = () => {
       phone: "",
       subject: "",
       message: "",
+      package: packageId,
       //      guide: guideId,
     },
   });

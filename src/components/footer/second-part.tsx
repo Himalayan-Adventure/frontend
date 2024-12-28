@@ -8,8 +8,8 @@ import { getPackageTypes } from "@/server/packages/get-package-types";
 export default async function UsefulLinksSection() {
   // TODO: add is popular in package category and package types
   const packageRegion = await getPackageRegions({ isPopular: true });
-  const packageCategory = await getPackageCategories();
-  const packageTypes = await getPackageTypes();
+  const packageCategory = await getPackageCategories({ isPopular: true });
+  const packageTypes = await getPackageTypes({ isPopular: true });
   const socialLinks = [
     { href: "#", src: "/icons/facebook.png", alt: "Facebook" },
     { href: "#", src: "/icons/instagram.png", alt: "Instagram" },
@@ -26,54 +26,6 @@ export default async function UsefulLinksSection() {
         href: `/packages?key=region&filter=${i.id}`,
       })),
     },
-
-    // {
-    //   title: "Expeditions",
-    //   links: [
-    //     { name: "8000m", href: "#" },
-    //     { name: "7000m", href: "#" },
-    //     { name: "Peak climbing", href: "#" },
-    //   ],
-    // },
-    // {
-    //   title: "Other Activities",
-    //   links: [
-    //     { name: "Helicopter tour", href: "#" },
-    //     { name: "Mountain bike", href: "#" },
-    //     { name: "Tours", href: "#" },
-    //   ],
-    // },
-    // {
-    //   title: "Peak Climbing",
-    //   links: [
-    //     { name: "Helicopter tour", href: "#" },
-    //     { name: "Mountain bike", href: "#" },
-    //     { name: "Tours", href: "#" },
-    //   ],
-    // },
-    // {
-    //   title: "14 X 8000M",
-    //   links: [
-    //     { name: "Everest (8,848.86 m)", href: "#" },
-    //     { name: "K2 (8,611 m)", href: "#" },
-    //     { name: "Kanchenjunga (8,586 m)", href: "#" },
-    //     { name: "Lhotse (8,516 m)", href: "#" },
-    //     { name: "Makalu (8,485 m)", href: "#" },
-    //     { name: "Cho Oyu (8,188 m)", href: "#" },
-    //     { name: "Dhaulagiri (8,167 m)", href: "#" },
-    //   ],
-    // },
-    // {
-    //   title: "Manaslu",
-    //   links: [
-    //     { name: "Nanga Parbat (8,126 m)", href: "#" },
-    //     { name: "Annapurna I (8,091 m)", href: "#" },
-    //     { name: "Gasherbrum I (8,080 m)", href: "#" },
-    //     { name: "Broad Peak (8,051 m)", href: "#" },
-    //     { name: "Gasherbrum II (8,035 m)", href: "#" },
-    //     { name: "Shishapangma (8,027 m)", href: "#" },
-    //   ],
-    // },
   ];
   const transformedCategories =
     packageCategory?.data && packageCategory.data.length > 0

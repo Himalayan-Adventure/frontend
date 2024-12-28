@@ -43,7 +43,11 @@ export const columns: ColumnDef<
         <span className="flex flex-col gap-y-1">
           {users && users.length
             ? users.map((user) => (
-                <Link key={`user-${user.id}`} href={`/profile/${user.id}`}>
+                <Link
+                  key={`user-${user.id}`}
+                  href={`/profile/${user.id}`}
+                  className="hover:underline"
+                >
                   <Text variant="text-sm">{user.attributes.username}</Text>
                 </Link>
               ))

@@ -13,6 +13,8 @@ import { APIResponseCollection } from "@/types/types";
 
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
+import { Button } from "@/components/ui/button";
+import { LoadMorePagination } from "@/components/services/pagination";
 export const metadata: Metadata = {
   title: `Work Dashboard | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,
@@ -29,8 +31,9 @@ export default async function WorkPage({
     toast.error("Please sign in ");
     redirect("/home");
   }
-  const works = await getWorksOfUser({ id: user.id });
+  const works = await getWorksOfUser({ id: user.id, ...searchParams });
 
+  console.log(works?.meta.pagination);
   return (
     <section className="space-y-8 font-poppins @container">
       {/*Header*/}
@@ -73,7 +76,15 @@ export default async function WorkPage({
                     ))
                 )}
               </div>
-              {works?.data && works?.data.length >= 1 && <WorkPagination />}
+              {works?.meta && (
+                <LoadMorePagination
+                  defaultLimit={5}
+                  disabled={
+                    works.meta.pagination.total <=
+                    works?.meta.pagination.pageSize
+                  }
+                />
+              )}
             </div>
           </div>
         </div>

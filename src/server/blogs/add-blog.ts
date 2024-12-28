@@ -34,6 +34,7 @@ export const addBlog = async (blog: TBlogForm) => {
       description: blog.description,
       blog_categories: blog.blog_categories,
       slug: blog.slug,
+      user: blog.user,
     };
 
     const res = await axios({

@@ -5,14 +5,20 @@ import { GoBackButton } from "@/components/profile/go-back-button";
 
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
+import { getCurrentUserData } from "@/server/auth/get-me";
+import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: `Write Blog Dashboard | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,
 };
-const BlogFormPage = () => {
+const BlogFormPage = async () => {
+  const user = await getCurrentUserData();
+  if (!user) {
+    redirect("/home");
+  }
   return (
     <section>
-      <BlogAddOrEditForm type={"add"} />
+      <BlogAddOrEditForm type={"add"} authorID={user?.id} />
     </section>
   );
 };
