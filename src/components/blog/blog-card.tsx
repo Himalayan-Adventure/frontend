@@ -22,6 +22,9 @@ export default function BlogCard({
 }) {
   const slug = blog?.id;
   const image = blog?.attributes?.thumbnail?.data?.attributes;
+  const avatar =
+    blog?.attributes?.author_image?.data?.attributes ||
+    blog?.attributes?.user?.data?.attributes?.profilePicture?.data?.attributes;
   const tags = blog?.attributes?.blog_categories?.data?.[0]?.attributes?.name;
   const { mutate: deleteAction, isPending } = useMutation({
     mutationKey: ["blogs", blog.id],
@@ -94,13 +97,9 @@ export default function BlogCard({
 
         <div className="mt-4 flex items-center gap-2 self-stretch">
           {/*@ts-ignore*/}
-          {blog?.attributes?.author_image?.data && (
-            <Avatar>
-              <AvatarImage
-                //@ts-ignore
-                src={blog?.attributes.author_image?.data?.attributes?.url}
-                className="saturate-0"
-              />
+          {avatar && (
+            <Avatar className="size-6">
+              <AvatarImage src={avatar.url} className="saturate-0" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           )}

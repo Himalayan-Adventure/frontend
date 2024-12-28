@@ -5,6 +5,7 @@ export const BlogFormSchema = z.object({
   blog_categories: z.string().optional(),
   description: z.string(),
   slug: z.string(),
+  user: z.coerce.number(),
 });
 
 export type TBlogForm = z.infer<typeof BlogFormSchema>;

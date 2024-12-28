@@ -33,8 +33,8 @@ export const CategoriesFilter = () => {
   return (
     <div className="flex items-center gap-x-4">
       <Select
-        onValueChange={(value) => updateQueryString({ tag: value })}
-        defaultValue={searchParams?.get("tag") || ""}
+        onValueChange={(value) => updateQueryString({ categoryID: value })}
+        defaultValue={searchParams?.get("categoryID") || ""}
       >
         <SelectTrigger className="relative h-full w-fit gap-x-2 rounded-full border border-none border-gray-200 bg-white outline-none">
           <Shapes size={18} />

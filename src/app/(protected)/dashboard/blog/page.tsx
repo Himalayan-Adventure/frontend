@@ -10,6 +10,7 @@ import { PlusIcon } from "lucide-react";
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
 import TablePagination from "@/components/table/table-pagination";
+import { getCurrentUserData } from "@/server/auth/get-me";
 
 export const metadata: Metadata = {
   title: `Blog Dashboard | ${siteConfig.siteName}`,
@@ -22,8 +23,9 @@ export default async function BlogPage({
   searchParams: { code?: string; tag?: string; page?: number };
 }) {
   const { code, tag, page } = searchParams;
+  const user = await getCurrentUserData();
 
-  const data = await getBlogs({ page });
+  const data = await getBlogs({ ...searchParams, authorID: user?.id });
   const blogs = data.data;
   return (
     <section className="space-y-8 font-poppins">

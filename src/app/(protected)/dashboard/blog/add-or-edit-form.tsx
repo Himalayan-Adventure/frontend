@@ -38,9 +38,19 @@ import { APIResponse } from "@/types/types";
 import { urlToFile } from "@/lib/utils";
 import { AxiosError } from "axios";
 type BlogAddOrEditProps =
-  | { type: "add"; data?: never; id?: never }
-  | { type: "edit"; data: APIResponse<"api::blog.blog">; id: number };
-export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
+  | { type: "add"; authorID: number; data?: never; id?: never }
+  | {
+      type: "edit";
+      data: APIResponse<"api::blog.blog">;
+      id: number;
+      authorID?: never;
+    };
+export const BlogAddOrEditForm = ({
+  type,
+  authorID,
+  data,
+  id,
+}: BlogAddOrEditProps) => {
   const [file, setFile] = useState<File>();
   const image = data?.data?.attributes.thumbnail?.data?.attributes;
 
@@ -67,6 +77,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
     categories:
       data?.data?.attributes?.blog_categories?.data?.[0]?.id.toString(),
     slug: data?.data?.attributes?.slug,
+    user: data?.data?.attributes?.user,
   };
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -78,6 +89,7 @@ export const BlogAddOrEditForm = ({ type, data, id }: BlogAddOrEditProps) => {
       description: blog?.description || "",
       image: blog?.image,
       slug: blog?.slug,
+      user: blog.user?.data.id || authorID,
     },
   });
 
