@@ -23,29 +23,36 @@ export const CategoriesFilter = () => {
     queryKey: ["blog-categories"],
     queryFn: async () => await getBlogCategories(),
   });
-  if (!data || isError) {
-    return <></>;
-  }
-  if (isFetching) {
-    return <Skeleton className="h-10 w-16" />;
-  }
 
   return (
     <div className="flex items-center gap-x-4">
       <Select
-        onValueChange={(value) => updateQueryString({ categoryID: value })}
+        onValueChange={(value) => {
+          if (value !== "all") {
+            updateQueryString({ categoryID: value });
+          } else {
+            updateQueryString({}, ["categoryID"]);
+          }
+        }}
         defaultValue={searchParams?.get("categoryID") || ""}
       >
         <SelectTrigger className="relative h-full w-fit gap-x-2 rounded-full border border-none border-gray-200 bg-white outline-none">
           <Shapes size={18} />
-          Categories
+          {data?.data?.find(
+            (i) => i.id === Number(searchParams.get("categoryID")),
+          )?.attributes.name || "Categories"}
         </SelectTrigger>
         <SelectContent>
-          {data.data.map((i) => (
-            <SelectItem key={`categories-${i.id}`} value={i.id.toString()}>
-              {i.attributes.name}
-            </SelectItem>
-          ))}
+          <SelectItem value="all">All</SelectItem>
+          {isFetching ? (
+            <Skeleton className="h-10 w-16" />
+          ) : (
+            data?.data.map((i) => (
+              <SelectItem key={`categories-${i.id}`} value={i.id.toString()}>
+                {i.attributes.name}
+              </SelectItem>
+            ))
+          )}
         </SelectContent>
       </Select>
       <Input
