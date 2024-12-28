@@ -44,7 +44,7 @@ export const getServiceRequests = async ({
       },
     );
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/service-requests?populate[services][populate][0]=service_provider&populate[users_permissions_users][populate][1]=name&${query}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/service-requests?populate[services][populate][0]=service_provider&populate[users_permissions_users][populate][1]=name&populate[users_permissions_users][populate][2]=contact&${query}`,
       {
         next: {
           tags: ["services-requests"],
