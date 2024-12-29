@@ -120,7 +120,7 @@ export default function YourDetailsForm() {
         required
       />
       <div className="flex flex-wrap justify-center gap-4">
-        <OptimizedPackagesModal packages={[]} />
+        <OptimizedPackagesModal />
         <button
           onClick={() => handleSubmit()}
           disabled={loading}
