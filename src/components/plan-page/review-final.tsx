@@ -11,7 +11,7 @@ import Details from "./details";
 const options = [
   {
     icon: <FaRedo />,
-    
+
     name: "Make Adjustments",
     content: <MakeAdjustments />,
   },
@@ -75,7 +75,7 @@ export default function ReviewFinal() {
         </div>
 
         {/* Content */}
-        <div className="flex  justify-center lg:col-span-4">
+        <div className="flex justify-center lg:col-span-4">
           {selectedContent && (
             <div className="w-full">
               {typeof selectedContent === "string" ? (

@@ -57,16 +57,13 @@ export default function Details({ setSelectedOption }: DetailsProps) {
     const fetchDestination = async () => {
       try {
         // Log the value of selectedDestinationId to confirm it's being set
-        console.log("Selected Destination ID:", selectedDestinationId);
 
         if (selectedDestinationId) {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-countries`,
           );
-          console.log("API Response:", response.data);
 
           const allDestinations = response?.data?.data || [];
-          console.log("All Destinations:", allDestinations);
 
           const selectedDestination = allDestinations.find(
             (dest: any) => dest?.id === selectedDestinationId,

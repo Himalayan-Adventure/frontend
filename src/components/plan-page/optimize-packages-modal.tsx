@@ -27,17 +27,37 @@ export default function OptimizedPackagesModal() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [packages, setPackages] = useState<any>([]);
-  const { selectedPackageIds, setSelectedPackageIds, selectedDestinationId } =
-    usePlanContext();
+  const {
+    selectedPackageIds,
+    setSelectedPackageIds,
+    selectedDestinationId,
+    selectedPackageType,
+  } = usePlanContext();
+
+  console.log("type is", selectedPackageType);
 
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        let url = `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate=deep`;
+        let url = `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=season&populate[package_host][populate][3]=package_host&populate[adventure_specification][populate][2]=grade`;
+
+        const filters: string[] = [];
 
         if (selectedDestinationId) {
-          // If selectedDestinationId is available, filter by it
-          url = `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?filters[package_country][id][$eq]=${selectedDestinationId}&populate=deep`;
+          filters.push(
+            `filters[package_country][id][$eq]=${selectedDestinationId}`,
+          );
+        }
+
+        if (selectedPackageType && selectedPackageType.length > 0) {
+          const packageTypeFilters = selectedPackageType.map(
+            (type) => `filters[package_type][$eq]=${type}`,
+          );
+          filters.push(`(${packageTypeFilters.join("&")})`);
+        }
+
+        if (filters.length) {
+          url += `?${filters.join("&")}`;
         }
 
         const response = await axios.get(url);
@@ -53,7 +73,7 @@ export default function OptimizedPackagesModal() {
     };
 
     fetchPackages();
-  }, [selectedDestinationId]);
+  }, [selectedDestinationId, selectedPackageType]);
 
   const handleSelectPackage = (pkg: any) => {
     setSelectedPackageIds((prevSelectedIds) =>
@@ -90,7 +110,7 @@ export default function OptimizedPackagesModal() {
         </button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[800px] max-h-[60vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Optimized Packages</DialogTitle>
           <DialogDescription>
