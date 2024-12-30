@@ -26,6 +26,7 @@ import {
 type TSeason = "spring" | "summer" | "autumn" | "winter" | "all";
 export default function HomeCarousel() {
   const [favorites, setFavorites] = useState<number[]>([]);
+  //TODO: make this query efficient
 
   const seasons = [
     { name: "spring", imageSrc: "/images/spring.png" },
@@ -40,6 +41,9 @@ export default function HomeCarousel() {
     { name: "autumn", icon: <AutumnIcon /> },
     { name: "winter", icon: <WinterIcon /> },
   ];
+  useEffect(() => {
+    console.log(activeSeason);
+  });
   const [activeSeason, setActiveSeason] = useState<TSeason>("all");
   const { data, isFetching, status, error } = useQuery<
     APIResponseCollection<"api::package.package">
@@ -48,7 +52,7 @@ export default function HomeCarousel() {
     queryFn: async () => {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate=*`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate=deep`,
         );
         return data.data;
       } catch (error) {
@@ -106,7 +110,7 @@ export default function HomeCarousel() {
       {status === "pending" ? (
         <PackageCardSkeleton />
       ) : status === "error" ? (
-        <Text variant="text-lg" className="text-center">
+        <Text variant="text-lg" className="text-center text-shadow-sm">
           No packages found
         </Text>
       ) : (
