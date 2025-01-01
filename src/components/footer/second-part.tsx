@@ -17,6 +17,22 @@ export default async function UsefulLinksSection() {
     { href: "#", src: "/icons/whatsApp.png", alt: "WhatsApp" },
     { href: "#", src: "/icons/youtube.png", alt: "YouTube" },
   ];
+  const eightThousanders = [
+    "Everest (8,848.86 m)",
+    "K2 (8,611 m)",
+    "Kanchenjunga (8,586 m)",
+    "Lhotse (8,516 m)",
+    "Makalu (8,485 m)",
+    "Cho Oyu (8,188 m)",
+    "Dhaulagiri (8,167 m)",
+    "Manaslu (8,163 m)",
+    "Nanga Parbat (8,126 m)",
+    "Annapurna I (8,091 m)",
+    "Gasherbrum I (8,080 m)",
+    "Broad Peak (8,051 m)",
+    "Gasherbrum II (8,035 m)",
+    "Shishapangma (8,027 m)",
+  ];
 
   const baseUsefulLinks = [
     {
@@ -138,6 +154,29 @@ export default async function UsefulLinksSection() {
                 </ul>
               </div>
             ))}
+            <div className="col-span-2">
+              <h2 className="mb-4 font-semibold lg:text-lg">14 X 8000M</h2>
+              <div className="grid grid-cols-2">
+                <ul className="space-y-2">
+                  {eightThousanders.slice(0, 7).map((peak, index) => (
+                    <li key={index}>
+                      <div className="text-sm hover:underline md:text-base">
+                        {peak}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <ul className="space-y-2">
+                  {eightThousanders.slice(7).map((peak, index) => (
+                    <li key={index}>
+                      <div className="text-sm hover:underline md:text-base">
+                        {peak}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 

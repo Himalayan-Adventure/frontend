@@ -194,7 +194,10 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
+                    <PopoverContent
+                      className="relative z-50 w-full p-0"
+                      align="start"
+                    >
                       <Select
                         onValueChange={(value) =>
                           setDate(addDays(new Date(), parseInt(value)))

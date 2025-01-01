@@ -52,7 +52,7 @@ export default function HomeCarousel() {
     queryFn: async () => {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate=deep`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate[image][populate]=true&populate[adventure_specification][populate]=*`,
         );
         return data.data;
       } catch (error) {
