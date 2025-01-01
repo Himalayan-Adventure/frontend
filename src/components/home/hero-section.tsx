@@ -8,26 +8,59 @@ import cloudImage from "/public/images/cloud.png";
 import bgImage from "/public/images/home-bg-1.png";
 import lhotseImage from "/public/images/lhotse.png";
 
-import { domMax, LazyMotion, m, useAnimate } from "framer-motion";
+import { stagger, domMax, LazyMotion, m, useAnimate } from "framer-motion";
 import { Toaster } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import * as React from "react";
+
+import { Input } from "../ui/input";
 export function HeroSection() {
   const router = useRouter();
   const [openSearch, setOpenSearch] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
-    const controls = animate([
-      [scope.current, {}],
-      ["svg", { scale: "0.95", x: "-10%" }],
-      ["p", { opacity: "0", display: "none" }],
-    ]);
+    if (openSearch) {
+      const controls = animate([
+        [scope.current, {}],
+        ["svg", { scale: ["1", "1.05", "1"] }, { delay: stagger(0.1) }],
+        [
+          "p",
+          {
+            opacity: 0,
+            display: "none",
+            scale: 0,
+          },
+        ],
+        [
+          "input",
+          {
+            opacity: 1,
+            // width: ["0", "10%", "100%"],
+            padding: "0.5rem",
+            display: "block",
+            scale: "1",
+          },
+          { delay: stagger(0.4, { startDelay: 0.4 }) },
+        ],
+      ]);
 
-    controls.speed = 0.8;
+      controls.speed = 1.5;
 
-    return () => controls.stop();
+      return () => controls.stop();
+    }
+  }, [openSearch]);
+  useEffect(() => {
+    if (openSearch) {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current?.focus();
+        }
+      }, 1000);
+    }
   }, [openSearch]);
   return (
     <LazyMotion features={domMax}>
@@ -98,28 +131,15 @@ export function HeroSection() {
           />
         </div>
 
-        {/*
-        Social icons
-      */}
-        {/* <aside className="absolute right-2 top-1/2 z-20 hidden h-screen -translate-y-1/2 flex-col justify-center gap-y-2 lg:flex">
-          {socialIcons.map((item) => (
-            <Link
-              key={`social-link-${item.name}`}
-              href={item.href}
-              target="_blank"
-            >
-              <Image
-                src={item.icon}
-                alt={`${item.name} Icon`}
-                className="h-auto w-12"
-              />
-            </Link>
-          ))}
-        </aside> */}
+        {/* Search bar */}
         <m.header
           initial={{ opacity: 0, y: "-10%" }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{
+            duration: 0.5,
+            delay: 1,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
           className="container relative top-5 z-10 flex flex-col gap-y-4 text-white sm:top-[calc(var(--navbar-height)+2em)] sm:items-center sm:gap-y-10"
         >
           <Text
@@ -128,14 +148,25 @@ export function HeroSection() {
           >
             Not sure where to go? Perfect.
           </Text>
-          <m.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <m.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.95 }}>
             <Button
               ref={scope}
               //onClick={() => router.push("/packages")}
               onClick={() => setOpenSearch(!openSearch)}
-              className="flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white hover:gap-x-6 sm:w-auto md:px-10 md:py-8"
+              className="group flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white hover:gap-x-5 hover:bg-transparent sm:w-auto md:px-10 md:py-8"
             >
               <Search />
+              <Input
+                ref={inputRef}
+                type="text"
+                //placeholder="Find your Adventure"
+                className="hidden scale-0 rounded-none border-none bg-transparent p-0 leading-none text-white placeholder:text-base placeholder:font-bold group-hover:text-white sm:h-16"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    router.push("/packages?title=" + e.currentTarget.value);
+                  }
+                }}
+              />
               <Text variant="text-md" bold>
                 Find your Adventure
               </Text>
