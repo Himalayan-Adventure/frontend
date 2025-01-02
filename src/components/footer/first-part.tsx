@@ -3,14 +3,14 @@ import Link from "next/link";
 import footerBgImage from "/public/images/footer.png";
 export default function FirstPart() {
   const usefulLinks = [
-    "Open Peak for climbing",
-    "Mountaineering Royalty",
-    "Terms and Condition",
-    "Gears and Equipment",
-    "Visa Info",
-    "Travel Insurance",
-    "Trekking Permit Fee",
-    "FAQ",
+    { name: "Open Peak for Climbing", slug: "/open-peak-for-climbing" },
+    { name: "Mountaineering Royalty", slug: "/mountaineering-royalty" },
+    { name: "Terms and Conditions", slug: "/terms-and-conditions" },
+    { name: "Gears and Equipment", slug: "/gears-and-equipment" },
+    { name: "Visa Info", slug: "/visa-info" },
+    { name: "Travel Insurance", slug: "/travel-insurance" },
+    { name: "Trekking Permit Fee", slug: "/trekking-permit-fee" },
+    { name: "FAQ", slug: "/faq" },
   ];
 
   return (
@@ -49,11 +49,11 @@ export default function FirstPart() {
             <div className="mt-2 flex flex-wrap gap-3 md:gap-x-6 lg:mt-4 lg:gap-x-8">
               {usefulLinks.map((link, index) => (
                 <Link
-                  href="#"
+                  href={link.slug}
                   key={index}
                   className="text-sm md:text-base lg:text-lg"
                 >
-                  {link}
+                  {link.name}
                 </Link>
               ))}
             </div>
