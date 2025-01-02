@@ -81,7 +81,7 @@ export default function ExplorePackages() {
             </div>
           </div>
           {/* Packages Grid */}
-          <div className="mt-8 w-fit mx-auto gri grid-cols-2 gap-8 lg:mt-16 flex-wrap lg:grid-cols-4 lg:gap-16 flex items-stretch [&>div]:flex-1 justify-center">
+          <div className="gri mx-auto mt-8 flex w-fit grid-cols-2 flex-wrap items-stretch justify-center gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16 [&>div]:flex-1">
             {packages?.data?.map((pkg, index) => (
               <PackageCategoryCard
                 data={pkg}
@@ -108,13 +108,13 @@ const PackageCategoryCard = ({
         <Image
           src={image.url}
           alt={image.name}
-          className="aspect-[0.65] h-auto max-h-96 w-full lg:w-auto rounded-2xl border border-gray-600 object-cover lg:max-h-96"
+          className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-96 lg:w-auto"
           height={image.height}
           width={image.width}
         />
       )}
       <div className="py-2 text-center">
-        <h2 className="mb-2 text-sm md:text-base font-semibold lg:text-xl">
+        <h2 className="mb-2 text-sm font-semibold md:text-base lg:text-xl">
           {data?.attributes?.name}
         </h2>
         <div className="flex flex-col items-center space-y-3">
@@ -135,19 +135,19 @@ const PackageCategoryCard = ({
                   alt="Cover image"
                   className="absolute -z-10 h-full w-full object-cover opacity-90"
                 />
-                <AdminInquiryDialog setOpen={setOpen} />
+                <AdminInquiryDialog packageId={data.id} setOpen={setOpen} />
               </DialogContent>
             </Dialog>
           ) : (
             <Button
-              className="w-auto rounded-full border border-black bg-transparent !px-2 !py-0.5 md:px-6 md:py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2"
+              className="w-auto rounded-full border border-black bg-transparent !px-2 !py-0.5 text-xs text-black hover:bg-black hover:text-white md:px-6 md:py-1 md:text-sm lg:px-12 lg:py-2"
               onClick={() => toast.error("Please login to inquire")}
             >
               Inquire
             </Button>
           )}
           <Link href={`/packages?key=category&filter=${data.id}`}>
-            <Button className="w-auto rounded-full md:px-6 md:py-1 text-xs text-white md:text-sm lg:px-12 lg:py-2">
+            <Button className="w-auto rounded-full text-xs text-white md:px-6 md:py-1 md:text-sm lg:px-12 lg:py-2">
               View More
             </Button>
           </Link>

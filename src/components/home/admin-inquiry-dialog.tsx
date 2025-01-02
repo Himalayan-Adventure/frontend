@@ -30,8 +30,10 @@ import { TriangleAlert } from "lucide-react";
 import { useCurrentUser } from "@/hooks/user-current-user";
 export const AdminInquiryDialog = ({
   setOpen,
+  packageId,
 }: {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
+  packageId: number;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,7 @@ export const AdminInquiryDialog = ({
       phone: "",
       subject: "",
       message: "",
+      package: packageId,
     },
   });
   async function onSubmit(values: TAdminInquiryForm) {
