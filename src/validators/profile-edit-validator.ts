@@ -1,16 +1,13 @@
 import { z } from "zod";
 function isValidPhoneNumber(phone: string): boolean {
   const phoneRegex = /(?:\(?\+977\)?)?[9][6-9]\d{8}|01[-]?[0-9]{7}/;
-
   return phoneRegex.test(phone);
 }
 export const EditProfileFormSchema = z.object({
   username: z.string().min(1, { message: "Please enter a username" }),
   email: z.string().email(),
 
-  profilePicture: z
-    .preprocess((value) => value, z.instanceof(File))
-    .optional(),
+  profilePicture: z.preprocess((value) => value, z.instanceof(File)).optional(),
   about: z
     .object({
       facebook: z.string().url().optional(),
@@ -20,7 +17,10 @@ export const EditProfileFormSchema = z.object({
     })
     .optional(),
   resume: z.object({
-    first_name: z.string().min(1, { message: "Please enter a name" }).optional(),
+    first_name: z
+      .string()
+      .min(1, { message: "Please enter a name" })
+      .optional(),
     last_name: z.string().optional(),
     phone: z
       .string()
@@ -38,16 +38,7 @@ export const EditProfileFormSchema = z.object({
   }),
   contact: z.object({
     email: z.string().email().optional(),
-    birthday: z.string().refine(
-      (date) => {
-        const currentDate = new Date(date);
-        const today = new Date();
-        return currentDate <= today;
-      },
-      {
-        message: "Date cannot be in the future",
-      },
-    ),
+    birthday: z.string(),
     gender: z.string().optional(),
     citizenship: z.string().optional(),
     nationality: z.string().optional(),

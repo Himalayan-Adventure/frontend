@@ -2,9 +2,13 @@ import { GoBackButton } from "@/components/profile/go-back-button";
 import { Text } from "@/components/ui/text";
 import { getCurrentUserDataDeep } from "@/server/auth/get-me";
 import ProfileEditForm from "./edit-form";
+import { redirect } from "next/navigation";
 
 export default async function EditProfilePage() {
   const user = await getCurrentUserDataDeep();
+  if (!user) {
+    redirect("/dashboard/profile");
+  }
   return (
     <section className="container max-w-4xl">
       <GoBackButton />
