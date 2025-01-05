@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUserData } from "./server/auth/get-me";
 import { toast } from "sonner";
 
-const protectedRoutes = ["/profile", "/dashboard"];
+const protectedRoutes = ["/dashboard"];
 const guideOnlyRoutes = [
   "/dashboard/calendar",
   "/dashboard/services/write",

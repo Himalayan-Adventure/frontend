@@ -2,6 +2,7 @@ import Image from "next/image";
 import bgImage from "/public/images/packagesBanner.png";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { getSingleUser } from "@/server/users/get-single-user";
+import { Text } from "@/components/ui/text";
 export default async function PublicProfilePage({
   params,
 }: {
@@ -24,7 +25,11 @@ export default async function PublicProfilePage({
           Public Profile
         </h1>
       </div>
-      {user && <ProfileTabs user={user} />}
+      {user ? (
+        <ProfileTabs user={user} />
+      ) : (
+        <Text variant="text-lg">User not found!</Text>
+      )}
     </section>
   );
 }
