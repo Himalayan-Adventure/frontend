@@ -34,16 +34,18 @@ export default function DateSelection() {
 
   useEffect(() => {
     if (selectedOption) {
+      const updatedTravelDates = { ...travelDates };
+
       if (selectedOption === "Exact date" && date) {
         const formattedDate = date.toISOString().split("T")[0];
-        setTravelDates({
-          ...(travelDates || {}),
-          exact_date_start: formattedDate,
-          exact_date_end: formattedDate,
-          flexible_date_start: null,
-          flexible_date_end: null,
-          decide_later: false,
-        });
+        if (updatedTravelDates.exact_date_start !== formattedDate) {
+          updatedTravelDates.exact_date_start = formattedDate;
+          updatedTravelDates.exact_date_end = formattedDate;
+          updatedTravelDates.flexible_date_start = null;
+          updatedTravelDates.flexible_date_end = null;
+          updatedTravelDates.decide_later = false;
+          setTravelDates(updatedTravelDates);
+        }
       } else if (
         selectedOption === "Flexible Date Range" &&
         dateRange?.from &&
@@ -51,23 +53,23 @@ export default function DateSelection() {
       ) {
         const startDateString = dateRange.from.toISOString().split("T")[0];
         const endDateString = dateRange.to.toISOString().split("T")[0];
-        setTravelDates({
-          ...(travelDates || {}),
-          exact_date_start: null,
-          exact_date_end: null,
-          flexible_date_start: startDateString,
-          flexible_date_end: endDateString,
-          decide_later: false,
-        });
+        if (updatedTravelDates.flexible_date_start !== startDateString) {
+          updatedTravelDates.exact_date_start = null;
+          updatedTravelDates.exact_date_end = null;
+          updatedTravelDates.flexible_date_start = startDateString;
+          updatedTravelDates.flexible_date_end = endDateString;
+          updatedTravelDates.decide_later = false;
+          setTravelDates(updatedTravelDates);
+        }
       } else if (selectedOption === "Decide Later") {
-        setTravelDates({
-          ...(travelDates || {}),
-          exact_date_start: null,
-          exact_date_end: null,
-          flexible_date_start: null,
-          flexible_date_end: null,
-          decide_later: true,
-        });
+        if (!updatedTravelDates.decide_later) {
+          updatedTravelDates.exact_date_start = null;
+          updatedTravelDates.exact_date_end = null;
+          updatedTravelDates.flexible_date_start = null;
+          updatedTravelDates.flexible_date_end = null;
+          updatedTravelDates.decide_later = true;
+          setTravelDates(updatedTravelDates);
+        }
       }
     }
   }, [selectedOption, date, dateRange, setTravelDates, travelDates]);
@@ -78,7 +80,6 @@ export default function DateSelection() {
 
   return (
     <div className="p-2 lg:p-4">
-      
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:gap-8">
         {options.map((option) => (
           <div

@@ -15,6 +15,25 @@ import axios from "axios";
 
 type PlanComponent = () => JSX.Element;
 
+export const staticSteps = [
+  { step: "Travel", title: "How do you want to Travel?", icon: "TfiUser" },
+  {
+    step: "TravelDates",
+    title: "Choose Travel Dates",
+    icon: "IoCalendarOutline",
+  },
+  {
+    step: "Destination",
+    title: "Choose Your Destination ",
+    icon: "IoMapOutline",
+  },
+  { step: "Package", title: "Packages", icon: "GoArchive" },
+  { step: "Accommodation", title: "Accommodations", icon: "AiOutlineHome" },
+  { step: "Budget", title: "Plan your Budget", icon: "CiBadgeDollar" },
+  { step: "Experience", title: "Customize Experience", icon: "BsListStars" },
+  { step: "ReviewFinal", title: "Review & Finalize", icon: "MdOutlinePreview" },
+];
+
 export const componentMapping: Record<string, PlanComponent> = {
   Travel: Travel,
   TravelDates: DateSelection,
@@ -34,11 +53,12 @@ export default function TestPlan() {
     const fetchSteps = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:1337/api/plan-with?populate=*",
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/plan-with?populate=deep`,
         );
         setSteps(response?.data?.data?.attributes?.steps || []);
       } catch (error) {
         console.error("Error fetching steps:", error);
+        setSteps(staticSteps);
       }
     };
 
@@ -47,7 +67,10 @@ export default function TestPlan() {
 
   const currentStep =
     steps.find((step: any) => step?.step === selectedStep) || steps[0];
-  const MatchedComponent = componentMapping[currentStep?.step];
+  const matchedStaticStep = staticSteps.find(
+    (staticStep) => staticStep.step === currentStep?.step,
+  );
+  const MatchedComponent = componentMapping[currentStep?.step] || null;
 
   const handleStepChange = (direction: "next" | "prev") => {
     const currentIndex = steps.findIndex(
@@ -70,6 +93,9 @@ export default function TestPlan() {
               const isCurrentStep = selectedStep === step?.step;
               const isCompletedStep =
                 steps.findIndex((s) => s?.step === selectedStep) > index;
+              const staticStep = staticSteps.find(
+                (staticStep) => staticStep.step === step?.step,
+              );
 
               return (
                 <div
@@ -82,9 +108,8 @@ export default function TestPlan() {
                         : "border border-black bg-white text-black lg:border-2"
                   } transition duration-300`}
                   onClick={() => setSelectedStep(step?.step)}
-                  aria-label={`Select ${step?.step} step`}
                 >
-                  <DynamicReactIcon name={step?.icon} />
+                  <DynamicReactIcon name={staticStep?.icon || "default-icon"} />
                 </div>
               );
             })}
@@ -100,7 +125,7 @@ export default function TestPlan() {
             Description
           </h3>
           <p className="text-sm text-gray-700 lg:text-justify lg:text-base">
-            {currentStep?.description}
+            {currentStep?.description || "No description available."}
           </p>
         </div>
 
@@ -127,9 +152,9 @@ export default function TestPlan() {
           </div>
           <div className="text-center">
             <h2 className="mb-4 text-center text-base font-bold md:text-xl lg:text-2xl">
-              {currentStep?.title}
+              {matchedStaticStep?.title || currentStep?.step}
             </h2>
-            {MatchedComponent && <MatchedComponent />}
+            {MatchedComponent ? <MatchedComponent /> : <p>Loading step...</p>}
           </div>
         </div>
       </div>

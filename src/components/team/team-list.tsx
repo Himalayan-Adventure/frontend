@@ -17,16 +17,18 @@ interface Member {
         };
       };
     };
-    team_category: {
-      data: {
-        id: number;
-        attributes: {
-          createdAt: string;
-          updatedAt: string;
-          publishedAt: string;
-          name: string;
-        };
-      };
+    team_categories: {
+      data: [
+        {
+          id: number;
+          attributes: {
+            createdAt: string;
+            updatedAt: string;
+            publishedAt: string;
+            name: string;
+          };
+        },
+      ];
     };
   };
 }
@@ -69,10 +71,10 @@ export default function TeamsList({ teamCategories, members }: TeamsListProps) {
 
   const filteredMembers = useMemo(
     () =>
-      members?.filter(
-        (member) =>
-          member?.attributes?.team_category?.data?.attributes?.name ===
-          selectedCategory,
+      members?.filter((member) =>
+        member?.attributes?.team_categories?.data?.some(
+          (category) => category?.attributes?.name === selectedCategory,
+        ),
       ),
     [selectedCategory, members],
   );
@@ -97,23 +99,25 @@ export default function TeamsList({ teamCategories, members }: TeamsListProps) {
       {!isLoading && (
         <div className="hide-scrollbar my-8 flex overflow-auto text-nowrap pb-4">
           {teamCategories?.length > 0 ? (
-            teamCategories?.map((team: Category) => (
-              <button
-                key={team.id}
-                onClick={() => setSelectedCategory(team.attributes.name)}
-                className={`border-r-2 border-gray-700 font-semibold transition-colors last:border-r-0`}
-              >
-                <span
-                  className={`mx-3 pb-2 md:text-lg lg:text-xl ${
-                    selectedCategory === team.attributes.name
-                      ? "border-b-4 border-primary text-primary"
-                      : "border-b-4 border-transparent text-gray-700"
-                  }`}
+            teamCategories
+              .sort((a, b) => a?.id - b?.id)
+              .map((team: Category) => (
+                <button
+                  key={team.id}
+                  onClick={() => setSelectedCategory(team?.attributes?.name)}
+                  className={`border-r-2 border-gray-700 font-semibold transition-colors last:border-r-0`}
                 >
-                  {team.attributes.name}
-                </span>
-              </button>
-            ))
+                  <span
+                    className={`mx-3 pb-2 md:text-lg lg:text-xl ${
+                      selectedCategory === team?.attributes?.name
+                        ? "border-b-4 border-primary text-primary"
+                        : "border-b-4 border-transparent text-gray-700"
+                    }`}
+                  >
+                    {team?.attributes?.name}
+                  </span>
+                </button>
+              ))
           ) : (
             <p className="text-gray-500">No team categories available</p>
           )}
@@ -124,7 +128,7 @@ export default function TeamsList({ teamCategories, members }: TeamsListProps) {
       {!isLoading && (
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {filteredMembers?.length > 0 ? (
-            filteredMembers?.map((member, index) => (
+            filteredMembers?.map((member) => (
               <div key={member.id} className="h-full w-full">
                 <Image
                   src={member?.attributes?.thumbnail?.data?.attributes?.url}
