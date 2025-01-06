@@ -10,6 +10,7 @@ import { PackageCardSkeleton } from "@/components/packagespage/package-card-skel
 import PackageCard from "@/components/packagespage/package-card/index";
 import SearchBar from "@/components/ui/search-bar";
 import { LoadMorePagination } from "@/components/services/pagination";
+import { SearchX } from "lucide-react";
 
 export const metadata: Metadata = {
   title: `Packages | ${siteConfig.siteName}`,
@@ -42,7 +43,10 @@ export default async function Packages({
         <Suspense fallback={<PackageCardSkeleton />}>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(0,300px))] gap-4">
             {!data || data?.data.length === 0 ? (
-              <span>No packages are available</span>
+              <span className="col-span-full flex flex-col items-center gap-y-4 text-center text-lg">
+                <SearchX size={32} className="text-gray-600" />
+                No packages are available !
+              </span>
             ) : (
               data?.data?.map((pkg, index) => (
                 <Suspense key={index}>

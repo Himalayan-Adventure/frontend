@@ -8,16 +8,7 @@ import cloudImage from "/public/images/cloud.png";
 import bgImage from "/public/images/home-bg-1.png";
 import lhotseImage from "/public/images/lhotse.png";
 
-import {
-  stagger,
-  domMax,
-  LazyMotion,
-  m,
-  useAnimate,
-  usePresence,
-  AnimatePresence,
-} from "framer-motion";
-import { Toaster } from "sonner";
+import { domMax, LazyMotion, m, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import * as React from "react";
@@ -31,11 +22,9 @@ export function HeroSection() {
 
   useEffect(() => {
     if (openSearch) {
-      setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current?.focus();
-        }
-      }, 1000);
+      if (inputRef.current) {
+        inputRef.current?.focus();
+      }
     }
   }, [openSearch]);
   return (
