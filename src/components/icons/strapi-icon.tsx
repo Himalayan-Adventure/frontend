@@ -55,6 +55,7 @@ const DynamicReactIcon: React.FC<IDynamicReactIcon> = ({
   color,
   ...rest
 }: IDynamicReactIcon) => {
+  console.log(name);
   const lib = name?.replace(/([a-z0-9])([A-Z])/g, "$1 $2").split(" ")[0];
   const iconComponent = iconComponents[lib];
 

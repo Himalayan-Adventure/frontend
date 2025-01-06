@@ -203,6 +203,7 @@ export default function FilterBox() {
       duration: 1000,
     });
   };
+  console.log(adventureTypes.map((i) => i.icon));
 
   return (
     <DialogContent className="h-[90vh] overflow-auto sm:max-w-[800px]">
@@ -257,7 +258,7 @@ export default function FilterBox() {
                   : ""
               }`}
             >
-              <DynamicReactIcon name={adventure.icon} />
+              {adventure?.icon && <DynamicReactIcon name={adventure.icon} />}
               <span
                 className={`border-t pt-1 text-sm font-medium ${
                   selectedAdventureType === adventure.name
