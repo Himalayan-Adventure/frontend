@@ -27,25 +27,25 @@ export default async function Packages({
     limit?: number;
   };
 }) {
+  const { title } = searchParams;
   const data = await getPackages(searchParams);
   return (
     <section>
       <TestBanner title={"Packages"} desc="" bgImage={bgImage} />
       <div className="container relative gap-y-2 lg:mt-40">
-        <Suspense>
-          <div className="flex justify-end [&>div]:w-fit">
-            <SearchBar selector="title" className="max-w-48 justify-end" />
-          </div>
-        </Suspense>
-        <Suspense>
-          <PackageFilter />
-        </Suspense>
+        <div className="flex justify-end [&>div]:w-fit">
+          <SearchBar
+            selector="title"
+            className="max-w-48 justify-end rounded-lg placeholder:text-sm"
+          />
+        </div>
+        <PackageFilter />
         <Suspense fallback={<PackageCardSkeleton />}>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(0,300px))] gap-4">
             {!data || data?.data.length === 0 ? (
               <span className="col-span-full flex flex-col items-center gap-y-4 text-center text-lg">
                 <SearchX size={32} className="text-gray-600" />
-                No packages are available !
+                No packages are available {title && `for search "${title}"`} !
               </span>
             ) : (
               data?.data?.map((pkg, index) => (

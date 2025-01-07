@@ -22,6 +22,8 @@ import { GiFlowerEmblem, GiHiking, GiStairsGoal } from "react-icons/gi";
 import { MdHiking } from "react-icons/md";
 import { toast } from "sonner";
 import DynamicReactIcon from "../icons/strapi-icon";
+import { APIResponseCollection } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
 
 const experiences = [
   {
@@ -96,7 +98,7 @@ const seasons = [
 
 interface AdventureType {
   name: string;
-  icon: string;
+  icon: string | undefined;
 }
 
 const AdventureTypes = (): AdventureType[] => {
@@ -105,18 +107,20 @@ const AdventureTypes = (): AdventureType[] => {
   useEffect(() => {
     const fetchTypes = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types?populate=*`,
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types`,
         );
+        const data: APIResponseCollection<"api::package-type.package-type"> =
+          await response.json();
+        console.log(response);
 
-        const fetchedTypes = response?.data?.data || [];
+        const fetchedTypes = data.data || [];
+        console.log(fetchedTypes);
 
-        const mappedTypes: AdventureType[] = fetchedTypes.map(
-          (type: any, index: number) => ({
-            name: type?.attributes?.name,
-            icon: type?.attributes?.icon,
-          }),
-        );
+        const mappedTypes: AdventureType[] = fetchedTypes.map((type) => ({
+          name: type?.attributes?.name,
+          icon: type.attributes?.react_icon,
+        }));
 
         setTypes(mappedTypes);
       } catch (error) {
@@ -147,6 +151,23 @@ export default function FilterBox() {
   const toggleLevel = (index: number) => {
     setLevel(level === index ? null : index);
   };
+  const { data: testAdventureTypes } = useQuery({
+    queryKey: ["package-type"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types`,
+      );
+      const data: APIResponseCollection<"api::package-type.package-type"> =
+        await response.json();
+      return data;
+    },
+    select: (data) => {
+      return data.data.map((type) => ({
+        name: type.attributes.name,
+        icon: type.attributes.react_icon,
+      }));
+    },
+  });
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -165,10 +186,14 @@ export default function FilterBox() {
     fetchCountries();
   }, []);
 
-  const adventureTypes = AdventureTypes();
+  //  const adventureTypes = AdventureTypes();
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <DialogContent className="h-[90vh] overflow-auto sm:max-w-[800px]">
+        <p>Loading...</p>
+      </DialogContent>
+    );
   }
 
   const handleApplyFilters = () => {
@@ -203,7 +228,7 @@ export default function FilterBox() {
       duration: 1000,
     });
   };
-  console.log(adventureTypes.map((i) => i.icon));
+  //  console.log(adventureTypes);
 
   return (
     <DialogContent className="h-[90vh] overflow-auto sm:max-w-[800px]">
@@ -248,7 +273,7 @@ export default function FilterBox() {
       <div className="mt-4 md:mt-8">
         <h2 className="text-xl font-semibold md:text-2xl">Adventure Type</h2>
         <div className="mt-4 flex flex-wrap gap-6">
-          {adventureTypes.map((adventure) => (
+          {testAdventureTypes?.map((adventure) => (
             <div
               key={adventure.name}
               onClick={() => setSelectedAdventureType(adventure.name)}
@@ -258,7 +283,9 @@ export default function FilterBox() {
                   : ""
               }`}
             >
-              {adventure?.icon && <DynamicReactIcon name={adventure.icon} />}
+              {adventure?.icon && adventure?.icon !== null && (
+                <DynamicReactIcon name={adventure.icon} />
+              )}
               <span
                 className={`border-t pt-1 text-sm font-medium ${
                   selectedAdventureType === adventure.name
