@@ -28,7 +28,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { toast } from "sonner";
 import { AuthCard } from "../auth";
 import Logo from "../logo";
@@ -75,7 +74,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
         return null;
       }
     },
-    retry: 5,
+    retry: 1,
   });
 
   return (
@@ -304,7 +303,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               <div className="flex flex-row justify-center gap-x-2 brightness-200">
                 {socialIcons.map((item) => (
                   <Link
-                    prefetch={true}
+                    // prefetch={true}
                     key={`social-link-${item.name}`}
                     href={item.href}
                     target="_blank"

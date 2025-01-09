@@ -51,7 +51,6 @@ export const Navbar = () => {
 
 
 const Navlinks = ({ scrollY }: { scrollY: number }) => {
-  const router = useRouter();
   const pathname = usePathname();
   // for handling navlinks overflow in mobile
   const containerRef = useRef<HTMLDivElement>(null);

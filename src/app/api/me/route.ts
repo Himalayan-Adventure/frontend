@@ -26,9 +26,9 @@ export async function GET(request: NextRequest) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      next: {
-        tags: ["me"],
-      },
+      // next: {
+      //   tags: ["me"],
+      // },
       cache: "force-cache",
     },
   );
