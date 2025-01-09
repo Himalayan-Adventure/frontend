@@ -13,10 +13,12 @@ import { Text } from "@/components/ui/text";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
 import { cn } from "@/lib/utils";
 import { getServiceCategories } from "@/server/services/get-services-categories";
+import { useServiceType } from "@/store/get-service-type";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 export function SortFilters() {
   const updateQueryString = useUpdateQueryString();
+  const { type, setType } = useServiceType();
   // const { data: categories } = useQuery({
   //   queryKey: ["services-categories"],
   //   queryFn: async () => await getServiceCategories(),
@@ -61,7 +63,11 @@ export function SortFilters() {
           </SelectGroup>
         </SelectContent>
       </Select> */}
-      <SearchBar selector="name" />
+      {type === "guides" ? (
+        <SearchBar selector="name" />
+      ) : (
+        <SearchBar selector="service-name" />
+      )}
     </div>
   );
 }

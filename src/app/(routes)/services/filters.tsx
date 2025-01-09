@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Blocks, Mountain } from "lucide-react";
 import { IoBusiness } from "react-icons/io5";
@@ -18,6 +18,7 @@ import { useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getServiceCategories } from "@/server/services/get-services-categories";
 import DynamicReactIcon from "@/components/icons/strapi-icon";
+import { TServiceType, useServiceType } from "@/store/get-service-type";
 // const tabsTriggers = [
 //   {
 //     icon: <Mountain className="size-5 md:size-6" />,
@@ -61,7 +62,7 @@ const categoryTriggers = [
   {
     icon: <FaPersonRays className="size-6 md:size-6" />,
     name: "Guide",
-    value: "guide",
+    value: "guides",
   },
   {
     icon: <FaBox className="size-6 md:size-6" />,
@@ -70,21 +71,30 @@ const categoryTriggers = [
   },
 ];
 export function TopFilter() {
+  const { type, setType } = useServiceType();
   const searchParams = useSearchParams();
   const updateQueryString = useUpdateQueryString();
+  useEffect(() => {
+    if (searchParams.get("type")) {
+      setType(searchParams.get("type") as TServiceType);
+    }
+  }, []);
   return (
     <Tabs
-      defaultValue="Guide"
-      value={searchParams.get("type") || "Guide"}
+      defaultValue={(searchParams.get("type") as TServiceType) || "guides"}
+      value={type}
       className="relative z-10 flex w-fit flex-row items-stretch p-0 md:left-36"
     >
       <TabsList className="hide-scrollbar relative flex h-fit w-full origin-top flex-row items-stretch gap-x-4 gap-y-10 overflow-x-scroll rounded-xl bg-background p-0 px-10 shadow-2xl transition-transform ease-out md:w-fit md:flex-row">
         {categoryTriggers.map((tab) => (
           <TabsTrigger
             key={`tab-${tab.name}`}
-            value={tab.name}
+            value={tab.value}
             className="h-full capitalize data-[state=active]:!text-primary"
-            onClick={() => updateQueryString({ type: tab.name })}
+            onClick={() => {
+              setType(tab.value as TServiceType);
+              updateQueryString({ type: tab.value }, ["name", "service-name",'limit','page']);
+            }}
             asChild
           >
             <Button className="flex h-full w-full flex-col items-center gap-y-1 bg-white py-4 text-black hover:bg-white hover:text-primary md:h-fit md:p-4">
@@ -104,17 +114,13 @@ export function TopFilter() {
   );
 }
 export function SideFilter() {
-  // const [hideTabs, setHideTabs] = useState(false);
   const updateQueryString = useUpdateQueryString();
   const searchParams = useSearchParams();
   const category = searchParams.get("category") || "All";
-  // const [activeTab, setActiveTab] = useState(
-  //   searchParams.get("category") || "All",
-  // );
   const { data, isPending } = useQuery({
     queryKey: ["service-categories"],
-    queryFn: async () => await getServiceCategories(), 
-    //placeholderData: keepPreviousData,
+    queryFn: async () => await getServiceCategories(),
+    placeholderData: keepPreviousData,
   });
   const categories = useMemo(() => data, [data]);
   const handleValueChange = useCallback(
@@ -127,7 +133,6 @@ export function SideFilter() {
     },
     [updateQueryString],
   );
-  console.log(data, isPending)
 
   return (
     <Tabs
@@ -147,9 +152,6 @@ export function SideFilter() {
             </Button>
             <div
               className={cn(
-                // hideTabs
-                //   ? "scale-x-0 md:scale-y-0"
-                //   : "scale-x-100 md:scale-y-100",
                 "hide-scrollbar relative flex h-fit w-full origin-left flex-row gap-y-2 overflow-x-scroll rounded-xl bg-white transition-transform ease-out md:w-full md:origin-top md:flex-col md:py-4",
               )}
             >

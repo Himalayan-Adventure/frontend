@@ -16,6 +16,7 @@ import cloudImage from "/public/images/cloud.png";
 import bgImage from "/public/images/packagesBanner.png";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { sleep } from "@/lib/utils";
+import { ServiceContent } from "./service-content";
 type TSearchParams = {
   searchParams: {
     type?: string;
@@ -39,9 +40,12 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
           <TopFilter />
           <SortFilters />
         </div>
-        <div className="flex w-full flex-col gap-5 md:flex-row">
-          {searchParams.type === "Packages" && <SideFilter />}
-          {searchParams.type === "Packages" ? (
+        <Suspense>
+          <ServiceContent />
+        </Suspense>
+        {/* <div className="flex w-full flex-col gap-5 md:flex-row">
+          {searchParams.type === "packages" && <SideFilter />}
+          {searchParams.type === "packages" ? (
             <Suspense fallback={<Loading className="h-48" />}>
               <ServicesPackages searchParams={searchParams} />
             </Suspense>
@@ -50,7 +54,7 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
               <ServicesGuides searchParams={searchParams} />
             </Suspense>
           )}
-        </div>
+        </div> */}
       </section>
     </main>
   );
@@ -85,14 +89,13 @@ async function ServicesGuides({ searchParams }: TSearchParams) {
     searchParams.limit || 20,
   );
 
-
   return (
     <div className="relative flex w-full flex-col gap-y-5 py-10 md:pl-36">
       <Text variant="text-xl" bold>
         All members
       </Text>
 
-      <div className="grid  w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
+      <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
         {data?.map((guide, index) => (
           <GuideCard guide={guide} key={`guide-${index}`} />
         ))}

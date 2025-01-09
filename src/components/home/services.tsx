@@ -77,7 +77,7 @@ const ServiceCard = ({
   svc: APIResponseData<"api::service.service">;
 }) => {
   const image = svc?.attributes?.image?.data?.attributes;
-  const { data: user, isLoading } = useCurrentUser();
+  const { user, isPending: isLoading } = useCurrentUser();
   const service_provider = svc?.attributes?.service_provider?.data;
   const {
     mutate: requestSerivceMutation,
