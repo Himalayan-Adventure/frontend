@@ -73,10 +73,10 @@ export default function ExplorePackages() {
             <div className="lg:max-w-4xl">
               <h1 className="comp-heading">Explore Packages</h1>
               <p className="comp-subheading mt-2 lg:mt-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis
-                ipsum suspendisse ultrices gravida. Risus commodo viverra
-                maecenas accumsan lacus vel facilisis.
+                Embark on thrilling Himalayan adventures! Choose from trekking,
+                mountaineering, paragliding, and more. Discover tailored
+                packages designed to ignite your spirit of exploration and make
+                every journey unforgettable. Adventure awaits—start now!
               </p>
             </div>
           </div>
@@ -100,7 +100,7 @@ const PackageCategoryCard = ({
   data: APIResponseData<"api::package-category.package-category">;
 }) => {
   const image = data?.attributes?.image?.data?.attributes;
-  const { data: user, isLoading } = useCurrentUser();
+  const { user, isPending} = useCurrentUser();
   const [open, setOpen] = useState(false);
   return (
     <div className="grid place-items-center">
@@ -140,7 +140,7 @@ const PackageCategoryCard = ({
             </Dialog>
           ) : (
             <Button
-              className="w-auto rounded-full border border-black bg-transparent !px-2 !py-0.5 text-xs text-black hover:bg-black hover:text-white md:px-6 md:py-1 md:text-sm lg:px-12 lg:py-2"
+              className="w-auto rounded-full border border-black bg-transparent px-2 py-0.5 text-xs text-black hover:bg-black hover:text-white md:px-6 md:py-1 md:text-sm lg:px-12 lg:py-2"
               onClick={() => toast.error("Please login to inquire")}
             >
               Inquire

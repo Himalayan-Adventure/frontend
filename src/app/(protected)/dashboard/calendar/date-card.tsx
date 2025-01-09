@@ -41,6 +41,7 @@ export const DateCard = ({
         </Link>
         <Button
           className="h-auto rounded-full bg-transparent p-1 text-red-600 hover:bg-red-600 hover:text-white"
+          isLoading={isPending}
           onClick={() => deleteAction()}
         >
           <Trash size={16} />

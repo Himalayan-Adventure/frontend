@@ -1,10 +1,10 @@
 import next from "next";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { getCurrentUserData } from "./server/auth/get-me";
+import { getCurrentUserData, getUser } from "./server/auth/get-me";
 import { toast } from "sonner";
 
-const protectedRoutes = ["/profile", "/dashboard"];
+const protectedRoutes = ["/dashboard"];
 const guideOnlyRoutes = [
   "/dashboard/calendar",
   "/dashboard/services/write",
@@ -26,8 +26,7 @@ export async function middleware(request: NextRequest) {
   if (protectedRoutes.some((route) => url.pathname.startsWith(route))) {
     const currentUser = request.cookies.get("jwt")?.value;
 
-    const user = await getCurrentUserData();
-
+    const user = await getUser();
     if (!user || !currentUser) {
       toast.error("You need to login first to access this page.");
       return NextResponse.redirect(new URL(`/`, request.url));
@@ -37,7 +36,7 @@ export async function middleware(request: NextRequest) {
   if (guideOnlyRoutes.some((route) => url.pathname.startsWith(route))) {
     const currentUser = request.cookies.get("jwt")?.value;
 
-    const user = await getCurrentUserData();
+    const user = await getUser();
 
     if (!user || !currentUser || user.userType !== "merchant") {
       toast.error("You need to login first to access this page.");

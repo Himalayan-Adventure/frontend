@@ -14,6 +14,8 @@ import wordsToNumbers from "words-to-numbers";
 import { DepartureFact } from "../departure";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { QuotesDialog } from "../quote";
+import { useCurrentUser } from "@/hooks/user-current-user";
+import { toast } from "sonner";
 export const Overlay = forwardRef<
   HTMLDivElement,
   {
@@ -59,6 +61,7 @@ export const Overlay = forwardRef<
       icon: <MdTimelapse size={20} />,
     });
   }
+  const { user, isPending } = useCurrentUser();
 
   return (
     <div
@@ -110,20 +113,46 @@ export const Overlay = forwardRef<
                   </p>
                 </div>
 
-                <Button className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white">
-                  Book Now
-                </Button>
+                {!user || isPending? (
+                  <Button
+                    className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white"
+                    onClick={() => {
+                      toast.error("Please login to get a booking");
+                    }}
+                  >
+                    Book Now
+                  </Button>
+                ) : (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white">
+                        Book Now
+                      </Button>
+                    </DialogTrigger>
+                    <QuotesDialog packageId={pkg?.id} title="Book now" />
+                  </Dialog>
+                )}
               </div>
             ))}
           </div>
         )}
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="h-10 w-full">Get Quote</Button>
-          </DialogTrigger>
-          <QuotesDialog packageId={pkg?.id} />
-        </Dialog>
+        {!user || isPending ? (
+          <Button
+            className="h-10 w-full"
+            onClick={() => {
+              toast.error("Please login to get a quote");
+            }}
+          >
+            Get Quote
+          </Button>
+        ) : (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="h-10 w-full">Get Quote</Button>
+            </DialogTrigger>
+            <QuotesDialog packageId={pkg?.id} />
+          </Dialog>
+        )}
       </div>
       <div className="mt-2 space-y-2">
         <p className="mb-2 text-center text-sm">You won’t be charged yet</p>

@@ -25,6 +25,8 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { QuotesDialog } from "./quote";
+import { toast } from "sonner";
+import { useCurrentUser } from "@/hooks/user-current-user";
 
 type ButtonStyleMap = {
   Standard: string;
@@ -92,6 +94,8 @@ export default function Departure({
     },
   ];
 
+  const { user, isPending } = useCurrentUser();
+
   // Helper function to render list items
   const renderListItems = (list: any) => {
     return list.map((listType: ListType, idx: number) => (
@@ -142,9 +146,25 @@ export default function Departure({
                       </p>
                     </div>
 
-                    <Button className="rounded-full bg-black px-4 py-1 text-xs text-white">
-                      Book Now
-                    </Button>
+                    {!user || isPending ? (
+                      <Button
+                        className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white"
+                        onClick={() => {
+                          toast.error("Please login to get a booking");
+                        }}
+                      >
+                        Book Now
+                      </Button>
+                    ) : (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white">
+                            Book Now
+                          </Button>
+                        </DialogTrigger>
+                        <QuotesDialog packageId={id} title="Book now" />
+                      </Dialog>
+                    )}
                   </div>
                 ))}
               </div>
@@ -231,14 +251,26 @@ export default function Departure({
           </Dialog>
 
           <hr className="my-4" />
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="w-full rounded-lg bg-primary py-2 font-semibold text-white hover:bg-orange-500">
-                Get Quote
-              </button>
-            </DialogTrigger>
-            <QuotesDialog packageId={id} />
-          </Dialog>
+
+          {!user || isPending ? (
+            <Button
+              className="h-10 w-full"
+              onClick={() => {
+                toast.error("Please login to get a quote");
+              }}
+            >
+              Get Quote
+            </Button>
+          ) : (
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="w-full rounded-lg bg-primary py-2 font-semibold text-white hover:bg-orange-500">
+                  Get Quote
+                </button>
+              </DialogTrigger>
+              <QuotesDialog packageId={id} />
+            </Dialog>
+          )}
         </div>
         <div className="mt-4 space-y-2">
           <p className="mb-4 text-center text-sm">You won’t be charged yet</p>
@@ -263,7 +295,7 @@ export default function Departure({
               icon={<BsBarChartFill size={20} />}
             />
           )}
-          {maxAltInM && maxAltInM !== 0 && (
+          {maxAltInM !== 0 && maxAltInM !== undefined && (
             <DepartureFact
               title="max altitude"
               desc={`${maxAltInM.toLocaleString(

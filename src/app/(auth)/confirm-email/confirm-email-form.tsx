@@ -45,7 +45,6 @@ export const ConfirmEmailForm = () => {
       toast.success("Send confirmation link! Please check email");
       router.push("/");
     } else {
-      console.log(res?.error?.error?.message);
       toast.error(`${res?.error?.error?.message}`);
     }
   }

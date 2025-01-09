@@ -109,12 +109,6 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       const res = await updateUser(payload, user.id);
       if (res.status === 200) {
         toast.success("Profile updated");
-        {
-          /* router.refresh(); */
-        }
-        {
-          /* router.back(); */
-        }
       }
     } catch (error) {
       console.log(error);
@@ -122,10 +116,6 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
 
     setLoading(false);
   }
-  useEffect(() => {
-    //@ts-ignore
-    console.log(form.getValues("resume.education"));
-  }, [form.watch("resume.education"), form.watch("resume.portfolio")]);
   const formContentMap: Record<string, React.ReactNode> = {
     about: <AboutForm control={form.control} />,
     resume: <ResumeForm control={form.control} />,
@@ -206,8 +196,10 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
         <div className="flex flex-col justify-center gap-y-2 sm:justify-center">
           <Button
             type="submit"
-            onClick={() => form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isValid}
+            onClick={() => {
+              form.handleSubmit(onSubmit);
+            }}
+            //disabled={!form.formState.isValid}
             className="w-fit items-center gap-x-3 self-start rounded-full bg-foreground px-10 py-6 font-poppins font-bold"
             isLoading={loading}
           >
@@ -323,10 +315,10 @@ const ResumeForm = ({ control }: { control: Control<TEditProfileForm> }) => {
       />
       <FormField
         control={control}
-        name="email"
+        name="resume.email"
         render={({ field }) => (
           <FormItem className="top-2">
-            <FormLabel>Contact</FormLabel>
+            <FormLabel>Contact email</FormLabel>
             <FormControl>
               <Input
                 type="email"

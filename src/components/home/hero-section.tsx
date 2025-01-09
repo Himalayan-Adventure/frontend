@@ -8,8 +8,7 @@ import cloudImage from "/public/images/cloud.png";
 import bgImage from "/public/images/home-bg-1.png";
 import lhotseImage from "/public/images/lhotse.png";
 
-import { stagger, domMax, LazyMotion, m, useAnimate } from "framer-motion";
-import { Toaster } from "sonner";
+import { domMax, LazyMotion, m, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import * as React from "react";
@@ -19,47 +18,13 @@ export function HeroSection() {
   const router = useRouter();
   const [openSearch, setOpenSearch] = useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
-
-  const [scope, animate] = useAnimate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (openSearch) {
-      const controls = animate([
-        [scope.current, {}],
-        ["svg", { scale: ["1", "1.05", "1"] }, { delay: stagger(0.1) }],
-        [
-          "p",
-          {
-            opacity: 0,
-            display: "none",
-            scale: 0,
-          },
-        ],
-        [
-          "input",
-          {
-            opacity: 1,
-            // width: ["0", "10%", "100%"],
-            padding: "0.5rem",
-            display: "block",
-            scale: "1",
-          },
-          { delay: stagger(0.4, { startDelay: 0.4 }) },
-        ],
-      ]);
-
-      controls.speed = 1.5;
-
-      return () => controls.stop();
-    }
-  }, [openSearch]);
-  useEffect(() => {
-    if (openSearch) {
-      setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current?.focus();
-        }
-      }, 1000);
+      if (inputRef.current) {
+        inputRef.current?.focus();
+      }
     }
   }, [openSearch]);
   return (
@@ -72,6 +37,7 @@ export function HeroSection() {
           <Image
             src={bgImage}
             alt="Home horizon image"
+            quality={50}
             className="absolute left-0 top-0 h-full w-full sm:h-screen"
           />
 
@@ -88,6 +54,7 @@ export function HeroSection() {
               src={climberImage}
               alt="Climber Image"
               className="relative h-full w-full object-contain"
+              quality={70}
               priority
             />
           </m.div>
@@ -104,6 +71,7 @@ export function HeroSection() {
             <Image
               src={lhotseImage}
               alt="Lhoste Image"
+              quality={70}
               priority
               className="relative h-full w-full object-cover"
             />
@@ -121,6 +89,7 @@ export function HeroSection() {
               src={cloudImage}
               alt="Cloud Image"
               className="relative h-full w-full object-cover"
+              quality={70}
             />
           </m.div>
 
@@ -128,6 +97,7 @@ export function HeroSection() {
             src={cloudImage}
             alt="Cloud Image"
             className="absolute bottom-0 left-0 h-1/2 w-full object-cover mix-blend-hard-light sm:bottom-0 sm:hidden sm:mix-blend-normal md:-bottom-10 md:h-[60vh]"
+            quality={70}
           />
         </div>
 
@@ -150,26 +120,49 @@ export function HeroSection() {
           </Text>
           <m.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.95 }}>
             <Button
-              ref={scope}
-              //onClick={() => router.push("/packages")}
-              onClick={() => setOpenSearch(!openSearch)}
+              onClick={() => {
+                if (!openSearch) {
+                  setOpenSearch(!openSearch);
+                }
+              }}
+              isLoading={loading}
               className="group flex w-fit items-center gap-x-4 rounded-full border border-white bg-transparent px-6 py-6 text-white hover:gap-x-5 hover:bg-transparent sm:w-auto md:px-10 md:py-8"
             >
               <Search />
-              <Input
-                ref={inputRef}
-                type="text"
-                //placeholder="Find your Adventure"
-                className="hidden scale-0 rounded-none border-none bg-transparent p-0 leading-none text-white placeholder:text-base placeholder:font-bold group-hover:text-white sm:h-16"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    router.push("/packages?title=" + e.currentTarget.value);
-                  }
-                }}
-              />
-              <Text variant="text-md" bold>
-                Find your Adventure
-              </Text>
+              <AnimatePresence>
+                {openSearch ? (
+                  <m.div
+                    initial={{ opacity: 0, x: "-100%", scale: 0 }}
+                    animate={{
+                      opacity: 1,
+                      x: "0%",
+                      scale: 1,
+                    }}
+                  >
+                    <Input
+                      ref={inputRef}
+                      type="text"
+                      //placeholder="Find your Adventure"
+                      className="relative rounded-none border-none bg-transparent p-0 leading-none text-white placeholder:text-base placeholder:font-bold group-hover:text-white sm:h-16"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          router.push(
+                            "/packages?title=" + e.currentTarget.value,
+                          );
+                          setLoading(true);
+                          //setOpenSearch(true);
+                        }
+                      }}
+                    />
+                  </m.div>
+                ) : (
+                  <m.div exit={{ opacity: 0, x: "-100%" }}>
+                    <Text variant="text-md" bold>
+                      Find your Adventure
+                    </Text>
+                  </m.div>
+                )}
+              </AnimatePresence>
             </Button>
           </m.div>
         </m.header>

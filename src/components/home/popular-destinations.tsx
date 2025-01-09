@@ -1,35 +1,11 @@
 "use client";
 import Image from "next/image";
-import destinationImg from "/public/images/destination.jpg";
 import { m, domMax, LazyMotion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
 import { APIResponseCollection } from "@/types/types";
 import Link from "next/link";
 import { Text } from "../ui/text";
-import { Loading } from "../loading";
-// const destinations = [
-//   {
-//     name: "Mustang Region",
-//     location: "Lorem Ipsum",
-//     image: destinationImg,
-//   },
-//   {
-//     name: "ABC Trekking",
-//     location: "Lorem Ipsum",
-//     image: destinationImg,
-//   },
-//   {
-//     name: "Everest Region",
-//     location: "Lorem Ipsum",
-//     image: destinationImg,
-//   },
-//   {
-//     name: "Makalu Region",
-//     location: "Lorem Ipsum",
-//     image: destinationImg,
-//   },
-// ];
 
 export default function PopularDestinations() {
   const {
@@ -68,8 +44,8 @@ export default function PopularDestinations() {
             <div className="lg:max-w-2xl">
               <h1 className="comp-heading">Popular Destinations</h1>
               <p className="comp-subheading mt-2 lg:mt-4">
-                Explore Stunning Destinations in Nepal: A Journey Through
-                Mountains, Culture, and Serenity
+                Discover Breathtaking Getaways Worldwide: Uniting Nature,
+                Culture, and Adventure for Your Ultimate Escape!
               </p>
             </div>
           </div>
@@ -84,7 +60,9 @@ export default function PopularDestinations() {
                 <Skeleton className="h-16 w-full" />
               </>
             ) : isError || destinations.data.length === 0 ? (
-              <Text variant="text-md"> No package destinations found</Text>
+              <Text variant="text-lg" className="col-span-4 text-center">
+                No popular package destinations found!
+              </Text>
             ) : (
               destinations?.data.map((destination, index) => {
                 const image = destination.attributes.image?.data;

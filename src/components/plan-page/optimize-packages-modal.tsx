@@ -34,7 +34,6 @@ export default function OptimizedPackagesModal() {
     selectedPackageType,
   } = usePlanContext();
 
-  console.log("type is", selectedPackageType);
 
   useEffect(() => {
     const fetchPackages = async () => {

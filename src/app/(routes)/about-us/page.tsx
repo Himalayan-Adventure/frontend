@@ -9,6 +9,12 @@ import bgImage from "/public/images/packagesBanner.png";
 import Services from "@/components/about/services";
 import { getProjects } from "@/server/projects/get-projects";
 
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+export const metadata: Metadata = {
+  title: `About Us | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteDescription}`,
+};
 const AboutUs = async () => {
   const data = await getAboutUs();
   const projectsData = await getProjects({});

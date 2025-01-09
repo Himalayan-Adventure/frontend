@@ -3,7 +3,12 @@ import CommonBanner from "@/components/ui/common-banner";
 import { getCategories } from "@/server/products/get-categories";
 import { getProducts } from "@/server/products/get-products";
 import bgImage from "/public/images/planPgBg.png";
-
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+export const metadata: Metadata = {
+  title: `Shop Page | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
 export default async function Shop() {
   const products = await getProducts();
   const categories = await getCategories();

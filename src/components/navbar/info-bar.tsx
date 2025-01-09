@@ -1,24 +1,5 @@
-import Link from "next/link";
-import Logo from "../logo";
-import { Text } from "../ui/text";
-import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  LogOut,
-  MapPin,
-  Menu,
-  Phone,
-  Settings,
-  User,
-  ShoppingCart,
-  UserCheck,
-  Settings2,
-} from "lucide-react";
-import Image from "next/image";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { m } from "framer-motion";
-import { socialIcons } from "@/config/constants";
-import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,19 +9,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
-import { ChooseAccType } from "../auth/choose-acc-type";
-import { AuthCard } from "../auth";
-import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { TUser } from "@/types/auth";
-import { toast } from "sonner";
+import { socialIcons } from "@/config/constants";
 import { logout } from "@/server/auth/logout";
+import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
+import { TUser } from "@/types/auth";
+import { useQuery } from "@tanstack/react-query";
+import { m } from "framer-motion";
+import {
+  LogOut,
+  MapPin,
+  Menu,
+  Phone,
+  Settings,
+  Settings2,
+  ShoppingCart,
+  User,
+  UserCheck,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "sonner";
+import { AuthCard } from "../auth";
+import Logo from "../logo";
+import { Button } from "../ui/button";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import { Skeleton } from "../ui/skeleton";
+import { Text } from "../ui/text";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
-  const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const { dialogOpen, setDialogOpen } = useCurrentAuthDialog();
-  const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const contacts = [
     {
       name: "Reach Us",
@@ -60,21 +56,25 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const res = await axios.get<TUser>(
-          "/api/me?populate[0]=profilePicture",
-        );
+        const res = await fetch("/api/me?populate[0]=profilePicture", {
+          cache: "force-cache",
+          next: {
+            tags: ["me"],
+          },
+        });
+        const data: TUser = await res.json();
 
-        if (!res?.data) {
+        if (!data) {
           return null;
         }
 
-        return res.data;
+        return data;
       } catch (error) {
         console.error("Error fetching user data", error);
         return null;
       }
     },
-    retry: 5,
+    retry: 1,
   });
 
   return (
@@ -116,7 +116,11 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               <p className="text-base leading-none">Plan with us</p>
             </Button>
           </Link>
-          {!user ? (
+          {isPending ? (
+            <span className="relative flex h-full flex-col items-stretch gap-y-1">
+              <Skeleton className="size-10 rounded-full" />
+            </span>
+          ) : !user ? (
             <span className="relative flex h-full flex-col items-stretch gap-y-1">
               <Dialog>
                 <DialogTrigger
@@ -283,19 +287,6 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                 </span>
               ) : (
                 <span className="flex items-stretch gap-x-3">
-                  {/* <Dialog> */}
-                  {/*   <DialogTrigger */}
-                  {/*     className="flex items-center justify-center rounded-full border border-gray-100 px-4 py-1 text-white" */}
-                  {/*     onClick={() => setRegisterDialogOpen(true)} */}
-                  {/*   > */}
-                  {/*     <UserPlus className="mr-2 h-4 w-4" strokeWidth={3} /> */}
-                  {/*     <p className="font-semibold">Register</p> */}
-                  {/*   </DialogTrigger> */}
-                  {/*   {registerDialogOpen && ( */}
-                  {/*     <RegisterCard setIsOpen={setRegisterDialogOpen} /> */}
-                  {/*   )} */}
-                  {/* </Dialog> */}
-
                   <Dialog>
                     <DialogTrigger
                       className="flex h-10 items-center justify-center rounded-full bg-primary px-10 py-3 text-white"
@@ -312,7 +303,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
               <div className="flex flex-row justify-center gap-x-2 brightness-200">
                 {socialIcons.map((item) => (
                   <Link
-                    prefetch={true}
+                    // prefetch={true}
                     key={`social-link-${item.name}`}
                     href={item.href}
                     target="_blank"

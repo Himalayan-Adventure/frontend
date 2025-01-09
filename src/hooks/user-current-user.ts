@@ -3,7 +3,7 @@ import { TUser } from "@/types/auth";
 import { useQuery } from "@tanstack/react-query";
 
 export const useCurrentUser = () => {
-  return useQuery<TUser>({
+  const { data: user, isPending } = useQuery<TUser>({
     queryKey: ["me"],
     queryFn: async () => {
       const userData = await getCurrentUserData();
@@ -13,4 +13,5 @@ export const useCurrentUser = () => {
       return userData;
     },
   });
+  return { user, isPending };
 };

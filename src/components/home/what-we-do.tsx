@@ -6,7 +6,6 @@ import Link from "next/link";
 import { m, domMax, LazyMotion } from "framer-motion";
 
 export default function WhatWeDo() {
-  const scrollRef = useRef(null);
   return (
     <LazyMotion features={domMax}>
       <section className="container overflow-hidden py-8 lg:py-16">
@@ -24,6 +23,7 @@ export default function WhatWeDo() {
               alt="What We Do"
               width={400}
               height={300}
+              quality={70}
             />
           </m.div>
 

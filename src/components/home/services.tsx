@@ -1,18 +1,14 @@
 "use client";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { m, domMax, LazyMotion } from "framer-motion";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { APIResponseCollection, APIResponseData } from "@/types/types";
-import { Text } from "../ui/text";
-import { Loading } from "../loading";
 import { useCurrentUser } from "@/hooks/user-current-user";
-import { toast } from "sonner";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { MessageDialog } from "@/components/services/message-dialog";
-import EverestImg from "/public/images/everest.png";
-import { cn } from "@/lib/utils";
 import { postRequestService } from "@/server/services/post-request-serivce";
+import { APIResponseCollection, APIResponseData } from "@/types/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { LazyMotion, domMax, m } from "framer-motion";
+import Image from "next/image";
+import { toast } from "sonner";
+import { Loading } from "../loading";
+import { Button } from "../ui/button";
+import { Text } from "../ui/text";
 export default function Services() {
   const {
     data: services,
@@ -45,10 +41,10 @@ export default function Services() {
             <div className="lg:max-w-2xl">
               <h1 className="comp-heading">Our Services</h1>
               <p className="comp-subheading mt-2 lg:mt-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis
-                ipsum suspendisse ultrices gravida. Risus commodo viverra
-                maecenas accumsan lacus vel facilisis.
+                Experience seamless adventure planning! From guided treks and
+                equipment rentals to transportation and expert consultation, we
+                provide everything you need for a safe and unforgettable
+                Himalayan journey.
               </p>
             </div>
           </div>
@@ -57,7 +53,9 @@ export default function Services() {
             {isPending ? (
               <Loading className="col-span-3" />
             ) : isError || !services || services?.data?.length == 0 ? (
-              <Text variant="text-md">No services found</Text>
+              <Text variant="text-md" className="col-span-full">
+                No services found
+              </Text>
             ) : (
               services?.data?.map((svc, index) => (
                 <ServiceCard svc={svc} key={`services-${svc.id}`} />
@@ -75,7 +73,7 @@ const ServiceCard = ({
   svc: APIResponseData<"api::service.service">;
 }) => {
   const image = svc?.attributes?.image?.data?.attributes;
-  const { data: user, isLoading } = useCurrentUser();
+  const { user, isPending: isLoading } = useCurrentUser();
   const service_provider = svc?.attributes?.service_provider?.data;
   const {
     mutate: requestSerivceMutation,

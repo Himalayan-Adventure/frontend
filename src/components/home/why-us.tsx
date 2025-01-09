@@ -6,6 +6,7 @@ import experience from "/public/images/whyus/experience.png";
 import guide from "/public/images/whyus/guides.png";
 import reliable from "/public/images/whyus/reliable.png";
 import support from "/public/images/whyus/support.png";
+import whyUsMan from "/public/images/whyus/whyusMan.png";
 import { m, domMax, LazyMotion } from "framer-motion";
 const features = [
   {
@@ -36,6 +37,7 @@ const FeatureItem = ({ src, alt, text }: any) => (
       src={src}
       alt={alt}
       className="mb-2 h-12 w-12 object-cover lg:h-20 lg:w-20"
+      quality={70}
     />
     <h3 className="text-center text-sm font-semibold md:text-left md:text-lg">
       {text}
@@ -52,13 +54,15 @@ const CloudImage = ({ src, alt, position }: any) => (
 export default function WhyUs() {
   return (
     <LazyMotion features={domMax}>
-      <section
-        className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat lg:my-16 lg:min-h-[80vh]"
-        style={{
-          backgroundImage: "url('/images/whyus/whyusMan.png')",
-          filter: "grayscale(100%)",
-        }}
-      >
+      <section className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat lg:my-16 lg:min-h-[80vh]">
+        <Image
+          src={whyUsMan}
+          alt="why us"
+          layout="fill"
+          objectFit="cover"
+          className="absolute h-full w-full grayscale"
+          quality={70}
+        />
         <div className="from-gray absolute top-0 h-20 w-full bg-gradient-to-b"></div>
         <m.div
           initial={{ opacity: 0, x: "-10%" }}

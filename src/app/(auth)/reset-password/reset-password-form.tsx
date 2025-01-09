@@ -50,12 +50,7 @@ export const ResetPasswordForm = ({ code }: { code: string }) => {
     if (res.status === 200) {
       toast.success("Successfully reset password! Please login ");
       router.push("/");
-    //   if (window) {
-    //     // window.location.reload();
-    //   }
-      // setDialogOpen(false);
     } else {
-      console.log(res?.error?.error?.message);
       toast.error(`${res?.error?.error?.message}`);
     }
   }

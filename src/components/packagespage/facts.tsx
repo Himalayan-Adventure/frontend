@@ -1,122 +1,18 @@
 "use client";
 
-import { BsFillCalendarCheckFill, BsFillPeopleFill } from "react-icons/bs";
-import {
-  FaCalendarAlt,
-  FaCar,
-  FaCloudSun,
-  FaCompass,
-  FaFlag,
-  FaHiking,
-  FaHotel,
-  FaMapMarkerAlt,
-  FaMountain,
-  FaPlane,
-  FaUsers,
-  FaUtensils,
-} from "react-icons/fa";
-import { MdOutlineLocationOn, MdOutlineSevereCold } from "react-icons/md";
-import Image from "next/image";
 import { IDProperty } from "@/types/types";
+import Image from "next/image";
 import DynamicReactIcon from "../icons/strapi-icon";
-import { IconContext } from "react-icons";
 const CloudImage = ({ src, alt, position }: any) => (
   <div className={`absolute ${position} w-full`}>
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
   </div>
 );
+import FactsBg from "/public/images/factsBg.png";
 
-const facts = [
-  {
-    label: "Highest access:",
-    value: "8,848.86m (29,032 ft)",
-    icon: <FaMountain />,
-  },
-  { label: "Duration:", value: "65 Days", icon: <FaCalendarAlt /> },
-  {
-    label: "Co-ordinates:",
-    value: "27°59'17'' N/86°55'31'' E",
-    icon: <FaCompass />,
-  },
-  { label: "Country:", value: "Nepal", icon: <FaFlag /> },
-  { label: "Departure From:", value: "Kathmandu Airport", icon: <FaPlane /> },
-  {
-    label: "Accommodation:",
-    value: "Three star to five star as request",
-    icon: <FaHotel />,
-  },
-  {
-    label: "Transportation:",
-    value: "Vehicle and domestic flight",
-    icon: <FaCar />,
-  },
-  {
-    label: "Major Activity:",
-    value: "Trekking/Mountaineering",
-    icon: <FaHiking />,
-  },
-  { label: "Culture:", value: "Sherpa and Tamang", icon: <FaUsers /> },
-  {
-    label: "Climbing route:",
-    value: "South east ridge (Normal route)",
-    icon: <FaMapMarkerAlt />,
-  },
-  {
-    label: "First Ascent:",
-    value: "May 29, 1953 Edmund Hillary & Tenzing Norgay Sherpa",
-    icon: <BsFillCalendarCheckFill />,
-  },
-  {
-    label: "Group Size:",
-    value: "08-10 persons per group",
-    icon: <BsFillPeopleFill />,
-  },
-  {
-    label: "Location:",
-    value: "Nepal/Tibet border",
-    icon: <MdOutlineLocationOn />,
-  },
-  { label: "Airport:", value: "Kathmandu Airport", icon: <FaPlane /> },
-  { label: "Grade:", value: "Challenging", icon: <MdOutlineSevereCold /> },
-  {
-    label: "Meals:",
-    value: "B/B plan in Kathmandu & B, I, D during trekking and climbing",
-    icon: <FaUtensils />,
-  },
-  {
-    label: "Best season:",
-    value: "Spring Season (April, May)",
-    icon: <FaCloudSun />,
-  },
-  {
-    label: "Include Activity:",
-    value: "Trekking/Mountaineering",
-    icon: <FaHiking />,
-  },
-  { label: "Mode of Travel:", value: "Tea House/Camping", icon: <FaHotel /> },
-  {
-    label: "Himalayan sights:",
-    value: "Lhotse, Makalu, Ama Dablam, Cho-Oyu",
-    icon: <FaMountain />,
-  },
-];
-[
-  {
-    id: 1,
-    name: "Highest access",
-    icon: "FaMountain",
-    value: "8,848.86m (29,032 ft)",
-  },
-];
 export default function FactsOfTheTrip({
   data,
 }: {
-  // data?: Array<{
-  //   id: number;
-  //   name: string;
-  //   icon: string;
-  //   value: string;
-  // }>;
   data?:
     | (IDProperty &
         Omit<
@@ -142,10 +38,17 @@ export default function FactsOfTheTrip({
     <section className="relative my-8 flex min-h-screen items-center bg-cover bg-center bg-no-repeat lg:my-16">
       <div
         className="absolute inset-0 -z-20 min-h-screen bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/images/factsBg.png')",
-          filter: "grayscale(100%)",
-        }}
+        // style={{
+        //   backgroundImage: "url('/images/factsBg.png')",
+        //   filter: "grayscale(100%)",
+        // }}
+      />
+      <Image
+        src={FactsBg}
+        alt="facts-section-bg"
+        layout="fill"
+        objectFit="cover"
+        className="grayscale absolute h-full w-full -z-20"
       />
       {/* Overlay */}
       <div className="absolute inset-0 -z-10 bg-black bg-opacity-50"></div>

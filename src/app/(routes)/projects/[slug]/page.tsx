@@ -9,21 +9,52 @@ import Itenerary from "@/components/packagespage/itenerary";
 import Map from "@/components/packagespage/map";
 import Offers from "@/components/packagespage/offers";
 import Reviews from "@/components/packagespage/reviews";
-import SimilarPackages from "@/components/packagespage/similar-packages";
 import ThingsToKnow from "@/components/packagespage/things-to-know";
-import CommonBanner from "@/components/ui/common-banner";
-import { getSinglePackage } from "@/server/packages/get-single-package";
-import { CostBudgeting, TDepartureData } from "@/types/packages/departure";
-import Image from "next/image";
-import bgImage from "/public/images/packageBanner.png";
 import Video from "@/components/packagespage/video";
-import { Dot } from "lucide-react";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import CommonBanner from "@/components/ui/common-banner";
 import { getSingleProject } from "@/server/projects/get-single-project";
+import { CostBudgeting, TDepartureData } from "@/types/packages/departure";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 import { format } from "date-fns";
-import { Text } from "@/components/ui/text";
+import { Dot } from "lucide-react";
+import Image from "next/image";
 import { PastClimbersCard } from "../past-climbers-card";
 import SimilarProjects from "../similar-projects";
+import bgImage from "/public/images/packageBanner.png";
+import type { Metadata, ResolvingMetadata } from "next";
+import { siteConfig } from "@/config/site-config";
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const slug = (await params).slug;
+
+  const data = await getSingleProject(slug);
+  if (data.status === 400 || !data.data) {
+    return {
+      title: "No project found",
+      description: `${siteConfig.siteName}`,
+    };
+  }
+
+  const images = data?.data?.attributes?.image
+    ? data?.data?.attributes?.image.data?.map((image) => image.attributes.url)
+    : [];
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: data.data?.attributes?.title,
+    openGraph: {
+      images: [...images, ...previousImages],
+    },
+  };
+}
 
 export default async function ProjectDetail({
   params,

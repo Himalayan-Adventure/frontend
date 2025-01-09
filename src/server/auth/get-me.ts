@@ -44,8 +44,6 @@ import { cookies } from "next/headers";
 //     const token = cookieStore.get("jwt")?.value;
 
 //     if (!token) {
-//       console.log(token);
-//       console.log("hi");
 //       return Response.json({ error: "Unauthorized" }, { status: 401 });
 //     }
 
@@ -74,6 +72,33 @@ import { cookies } from "next/headers";
 //   }
 // }
 
+export async function getUser() {
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get("jwt")?.value;
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        next: {
+          tags: ["me"],
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data: TUser = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 export async function getCurrentUserData() {
   try {
     const cookieStore = cookies();
@@ -82,7 +107,7 @@ export async function getCurrentUserData() {
       `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate[0]=profilePicture`,
       {
         headers: {
-          Authorization: `Bearer ${token}` || "",
+          Authorization: `Bearer ${token}`,
         },
         next: {
           tags: ["me"],
@@ -110,7 +135,7 @@ export async function getCurrentUserDataDeep() {
       `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate=deep`,
       {
         headers: {
-          Authorization: `Bearer ${token}` || "",
+          Authorization: `Bearer ${token}`,
         },
         next: {
           tags: ["me"],
@@ -130,16 +155,16 @@ export async function getCurrentUserDataDeep() {
   }
 }
 
-const getUser = async () => {
-  try {
-    const res = await axios.get<TUserDeep>("/api/me?populate=deep");
+// const getUser = async () => {
+//   try {
+//     const res = await axios.get<TUserDeep>("/api/me?populate=deep");
 
-    if (!res?.data) {
-      return null;
-    }
-    return res.data;
-  } catch (error) {
-    console.error("Error fetching user data", error);
-    return null;
-  }
-};
+//     if (!res?.data) {
+//       return null;
+//     }
+//     return res.data;
+//   } catch (error) {
+//     console.error("Error fetching user data", error);
+//     return null;
+//   }
+// };

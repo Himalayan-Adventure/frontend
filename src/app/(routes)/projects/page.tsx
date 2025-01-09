@@ -39,11 +39,6 @@ export default async function Packages({
             <SearchBar selector="title" className="max-w-48 justify-end" />
           </div>
         </Suspense>
-        {/*
-        <Suspense>
-          <PackageFilter />
-        </Suspense>
-          */}
         <Suspense fallback={<PackageCardSkeleton />}>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(0,300px))] gap-4">
             {!data || data?.data?.length === 0 ? (

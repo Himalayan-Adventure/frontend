@@ -41,9 +41,6 @@ export default function HomeCarousel() {
     { name: "autumn", icon: <AutumnIcon /> },
     { name: "winter", icon: <WinterIcon /> },
   ];
-  useEffect(() => {
-    console.log(activeSeason);
-  });
   const [activeSeason, setActiveSeason] = useState<TSeason>("all");
   const { data, isFetching, status, error } = useQuery<
     APIResponseCollection<"api::package.package">
@@ -52,7 +49,7 @@ export default function HomeCarousel() {
     queryFn: async () => {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate[image][populate]=true&populate[adventure_specification][populate]=*`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate[image][populate]=true&populate[adventure_specification][populate]=*&pagination[pageSize]=10&pagination[page]=1`,
         );
         return data.data;
       } catch (error) {
@@ -133,7 +130,7 @@ export default function HomeCarousel() {
                   ? data?.data.map((pkg, index) => (
                       <CarouselItem
                         key={index}
-                        className="md:basis-1/2 lg:basis-1/4"
+                        className="sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                       >
                         <PackageCard pkg={pkg} variant="home" />
                       </CarouselItem>

@@ -124,7 +124,7 @@ export default async function UsefulLinksSection() {
                   alt={social.alt}
                   width={24}
                   height={24}
-                  className="h-6 w-6 bg-black" // Tailwind classes for consistent size
+                  className="h-6 w-6 bg-black" 
                 />
               </Link>
             ))}

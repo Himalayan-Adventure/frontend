@@ -45,7 +45,7 @@ export default function SearchBar({
         }}
         defaultValue={searchParams.get(selector) || ""}
       />
-      <Search size={18} className="absolute left-2 top-1/2 -translate-y-1/2" />
+      <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2" />
     </div>
   );
 }

@@ -45,6 +45,7 @@ import { TUser } from "@/types/auth";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useCurrentUser } from "@/hooks/user-current-user";
+import ExpertsImage from "/public/images/experts.png";
 const CloudImage = ({ src, alt, position }: any) => (
   <div className={`absolute ${position} w-full brightness-100`}>
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
@@ -54,7 +55,7 @@ const CloudImage = ({ src, alt, position }: any) => (
 export default function BookAppointment() {
   const [book, setBook] = useState(false);
 
-  const { data: user, isLoading } = useCurrentUser();
+  const { user, isPending } = useCurrentUser();
   return (
     <LazyMotion features={domMax}>
       <m.section
@@ -62,13 +63,20 @@ export default function BookAppointment() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat lg:my-16 lg:min-h-[80vh]"
-        style={{
-          backgroundImage: "url('/images/experts.jpeg')",
-          filter: "grayscale(100%)",
-        }}
+        className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat lg:my-16 lg:min-h-[80vh] grayscale"
+        // style={{
+        //   backgroundImage: "url('/images/experts.jpeg')",
+        //   filter: "grayscale(100%)",
+        // }}
       >
         {/* Overlay */}
+        <Image
+          src={ExpertsImage}
+          alt="Experts Image"
+          layout="fill"
+          objectFit="cover"
+          className="absolute h-full w-full grayscale"
+        />
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
         <div className="from-gray absolute top-0 h-20 w-full bg-gradient-to-b"></div>
@@ -581,7 +589,6 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
               onClick={() => {
                 if (!form.formState.isValid) {
                   const firstError = Object.keys(errors).reduce((field, a) => {
-                    console.log(errors);
                     return !!errors[
                       field as keyof TBookAppointmentSchemaProvider
                     ]

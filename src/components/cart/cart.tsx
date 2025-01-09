@@ -23,7 +23,6 @@ export default function Cart() {
     address: string;
     landmark: string;
   }) => {
-    console.log(address);
     setIsAddressDialogOpen(false);
     setIsPaymentDialogOpen(true);
   };

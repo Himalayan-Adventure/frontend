@@ -66,10 +66,10 @@ export const columns: ColumnDef<
     accessorKey: "attributes.services.service_provider",
     cell({ row }) {
       const serviceProvider =
-        row?.original?.attributes?.services?.data?.[0].attributes
-          .service_provider;
+        row?.original?.attributes?.services?.data?.[0]?.attributes
+          ?.service_provider;
       return serviceProvider ? (
-        <Link href={`/profile/${serviceProvider.data.id}`}>
+        <Link href={`/profile/${serviceProvider.data.id}`} target="_blank">
           <Text variant="text-sm">
             {serviceProvider.data.attributes.username}
           </Text>

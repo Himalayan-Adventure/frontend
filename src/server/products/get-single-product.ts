@@ -1,6 +1,7 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
+import { APIResponse } from "@/types/types";
 import axios, { AxiosResponse, type AxiosError } from "axios";
 export const getSingleProduct = async (id: string) => {
   try {

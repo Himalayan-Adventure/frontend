@@ -19,12 +19,47 @@ import bgImage from "/public/images/packageBanner.png";
 import Video from "@/components/packagespage/video";
 import { Dot } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import type { Metadata, ResolvingMetadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
-interface Params {
-  slug: string;
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const slug = (await params).slug;
+
+  const data = await getSinglePackage(slug);
+  if (data.status === 400 || !data.data) {
+    return {
+      title: "No package found",
+      description: `${siteConfig.siteName}`,
+    };
+  }
+
+  const images = data?.data?.attributes?.image
+    ? data?.data?.attributes?.image.data?.map((image) => image.attributes.url)
+    : [];
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: data.data?.attributes?.package_name,
+    openGraph: {
+      images: [...images, ...previousImages],
+    },
+  };
 }
 
-export default async function PackageDetail({ params }: { params: Params }) {
+export default async function PackageDetail({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const { slug } = params;
   const data = await getSinglePackage(slug);
   if (data.status === 404) {
@@ -83,7 +118,7 @@ export default async function PackageDetail({ params }: { params: Params }) {
         src={bgImage}
         alt="Background Image"
         objectFit="cover"
-        quality={100}
+        quality={60}
         className="absolute inset-0 h-96 w-full object-cover lg:h-auto"
       />
 
