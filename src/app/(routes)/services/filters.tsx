@@ -19,46 +19,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getServiceCategories } from "@/server/services/get-services-categories";
 import DynamicReactIcon from "@/components/icons/strapi-icon";
 import { TServiceType, useServiceType } from "@/store/get-service-type";
-// const tabsTriggers = [
-//   {
-//     icon: <Mountain className="size-5 md:size-6" />,
-//     name: "Trekking",
-//     value: "trekking",
-//     key: "",
-//   },
-//   {
-//     icon: <FaWalking className="size-6 md:size-6" />,
-//     name: "Peak Climbing",
-//     value: "trekking",
-//     key: "",
-//   },
-//   {
-//     icon: <FaMountain className="size-6 md:size-6" />,
-//     name: "Expeditions 8000m",
-//     value: "8000",
-//     key: "",
-//   },
-//   {
-//     icon: <PiMountainsFill className="size-6 md:size-6" />,
-//     name: "Expeditions 7000m",
-//     value: "7000",
-//     key: "",
-//   },
-//   {
-//     icon: <GiMountainRoad className="size-6 md:size-6" />,
-//     name: "Expeditions 6000m",
-
-//     value: "8000",
-//     key: "",
-//   },
-// ];
-
 const categoryTriggers = [
-  // {
-  //   icon: <IoBusiness className="size-5 md:size-6" />,
-  //   name: "Agency",
-  //   value: "agency",
-  // },
   {
     icon: <FaPersonRays className="size-6 md:size-6" />,
     name: "Guide",
@@ -93,7 +54,12 @@ export function TopFilter() {
             className="h-full capitalize data-[state=active]:!text-primary"
             onClick={() => {
               setType(tab.value as TServiceType);
-              updateQueryString({ type: tab.value }, ["name", "service-name",'limit','page']);
+              updateQueryString({ type: tab.value }, [
+                "name",
+                "service-name",
+                "limit",
+                "page",
+              ]);
             }}
             asChild
           >
