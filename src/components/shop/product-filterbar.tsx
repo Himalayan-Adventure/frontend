@@ -102,7 +102,6 @@ export default function ProductFilterBar({
                             </ul>
                           </div>
                         )}
-                      w
                     </li>
                   ))}
                 </ul>
