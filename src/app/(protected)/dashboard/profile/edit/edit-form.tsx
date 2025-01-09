@@ -197,7 +197,6 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
           <Button
             type="submit"
             onClick={() => {
-              console.log(form.formState.errors);
               form.handleSubmit(onSubmit);
             }}
             //disabled={!form.formState.isValid}

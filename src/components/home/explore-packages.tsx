@@ -100,7 +100,7 @@ const PackageCategoryCard = ({
   data: APIResponseData<"api::package-category.package-category">;
 }) => {
   const image = data?.attributes?.image?.data?.attributes;
-  const { data: user, isLoading } = useCurrentUser();
+  const { user, isPending} = useCurrentUser();
   const [open, setOpen] = useState(false);
   return (
     <div className="grid place-items-center">

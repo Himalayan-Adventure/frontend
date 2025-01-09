@@ -44,8 +44,6 @@ import { cookies } from "next/headers";
 //     const token = cookieStore.get("jwt")?.value;
 
 //     if (!token) {
-//       console.log(token);
-//       console.log("hi");
 //       return Response.json({ error: "Unauthorized" }, { status: 401 });
 //     }
 

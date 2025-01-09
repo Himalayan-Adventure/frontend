@@ -5,6 +5,12 @@ import { getCurrentUserData } from "@/server/auth/get-me";
 import { getBlogCategories } from "@/server/blogs/get-blog-categories";
 import { getBlogs } from "@/server/blogs/get-blogs";
 
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+export const metadata: Metadata = {
+  title: `Blogs | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
 export default async function BlogsPage({
   searchParams,
 }: {

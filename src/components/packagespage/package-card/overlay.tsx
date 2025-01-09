@@ -62,7 +62,6 @@ export const Overlay = forwardRef<
     });
   }
   const { user, isPending } = useCurrentUser();
-  console.log(user, isPending);
 
   return (
     <div

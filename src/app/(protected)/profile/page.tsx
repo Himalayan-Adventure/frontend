@@ -4,6 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { getCurrentUserDataDeep } from "@/server/auth/get-me";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+export const metadata: Metadata = {
+  title: `My Profile`,
+  description: ` ${siteConfig.siteDescription}`,
+};
 export default async function ProfilePage() {
   const user = await getCurrentUserDataDeep();
   if (!user) {

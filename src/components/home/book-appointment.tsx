@@ -589,7 +589,6 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
               onClick={() => {
                 if (!form.formState.isValid) {
                   const firstError = Object.keys(errors).reduce((field, a) => {
-                    console.log(errors);
                     return !!errors[
                       field as keyof TBookAppointmentSchemaProvider
                     ]

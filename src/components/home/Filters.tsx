@@ -5,25 +5,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { APIResponseCollection } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
-  FaCarAlt,
   FaChevronDown,
-  FaHiking,
   FaLeaf,
-  FaMountain,
-  FaSkiingNordic,
   FaSnowflake,
-  FaSun,
+  FaSun
 } from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa6";
 import { GiFlowerEmblem, GiHiking, GiStairsGoal } from "react-icons/gi";
 import { MdHiking } from "react-icons/md";
 import { toast } from "sonner";
 import DynamicReactIcon from "../icons/strapi-icon";
-import { APIResponseCollection } from "@/types/types";
-import { useQuery } from "@tanstack/react-query";
 
 const experiences = [
   {
@@ -196,7 +192,6 @@ export default function FilterBox() {
       duration: 1000,
     });
   };
-  //  console.log(adventureTypes);
 
   return (
     <DialogContent className="h-[90vh] overflow-auto sm:max-w-[800px]">

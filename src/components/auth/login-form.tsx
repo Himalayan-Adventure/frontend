@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { SetStateAction, useState } from "react";
+import { DialogTitle } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -8,19 +8,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Oval } from "react-loader-spinner";
-import { DialogTitle } from "@/components/ui/dialog";
-import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOffIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Text } from "@/components/ui/text";
+import { login } from "@/server/auth/login-user";
+import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
 import { LoginFormSchema, TLoginForm } from "@/validators/login-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { Eye, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { login } from "@/server/auth/login-user";
-import Logo from "@/components/logo";
-import { useCurrentAuthDialog } from "@/store/get-current-auth-dialog";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Oval } from "react-loader-spinner";
+import { toast } from "sonner";
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { type, setType, setDialogOpen } = useCurrentAuthDialog();
@@ -36,7 +35,6 @@ export const LoginForm = () => {
   async function onSubmit(values: TLoginForm) {
     setLoading(true);
     const payload = form.getValues();
-    console.log(payload);
     const res = await login({
       email: payload.email,
       password: payload.password,
@@ -52,7 +50,6 @@ export const LoginForm = () => {
       // setDialogOpen(false);
     } else {
       setLoading(false);
-      console.log(res?.error?.error?.message);
       if (
         res?.error?.error?.message === "Your account email is not confirmed"
       ) {

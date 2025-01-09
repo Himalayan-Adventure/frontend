@@ -17,6 +17,7 @@ import bgImage from "/public/images/packagesBanner.png";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { sleep } from "@/lib/utils";
 import { ServiceContent } from "./service-content";
+
 type TSearchParams = {
   searchParams: {
     type?: string;

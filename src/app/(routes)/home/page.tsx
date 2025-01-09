@@ -11,6 +11,14 @@ import { socialIcons } from "@/config/constants";
 import Image from "next/image";
 import Link from "next/link";
 
+import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Home | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
+
 export default async function Home() {
   return (
     <main>

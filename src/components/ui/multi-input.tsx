@@ -63,7 +63,6 @@ const MultiInput = React.forwardRef<HTMLInputElement, MultiInputProps>(
       if (inputRef.current) {
         inputRef.current.value = values.join("\n");
       }
-      console.log(value);
     }, [values, ref]);
     return (
       <FormItem className="space-y-3">

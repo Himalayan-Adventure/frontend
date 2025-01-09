@@ -3,6 +3,40 @@ import bgImage from "/public/images/packagesBanner.png";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { getSingleUser } from "@/server/users/get-single-user";
 import { Text } from "@/components/ui/text";
+
+import type { Metadata, ResolvingMetadata } from "next";
+import { siteConfig } from "@/config/site-config";
+type Props = {
+  params: Promise<{ id: number }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const id = (await params).id;
+
+  const data = await getSingleUser({ id });
+  if (!data) {
+    return {
+      title: "No user found!",
+      description: `${siteConfig.siteName}`,
+    };
+  }
+
+  const image = data?.profilePicture?.url || "";
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: data.username + " Profile",
+    openGraph: {
+      images: [image, ...previousImages],
+    },
+  };
+}
+
 export default async function PublicProfilePage({
   params,
 }: {

@@ -15,7 +15,6 @@ export async function PUT(
   }
 
   try {
-    console.log(JSON.stringify({data}));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?populate=deep`,
 
@@ -35,7 +34,6 @@ export async function PUT(
     revalidateTag("me");
 
     const value = await res.json(); 
-    console.log(res, req);
     if (!res.ok) {
       return Response.json(
         { error: value.error?.details?.errors?.[0] },
@@ -75,7 +73,6 @@ export async function GET(
         },
       },
     );
-    console.log(res);
 
     const value = await res.json();
     return Response.json(value);

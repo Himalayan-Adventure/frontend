@@ -33,7 +33,6 @@ export default async function ServicesRequestedPage({
     redirect("/home");
   }
   const data = await getServiceRequestedByUser({ id: user?.id, page, date });
-  console.log(data?.data[0].attributes);
 
   return (
     <section className="space-y-4">

@@ -3,6 +3,12 @@ import CommonBanner from "@/components/ui/common-banner";
 import { getMembers } from "@/server/teams/get-members";
 import { getTeams } from "@/server/teams/get-team-categories";
 
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+export const metadata: Metadata = {
+  title: `Our Team | ${siteConfig.siteName}`,
+  description: ` ${siteConfig.siteName}`,
+};
 export default async function TeamsPage() {
   const teamCategories = await getTeams();
   const membersList = await getMembers();

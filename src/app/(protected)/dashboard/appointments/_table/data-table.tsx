@@ -123,12 +123,7 @@ function DataTable<TData, TValue>({
     enableRowSelection: true,
 
     onRowSelectionChange: setRowSelection,
-    // onRowSelectionChange: (updaterOrValue) => {
-    //   console.log(typeof updaterOrValue);
-    //   setRowSelection;
-    // },
     getPaginationRowModel: getPaginationRowModel(),
-    //debugTable: true,
     state: {
       sorting,
       columnFilters,

@@ -2,8 +2,6 @@ import bgImage from "/public/images/packagesBanner.png";
 import { Suspense } from "react";
 import Image, { StaticImageData } from "next/image";
 import cloudImage from "/public/images/cloud.png";
-import { Metadata } from "next";
-import { siteConfig } from "@/config/site-config";
 import { getPackages } from "@/server/packages/get-packages";
 import { PackageFilter } from "./filter";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
@@ -12,6 +10,8 @@ import SearchBar from "@/components/ui/search-bar";
 import { LoadMorePagination } from "@/components/services/pagination";
 import { SearchX } from "lucide-react";
 
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 export const metadata: Metadata = {
   title: `Packages | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,

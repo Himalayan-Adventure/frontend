@@ -153,9 +153,6 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
       toast.error(`${res?.error?.message}`);
     }
   }
-  useEffect(() => {
-    console.log(form.getValues("appointment_date"), date);
-  }, [form.getValues("appointment_date"), date]);
   return (
     <div className="relative space-y-4">
       <Text className="w-full text-center" variant={"text-md"}>

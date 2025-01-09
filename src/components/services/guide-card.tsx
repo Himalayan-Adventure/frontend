@@ -130,9 +130,8 @@ const GuideCardOverlay = ({
   );
 };
 const GuideDetails = ({ id }: { id: number }) => {
-  const { data: loggedInUser, isLoading } = useCurrentUser();
+  const { user: loggedInUser, isPending:isUserPending } = useCurrentUser();
   const { type, setType, setDialogOpen } = useGuideDialog();
-  console.log(loggedInUser, id);
   const {
     data: guide,
     isPending,

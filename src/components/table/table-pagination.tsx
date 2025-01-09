@@ -57,7 +57,6 @@ export default function TablePagination({
             onClick={() => {
               if (meta?.pagination && page < meta?.pagination.pageCount) {
                 setPage(page + 1);
-                console.log(page);
                 updateQueryString({
                   page: (meta?.pagination.page + 1).toString(),
                 });

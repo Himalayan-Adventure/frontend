@@ -1,18 +1,14 @@
 "use client";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { m, domMax, LazyMotion } from "framer-motion";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { APIResponseCollection, APIResponseData } from "@/types/types";
-import { Text } from "../ui/text";
-import { Loading } from "../loading";
 import { useCurrentUser } from "@/hooks/user-current-user";
-import { toast } from "sonner";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { MessageDialog } from "@/components/services/message-dialog";
-import EverestImg from "/public/images/everest.png";
-import { cn } from "@/lib/utils";
 import { postRequestService } from "@/server/services/post-request-serivce";
+import { APIResponseCollection, APIResponseData } from "@/types/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { LazyMotion, domMax, m } from "framer-motion";
+import Image from "next/image";
+import { toast } from "sonner";
+import { Loading } from "../loading";
+import { Button } from "../ui/button";
+import { Text } from "../ui/text";
 export default function Services() {
   const {
     data: services,

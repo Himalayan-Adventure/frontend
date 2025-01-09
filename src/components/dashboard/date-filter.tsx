@@ -17,7 +17,6 @@ export default function DateFilter() {
   return (
     <Select
       onValueChange={(value) => {
-        console.log(value);
         switch (value) {
           case "all":
             updateQueryString({}, ["date"]);

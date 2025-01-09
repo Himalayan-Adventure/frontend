@@ -47,7 +47,6 @@ export const makeAppointment = async (
       status: res.status,
     };
   } catch (error: any) {
-    console.log(error);
     return {
       error: {
         // @ts-ignore
