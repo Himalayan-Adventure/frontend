@@ -1,5 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -24,6 +27,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DepartureFact } from "@/components/packagespage/departure";
 import Image from "next/image";
 import { format } from "date-fns";
+import { useCurrentUser } from "@/hooks/user-current-user";
+import { QuotesDialog } from "@/components/packagespage/quote";
+import { toast } from "sonner";
 
 const ProjectCard = ({
   project,
@@ -339,6 +345,7 @@ const Overlay = forwardRef<
       icon: <MdTimelapse size={20} />,
     });
   }
+  const { user, isPending } = useCurrentUser();
 
   return (
     <div
@@ -390,9 +397,23 @@ const Overlay = forwardRef<
                   </p>
                 </div>
 
-                <Button className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white">
-                  Book Now
-                </Button>
+                {!user || isPending ? (
+                  <Button
+                    className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white"
+                    onClick={() => toast.error("Please login for booking")}
+                  >
+                    Book Now
+                  </Button>
+                ) : (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white">
+                        Book Now
+                      </Button>
+                    </DialogTrigger>
+                    <QuotesDialog packageId={pkg?.id} title="Book now" />
+                  </Dialog>
+                )}
               </div>
             ))}
           </div>

@@ -26,7 +26,14 @@ import { DialogContent } from "../ui/dialog";
 
 import EverestImg from "/public/images/everest.png";
 import Image from "next/image";
-export const QuotesDialog = ({ packageId }: { packageId?: number }) => {
+import { useCurrentUser } from "@/hooks/user-current-user";
+export const QuotesDialog = ({
+  packageId,
+  title,
+}: {
+  packageId?: number;
+  title?: string;
+}) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const form = useForm<TQuoteForm>({
@@ -61,7 +68,7 @@ export const QuotesDialog = ({ packageId }: { packageId?: number }) => {
         className="absolute -z-10 h-full w-full object-cover opacity-90"
       />
       <Text className="w-full text-center" variant={"text-lg"} semibold>
-        Write a quote
+        {title || "Write a quote"}
       </Text>
       <Form {...form}>
         <form
