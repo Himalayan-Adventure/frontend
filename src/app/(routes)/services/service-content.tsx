@@ -15,13 +15,24 @@ import { LoadMorePagination } from "@/components/services/pagination";
 import { getUsers } from "@/server/users/get-users";
 import { GuideCard } from "@/components/services/guide-card";
 export const ServiceContent = () => {
-  const searchParams = useSearchParams();
   const { type, setType } = useServiceType();
 
   return (
     <div className="flex w-full flex-col gap-5 md:flex-row">
-      {type === "packages" && <SideFilter />}
-      {type === "packages" ? <ServicesPackages /> : <ServicesGuides />}
+      {type === "packages" && (
+        <Suspense>
+          <SideFilter />
+        </Suspense>
+      )}
+      {type === "packages" ? (
+        <Suspense>
+          <ServicesPackages />
+        </Suspense>
+      ) : (
+        <Suspense>
+          <ServicesGuides />
+        </Suspense>
+      )}
     </div>
   );
 };

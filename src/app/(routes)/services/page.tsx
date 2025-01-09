@@ -1,22 +1,12 @@
-import { SideFilter, TopFilter } from "./filters";
-import { Loading } from "@/components/loading";
-import fallbackImg from "/public/images/packageBanner.png";
-import { ServiceCard } from "./service-card";
-import Image, { StaticImageData } from "next/image";
-import { SortFilters } from "./sort-filters";
-import { Text } from "@/components/ui/text";
-import { getServices } from "@/server/services/get-services";
-import { getUsers } from "@/server/users/get-users";
-import { LoadMorePagination as ServicesPagination } from "@/components/services/pagination";
-import { GuideCard } from "@/components/services/guide-card";
-import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+import Image, { StaticImageData } from "next/image";
 import { Suspense } from "react";
+import { TopFilter } from "./filters";
+import { ServiceContent } from "./service-content";
+import { SortFilters } from "./sort-filters";
 import cloudImage from "/public/images/cloud.png";
 import bgImage from "/public/images/packagesBanner.png";
-import { getCurrentUserData } from "@/server/auth/get-me";
-import { sleep } from "@/lib/utils";
-import { ServiceContent } from "./service-content";
 
 type TSearchParams = {
   searchParams: {
@@ -28,7 +18,7 @@ type TSearchParams = {
 };
 
 export const metadata: Metadata = {
-  title: `Services | ${siteConfig.siteName}`,
+  title: `Services`,
   description: ` ${siteConfig.siteName}`,
 };
 export default async function ServicesPage({ searchParams }: TSearchParams) {
@@ -38,8 +28,13 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
 
       <section className="relative z-20 space-y-2 md:top-52">
         <div className="relative flex flex-wrap items-center justify-between gap-2">
-          <TopFilter />
-          <SortFilters />
+          <Suspense>
+            <TopFilter />
+          </Suspense>
+
+          <Suspense>
+            <SortFilters />
+          </Suspense>
         </div>
         <Suspense>
           <ServiceContent />
@@ -60,51 +55,51 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
     </main>
   );
 }
-async function ServicesPackages({ searchParams }: TSearchParams) {
-  const { category } = searchParams;
-  const data = await getServices(searchParams);
-  const user = await getCurrentUserData();
-  return (
-    <div className="z-10 w-full space-y-10 py-10">
-      <Text variant="text-xl" bold>
-        Services
-      </Text>
-      <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-        {data?.data?.map((svc, index) => (
-          <ServiceCard data={svc} key={index} userId={user?.id} />
-        ))}
-      </div>
-      {data && data?.meta.pagination.total > 10 && (
-        <ServicesPagination
-          title="Continue exploring amazing views"
-          disabled={data.meta.pagination.total <= data.meta.pagination.pageSize}
-        />
-      )}
-    </div>
-  );
-}
-async function ServicesGuides({ searchParams }: TSearchParams) {
-  const data = await getUsers(
-    "merchant",
-    searchParams.name,
-    searchParams.limit || 20,
-  );
+// async function ServicesPackages({ searchParams }: TSearchParams) {
+//   const { category } = searchParams;
+//   const data = await getServices(searchParams);
+//   const user = await getCurrentUserData();
+//   return (
+//     <div className="z-10 w-full space-y-10 py-10">
+//       <Text variant="text-xl" bold>
+//         Services
+//       </Text>
+//       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
+//         {data?.data?.map((svc, index) => (
+//           <ServiceCard data={svc} key={index} userId={user?.id} />
+//         ))}
+//       </div>
+//       {data && data?.meta.pagination.total > 10 && (
+//         <ServicesPagination
+//           title="Continue exploring amazing views"
+//           disabled={data.meta.pagination.total <= data.meta.pagination.pageSize}
+//         />
+//       )}
+//     </div>
+//   );
+// }
+// async function ServicesGuides({ searchParams }: TSearchParams) {
+//   const data = await getUsers(
+//     "merchant",
+//     searchParams.name,
+//     searchParams.limit || 20,
+//   );
 
-  return (
-    <div className="relative flex w-full flex-col gap-y-5 py-10 md:pl-36">
-      <Text variant="text-xl" bold>
-        All members
-      </Text>
+//   return (
+//     <div className="relative flex w-full flex-col gap-y-5 py-10 md:pl-36">
+//       <Text variant="text-xl" bold>
+//         All members
+//       </Text>
 
-      <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-        {data?.map((guide, index) => (
-          <GuideCard guide={guide} key={`guide-${index}`} />
-        ))}
-      </div>
-      {data && data?.length > 20 && <ServicesPagination />}
-    </div>
-  );
-}
+//       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
+//         {data?.map((guide, index) => (
+//           <GuideCard guide={guide} key={`guide-${index}`} />
+//         ))}
+//       </div>
+//       {data && data?.length > 20 && <ServicesPagination />}
+//     </div>
+//   );
+// }
 
 const Banner = ({
   title,
