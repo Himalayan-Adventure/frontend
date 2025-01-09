@@ -39,47 +39,6 @@ export const updateUser = async (user: TEditProfileForm, id: number) => {
           .map((i) => ({ education: i })),
       },
     };
-    // const data = {
-    //   username: "Prajjwal",
-    //   email: "prajjwalt9@gmail.com",
-    //   profilePicture: uploadPfp,
-    //   about: {
-    //     facebook: "https://www.reddit.com/r/pagal",
-    //     instagram: "https://www.reddit.com/r/all/",
-    //     whatsapp: "https://www.reddit.com/r/all/",
-    //     description:
-    //       "Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod ligula urna in dolor. Phasellus a est. Vivamus in erat ut urna cursus vestibulum. Sed magna purus, fermentum eu, tincidunt eu, varius ut, felis. Donec venenatis vulputate lorem.\n" +
-    //       "\n" +
-    //       "Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Phasellus blandit leo ut odio. In auctor lobortis lacus. In hac habitasse platea dictumst. Suspendisse potenti.",
-    //   },
-    //   resume: {
-    //     first_name: "Levi",
-    //     last_name: "asthur",
-    //     email: "prajjwalt9@gmail.com",
-    //     phone: "9822015199",
-    //     location: "Sankhamul, nepal",
-    //     portfolio: "https://www.instagram.com/hello_hello/",
-    //     hard_skill: "technical\nsomething\nwhatever",
-    //     technical_skill: "no\nyes\nno\nyes",
-    //     education: [
-    //       { education: "SEE" },
-    //       { education: "+2" },
-    //       { education: "" },
-    //     ],
-    //     interest: "nothing\ninterests\nme",
-    //   },
-    //   contact: {
-    //     phone: "9822015199",
-    //     address: "Sankhamul, nepal",
-    //     birthday: "2024-11-03",
-    //     gender: "other",
-    //     citizenship: "12312312312312312",
-    //     nationality: "nepali",
-    //     religion: "kirant",
-    //     marital_status: "single",
-    //   },
-    // };
-    console.log(data);
 
     const res = await axios({
       method: "PUT",

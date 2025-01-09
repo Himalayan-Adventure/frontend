@@ -80,7 +80,7 @@ const TestBanner = ({
           src={bgImage}
           alt="Background Image"
           objectFit="cover"
-          quality={100}
+          quality={60}
           className="inset-0 h-full object-cover"
         />
 

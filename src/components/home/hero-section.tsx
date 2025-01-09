@@ -37,6 +37,7 @@ export function HeroSection() {
           <Image
             src={bgImage}
             alt="Home horizon image"
+            quality={50}
             className="absolute left-0 top-0 h-full w-full sm:h-screen"
           />
 
@@ -53,6 +54,7 @@ export function HeroSection() {
               src={climberImage}
               alt="Climber Image"
               className="relative h-full w-full object-contain"
+              quality={70}
               priority
             />
           </m.div>
@@ -69,6 +71,7 @@ export function HeroSection() {
             <Image
               src={lhotseImage}
               alt="Lhoste Image"
+              quality={70}
               priority
               className="relative h-full w-full object-cover"
             />
@@ -86,6 +89,7 @@ export function HeroSection() {
               src={cloudImage}
               alt="Cloud Image"
               className="relative h-full w-full object-cover"
+              quality={70}
             />
           </m.div>
 
@@ -93,6 +97,7 @@ export function HeroSection() {
             src={cloudImage}
             alt="Cloud Image"
             className="absolute bottom-0 left-0 h-1/2 w-full object-cover mix-blend-hard-light sm:bottom-0 sm:hidden sm:mix-blend-normal md:-bottom-10 md:h-[60vh]"
+            quality={70}
           />
         </div>
 

@@ -27,9 +27,9 @@ export async function GET(request: NextRequest) {
         Authorization: `Bearer ${token}`,
       },
       next: {
-        revalidate: 15,
         tags: ["me"],
       },
+      cache: "force-cache",
     },
   );
 

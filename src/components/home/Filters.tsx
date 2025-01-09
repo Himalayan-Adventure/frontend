@@ -101,38 +101,6 @@ interface AdventureType {
   icon: string | undefined;
 }
 
-const AdventureTypes = (): AdventureType[] => {
-  const [types, setTypes] = useState<AdventureType[]>([]);
-
-  useEffect(() => {
-    const fetchTypes = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-types`,
-        );
-        const data: APIResponseCollection<"api::package-type.package-type"> =
-          await response.json();
-        console.log(response);
-
-        const fetchedTypes = data.data || [];
-        console.log(fetchedTypes);
-
-        const mappedTypes: AdventureType[] = fetchedTypes.map((type) => ({
-          name: type?.attributes?.name,
-          icon: type.attributes?.react_icon,
-        }));
-
-        setTypes(mappedTypes);
-      } catch (error) {
-        console.error("Error fetching types:", error);
-      }
-    };
-
-    fetchTypes();
-  }, []);
-
-  return types;
-};
 
 export default function FilterBox() {
   const [countries, setCountries] = useState<any>();
@@ -151,7 +119,7 @@ export default function FilterBox() {
   const toggleLevel = (index: number) => {
     setLevel(level === index ? null : index);
   };
-  const { data: testAdventureTypes } = useQuery({
+  const { data: adventureTypes } = useQuery({
     queryKey: ["package-type"],
     queryFn: async () => {
       const response = await fetch(
@@ -273,7 +241,7 @@ export default function FilterBox() {
       <div className="mt-4 md:mt-8">
         <h2 className="text-xl font-semibold md:text-2xl">Adventure Type</h2>
         <div className="mt-4 flex flex-wrap gap-6">
-          {testAdventureTypes?.map((adventure) => (
+          {adventureTypes?.map((adventure) => (
             <div
               key={adventure.name}
               onClick={() => setSelectedAdventureType(adventure.name)}
