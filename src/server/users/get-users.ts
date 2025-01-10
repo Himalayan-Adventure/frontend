@@ -32,11 +32,12 @@ export const getUsers = async (
   type?: "merchant" | "customer",
   name?: string,
   limit?: number,
+  filter?: string,
 ) => {
   try {
-    const filter = type
-      ? `?filters[userType][$eqi]=${type}&populate[0]=profilePicture`
-      : "";
+    // const filter = type
+    //   ? `?filters[userType][$eqi]=${type}&populate[0]=profilePicture`
+    //   : "";
 
     const params = new URLSearchParams();
     if (type) {
@@ -51,7 +52,9 @@ export const getUsers = async (
     if (name) {
       params.set("filters[username][$contains]", name);
     }
-    const res = await axiosInstance.get(`api/users?${params.toString()}`);
+    const res = await axiosInstance.get(
+      `api/users?${params.toString()}${filter && "&" + filter}`,
+    );
     return res.data as TUser[];
   } catch (error: AxiosError | any) {
     console.log(error);

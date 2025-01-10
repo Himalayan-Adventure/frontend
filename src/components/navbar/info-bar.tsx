@@ -120,7 +120,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
             <span className="relative flex h-full flex-col items-stretch gap-y-1">
               <Skeleton className="size-10 rounded-full" />
             </span>
-          ) : !user ? (
+          ) : user === null || !user?.id ? (
             <span className="relative flex h-full flex-col items-stretch gap-y-1">
               <Dialog>
                 <DialogTrigger
