@@ -39,67 +39,10 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
         <Suspense>
           <ServiceContent />
         </Suspense>
-        {/* <div className="flex w-full flex-col gap-5 md:flex-row">
-          {searchParams.type === "packages" && <SideFilter />}
-          {searchParams.type === "packages" ? (
-            <Suspense fallback={<Loading className="h-48" />}>
-              <ServicesPackages searchParams={searchParams} />
-            </Suspense>
-          ) : (
-            <Suspense fallback={<Loading className="h-48" />}>
-              <ServicesGuides searchParams={searchParams} />
-            </Suspense>
-          )}
-        </div> */}
       </section>
     </main>
   );
 }
-// async function ServicesPackages({ searchParams }: TSearchParams) {
-//   const { category } = searchParams;
-//   const data = await getServices(searchParams);
-//   const user = await getCurrentUserData();
-//   return (
-//     <div className="z-10 w-full space-y-10 py-10">
-//       <Text variant="text-xl" bold>
-//         Services
-//       </Text>
-//       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-//         {data?.data?.map((svc, index) => (
-//           <ServiceCard data={svc} key={index} userId={user?.id} />
-//         ))}
-//       </div>
-//       {data && data?.meta.pagination.total > 10 && (
-//         <ServicesPagination
-//           title="Continue exploring amazing views"
-//           disabled={data.meta.pagination.total <= data.meta.pagination.pageSize}
-//         />
-//       )}
-//     </div>
-//   );
-// }
-// async function ServicesGuides({ searchParams }: TSearchParams) {
-//   const data = await getUsers(
-//     "merchant",
-//     searchParams.name,
-//     searchParams.limit || 20,
-//   );
-
-//   return (
-//     <div className="relative flex w-full flex-col gap-y-5 py-10 md:pl-36">
-//       <Text variant="text-xl" bold>
-//         All members
-//       </Text>
-
-//       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
-//         {data?.map((guide, index) => (
-//           <GuideCard guide={guide} key={`guide-${index}`} />
-//         ))}
-//       </div>
-//       {data && data?.length > 20 && <ServicesPagination />}
-//     </div>
-//   );
-// }
 
 const Banner = ({
   title,

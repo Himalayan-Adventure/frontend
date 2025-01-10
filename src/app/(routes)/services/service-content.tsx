@@ -48,6 +48,7 @@ function ServicesGuides() {
         "merchant",
         searchParams.get("name") || "",
         limit || 20,
+        "filters[services][$notNull]=true",
       );
       return data;
     },
@@ -57,7 +58,7 @@ function ServicesGuides() {
   return (
     <div className="relative flex w-full flex-col gap-y-5 py-10 md:pl-36">
       <Text variant="text-xl" bold>
-        All members
+        Guides with service(s)
       </Text>
 
       <div className="grid w-full gap-2 sm:grid-cols-[repeat(auto-fill,minmax(20em,1fr))] md:gap-6 xl:gap-8">
