@@ -16,7 +16,7 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { LoadMorePagination } from "@/components/services/pagination";
 export const metadata: Metadata = {
-  title: `Work Dashboard | ${siteConfig.siteName}`,
+  title: `Work Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 

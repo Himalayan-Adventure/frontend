@@ -5,7 +5,7 @@ import { getSingleCalendar } from "@/server/calendar/get-single-calendar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `Edit Calendar Dashboard | ${siteConfig.siteName}`,
+  title: `Edit Calendar Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 const CalendarEditFormPage = async ({ params }: { params: { id: number } }) => {

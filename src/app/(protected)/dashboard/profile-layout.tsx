@@ -107,7 +107,10 @@ function SidebarContent({
       </Text>
 
       {/* User details */}
-      <li className="mt-auto w-full list-none">
+      <Link
+        href="/dashboard/profile"
+        className="group mt-auto w-full list-none"
+      >
         <div className="flex w-full items-center gap-2 rounded-lg">
           <div className="h-10 max-w-10 overflow-hidden rounded-full">
             <Avatar>
@@ -133,7 +136,7 @@ function SidebarContent({
           <div className="flex flex-1 flex-col items-start">
             <Text
               variant="text-sm"
-              className="max-w-52 truncate text-gray-100"
+              className="max-w-52 truncate text-gray-100 group-hover:underline"
               semibold
             >
               {user?.username}
@@ -146,7 +149,7 @@ function SidebarContent({
             </Text>
           </div>
         </div>
-      </li>
+      </Link>
       {/* Navigation links */}
       <nav className="flex w-full flex-1 flex-col">
         <ul role="list" className="flex w-full flex-1 flex-col gap-y-7">
@@ -191,11 +194,6 @@ function SidebarContent({
     </div>
   );
 }
-
-// type NavigationItemComponentProps = {
-//   item: TNavigationItem;
-//   pathname: string;
-// };
 
 // This is the navigation item component which is used to render the sidebar navigation items and subitems if it has any
 // This is the navigation item component which acts as the main link if it doesnt have any subitems. If it has subitems, it will act as the trigger for the accordion

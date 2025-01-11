@@ -13,7 +13,7 @@ import TablePagination from "@/components/table/table-pagination";
 import { getCurrentUserData } from "@/server/auth/get-me";
 
 export const metadata: Metadata = {
-  title: `Blog Dashboard | ${siteConfig.siteName}`,
+  title: `Blog Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 

@@ -6,7 +6,7 @@ import { GoBackButton } from "@/components/profile/go-back-button";
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: `Edit Blog Dashboard | ${siteConfig.siteName}`,
+  title: `Edit Blog`,
   description: ` ${siteConfig.siteName}`,
 };
 

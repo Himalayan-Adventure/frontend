@@ -6,7 +6,7 @@ import { getSingleWork } from "@/server/work/get-single-work";
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: `Edit Work Dashboard | ${siteConfig.siteName}`,
+  title: `Edit Work Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 type Props = {
