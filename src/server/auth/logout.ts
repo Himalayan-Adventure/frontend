@@ -7,7 +7,6 @@ export async function logout() {
     name: "jwt",
     httpOnly: true,
     path: "/",
-    secure: true,
-    domain: process.env.NEXT_PUBLIC_WEBSITE_URL,
+    domain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN,
   });
 }

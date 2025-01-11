@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { LazyMotion, domMax, m } from "framer-motion";
 import Image from "next/image";
 import { toast } from "sonner";
-import { Loading } from "../loading";
+import { Loading } from "@/components/loading";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 export default function Services() {
@@ -51,7 +51,7 @@ export default function Services() {
           {/* services Grid */}
           <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3 lg:mt-16">
             {isPending ? (
-              <Loading className="col-span-3" />
+              <Loading className="col-span-full" />
             ) : isError || !services || services?.data?.length == 0 ? (
               <Text variant="text-md" className="col-span-full">
                 No services found

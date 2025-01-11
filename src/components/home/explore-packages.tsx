@@ -14,25 +14,8 @@ import { AdminInquiryDialog } from "./admin-inquiry-dialog";
 import { useCurrentUser } from "@/hooks/user-current-user";
 import { toast } from "sonner";
 import { useState } from "react";
-const packages = [
-  {
-    name: "Expedition Over 8000m",
-    image: packageImg,
-  },
-  {
-    name: "Expedition Over 8000m",
-    image: packageImg,
-  },
-  {
-    name: "Peak Climbing",
-    image: packageImg,
-  },
-  {
-    name: "Trekking",
-    image: packageImg,
-  },
-];
-
+import { Loading } from "@/components/loading";
+import { Text } from "../ui/text";
 export default function ExplorePackages() {
   const {
     data: packages,
@@ -82,12 +65,20 @@ export default function ExplorePackages() {
           </div>
           {/* Packages Grid */}
           <div className="gri mx-auto mt-8 flex w-fit grid-cols-2 flex-wrap items-stretch justify-center gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16 [&>div]:flex-1">
-            {packages?.data?.map((pkg, index) => (
-              <PackageCategoryCard
-                data={pkg}
-                key={`package-category-${pkg.id}`}
-              />
-            ))}
+            {isPending ? (
+              <Loading className="col-span-full" />
+            ) : isError || !packages || packages.data.length === 0 ? (
+              <Text variant="text-md" className="col-span-full">
+                No package categoreis found
+              </Text>
+            ) : (
+              packages?.data?.map((pkg, index) => (
+                <PackageCategoryCard
+                  data={pkg}
+                  key={`package-category-${pkg.id}`}
+                />
+              ))
+            )}
           </div>
         </div>
       </m.section>
@@ -100,7 +91,7 @@ const PackageCategoryCard = ({
   data: APIResponseData<"api::package-category.package-category">;
 }) => {
   const image = data?.attributes?.image?.data?.attributes;
-  const { user, isPending} = useCurrentUser();
+  const { user, isPending } = useCurrentUser();
   const [open, setOpen] = useState(false);
   return (
     <div className="grid place-items-center">

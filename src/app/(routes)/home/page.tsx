@@ -1,5 +1,5 @@
 import BookAppointment from "@/components/home/book-appointment";
-import HomeCarousel from "@/components/home/carousel";
+//import HomeCarousel from "@/components/home/carousel";
 import ExplorePackages from "@/components/home/explore-packages";
 import { HeroSection } from "@/components/home/hero-section";
 import PopularDestinations from "@/components/home/popular-destinations";
@@ -13,6 +13,7 @@ import Link from "next/link";
 
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
+import HomeCarousel from "@/components/home/home-carousel/index";
 
 export const metadata: Metadata = {
   title: `Home | ${siteConfig.siteName}`,
@@ -40,6 +41,8 @@ export default async function Home() {
       <HeroSection />
       <WhatWeDo />
       <HomeCarousel />
+
+      {/* <HomeCarousel /> */}
       <WhyUs />
       <ExplorePackages />
       <Services />
