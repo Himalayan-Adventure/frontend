@@ -46,7 +46,6 @@ export const updateUser = async (user: TEditProfileForm, id: number) => {
       data: data,
       withCredentials: true,
     });
-    console.log(res);
     return {
       data: res.data,
       status: res.status,

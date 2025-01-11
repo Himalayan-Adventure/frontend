@@ -33,7 +33,6 @@ export default async function WorkPage({
   }
   const works = await getWorksOfUser({ id: user.id, ...searchParams });
 
-  console.log(works?.meta.pagination);
   return (
     <section className="space-y-8 font-poppins @container">
       {/*Header*/}
