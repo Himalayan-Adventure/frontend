@@ -122,6 +122,7 @@ export function HeroSection() {
           </Text>
           <m.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.95 }}>
             <Button
+              aria-label="search-button"
               onClick={() => {
                 if (!openSearch) {
                   setOpenSearch(!openSearch);

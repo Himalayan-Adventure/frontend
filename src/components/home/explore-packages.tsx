@@ -114,7 +114,10 @@ const PackageCategoryCard = ({
           {user ? (
             <Dialog open={open} onOpenChange={(e) => setOpen(e)}>
               <DialogTrigger asChild>
-                <Button className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2">
+                <Button
+                  aria-label="Inquire button"
+                  className="w-auto rounded-full border border-black bg-transparent px-6 py-1 text-xs text-black hover:bg-black hover:text-white md:text-sm lg:px-12 lg:py-2"
+                >
                   Inquire
                 </Button>
               </DialogTrigger>
@@ -133,6 +136,7 @@ const PackageCategoryCard = ({
             </Dialog>
           ) : (
             <Button
+              aria-label="Not logged in Inquire"
               className="w-auto rounded-full border border-black bg-transparent px-2 py-0.5 text-xs text-black hover:bg-black hover:text-white md:px-6 md:py-1 md:text-sm lg:px-12 lg:py-2"
               onClick={() => toast.error("Please login to inquire")}
             >
@@ -140,7 +144,10 @@ const PackageCategoryCard = ({
             </Button>
           )}
           <Link href={`/packages?key=category&filter=${data.id}`}>
-            <Button className="w-auto rounded-full text-xs text-white md:px-6 md:py-1 md:text-sm lg:px-12 lg:py-2">
+            <Button
+              aria-label="view-more"
+              className="w-auto rounded-full text-xs text-white md:px-6 md:py-1 md:text-sm lg:px-12 lg:py-2"
+            >
               View More
             </Button>
           </Link>

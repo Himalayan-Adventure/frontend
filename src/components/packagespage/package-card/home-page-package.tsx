@@ -103,6 +103,7 @@ const HomePackageCard = ({
             )}
           >
             <Button
+              name="carousel-left"
               className="relative -z-[51] w-fit rounded-none px-1 opacity-0 disabled:opacity-0 group-hover:z-[51] group-hover:opacity-100 group-hover:disabled:opacity-50"
               disabled={cardState === 0}
               onClick={() => {
@@ -111,10 +112,12 @@ const HomePackageCard = ({
                 }
               }}
             >
+              <p className="sr-only">Carousel left</p>
               <ChevronLeft size={14} />
             </Button>
 
             <Button
+              name="carousel-right"
               disabled={cardState === 1}
               className="relative -z-[51] w-fit rounded-none px-1 opacity-0 disabled:opacity-0 group-hover:z-[51] group-hover:opacity-100 group-hover:disabled:opacity-50"
               onClick={() => {
@@ -123,6 +126,7 @@ const HomePackageCard = ({
                 }
               }}
             >
+              <p className="sr-only">Carousel Right</p>
               <ChevronRight size={14} />
             </Button>
           </div>
@@ -171,6 +175,7 @@ const HomePackageCard = ({
                 )}
               </Link>
               <Button
+                aria-label="Get Quote"
                 variant="ghost"
                 className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
                 onClick={toggleOverlay}

@@ -139,7 +139,10 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                 <Avatar className="cursor-pointer border-2 border-white/40">
                   {user?.profilePicture && (
                     <AvatarImage
-                      src={user?.profilePicture.url}
+                      src={
+                        user?.profilePicture.formats.thumbnail?.url ||
+                        user.profilePicture?.url
+                      }
                       alt={user.username}
                       className="object-cover"
                     />
