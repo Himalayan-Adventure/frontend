@@ -38,7 +38,7 @@ export const register = async (user: TRegisterPayload) => {
       value: res.data.jwt,
       httpOnly: true,
       path: "/",
-      //domain: process.env.NODE_ENV === "development" ? `localhost` : "/",
+      domain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN,
     });
 
     return {

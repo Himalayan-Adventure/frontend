@@ -57,7 +57,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
     queryFn: async () => {
       try {
         const res = await fetch("/api/me?populate[0]=profilePicture", {
-          cache: "force-cache",
+          cache: "no-cache",
           next: {
             tags: ["me"],
           },
