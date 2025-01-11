@@ -243,7 +243,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
     }
   }
   const tw =
-    "rounded-none border-0 border-b-2 bg-transparent text-base !placeholder:text-white text-white";
+    "rounded-none border-0 border-b-2 bg-transparent text-base placeholder:text-slate-400 text-white placeholder-white";
   return (
     <div className="container relative py-8 lg:py-16">
       <div className="relative z-10 space-y-6 text-white lg:text-center">
@@ -621,6 +621,10 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
           <Button
             disabled={step >= 3}
             onClick={() => {
+              if (!activeTime) {
+                toast.error("Select an appointment date to proceed!");
+                return;
+              }
               if (step < 3) {
                 setStep(step + 1);
               }
