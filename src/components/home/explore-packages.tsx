@@ -1,7 +1,6 @@
 "use client";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { Button } from "../ui/button";
-import packageImg from "/public/images/package1.jpeg";
 import { m, domMax, LazyMotion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { APIResponseCollection, APIResponseData } from "@/types/types";
@@ -9,7 +8,6 @@ import EverestImg from "/public/images/everest.png";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { MessageDialog } from "../services/message-dialog";
 import { AdminInquiryDialog } from "./admin-inquiry-dialog";
 import { useCurrentUser } from "@/hooks/user-current-user";
 import { toast } from "sonner";
@@ -90,7 +88,8 @@ const PackageCategoryCard = ({
 }: {
   data: APIResponseData<"api::package-category.package-category">;
 }) => {
-  const image = data?.attributes?.image?.data?.attributes;
+  //@ts-ignore
+  const image = data?.attributes?.image?.data?.attributes?.formats?.small;
   const { user, isPending } = useCurrentUser();
   const [open, setOpen] = useState(false);
   return (
@@ -98,7 +97,7 @@ const PackageCategoryCard = ({
       {image && (
         <Image
           src={image.url}
-          alt={image.name}
+          alt={image?.name}
           className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-96 lg:w-auto"
           height={image.height}
           width={image.width}

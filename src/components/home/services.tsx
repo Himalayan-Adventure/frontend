@@ -19,7 +19,7 @@ export default function Services() {
     queryFn: async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/services?populate=*&pagination[page]=1&pagination[pageSize]=3`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/services?pagination[page]=1&pagination[pageSize]=3&fields[0]=title&populate[1]=service_provider&populate[0]=image`,
         );
         if (!res.ok) {
           throw new Error("Error fetching services");
