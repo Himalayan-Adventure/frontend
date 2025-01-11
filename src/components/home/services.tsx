@@ -72,7 +72,11 @@ const ServiceCard = ({
 }: {
   svc: APIResponseData<"api::service.service">;
 }) => {
-  const image = svc?.attributes?.image?.data?.attributes;
+  //prettier-ignore
+  //@ts-ignore
+  const smallImage =   svc.attributes.image?.data?.attributes?.formats?.small;
+  const fallbackImg = svc?.attributes?.image?.data?.attributes;
+  const image = smallImage || fallbackImg;
   const { user, isPending: isLoading } = useCurrentUser();
   const service_provider = svc?.attributes?.service_provider?.data;
   const {

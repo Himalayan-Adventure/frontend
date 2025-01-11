@@ -260,28 +260,26 @@ export const SliderComponent = ({
             : "z-[52] hidden",
       )}
     >
-      {images?.data?.map(
-        (image, index: number) =>
-          //@ts-ignore
-          image?.attributes?.formats?.small && (
-            <SwiperSlide key={index}>
+      {images?.data?.map((image, index: number) => {
+        //prettier-ignore
+        //@ts-ignore
+        const smallImage =   image?.attributes?.formats?.small;
+        const fallbackImg = image?.attributes;
+        const optImg = smallImage || fallbackImg;
+        return (
+          optImg?.url && (
+            <SwiperSlide key={`${index}-${image.id}`}>
               <Image
-                //@ts-ignore
-                src={image?.attributes?.formats?.small?.url}
-                alt={
-                  image?.attributes?.name ||
-                  image?.attributes?.caption ||
-                  `Slider image ${image.id}`
-                }
-                //@ts-ignore
-                width={image?.attributes?.small?.width || 400}
-                //@ts-ignore
-                height={image?.attributes?.small?.height || 400}
+                src={optImg.url}
+                alt={optImg?.name || `Slider image ${image.id}`}
+                width={optImg?.width || 400}
+                height={optImg?.height || 400}
                 className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
               />
             </SwiperSlide>
-          ),
-      )}
+          )
+        );
+      })}
     </Swiper>
   );
 };

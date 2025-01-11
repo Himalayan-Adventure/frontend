@@ -17,7 +17,7 @@ export default function PopularDestinations() {
     queryFn: async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-regions?populate=*&filters[is_popular]=true`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-regions?filters[is_popular]=true&fields[0]=name&populate[0]=image&populate[1]=package_country`,
         );
         if (!res.ok) {
           throw new Error("Error fetching package region");
@@ -51,7 +51,7 @@ export default function PopularDestinations() {
           </div>
 
           {/* Destinations Grid */}
-          <div className="mt-8 grid grid-cols-2 gap-2 md:gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16">
+          <div className="gri mt-8 flex grid-cols-2 flex-wrap items-stretch justify-center gap-2 md:gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16 [&>a]:flex-1">
             {isPending ? (
               <>
                 <Skeleton className="h-16 w-full" />
@@ -65,12 +65,18 @@ export default function PopularDestinations() {
               </Text>
             ) : (
               destinations?.data.map((destination, index) => {
-                const image = destination.attributes.image?.data;
+                //prettier-ignore
+                //@ts-ignore
+                const smallImage =   destination.attributes.image?.data?.attributes?.formats?.small;
+                const fallbackImg =
+                  destination?.attributes?.image?.data?.attributes;
+                const image = smallImage || fallbackImg;
+
                 return (
                   <Link
                     href={`/packages?key=region&filter=${destination.id}`}
                     key={index}
-                    className="destination-card relative grid grid-rows-[60%_auto] gap-y-2 rounded-3xl border border-gray-200 bg-white"
+                    className="destination-card relative grid min-w-[200px] grid-rows-[60%_auto] gap-y-2 rounded-3xl border border-gray-200 bg-white"
                   >
                     <div className="absolute top-12 -z-10 w-full">
                       <div className="h-16 w-full bg-gray-700 blur-lg lg:h-36"></div>
@@ -80,10 +86,10 @@ export default function PopularDestinations() {
                     </div>
                     {image && (
                       <Image
-                        src={image.attributes.url}
-                        alt={image.attributes.url}
-                        height={image.attributes.height}
-                        width={image.attributes.width}
+                        src={image?.url}
+                        alt={image?.name}
+                        height={image?.height}
+                        width={image?.width}
                         className="h-full max-h-60 w-full rounded-t-3xl object-cover grayscale transition duration-300 lg:h-60"
                       />
                     )}

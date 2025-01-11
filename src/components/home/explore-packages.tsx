@@ -62,12 +62,12 @@ export default function ExplorePackages() {
             </div>
           </div>
           {/* Packages Grid */}
-          <div className="gri mx-auto mt-8 flex w-fit grid-cols-2 flex-wrap items-stretch justify-center gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-16 [&>div]:flex-1">
+          <div className="mx-auto mt-8 flex w-fit flex-wrap items-stretch justify-center gap-8 lg:mt-16 lg:gap-16 [&>div]:flex-1">
             {isPending ? (
               <Loading className="col-span-full" />
             ) : isError || !packages || packages.data.length === 0 ? (
               <Text variant="text-md" className="col-span-full">
-                No package categoreis found
+                No package categories found
               </Text>
             ) : (
               packages?.data?.map((pkg, index) => (
@@ -88,8 +88,11 @@ const PackageCategoryCard = ({
 }: {
   data: APIResponseData<"api::package-category.package-category">;
 }) => {
+  //prettier-ignore
   //@ts-ignore
-  const image = data?.attributes?.image?.data?.attributes?.formats?.small;
+  const smallImage =   data.attributes.image?.data?.attributes?.formats?.small;
+  const fallbackImg = data?.attributes?.image?.data?.attributes;
+  const image = smallImage || fallbackImg;
   const { user, isPending } = useCurrentUser();
   const [open, setOpen] = useState(false);
   return (
