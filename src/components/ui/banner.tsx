@@ -26,11 +26,13 @@ export const Banner = ({
           src={cloudImage}
           alt="Cloud Image"
           className="sm:mix-blend-light absolute -bottom-[45%] h-1/2 w-full object-cover md:-bottom-0 md:h-[40vh] lg:bottom-0 lg:h-auto lg:object-contain"
+          unoptimized
         />
         <Image
           src={cloudImage}
           alt="Cloud Image"
           className="sm:mix-blend-light absolute -bottom-[45%] h-1/2 w-full object-cover mix-blend-multiply md:bottom-0 md:h-[40vh]"
+          unoptimized
         />
       </div>
       <div className="relative">

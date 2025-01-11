@@ -20,7 +20,7 @@ const CommonBanner: React.FC<CommonBannerProps> = ({
             src={bgImage || fallbackImg}
             alt="Background Image"
             objectFit="cover"
-            quality={100}
+            quality={60}
             className="h-96 object-cover lg:h-auto"
           />
           <div className="container absolute inset-0 flex flex-col justify-center space-y-3 text-white lg:space-y-6">

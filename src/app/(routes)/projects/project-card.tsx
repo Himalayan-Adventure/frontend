@@ -18,7 +18,7 @@ import { MdTimelapse, MdTimer } from "react-icons/md";
 import wordsToNumbers from "words-to-numbers";
 
 import { cn, formatDate } from "@/lib/utils";
-import { APIResponseData } from "@/types/types";
+import { APIResponseCollection, APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "@/components/ui/button";
 import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
@@ -154,7 +154,7 @@ const ProjectCard = ({
         >
           {project?.attributes?.package && (
             <SliderComponent
-              pkg={project.attributes.package.data}
+              images={project.attributes.package.data.attributes.image}
               type="hover"
               isOverlayVisible={isOverlayVisible}
             />
@@ -253,15 +253,14 @@ const ProjectCard = ({
 export default ProjectCard;
 
 export const SliderComponent = ({
-  pkg,
+  images,
   type,
   isOverlayVisible,
 }: {
-  pkg: APIResponseData<"api::package.package">;
+  images: APIResponseCollection<"plugin::upload.file"> | undefined;
   type: "hover" | "default";
   isOverlayVisible: boolean;
 }) => {
-  const attr = pkg?.attributes;
   return (
     <Swiper
       spaceBetween={30}
@@ -281,20 +280,26 @@ export const SliderComponent = ({
             : "z-[52] hidden",
       )}
     >
-      {attr?.image?.data?.map(
-        (image, index: number) =>
-          image?.attributes?.url && (
-            <SwiperSlide key={index}>
+      {images?.data?.map((image, index: number) => {
+        //prettier-ignore
+        //@ts-ignore
+        const smallImage =   image?.attributes?.formats?.small;
+        const fallbackImg = image?.attributes;
+        const optImg = smallImage || fallbackImg;
+        return (
+          optImg?.url && (
+            <SwiperSlide key={`${index}-${image.id}`}>
               <Image
-                src={image?.attributes?.url}
-                alt={image?.attributes?.name || pkg.attributes.package_name}
-                width={image?.attributes?.width || 400}
-                height={image?.attributes?.height || 400}
+                src={optImg.url}
+                alt={optImg?.name || `Slider image ${image.id}`}
+                width={optImg?.width || 400}
+                height={optImg?.height || 400}
                 className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
               />
             </SwiperSlide>
-          ),
-      )}
+          )
+        );
+      })}
     </Swiper>
   );
 };
