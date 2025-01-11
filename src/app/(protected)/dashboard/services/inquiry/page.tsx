@@ -15,7 +15,7 @@ import { getInquiries } from "@/server/inquiry/get-inquiries";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: `Inquiry of Services | Dashboard | ${siteConfig.siteName}`,
+  title: `Inquiry of Services`,
   description: ` ${siteConfig.siteName}`,
 };
 export default async function ServicesInquiryPage({

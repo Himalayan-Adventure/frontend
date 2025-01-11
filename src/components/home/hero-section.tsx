@@ -89,7 +89,8 @@ export function HeroSection() {
               src={cloudImage}
               alt="Cloud Image"
               className="relative h-full w-full object-cover"
-              quality={70}
+              unoptimized
+              // quality={50}
             />
           </m.div>
 
@@ -97,7 +98,8 @@ export function HeroSection() {
             src={cloudImage}
             alt="Cloud Image"
             className="absolute bottom-0 left-0 h-1/2 w-full object-cover mix-blend-hard-light sm:bottom-0 sm:hidden sm:mix-blend-normal md:-bottom-10 md:h-[60vh]"
-            quality={70}
+            unoptimized
+            //quality={50}
           />
         </div>
 
@@ -120,6 +122,7 @@ export function HeroSection() {
           </Text>
           <m.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.95 }}>
             <Button
+              aria-label="search-button"
               onClick={() => {
                 if (!openSearch) {
                   setOpenSearch(!openSearch);

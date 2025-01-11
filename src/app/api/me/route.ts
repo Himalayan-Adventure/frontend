@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       // next: {
       //   tags: ["me"],
       // },
-      cache: "force-cache",
+      //cache: "force-cache",
     },
   );
 

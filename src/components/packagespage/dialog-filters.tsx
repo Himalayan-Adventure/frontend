@@ -9,12 +9,7 @@ import { APIResponseCollection } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {
-  FaChevronDown,
-  FaLeaf,
-  FaSnowflake,
-  FaSun
-} from "react-icons/fa";
+import { FaChevronDown, FaLeaf, FaSnowflake, FaSun } from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa6";
 import { GiFlowerEmblem, GiHiking, GiStairsGoal } from "react-icons/gi";
 import { MdHiking } from "react-icons/md";
@@ -96,7 +91,6 @@ interface AdventureType {
   name: string;
   icon: string | undefined;
 }
-
 
 export default function FilterBox() {
   const [countries, setCountries] = useState<any>();
@@ -194,7 +188,7 @@ export default function FilterBox() {
   };
 
   return (
-    <DialogContent className="h-[90vh] overflow-auto sm:max-w-[800px]">
+    <>
       <DialogHeader>
         <DialogTitle>Filters</DialogTitle>
       </DialogHeader>
@@ -371,6 +365,6 @@ export default function FilterBox() {
       <DialogFooter>
         <Button onClick={handleApplyFilters}>Apply Filters</Button>
       </DialogFooter>
-    </DialogContent>
+    </>
   );
 }

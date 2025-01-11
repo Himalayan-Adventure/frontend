@@ -1,25 +1,16 @@
 import { Text } from "@/components/ui/text";
 import Link from "next/link";
-import { GrUpgrade } from "react-icons/gr";
 
-import { TbMessageCircleSearch } from "react-icons/tb";
-import { PlusIcon, Workflow } from "lucide-react";
-import { getServices } from "@/server/services/get-services";
 import DataTable from "../services/_table/data-table";
 import { columns } from "./_table/columns-def";
 import { getCurrentUserData } from "@/server/auth/get-me";
+import { redirect } from "next/navigation";
+import { getServiceRequestedByUser } from "@/server/services/get-service-request-for-guide";
+
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
-import { GoBackButton } from "@/components/profile/go-back-button";
-import { getInquiries } from "@/server/inquiry/get-inquiries";
-import { redirect } from "next/navigation";
-import {
-  getServiceRequestedByUser,
-  getServiceRequests,
-} from "@/server/services/get-service-request-for-guide";
-
 export const metadata: Metadata = {
-  title: `Services Requested by me | Dashboard | ${siteConfig.siteName}`,
+  title: `Services Requested by me | Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 export default async function ServicesRequestedPage({

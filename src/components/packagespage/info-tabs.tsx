@@ -45,7 +45,6 @@ export default function InfoTabs({ content }: { content: InfoTabsProp }) {
       }));
       return { type: "list", data };
     } else {
-      console.log(tabData?.description);
       return { type: "markdown", markdownData: tabData?.description };
     }
   };

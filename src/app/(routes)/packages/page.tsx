@@ -1,7 +1,4 @@
-import bgImage from "/public/images/packagesBanner.png";
 import { Suspense } from "react";
-import Image, { StaticImageData } from "next/image";
-import cloudImage from "/public/images/cloud.png";
 import { getPackages } from "@/server/packages/get-packages";
 import { PackageFilter } from "./filter";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
@@ -12,6 +9,7 @@ import { SearchX } from "lucide-react";
 
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { Banner } from "@/components/ui/banner";
 export const metadata: Metadata = {
   title: `Packages | ${siteConfig.siteName}`,
   description: ` ${siteConfig.siteName}`,
@@ -31,7 +29,7 @@ export default async function Packages({
   const data = await getPackages(searchParams);
   return (
     <section>
-      <TestBanner title={"Packages"} desc="" bgImage={bgImage} />
+      <Banner title={"Packages"} desc="" />
       <div className="container relative gap-y-2 lg:mt-40">
         <div className="flex justify-end [&>div]:w-fit">
           <SearchBar
@@ -64,45 +62,3 @@ export default async function Packages({
     </section>
   );
 }
-const TestBanner = ({
-  title,
-  bgImage,
-  desc,
-}: {
-  title: string;
-  bgImage: string | StaticImageData;
-  desc?: string;
-}) => {
-  return (
-    <>
-      <div className="absolute inset-0 h-[40vh] w-full lg:h-[80vh]">
-        <Image
-          src={bgImage}
-          alt="Background Image"
-          objectFit="cover"
-          quality={60}
-          className="inset-0 h-full object-cover"
-        />
-
-        <Image
-          src={cloudImage}
-          alt="Cloud Image"
-          className="sm:mix-blend-light absolute -bottom-[45%] h-1/2 w-full object-cover md:-bottom-0 md:h-[40vh] lg:bottom-0 lg:h-auto lg:object-contain"
-        />
-        <Image
-          src={cloudImage}
-          alt="Cloud Image"
-          className="sm:mix-blend-light absolute -bottom-[45%] h-1/2 w-full object-cover mix-blend-multiply md:bottom-0 md:h-[40vh]"
-        />
-      </div>
-      <div className="relative">
-        <div className="container relative z-10 flex min-h-60 flex-col justify-center space-y-3 text-white lg:space-y-6">
-          <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
-            {title}
-          </h1>
-          {desc && <p className="max-w-xl text-sm md:text-[16px]">{desc}</p>}
-        </div>
-      </div>
-    </>
-  );
-};

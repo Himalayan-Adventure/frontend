@@ -3,6 +3,13 @@ import { Text } from "@/components/ui/text";
 import { getCurrentUserDataDeep } from "@/server/auth/get-me";
 import ProfileEditForm from "./edit-form";
 import { redirect } from "next/navigation";
+import { siteConfig } from "@/config/site-config";
+import { Metadata } from "next";
+import { Suspense } from "react";
+export const metadata: Metadata = {
+  title: `Edit Profile`,
+  description: ` ${siteConfig.siteName}`,
+};
 
 export default async function EditProfilePage() {
   const user = await getCurrentUserDataDeep();
@@ -20,7 +27,11 @@ export default async function EditProfilePage() {
           Edit Profile
         </Text>
       </div>
-      {user && <ProfileEditForm user={user} />}
+      {user && (
+        <Suspense>
+          <ProfileEditForm user={user} />
+        </Suspense>
+      )}
     </section>
   );
 }

@@ -12,7 +12,7 @@ import { FaStar } from "react-icons/fa";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 
 import { cn } from "@/lib/utils";
-import { APIResponseData } from "@/types/types";
+import { APIResponseCollection, APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -103,6 +103,7 @@ const HomePackageCard = ({
             )}
           >
             <Button
+              name="carousel-left"
               className="relative -z-[51] w-fit rounded-none px-1 opacity-0 disabled:opacity-0 group-hover:z-[51] group-hover:opacity-100 group-hover:disabled:opacity-50"
               disabled={cardState === 0}
               onClick={() => {
@@ -111,10 +112,12 @@ const HomePackageCard = ({
                 }
               }}
             >
+              <p className="sr-only">Carousel left</p>
               <ChevronLeft size={14} />
             </Button>
 
             <Button
+              name="carousel-right"
               disabled={cardState === 1}
               className="relative -z-[51] w-fit rounded-none px-1 opacity-0 disabled:opacity-0 group-hover:z-[51] group-hover:opacity-100 group-hover:disabled:opacity-50"
               onClick={() => {
@@ -123,11 +126,12 @@ const HomePackageCard = ({
                 }
               }}
             >
+              <p className="sr-only">Carousel Right</p>
               <ChevronRight size={14} />
             </Button>
           </div>
           <SliderComponent
-            pkg={pkg}
+            images={pkg?.attributes?.image}
             type="hover"
             isOverlayVisible={isOverlayVisible}
           />
@@ -171,6 +175,7 @@ const HomePackageCard = ({
                 )}
               </Link>
               <Button
+                aria-label="Get Quote"
                 variant="ghost"
                 className="h-fit p-0 font-[900] text-primary hover:bg-transparent hover:text-primary/70"
                 onClick={toggleOverlay}
@@ -188,15 +193,14 @@ const HomePackageCard = ({
 export default HomePackageCard;
 
 export const SliderComponent = ({
-  pkg,
+  images,
   type,
   isOverlayVisible,
 }: {
-  pkg: APIResponseData<"api::package.package">;
+  images: APIResponseCollection<"plugin::upload.file"> | undefined;
   type: "hover" | "default";
   isOverlayVisible: boolean;
 }) => {
-  const attr = pkg?.attributes;
   return (
     <Swiper
       spaceBetween={30}
@@ -216,20 +220,28 @@ export const SliderComponent = ({
             : "z-[52] hidden",
       )}
     >
-      {attr?.image?.data?.map(
-        (image, index: number) =>
-          image?.attributes?.url && (
-            <SwiperSlide key={index}>
+      {images?.data?.map((image, index: number) => {
+        //prettier-ignore
+        //@ts-ignore
+        const smallImage =   image?.attributes?.formats?.small;
+        const fallbackImg = image?.attributes;
+        const optImg = smallImage || fallbackImg;
+
+        //@ts-ignore
+        return (
+          optImg?.url && (
+            <SwiperSlide key={`${index}-${image.id}`}>
               <Image
-                src={image?.attributes?.url}
-                alt={image?.attributes?.name || pkg.attributes.package_name}
-                width={image?.attributes?.width || 400}
-                height={image?.attributes?.height || 400}
+                src={optImg.url}
+                alt={optImg?.name || `Slider image ${image.id}`}
+                width={optImg?.width || 400}
+                height={optImg?.height || 400}
                 className="h-full w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
               />
             </SwiperSlide>
-          ),
-      )}
+          )
+        );
+      })}
     </Swiper>
   );
 };

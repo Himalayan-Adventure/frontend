@@ -1,8 +1,8 @@
 "use client";
 
-import FilterBox from "@/components/home/Filters";
+import FilterBox from "@/components/packagespage/dialog-filters";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import filterCategories from "@/config/packages-filters";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
@@ -120,7 +120,9 @@ export const PackageFilter = () => {
             <p>View filters</p>
           </Button>
         </DialogTrigger>
-        <FilterBox />
+        <DialogContent className="h-[90vh] overflow-auto sm:max-w-[800px]">
+          <FilterBox />
+        </DialogContent>
       </Dialog>
     </div>
   );

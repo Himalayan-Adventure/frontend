@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { getSingleService } from "@/server/services/get-single-service";
 export const metadata: Metadata = {
-  title: `Edit Service Dashboard | ${siteConfig.siteName}`,
+  title: `Edit Service Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 const ServiceAddPage = async ({ params }: { params: { id: number } }) => {

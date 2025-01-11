@@ -12,7 +12,7 @@ import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `Services Dashboard | ${siteConfig.siteName}`,
+  title: `Services Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 export default async function ServicesPage({
@@ -56,7 +56,6 @@ export default async function ServicesPage({
           </Link>
         )}
       </span>
-
 
       <div className="relative flex flex-col gap-5 md:flex-row">
         <DataTable

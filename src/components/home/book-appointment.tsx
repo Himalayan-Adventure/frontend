@@ -46,9 +46,14 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useCurrentUser } from "@/hooks/user-current-user";
 import ExpertsImage from "/public/images/experts.png";
-const CloudImage = ({ src, alt, position }: any) => (
+import Clouds from "/public/images/cloudup.png";
+const CloudImage = ({ position }: { position: string }) => (
   <div className={`absolute ${position} w-full brightness-100`}>
-    <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
+    <Image
+      src={Clouds}
+      alt="cloud"
+      className="relative h-full w-full object-cover"
+    />
   </div>
 );
 
@@ -63,11 +68,7 @@ export default function BookAppointment() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat lg:my-16 lg:min-h-[80vh] grayscale"
-        // style={{
-        //   backgroundImage: "url('/images/experts.jpeg')",
-        //   filter: "grayscale(100%)",
-        // }}
+        className="relative my-8 flex min-h-[60vh] items-center bg-cover bg-center bg-no-repeat grayscale lg:my-16 lg:min-h-[80vh]"
       >
         {/* Overlay */}
         <Image
@@ -102,16 +103,8 @@ export default function BookAppointment() {
           user && <AppointmentForm user={user} />
         )}
 
-        <CloudImage
-          src="/images/cloudup.png"
-          alt="cloud"
-          position="left-0 top-0 lg:-top-12"
-        />
-        <CloudImage
-          src="/images/cloud.png"
-          alt="cloud"
-          position="bottom-0 left-0 lg:-bottom-10"
-        />
+        <CloudImage position="left-0 top-0 lg:-top-12" />
+        <CloudImage position="bottom-0 left-0 lg:-bottom-10 rotate-180" />
       </m.section>
     </LazyMotion>
   );
@@ -250,7 +243,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
     }
   }
   const tw =
-    "rounded-none border-0 border-b-2 bg-transparent text-base !placeholder:text-white text-white";
+    "rounded-none border-0 border-b-2 bg-transparent text-base placeholder:text-slate-400 text-white placeholder-white";
   return (
     <div className="container relative py-8 lg:py-16">
       <div className="relative z-10 space-y-6 text-white lg:text-center">
@@ -628,6 +621,10 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
           <Button
             disabled={step >= 3}
             onClick={() => {
+              if (!activeTime) {
+                toast.error("Select an appointment date to proceed!");
+                return;
+              }
               if (step < 3) {
                 setStep(step + 1);
               }

@@ -16,7 +16,7 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { LoadMorePagination } from "@/components/services/pagination";
 export const metadata: Metadata = {
-  title: `Work Dashboard | ${siteConfig.siteName}`,
+  title: `Work Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 
@@ -33,7 +33,6 @@ export default async function WorkPage({
   }
   const works = await getWorksOfUser({ id: user.id, ...searchParams });
 
-  console.log(works?.meta.pagination);
   return (
     <section className="space-y-8 font-poppins @container">
       {/*Header*/}

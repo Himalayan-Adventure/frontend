@@ -1,43 +1,34 @@
-"use client";
 import { Text } from "@/components/ui/text";
 import { PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { TUserDeep } from "@/types/auth";
-import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
-export default function ProfilePage() {
-  const { data: user, isPending } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      try {
-        const res = await axios.get<TUserDeep>("/api/me?populate=deep");
+import { getCurrentUserDataDeep } from "@/server/auth/get-me";
+import { redirect } from "next/navigation";
 
-        if (!res?.data) {
-          return null;
-        }
-        return res.data;
-      } catch (error) {
-        console.error("Error fetching user data", error);
-        return null;
-      }
-    },
-    retry: 1,
-  });
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
+export const metadata: Metadata = {
+  title: `My Profile Dashboard`,
+  description: ` ${siteConfig.siteDescription}`,
+};
+export default async function ProfilePage() {
+  const user = await getCurrentUserDataDeep();
+  if (!user) {
+    redirect("/home");
+  }
   return (
     <section className="container space-y-8 font-poppins">
-      {/*Header*/}
       <span className="flex gap-x-3">
         <Text variant="display-sm" bold>
-          Profile
+          My Profile
         </Text>
         <Link href="/dashboard/profile/edit">
-          <Button className="gap-x-1 bg-black text-sm text-white">
+          <div className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
             <PenLine size={16} />
             Edit
-          </Button>
+          </div>
         </Link>
       </span>
       {user && !user?.confirmed && (

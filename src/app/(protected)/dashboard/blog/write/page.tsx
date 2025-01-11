@@ -8,7 +8,7 @@ import { Metadata } from "next";
 import { getCurrentUserData } from "@/server/auth/get-me";
 import { redirect } from "next/navigation";
 export const metadata: Metadata = {
-  title: `Write Blog Dashboard | ${siteConfig.siteName}`,
+  title: `Write Blog Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 const BlogFormPage = async () => {

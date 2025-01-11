@@ -28,7 +28,7 @@ export const DateCard = ({
     <Card
       className={cn(
         active && "border-2 border-yellow-500 bg-yellow-50",
-        "group relative w-fit cursor-pointer space-y-2 p-4 pr-8",
+        "group relative w-fit flex-1 cursor-pointer space-y-2 p-4 pr-8",
       )}
       onClick={() => updateQueryString({ active: data?.id.toString() })}
     >
@@ -63,13 +63,16 @@ export const DateCard = ({
         <span className="flex gap-x-2">
           <Clock size={18} />
           <span className="flex items-center">
-            <Text variant="text-sm" className="text-green-800">
+            <Text
+              variant="text-sm"
+              className="whitespace-nowrap text-green-800"
+            >
               {format(new Date(data?.attributes?.start_date), "hh:mm a")}
             </Text>
             <Text variant="text-sm" className="">
               &nbsp;:&nbsp;
             </Text>
-            <Text variant="text-sm" className="text-red-800">
+            <Text variant="text-sm" className="whitespace-nowrap text-red-800">
               {format(new Date(data?.attributes?.end_date), "hh:mm a")}
             </Text>
           </span>

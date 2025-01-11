@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { LazyMotion, domMax, m } from "framer-motion";
 import Image from "next/image";
 import { toast } from "sonner";
-import { Loading } from "../loading";
+import { Loading } from "@/components/loading";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 export default function Services() {
@@ -19,7 +19,7 @@ export default function Services() {
     queryFn: async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/services?populate=*&pagination[page]=1&pagination[pageSize]=3`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/services?pagination[page]=1&pagination[pageSize]=3&fields[0]=title&populate[1]=service_provider&populate[0]=image`,
         );
         if (!res.ok) {
           throw new Error("Error fetching services");
@@ -51,7 +51,7 @@ export default function Services() {
           {/* services Grid */}
           <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3 lg:mt-16">
             {isPending ? (
-              <Loading className="col-span-3" />
+              <Loading className="col-span-full" />
             ) : isError || !services || services?.data?.length == 0 ? (
               <Text variant="text-md" className="col-span-full">
                 No services found
@@ -72,7 +72,11 @@ const ServiceCard = ({
 }: {
   svc: APIResponseData<"api::service.service">;
 }) => {
-  const image = svc?.attributes?.image?.data?.attributes;
+  //prettier-ignore
+  //@ts-ignore
+  const smallImage =   svc.attributes.image?.data?.attributes?.formats?.small;
+  const fallbackImg = svc?.attributes?.image?.data?.attributes;
+  const image = smallImage || fallbackImg;
   const { user, isPending: isLoading } = useCurrentUser();
   const service_provider = svc?.attributes?.service_provider?.data;
   const {

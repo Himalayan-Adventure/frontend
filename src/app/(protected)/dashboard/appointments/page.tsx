@@ -11,7 +11,7 @@ import { columns, userColumns } from "./_table/columns-def";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: `Appointments Dashboard | ${siteConfig.siteName}`,
+  title: `Appointments Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 export default async function ApppointmentsPage({

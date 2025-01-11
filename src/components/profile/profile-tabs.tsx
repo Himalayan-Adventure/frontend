@@ -67,7 +67,6 @@ export function ProfileTabs({ user }: { user: TUserDeep }) {
       defaultValue={searchParams?.get("tab") || "about"}
       className="relative z-10 flex flex-col items-stretch gap-x-10 gap-y-10 xl:flex-row"
       onValueChange={(value) => {
-        console.log(value);
         updateQueryString({ tab: value });
       }}
     >

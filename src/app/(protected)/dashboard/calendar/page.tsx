@@ -5,7 +5,13 @@ import CalendarSection from "./calendar-section";
 import { getCalendars } from "@/server/calendar/get-calendars";
 import Link from "next/link";
 import { LoadMorePagination } from "@/components/services/pagination";
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
+export const metadata: Metadata = {
+  title: `Calendar Dashboard`,
+  description: ` ${siteConfig.siteDescription}`,
+};
 export default async function CalendarPage({
   searchParams,
 }: {

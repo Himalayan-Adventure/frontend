@@ -4,7 +4,7 @@ import { ServiceAddOrEditForm } from "../add-or-edit-form";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 export const metadata: Metadata = {
-  title: `Add Service Dashboard | ${siteConfig.siteName}`,
+  title: `Add Service | Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 const ServiceAddPage = async () => {

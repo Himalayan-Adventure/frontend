@@ -4,7 +4,7 @@
 
 export const siteConfig = {
   siteName: "Himalayan Adventure",
-  siteUrl: "https://www.himalayanadventure.org/",
+  siteUrl: "https://www.himalayanadventure.org",
   siteDescription:
     "Embark on epic adventures with us. From thrilling expeditions to breathtaking treks, we curate unforgettable experiences. Our expert guides lead you through nature's wonders, ensuring safety and satisfaction every step of the way.",
 

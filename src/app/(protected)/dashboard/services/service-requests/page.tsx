@@ -16,7 +16,7 @@ import { redirect } from "next/navigation";
 import { getServiceRequests } from "@/server/services/get-service-request-for-guide";
 
 export const metadata: Metadata = {
-  title: `Services Requests | Dashboard | ${siteConfig.siteName}`,
+  title: `Services Requests | Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
 export default async function ServicesRequestsPage({
