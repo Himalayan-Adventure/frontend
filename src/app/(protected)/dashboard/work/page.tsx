@@ -61,7 +61,9 @@ export default async function WorkPage({
             <div className="flex flex-col gap-y-32">
               <div className="flex flex-col gap-y-16">
                 {(!works?.data || works.data.length) === 0 ? (
-                  <Text variant={"text-md"}>No works found.</Text>
+                  <Text variant={"text-lg"} className="text-center">
+                    No works found.
+                  </Text>
                 ) : (
                   works?.data
                     ?.slice(0, limit)
