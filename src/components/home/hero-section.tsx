@@ -55,7 +55,6 @@ export function HeroSection() {
               alt="Climber Image"
               className="relative h-full w-full object-contain"
               quality={70}
-              priority
             />
           </m.div>
 
@@ -72,7 +71,6 @@ export function HeroSection() {
               src={lhotseImage}
               alt="Lhoste Image"
               quality={70}
-              priority
               className="relative h-full w-full object-cover"
             />
           </m.div>
