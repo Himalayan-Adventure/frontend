@@ -17,7 +17,6 @@ export default function Contact() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Handles input field changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -25,7 +24,6 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handles form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -33,7 +31,6 @@ export default function Contact() {
     setSuccess(false);
 
     try {
-      // Sending POST request to the API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_STRAPI_URL}api/contact-uses`,
         { data: formData },
@@ -44,20 +41,18 @@ export default function Contact() {
         },
       );
 
-      // Handling successful form submission
       if (response.status === 200) {
         setSuccess(true);
         toast.success("Form Submitted Successfully");
-        setFormData({ name: "", email: "", message: "" }); // Clear form after success
+        setFormData({ name: "", email: "", message: "" });
       } else {
         throw new Error("Something went wrong");
       }
     } catch (error) {
-      // Error handling
       setError("Failed to send the message. Please try again later.");
       toast.error("Something went wrong. Please try again later.");
     } finally {
-      setLoading(false); // End loading state
+      setLoading(false);
     }
   };
 

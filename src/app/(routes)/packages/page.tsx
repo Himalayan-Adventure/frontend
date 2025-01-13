@@ -23,6 +23,9 @@ export default async function Packages({
     operator?: string;
     title?: string;
     limit?: number;
+    adventureType?: string;
+    region?: string;
+    season?: string;
   };
 }) {
   const { title } = searchParams;
@@ -40,7 +43,7 @@ export default async function Packages({
         <PackageFilter />
         <Suspense fallback={<PackageCardSkeleton />}>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(0,300px))] gap-4">
-            {!data || data?.data.length === 0 ? (
+            {!data || data?.data?.length === 0 ? (
               <span className="col-span-full flex flex-col items-center gap-y-4 text-center text-lg">
                 <SearchX size={32} className="text-gray-600" />
                 No packages are available {title && `for search "${title}"`} !

@@ -1,12 +1,10 @@
 "use client";
 
 import FilterBox from "@/components/packagespage/dialog-filters";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import filterCategories from "@/config/packages-filters";
 import { useOverflowDetection } from "@/hooks/use-overflow-detection";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaBorderAll } from "react-icons/fa";
@@ -113,17 +111,9 @@ export const PackageFilter = () => {
           />
         </div>
       ) : null}
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="bg-white text-primary hover:text-white">
-            <SlidersHorizontal size={16} />
-            <p>View filters</p>
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="h-[90vh] overflow-auto sm:max-w-[800px]">
-          <FilterBox />
-        </DialogContent>
-      </Dialog>
+      <>
+        <FilterBox />
+      </>
     </div>
   );
 };

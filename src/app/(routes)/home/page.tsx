@@ -14,6 +14,7 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site-config";
 import { Metadata } from "next";
 import HomeCarousel from "@/components/home/home-carousel/index";
+import FirstPart from "@/components/footer/first-part";
 
 export const metadata: Metadata = {
   title: `Home | ${siteConfig.siteName}`,

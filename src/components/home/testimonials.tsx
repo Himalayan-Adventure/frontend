@@ -83,18 +83,19 @@ export default function Testimonials() {
             {clientReviews.length > 0 ? (
               clientReviews.map((testimonial, index) => {
                 const isRightmostInRow = (index + 1) % 3 === 0;
+                const isLastItem = index === clientReviews.length - 1;
 
                 return (
                   <div
                     key={index}
-                    className={`relative flex w-full justify-center ${isRightmostInRow ? "" : "md:border-r-0"}`}
+                    className={`relative flex w-full justify-center`}
                   >
                     <div
-                      className={`${
-                        !isRightmostInRow
+                      className={`px-8 text-center ${
+                        !isRightmostInRow && !isLastItem
                           ? "before:absolute before:bottom-0 before:right-0 before:top-0 before:bg-gradient-to-b before:from-transparent before:via-gray-700 before:to-transparent md:before:w-[2px]"
                           : ""
-                      } px-8 text-center`}
+                      }`}
                     >
                       <div className="mx-auto h-24 w-24 overflow-hidden rounded-full border">
                         <Image
