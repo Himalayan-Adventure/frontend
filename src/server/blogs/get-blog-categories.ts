@@ -7,7 +7,7 @@ export const getBlogCategories = async () => {
   try {
     const res: AxiosResponse<
       APIResponseCollection<"api::blog-category.blog-category">
-    > = await axiosInstance.get("api/blog-categories?populate=*");
+    > = await axiosInstance.get("api/blog-categories");
     return {
       data: res?.data?.data,
       status: res.status,

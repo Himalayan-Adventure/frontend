@@ -62,7 +62,9 @@ export default async function PublicProfilePage({
       {user ? (
         <ProfileTabs user={user} />
       ) : (
-        <Text variant="text-lg">User not found!</Text>
+        <Text variant="text-lg" className="relative z-[100] text-shadow-sm">
+          User not found!
+        </Text>
       )}
     </section>
   );

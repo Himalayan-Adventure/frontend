@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
-import { getCurrentUserDataDeep } from "@/server/auth/get-me";
+import {
+  getCurrentUserDataDeep,
+  getCurrentUserProfilePageData,
+} from "@/server/auth/get-me";
 import { redirect } from "next/navigation";
 
 import { Metadata } from "next";
@@ -14,7 +17,7 @@ export const metadata: Metadata = {
   description: ` ${siteConfig.siteDescription}`,
 };
 export default async function ProfilePage() {
-  const user = await getCurrentUserDataDeep();
+  const user = await getCurrentUserProfilePageData();
   if (!user) {
     redirect("/home");
   }
