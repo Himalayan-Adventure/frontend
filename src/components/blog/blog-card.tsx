@@ -22,7 +22,9 @@ export default function BlogCard({
   variant?: "default" | "edit";
 }) {
   const slug = blog?.id;
-  const image = blog?.attributes?.thumbnail?.data?.attributes;
+  //prettier-ignore
+  //@ts-ignore
+  const image = blog?.attributes?.thumbnail?.data?.attributes.formats?.small || blog?.attributes?.thumbnail?.data;
   const avatar =
     blog?.attributes?.author_image?.data?.attributes ||
     blog?.attributes?.user?.data?.attributes?.profilePicture?.data?.attributes;

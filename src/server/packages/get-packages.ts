@@ -40,7 +40,7 @@ export const getPackages = async ({
     const additionalQuery = qs.stringify({
       filters: {
         package_name: {
-          $contains: title,
+          $containsi: title,
         },
       },
       pagination: {

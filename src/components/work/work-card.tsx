@@ -24,7 +24,9 @@ export const WorkCard = ({
   const work = {
     id: data?.id,
     title: data?.attributes?.title,
-    image: data?.attributes?.image?.data?.[0]?.attributes,
+    //prettier-ignore
+    //@ts-ignore
+    image: data?.attributes?.image?.data?.[0]?.attributes?.formats?.medium|| data?.attributes?.image?.data?.[0]?.attributes,
     date: data?.attributes?.createdAt?.toString(),
     content: data?.attributes?.description,
   };

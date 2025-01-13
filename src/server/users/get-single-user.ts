@@ -1,6 +1,5 @@
 import { TUserDeep } from "@/types/auth";
-import { cookies } from "next/headers";
-
+import qs from "qs";
 export const getSingleUser = async ({
   id,
   query,
@@ -8,23 +7,25 @@ export const getSingleUser = async ({
   id: number;
   query?: string;
 }) => {
-  //  const cookieStore = cookies();
-  // const token = cookieStore.get("jwt")?.value;
-
-  // if (!token) {
-  //   throw new Error("No token, Unauthorized");
-  // }
-
   try {
-    const params = new URLSearchParams();
-    params.set("populate", "deep");
+    const params = qs.stringify({
+      populate: [
+        "role",
+        "profilePicture",
+        "works",
+        "about",
+        "resume",
+        "contact",
+        "services",
+        "blogs",
+      ],
+    });
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?${query || params.toString()}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?${query || params}`,
       {
         headers: {
           "Content-Type": "application/json",
-          //        Authorization: `Bearer ${token}`,
         },
         next: {
           tags: [`user-${id}`],

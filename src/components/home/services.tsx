@@ -53,7 +53,7 @@ export default function Services() {
             {isPending ? (
               <Loading className="col-span-full" />
             ) : isError || !services || services?.data?.length == 0 ? (
-              <Text variant="text-md" className="col-span-full">
+              <Text variant="text-lg" className="col-span-full text-center">
                 No services found
               </Text>
             ) : (
