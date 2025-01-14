@@ -9,7 +9,7 @@ import axios from "axios";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
 import ProjectCard from "./project-card";
 
-const SimilarProjects = () => {
+const SimilarProjects = ({ notToInclude }: { notToInclude?: number }) => {
   const { data, isFetching, status, error } = useQuery<
     APIResponseCollection<"api::project.project">
   >({
@@ -17,7 +17,7 @@ const SimilarProjects = () => {
     queryFn: async () => {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/projects?fields[0]=title&populate[package][populate][0]=image&populate[package][populate][1]=adventure_specification`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/projects?fields[0]=title&populate[package][populate][0]=image&populate[package][populate][1]=adventure_specification&filters[id][$ne]=${notToInclude}&pagination[pageSize]=4&pagination[page]=1`,
         );
         return data.data;
       } catch (error) {

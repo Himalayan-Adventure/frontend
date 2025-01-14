@@ -186,18 +186,16 @@ export default async function PackageDetail({
                 {pkg?.package_host && (
                   <Image
                     src={
-                      pkg?.package_host?.logo?.data?.attributes?.url ||
+                      //prettier-ignore
+                      //@ts-ignore
+                      pkg?.package_host?.logo?.data?.attributes?.formats?.thumbnail?.url||pkg?.package_host?.logo?.data?.attributes?.url  ||
                       "/logo.png"
                     }
                     alt={"host logo" + pkg?.package_host?.hostname}
                     priority
                     className="max-h-20 w-28 object-contain md:w-40"
-                    width={
-                      pkg?.package_host?.logo?.data?.attributes?.width || 400
-                    }
-                    height={
-                      pkg?.package_host?.logo?.data?.attributes?.height || 400
-                    }
+                    width={150}
+                    height={150}
                   />
                 )}
               </div>
@@ -240,7 +238,7 @@ export default async function PackageDetail({
       )}
       {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
       <Reviews />
-      <SimilarPackages />
+      <SimilarPackages notToInclude={data.data?.id} />
       {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
       {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (
         <ThingsToKnow data={pkg?.things_to_know} />

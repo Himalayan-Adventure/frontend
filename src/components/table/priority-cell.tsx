@@ -14,13 +14,18 @@ import {
 
 export const PriorityCell = ({ id }: { id: number }) => {
   const PRIORITY_KEY = `appointment-priority-${id}`;
-  const [priority, setPriority] = useState<string | null>(
-    localStorage.getItem(PRIORITY_KEY) || null,
-  );
+  const [priority, setPriority] = useState<string | null>();
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPriority(localStorage.getItem(PRIORITY_KEY) || null);
+    }
+  }, []);
 
   useEffect(() => {
-    if (priority) {
-      localStorage.setItem(PRIORITY_KEY, priority);
+    if (typeof window !== "undefined") {
+      if (priority) {
+        localStorage.setItem(PRIORITY_KEY, priority);
+      }
     }
   }, [priority]);
   return (
