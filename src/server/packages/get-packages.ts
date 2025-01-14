@@ -8,13 +8,19 @@ export const getPackages = async ({
   filter,
   operator,
   title,
+  adventureType,
   limit,
+  region,
+  season,
 }: {
   key?: string;
   filter?: string;
   operator?: string;
   title?: string;
   limit?: number;
+  adventureType?: string;
+  region?: string;
+  season?: string;
 }) => {
   try {
     const queryGenerator = (key?: string, filter?: string) => {
@@ -36,12 +42,32 @@ export const getPackages = async ({
       }
     };
     const query = queryGenerator(key, filter);
-    // for pagination and search
     const additionalQuery = qs.stringify({
       filters: {
-        package_name: {
-          $containsi: title,
-        },
+        ...(title ? { package_name: { $containsi: title } } : {}),
+        ...(adventureType
+          ? {
+              package_types: {
+                name: { $eqi: adventureType },
+              },
+            }
+          : {}),
+        ...(region
+          ? {
+              package_region: {
+                name: { $eqi: region },
+              },
+            }
+          : {}),
+        ...(season
+          ? {
+              adventure_specification: {
+                season: {
+                  name: { $eqi: season },
+                },
+              },
+            }
+          : {}),
       },
       pagination: {
         pageSize: limit || 20,
