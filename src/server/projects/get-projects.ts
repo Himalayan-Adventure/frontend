@@ -38,7 +38,7 @@ export const getProjects = async ({
     const additionalQuery = qs.stringify({
       filters: {
         title: {
-          $contains: title,
+          $containsi: title,
         },
       },
       pagination: {

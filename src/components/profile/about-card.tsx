@@ -21,7 +21,7 @@ export const AboutCard = ({ user }: { user: TUserDeep | null }) => {
           </p>
         </div>
       </div>
-      {user && <Services user={user} />}
+      {user && user.userType === "merchant" && <Services user={user} />}
     </div>
   );
 };

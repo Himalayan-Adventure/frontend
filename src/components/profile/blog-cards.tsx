@@ -11,7 +11,6 @@ import useUpdateQueryString from "@/hooks/use-update-query-string";
 import { LoadMorePagination } from "../services/pagination";
 import { useSearchParams } from "next/navigation";
 export const BlogCards = () => {
-  //const [limit, setLimit] = useState(10);
   const searchParams = useSearchParams();
   const limit = Number(searchParams.get("limit")) || 5;
   const {
@@ -23,7 +22,6 @@ export const BlogCards = () => {
     queryFn: async () => await getBlogs({ limit }),
     placeholderData: keepPreviousData,
   });
-  const updateQueryString = useUpdateQueryString();
 
   return (
     <div className="rounded-xl bg-white px-4 py-8 sm:px-6 lg:px-8">
@@ -41,7 +39,6 @@ export const BlogCards = () => {
           <div className="flex flex-col space-y-8">
             <div className="grid w-full gap-4 md:grid-cols-2">
               {blogs?.data
-                //?.slice(0, limit)
                 ?.map((blog) => (
                   <BlogCard blog={blog} key={`blog-${blog.id}`} />
                 ))}

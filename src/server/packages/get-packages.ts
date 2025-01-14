@@ -44,7 +44,7 @@ export const getPackages = async ({
     const query = queryGenerator(key, filter);
     const additionalQuery = qs.stringify({
       filters: {
-        ...(title ? { package_name: { $eq: title } } : {}),
+        ...(title ? { package_name: { $containsi: title } } : {}),
         ...(adventureType
           ? {
               package_types: {

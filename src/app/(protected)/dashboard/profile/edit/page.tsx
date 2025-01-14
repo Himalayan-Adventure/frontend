@@ -1,6 +1,6 @@
 import { GoBackButton } from "@/components/profile/go-back-button";
 import { Text } from "@/components/ui/text";
-import { getCurrentUserDataDeep } from "@/server/auth/get-me";
+import { getCurrentUserDataDeep, getCurrentUserProfilePageData } from "@/server/auth/get-me";
 import ProfileEditForm from "./edit-form";
 import { redirect } from "next/navigation";
 import { siteConfig } from "@/config/site-config";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EditProfilePage() {
-  const user = await getCurrentUserDataDeep();
+  const user = await getCurrentUserProfilePageData();
   if (!user) {
     redirect("/dashboard/profile");
   }

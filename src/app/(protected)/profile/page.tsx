@@ -2,7 +2,10 @@ import Image from "next/image";
 import bgImage from "/public/images/packagesBanner.png";
 import { Badge } from "@/components/ui/badge";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
-import { getCurrentUserDataDeep } from "@/server/auth/get-me";
+import {
+  getCurrentUserDataDeep,
+  getCurrentUserProfilePageData,
+} from "@/server/auth/get-me";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
@@ -11,7 +14,7 @@ export const metadata: Metadata = {
   description: ` ${siteConfig.siteDescription}`,
 };
 export default async function ProfilePage() {
-  const user = await getCurrentUserDataDeep();
+  const user = await getCurrentUserProfilePageData();
   if (!user) {
     redirect("/home");
   }
@@ -21,7 +24,7 @@ export default async function ProfilePage() {
         src={bgImage}
         alt="Background Image"
         objectFit="cover"
-        quality={100}
+        quality={60}
         className="absolute inset-0 h-96 w-full object-cover lg:h-auto"
       />
 

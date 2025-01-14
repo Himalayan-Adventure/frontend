@@ -50,7 +50,7 @@ export const getUsers = async (
     }
 
     if (name) {
-      params.set("filters[username][$contains]", name);
+      params.set("filters[username][$containsi]", name);
     }
     const res = await axiosInstance.get(
       `api/users?${params.toString()}${filter && "&" + filter}`,
@@ -75,7 +75,7 @@ export const getUsersDeep = async (
       params.set("populate[0]", "profilePicture");
     }
     if (name) {
-      params.set("filters[username][$contains]", name);
+      params.set("filters[username][$containsi]", name);
     }
     params.set("populate", "deep");
 

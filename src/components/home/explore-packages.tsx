@@ -97,13 +97,21 @@ const PackageCategoryCard = ({
   const [open, setOpen] = useState(false);
   return (
     <div className="grid place-items-center">
-      {image && (
+      {image ? (
         <Image
           src={image.url}
           alt={image?.name}
           className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 object-cover lg:max-h-96 lg:w-auto"
           height={image.height}
           width={image.width}
+        />
+      ) : (
+        <Image
+          src={EverestImg}
+          alt={"fall back image"}
+          className="aspect-[0.65] h-auto max-h-96 w-full rounded-2xl border border-gray-600 lg:max-h-96 lg:w-auto object-cover"
+          height={400}
+          width={400}
         />
       )}
       <div className="py-2 text-center">

@@ -1,17 +1,16 @@
 "use client";
 import { socialIcons } from "@/config/constants";
 import { TUser, TUserDeep } from "@/types/auth";
-import Link from "next/link";
 import { Mail, Phone, UserIcon } from "lucide-react";
-import { Button } from "../ui/button";
 import Image from "next/image";
-import UserFallbackImg from "/public/images/user.png";
+import Link from "next/link";
+import generatePDF, { Margin } from "react-to-pdf";
+import { Button } from "../ui/button";
 import { Text } from "../ui/text";
-import UserImg from "/public/images/user.png";
 import fbIcon from "/public/icons/facebook-bw.png";
-import WhatsAppIcon from "/public/icons/whatsApp-bw.png";
 import IgImage from "/public/icons/instagram-bw.png";
-import generatePDF, { Resolution, Margin } from "react-to-pdf";
+import WhatsAppIcon from "/public/icons/whatsApp-bw.png";
+import UserImg from "/public/images/user.png";
 
 import {
   Popover,
@@ -19,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
-import { PopoverArrow } from "@radix-ui/react-popover";
 export const ProfileCard = ({ user }: { user: TUserDeep | null }) => {
+  const userPfp = user?.profilePicture?.formats?.medium || user?.profilePicture;
   const getTargetElement = () => document.getElementById("profile-page");
   const [isLoading, setIsLoading] = useState(false);
   const handleGeneratePDF = async () => {
@@ -43,12 +42,13 @@ export const ProfileCard = ({ user }: { user: TUserDeep | null }) => {
   return (
     <div className="relative h-[600px] w-full overflow-hidden rounded-xl bg-black text-white shadow-lg sm:min-w-[300px] md:aspect-square md:h-auto md:min-h-[580px] md:w-auto md:max-w-sm">
       <div className="relative h-full w-full">
-        {user?.profilePicture?.url ? (
+        {userPfp ? (
           <Image
-            src={user?.profilePicture?.url || UserFallbackImg}
-            width={user?.profilePicture?.width || 400}
-            height={user?.profilePicture?.height || 400}
-            alt="Profile"
+            src={userPfp.url}
+            width={userPfp?.width || 400}
+            height={userPfp?.height || 400}
+            alt="Profile Picture"
+            quality={60}
             className="h-full w-full object-cover"
           />
         ) : (
