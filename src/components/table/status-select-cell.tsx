@@ -14,13 +14,18 @@ import {
 
 export const StatusSelectCell = ({ id }: { id: number }) => {
   const STATUS_KEY = `appointment-status-${id}`;
-  const [status, setStatus] = useState<string | null>(
-    localStorage.getItem(STATUS_KEY) || null,
-  );
+  const [status, setStatus] = useState<string | null>();
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setStatus(localStorage.getItem(STATUS_KEY) || null);
+    }
+  }, []);
 
   useEffect(() => {
-    if (status) {
-      localStorage.setItem(STATUS_KEY, status);
+    if (typeof window !== "undefined") {
+      if (status) {
+        localStorage.setItem(STATUS_KEY, status);
+      }
     }
   }, [status]);
   return (

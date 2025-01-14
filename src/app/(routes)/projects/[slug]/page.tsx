@@ -264,7 +264,7 @@ export default async function ProjectDetail({
       )}
       {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
       <Reviews />
-      <SimilarProjects />
+      <SimilarProjects notToInclude={data.data?.id} />
       {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
       {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (
         <ThingsToKnow data={pkg?.things_to_know} />

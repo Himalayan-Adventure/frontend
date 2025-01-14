@@ -8,7 +8,7 @@ const CloudImage = ({ src, alt, position }: any) => (
     <Image src={src} alt={alt} width={1920} height={150} className="w-full" />
   </div>
 );
-import FactsBg from "/public/images/factsBg.png";
+import FactsBg from "/public/images/Mt-1.png";
 
 export default function FactsOfTheTrip({
   data,
@@ -36,19 +36,13 @@ export default function FactsOfTheTrip({
 }) {
   return (
     <section className="relative my-8 flex min-h-screen items-center bg-cover bg-center bg-no-repeat lg:my-16">
-      <div
-        className="absolute inset-0 -z-20 min-h-screen bg-cover bg-center bg-no-repeat"
-        // style={{
-        //   backgroundImage: "url('/images/factsBg.png')",
-        //   filter: "grayscale(100%)",
-        // }}
-      />
+      <div className="absolute inset-0 -z-20 min-h-screen bg-cover bg-center bg-no-repeat" />
       <Image
         src={FactsBg}
         alt="facts-section-bg"
         layout="fill"
         objectFit="cover"
-        className="grayscale absolute h-full w-full -z-20"
+        className="absolute -z-20 h-full w-full grayscale"
       />
       {/* Overlay */}
       <div className="absolute inset-0 -z-10 bg-black bg-opacity-50"></div>

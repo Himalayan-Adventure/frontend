@@ -27,8 +27,6 @@ export async function PUT(
       body: JSON.stringify({ data }),
     },
   );
-  revalidateTag("blogs");
-  revalidateTag(`blog-${id}`);
 
   const value = await res.json();
   if (!res.ok) {
@@ -37,5 +35,8 @@ export async function PUT(
       { status: res.status },
     );
   }
+
+  revalidateTag(`blog-${id}`);
+  revalidateTag("blogs");
   return Response.json(res);
 }

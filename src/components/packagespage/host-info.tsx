@@ -6,17 +6,6 @@ import { APIResponse, IDProperty } from "@/types/types";
 import { BiSolidBadgeCheck as Badge } from "react-icons/bi";
 import { Text } from "../ui/text";
 
-// (IDProperty & Omit<{
-//     host_contact?: string | undefined;
-//     short_description?: string | undefined;
-//     facebook?: string | undefined;
-//     instagram?: string | undefined;
-//     linkedin?: string | undefined;
-//     whatsapp?: string | undefined;
-//     logo?: APIResponse<...> | ... 1 more ... | undefined;
-// } & {
-//     ...;
-// }, never>) | undefined
 type props =
   | (IDProperty & {
       host_name: string;
@@ -42,7 +31,6 @@ export default function HostInfo({ data }: { data: props }) {
     <section className="container py-4 lg:py-8">
       <div className="space-y-4">
         <div className="hidden">
-          {" "}
           {/* hidden because design seems incomplete*/}
           <h1 className="font-bold lg:text-lg">
             Bordeaux, Nouvelle-Aquitaine, France
@@ -61,7 +49,9 @@ export default function HostInfo({ data }: { data: props }) {
           <div className="relative">
             <Avatar className="relative size-16">
               <AvatarImage
-                src={data?.logo?.data.attributes.url || ""}
+                //prettier-ignore
+                //@ts-ignore
+                src={data?.logo?.data.attributes?.formats?.thumbnail?.url||data?.logo?.data.attributes.url || ""}
                 className="object-cover"
               />
               <AvatarFallback className="bg-green-100">B</AvatarFallback>

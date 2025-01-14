@@ -11,7 +11,7 @@ import axios from "axios";
 import { PackageCardSkeleton } from "./package-card-skeleton";
 import PackageCard from "./package-card";
 
-const SimilarPackages = () => {
+const SimilarPackages = ({ notToInclude }: { notToInclude?: number }) => {
   const { data, isFetching, status, error } = useQuery<
     APIResponseCollection<"api::package.package">
   >({
@@ -19,7 +19,7 @@ const SimilarPackages = () => {
     queryFn: async () => {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=travel_dates&populate[package_host][populate][3]=package_host`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=travel_dates&populate[package_host][populate][3]=package_host&filters[id][$ne]=${notToInclude}&pagination[pageSize]=4&pagination[page]=1`,
         );
         return data.data;
       } catch (error) {

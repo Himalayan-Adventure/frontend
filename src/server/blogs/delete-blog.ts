@@ -16,11 +16,11 @@ export const deleteBlog = async (id: number) => {
         },
       },
     );
-    revalidateTag("blogs");
 
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
+    revalidateTag("blogs");
     return {
       data: res.data,
       status: res.status,

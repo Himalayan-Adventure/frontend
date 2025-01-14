@@ -7,7 +7,6 @@ import { Trash } from "lucide-react";
 import { toast } from "sonner";
 
 export default function DeleteButton({ id }: { id: number }) {
-  console.log(id);
   const {
     mutate: deleteMutation,
     isPending,
