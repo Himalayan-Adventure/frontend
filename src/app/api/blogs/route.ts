@@ -1,3 +1,4 @@
+"use server";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -20,12 +21,8 @@ export async function POST(req: Request) {
       },
       method: "POST",
       body: JSON.stringify({ data }),
-      next: {
-        tags: ["blogs"],
-      },
     },
   );
-  revalidateTag("blogs");
 
   const value = await res.json();
   if (!res.ok) {
@@ -34,5 +31,6 @@ export async function POST(req: Request) {
       { status: res.status },
     );
   }
+  revalidateTag("blogs");
   return Response.json(res);
 }

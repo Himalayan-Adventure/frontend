@@ -44,6 +44,7 @@ export const getBlogs = async ({
       {
         next: {
           tags: ["blogs"],
+          revalidate: 60,
         },
       },
     );

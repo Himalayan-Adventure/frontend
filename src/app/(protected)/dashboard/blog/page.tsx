@@ -52,7 +52,7 @@ export default async function BlogPage({
         {(!blogs || blogs.length === 0) && (
           <Text variant="text-xl">No blogs found</Text>
         )}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        <div className="grid sm:grid-cols-[repeat(auto-fit,350px)] gap-4 lg:gap-8">
           {(code
             ? blogs.filter((i) => i.attributes.title.includes(code || ""))
             : blogs

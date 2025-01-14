@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Text } from "@/components/ui/text";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Pencil, Trash } from "lucide-react";
+import { Link2, Pencil, Trash } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { APIResponseData } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
@@ -43,6 +43,11 @@ export default function BlogCard({
       {/*Overlay buttons for edit*/}
       {variant === "edit" && (
         <div className="invisible absolute inset-0 -z-20 flex w-full items-center justify-center gap-x-2 rounded-xl bg-black/40 transition-all ease-in-out group-hover:visible group-hover:z-20">
+          <Link href={`/blog/${blog.id}`} target="_blank">
+            <Button className="aspect-square h-auto bg-white text-green-400 hover:bg-green-400 hover:text-white">
+              <Link2 size={24} />
+            </Button>
+          </Link>
           <Link href={`/dashboard/blog/edit/${blog.id}`}>
             <Button className="aspect-square h-auto bg-white text-blue-400 hover:bg-blue-400 hover:text-white">
               <Pencil size={24} />

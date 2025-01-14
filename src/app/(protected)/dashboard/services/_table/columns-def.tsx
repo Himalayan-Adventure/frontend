@@ -44,7 +44,9 @@ export const columns: ColumnDef<
     header: "IMAGES",
     accessorKey: "attributes.image",
     cell({ row }) {
-      const image = row?.original?.attributes?.image?.data?.attributes;
+      //prettier-ignore
+      //@ts-ignore
+      const image = row?.original?.attributes?.image?.data?.attributes?.formats?.small || row?.original?.attributes?.image?.data?.attributes
       return image?.url ? (
         <Image
           src={image?.url}
@@ -55,7 +57,7 @@ export const columns: ColumnDef<
             image?.name ||
             `Service image ${row?.original?.attributes?.title}`
           }
-          className="aspect-video object-cover object-center"
+          className="aspect-video object-cover object-center max-w-32"
         />
       ) : (
         <Text variant="text-xs" className="italic">
