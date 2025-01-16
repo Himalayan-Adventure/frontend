@@ -18,7 +18,7 @@ export const ServiceContent = () => {
   const { type, setType } = useServiceType();
 
   return (
-    <div className="flex w-full flex-col gap-5 md:flex-row">
+    <div className="flex w-full flex-col gap-5 md:flex-row z-[52]">
       {type === "packages" && (
         <Suspense>
           <SideFilter />

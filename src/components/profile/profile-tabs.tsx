@@ -149,7 +149,7 @@ export function ProfileTabs({ user }: { user: TUserDeep }) {
       </TabsContent>
 
       <TabsContent value="blog" className="mt-0 w-full">
-        <BlogCards />
+        <BlogCards user={user} />
       </TabsContent>
 
       <TabsContent value="contact" className="mt-0 w-full">

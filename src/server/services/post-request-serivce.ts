@@ -20,7 +20,7 @@ export const postRequestService = async ({
       url: "api/service-requests",
       data: {
         data: {
-          services: serviceId,
+          service: serviceId,
           users_permissions_users: [userId],
         },
       },

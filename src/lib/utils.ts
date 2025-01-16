@@ -67,6 +67,10 @@ export const getDateBounds = (dateStr: string) => {
     end: endOfDay(date),
   };
 };
-export function sleep(ms:number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function truncate(str: string, length: number) {
+  return str.length > length ? str.slice(0, length) + "..." : str;
 }

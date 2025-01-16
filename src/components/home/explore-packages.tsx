@@ -25,7 +25,7 @@ export default function ExplorePackages() {
       queryFn: async () => {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=4`,
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/package-categories?populate[0]=image&fields[0]=name&pagination[page]=1&pagination[pageSize]=4&filters[is_popular]=true`,
           );
           if (!res.ok) {
             throw new Error("Error fetching package categories");

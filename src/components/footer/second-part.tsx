@@ -77,25 +77,32 @@ export default async function UsefulLinksSection() {
   ];
 
   const paymentMethods = [
-    { src: "/images/visa.png", alt: "Visa" },
-    { src: "/images/visa.png", alt: "MasterCard" },
-    { src: "/images/visa.png", alt: "American Express" },
+    { src: "/icons/visa.png", alt: "Visa" },
+    { src: "/icons/mastercard.png", alt: "MasterCard" },
+    { src: "/icons/paypal.png", alt: "Paypal" },
   ];
 
   const affiliations = [
-    { src: "/images/visa.png", alt: "Affiliation 1" },
-    { src: "/images/visa.png", alt: "Affiliation 2" },
+    { src: "/icons/nepal-emblem.png", alt: "Nepal government" },
+    { src: "/icons/ntb.jpg", alt: "Nepal Tourism Board" },
   ];
 
-  const recommendations = [
-    { src: "/images/visa.png", alt: "Recommendation 1" },
-    { src: "/images/visa.png", alt: "Recommendation 2" },
-  ];
+  const recommendations = {
+    src: "/icons/trip-advisor.png",
+    alt: "Recommendation 1",
+  };
+  // { src: "/images/visa.png", alt: "Recommendation 2" },
 
   const renderList = (items: { src: string; alt: string }[]) =>
     items.map((item, index) => (
       <li key={index} className="inline-block">
-        <Image src={item.src} alt={item.alt} width={50} height={24} />
+        <Image
+          src={item.src}
+          alt={item.alt}
+          width={50}
+          height={24}
+          className="h-full w-full"
+        />
       </li>
     ));
 
@@ -124,7 +131,7 @@ export default async function UsefulLinksSection() {
                   alt={social.alt}
                   width={24}
                   height={24}
-                  className="h-6 w-6 bg-black" 
+                  className="h-6 w-6 bg-black"
                 />
               </Link>
             ))}
@@ -188,18 +195,28 @@ export default async function UsefulLinksSection() {
 
           <div>
             <h3 className="mb-4 font-semibold lg:text-lg">Affiliated with</h3>
-            <ul className="flex gap-6">{renderList(affiliations)}</ul>
+            <ul className="flex h-12 gap-6">{renderList(affiliations)}</ul>
           </div>
 
           <div>
             <h3 className="mb-4 font-semibold lg:text-lg">Recommended by</h3>
-            <ul className="flex gap-6">{renderList(recommendations)}</ul>
+            <ul className="">
+              <li>
+                <Image
+                  src={recommendations.src}
+                  alt={recommendations.alt}
+                  width={150}
+                  height={50}
+                />
+              </li>
+            </ul>
           </div>
         </div>
 
         <div className="flex justify-center pt-4">
           <p className="text-center text-sm md:text-base">
-            Copyright © 2024, Gurukul Hub Pvt. Ltd. All Rights reserved.
+            Copyright © 2025, Himalayan Adventures Pvt. Ltd. All Rights
+            reserved.
           </p>
         </div>
       </div>
