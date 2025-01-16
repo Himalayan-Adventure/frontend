@@ -96,7 +96,13 @@ export default async function UsefulLinksSection() {
   const renderList = (items: { src: string; alt: string }[]) =>
     items.map((item, index) => (
       <li key={index} className="inline-block">
-        <Image src={item.src} alt={item.alt} width={50} height={24} className="w-full h-full" />
+        <Image
+          src={item.src}
+          alt={item.alt}
+          width={50}
+          height={24}
+          className="h-full w-full"
+        />
       </li>
     ));
 
@@ -189,7 +195,7 @@ export default async function UsefulLinksSection() {
 
           <div>
             <h3 className="mb-4 font-semibold lg:text-lg">Affiliated with</h3>
-            <ul className="flex gap-6 h-12">{renderList(affiliations)}</ul>
+            <ul className="flex h-12 gap-6">{renderList(affiliations)}</ul>
           </div>
 
           <div>
@@ -209,7 +215,8 @@ export default async function UsefulLinksSection() {
 
         <div className="flex justify-center pt-4">
           <p className="text-center text-sm md:text-base">
-            Copyright © 2024, Gurukul Hub Pvt. Ltd. All Rights reserved.
+            Copyright © 2025, Himalayan Adventures Pvt. Ltd. All Rights
+            reserved.
           </p>
         </div>
       </div>
