@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable react/no-unescaped-entities */
 import Image from "next/image";
+import { useDebounce } from "@uidotdev/usehooks";
 import React, { useState } from "react";
 import qs from "qs";
 import {
@@ -38,15 +39,30 @@ import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { capitalize, cn, getDateBounds } from "@/lib/utils";
+import { capitalize, cn, getDateBounds, truncate } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  CalendarIcon,
+  CheckIcon,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsUpDown,
+} from "lucide-react";
 import { TUser } from "@/types/auth";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useCurrentUser } from "@/hooks/user-current-user";
 import ExpertsImage from "/public/images/experts.png";
 import Clouds from "/public/images/cloudup.png";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
+import { Loading } from "../loading";
 const CloudImage = ({ position }: { position: string }) => (
   <div className={`absolute ${position} w-full brightness-100`}>
     <Image
@@ -111,6 +127,10 @@ export default function BookAppointment() {
 }
 const AppointmentForm = ({ user }: { user: TUser }) => {
   const [step, setStep] = useState(1);
+  const [searchPackage, setSearchPackage] = useState("");
+  const debouncedSearchPackage = useDebounce(searchPackage, 300);
+  const [searchGuide, setSearchGuide] = useState("");
+  const debouncedSearchGuide = useDebounce(searchGuide, 300);
 
   const [activeTime, setActiveTime] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -133,13 +153,19 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
     isLoading: isLoadingGuides,
     isError: isErrorGuides,
   } = useQuery<TUser[]>({
-    queryKey: ["guides"],
+    queryKey: ["guides", debouncedSearchGuide],
     queryFn: async () => {
       try {
         const params = new URLSearchParams();
-        params.set("filters[userType][$eqi]", "merchant");
+        if (debouncedSearchGuide) {
+          params.set("filters[username][$containsi][0]", debouncedSearchGuide);
+        }
+        params.set("filters[userType][$eqi][1]", "merchant");
+        params.set("pagination[pageSize]", "10");
+        params.set("pagination[page]", "1");
+        params.set("populate[0]", "profilePicture");
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users?${params.toString()}&populate[0]=profilePicture`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users?${params.toString()}`,
         );
         return res.data;
       } catch (error) {
@@ -154,13 +180,20 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
     isLoading: isLoadingPackages,
     isError: isErrorPackages,
   } = useQuery<APIResponseCollection<"api::package.package">>({
-    queryKey: ["packages-appointment"],
+    queryKey: ["packages-appointment", debouncedSearchPackage],
     queryFn: async () => {
       try {
         const params = new URLSearchParams();
-        params.set("filters[userType][$eqi]", "merchant");
+        if (debouncedSearchPackage) {
+          params.set(
+            "filters[package_name][$containsi]",
+            debouncedSearchPackage,
+          );
+        }
+        params.set("pagination[pageSize]", "10");
+        params.set("pagination[page]", "1");
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?${params.toString()}`,
         );
         return res.data;
       } catch (error) {
@@ -275,36 +308,71 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                 name="package"
                 render={({ field }) => (
                   <FormItem>
-                    {/*TODO: use combobox*/}
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value?.toString()}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select package" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {isLoadingPackages ? (
-                            <p>Loading...</p>
-                          ) : !packages?.data || packages.data.length === 0 ? (
-                            <p>No package available</p>
-                          ) : (
-                            packages.data.map((i) => (
-                              <SelectItem
-                                value={i.id.toString()}
-                                key={`package--${i.id}`}
-                                className=""
-                              >
-                                <div className="flex flex-row items-center gap-x-2">
-                                  {i.attributes.package_name}
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "line-clamp-1 flex h-10 w-[200px] justify-between rounded-none border-0 border-b-2 border-input bg-transparent text-base font-normal text-white ring-offset-background placeholder:text-muted-foreground hover:bg-transparent hover:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+                              !field.value && "text-white",
+                            )}
+                          >
+                            {field.value
+                              ? truncate(
+                                  packages?.data.find(
+                                    (category) => category.id === field.value,
+                                  )?.attributes?.package_name || "",
+                                  15,
+                                )
+                              : "Select package"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command shouldFilter={false}>
+                          <CommandInput
+                            placeholder="Search package..."
+                            onValueChange={(value) => {
+                              setSearchPackage(value);
+                            }}
+                          />
+                          <CommandList className="max-h-[150px] overflow-y-scroll">
+                            <CommandEmpty>No packages found.</CommandEmpty>
+                            <CommandGroup>
+                              {isLoadingPackages ? (
+                                <div className="h-40 w-auto rounded-lg bg-white">
+                                  <Loading />
                                 </div>
-                              </SelectItem>
-                            ))
-                          )}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                              ) : (
+                                packages?.data?.map((i) => (
+                                  <CommandItem
+                                    value={`${i.id.toString()}-${i.attributes.package_name}`}
+                                    key={`package-category-${i.id}`}
+                                    className=""
+                                    onSelect={() => {
+                                      form.setValue("package", i.id);
+                                    }}
+                                  >
+                                    {i.attributes.package_name}
+                                    <CheckIcon
+                                      className={cn(
+                                        "ml-auto",
+                                        i.id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0",
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))
+                              )}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -316,46 +384,71 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value?.toString()}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Guide" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {isLoadingGuides ? (
-                            <p>Loading...</p>
-                          ) : !guides || guides.length === 0 ? (
-                            <p>No guides available</p>
-                          ) : (
-                            guides.map((i) => (
-                              <SelectItem
-                                value={i.id.toString()}
-                                key={`user-merchant-${i.id}`}
-                                className=""
-                              >
-                                <div className="flex flex-row items-center gap-x-2">
-                                  <Avatar className="hidden h-fit w-fit">
-                                    {i.profilePicture && (
-                                      <AvatarImage
-                                        src={i.profilePicture?.url}
-                                        className="size-6 rounded-full object-cover"
-                                        height={8}
-                                        width={8}
-                                      />
-                                    )}
-                                    <AvatarFallback className="hidden bg-black text-white">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "line-clamp-1 flex h-10 w-[200px] justify-between rounded-none border-0 border-b-2 border-input bg-transparent text-base font-normal text-white ring-offset-background placeholder:text-muted-foreground hover:bg-transparent hover:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+                                !field.value && "text-white",
+                              )}
+                            >
+                              {field.value
+                                ? truncate(
+                                    guides?.find(
+                                      (guide) => guide.id === field.value,
+                                    )?.username || "",
+                                    15,
+                                  )
+                                : "Select guide"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command shouldFilter={false}>
+                            <CommandInput
+                              placeholder="Search guide..."
+                              onValueChange={(value) => {
+                                setSearchGuide(value);
+                              }}
+                            />
+                            <CommandList className="max-h-[150px] overflow-y-scroll">
+                              <CommandEmpty>No guides found.</CommandEmpty>
+                              <CommandGroup>
+                                {isLoadingGuides ? (
+                                  <div className="h-40 w-auto rounded-lg bg-white">
+                                    <Loading />
+                                  </div>
+                                ) : (
+                                  guides?.map((i) => (
+                                    <CommandItem
+                                      value={`${i.id.toString()}-${i.username}`}
+                                      key={`user-guide-${i.id}`}
+                                      className=""
+                                      onSelect={() => {
+                                        form.setValue("guide", i.id);
+                                      }}
+                                    >
                                       {i.username}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  {i.username}
-                                </div>
-                              </SelectItem>
-                            ))
-                          )}
-                        </SelectContent>
-                      </Select>
+                                      <CheckIcon
+                                        className={cn(
+                                          "ml-auto",
+                                          i.id === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0",
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))
+                                )}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                     </FormControl>
                     {/* <FormMessage className="text-white text-shadow-sm" /> */}
                   </FormItem>
