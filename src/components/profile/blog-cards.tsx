@@ -10,7 +10,9 @@ import { Text } from "../ui/text";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
 import { LoadMorePagination } from "../services/pagination";
 import { useSearchParams } from "next/navigation";
-export const BlogCards = () => {
+import { TUser } from "@/types/auth";
+import { Loading } from "../loading";
+export const BlogCards = ({ user }: { user: TUser }) => {
   const searchParams = useSearchParams();
   const limit = Number(searchParams.get("limit")) || 5;
   const {
@@ -19,7 +21,7 @@ export const BlogCards = () => {
     isError,
   } = useQuery({
     queryKey: ["blogs", limit],
-    queryFn: async () => await getBlogs({ limit }),
+    queryFn: async () => await getBlogs({ limit, authorID: user.id }),
     placeholderData: keepPreviousData,
   });
 
@@ -31,17 +33,25 @@ export const BlogCards = () => {
           <h1 className="w-fit text-3xl font-bold text-foreground">Blog</h1>
           <Separator className="h-2 w-auto bg-black" />
         </div>
-        {!blogs?.data || isError ? (
+        {isPending ? (
+          <div className="grid grid-cols-2 [&>div]:w-full gap-4 [&>div]:h-80">
+            <Skeleton className="size-20" />
+            <Skeleton className="size-20" />
+            <Skeleton className="size-20" />
+            <Skeleton className="size-20" />
+          </div>
+        ) : !blogs?.data || isError || blogs?.data.length === 0 ? (
           <Text variant="text-xl">No blogs found</Text>
-        ) : isPending ? (
-          <Skeleton className="size-20" />
         ) : (
           <div className="flex flex-col space-y-8">
             <div className="grid w-full gap-4 md:grid-cols-2">
-              {blogs?.data
-                ?.map((blog) => (
+              {isPending ? (
+                <Loading className="col-span-full" />
+              ) : (
+                blogs?.data?.map((blog) => (
                   <BlogCard blog={blog} key={`blog-${blog.id}`} />
-                ))}
+                ))
+              )}
             </div>
             {blogs?.data && blogs?.data.length >= 1 && blogs?.meta && (
               <LoadMorePagination
