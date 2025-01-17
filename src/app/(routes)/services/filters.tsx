@@ -44,7 +44,7 @@ export function TopFilter() {
     <Tabs
       defaultValue={(searchParams.get("type") as TServiceType) || "guides"}
       value={type}
-      className="relative z-10 flex w-fit flex-row items-stretch p-0 md:left-36"
+      className="relative z-[52] flex w-fit flex-row items-stretch p-0 md:left-36"
     >
       <TabsList className="hide-scrollbar relative flex h-fit w-full origin-top flex-row items-stretch gap-x-4 gap-y-10 overflow-x-scroll rounded-xl bg-background p-0 px-10 shadow-2xl transition-transform ease-out md:w-fit md:flex-row">
         {categoryTriggers.map((tab) => (
