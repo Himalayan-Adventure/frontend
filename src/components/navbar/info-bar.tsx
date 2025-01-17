@@ -35,6 +35,8 @@ import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import { Skeleton } from "../ui/skeleton";
 import { Text } from "../ui/text";
+import { navLinks } from "@/config/navbar-links";
+import { Separator } from "@radix-ui/react-select";
 export const InfoBar = ({ scrollY }: { scrollY: number }) => {
   const { dialogOpen, setDialogOpen } = useCurrentAuthDialog();
   const contacts = [
@@ -204,7 +206,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           <DrawerTrigger className="lg:hidden">
             <Menu />
           </DrawerTrigger>
-          <DrawerContent className="container flex h-full justify-between border-none bg-black/40 text-white lg:hidden">
+          <DrawerContent className="container flex h-full justify-between border-none bg-black/40 text-white lg:hidden overflow-y-scroll hide-scrollbar">
             <div className="space-y-4 pt-10">
               {contacts.map((item) => (
                 <div
@@ -222,8 +224,18 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   </span>
                 </div>
               ))}
+              <Separator className="bg-gray-400 w-full h-px"/>
 
               <div className="flex flex-col items-start gap-4">
+                {navLinks.map((navLink) => (
+                  <Link key={`mobile-link-${navLink.href}`} href={navLink.href}>
+                    <div className="flex items-center gap-x-6">
+                      {navLink.icon}
+                      <Text variant="text-sm">{navLink.name}</Text>
+                    </div>
+                  </Link>
+                ))}
+
                 <Link href={"/profile"}>
                   <div className="flex items-center gap-x-6">
                     <User className="size-6 lg:size-7" />
@@ -245,12 +257,40 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   Plan with us
                 </Button>
               </Link>
-              {user ? (
+              {isPending ? (
+                <span className="relative flex h-full flex-col items-stretch gap-y-1">
+                  <Skeleton className="size-10 rounded-full" />
+                </span>
+              ) : user === null || !user?.id ? (
+                <span className="flex items-stretch gap-x-3">
+                  <Dialog>
+                    <DialogTrigger
+                      className="flex h-10 items-center justify-center rounded-full bg-primary px-10 py-3 text-white"
+                      onClick={() => setDialogOpen(true)}
+                    >
+                      <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
+                      <p className="font-semibold">Login</p>
+                    </DialogTrigger>
+                    {dialogOpen && <AuthCard />}
+                  </Dialog>
+                </span>
+              ) : (
                 <span className="flex cursor-pointer items-start gap-x-4">
                   <Link href="/profile">
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CN</AvatarFallback>
+                    <Avatar className="h-10 cursor-pointer border-2 border-white/40">
+                      {user?.profilePicture && (
+                        <AvatarImage
+                          src={
+                            user?.profilePicture.formats.thumbnail?.url ||
+                            user.profilePicture?.url
+                          }
+                          alt={user.username}
+                          className="object-cover"
+                        />
+                      )}
+                      <AvatarFallback className="bg-gray-400 text-black">
+                        {user?.username?.[0]}
+                      </AvatarFallback>
                     </Avatar>
                   </Link>
                   <span className="flex flex-col items-start gap-y-2">
@@ -287,19 +327,6 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                       <span>Log out</span>
                     </Button>
                   </span>
-                </span>
-              ) : (
-                <span className="flex items-stretch gap-x-3">
-                  <Dialog>
-                    <DialogTrigger
-                      className="flex h-10 items-center justify-center rounded-full bg-primary px-10 py-3 text-white"
-                      onClick={() => setDialogOpen(true)}
-                    >
-                      <UserCheck className="mr-2 h-4 w-4" strokeWidth={3} />
-                      <p className="font-semibold">Login</p>
-                    </DialogTrigger>
-                    {dialogOpen && <AuthCard />}
-                  </Dialog>
                 </span>
               )}
 

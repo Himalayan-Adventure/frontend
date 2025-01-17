@@ -10,7 +10,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { InfoBar } from "./info-bar";
 
 import { LazyMotion, domMax, m } from "framer-motion";
-import { navLinks } from "@/config/navbar-links";
+import { navLinks } from "@/config/navbar-links"
 export const Navbar = () => {
   const [scrollY, setScrollY] = useState(0);
 
