@@ -70,7 +70,7 @@ export const Overlay = forwardRef<
       className={cn(
         className,
         isOverlayVisible ? "z-50 opacity-100" : "-z-50 opacity-0",
-        "overlay absolute inset-0 mx-auto flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white transition-all ease-in-out",
+        "overlay absolute inset-0 mx-auto flex flex-col justify-between overflow-auto bg-black bg-opacity-70 p-4 text-white transition-all ease-in-out [&>*]:select-none",
       )}
     >
       <div className="absolute right-0 top-0 hidden -translate-y-1/2 translate-x-1/2 justify-end bg-black/40">
@@ -113,7 +113,7 @@ export const Overlay = forwardRef<
                   </p>
                 </div>
 
-                {!user || isPending? (
+                {!user || isPending ? (
                   <Button
                     className="h-fit rounded-full bg-black px-2 py-0.5 text-xs text-white"
                     onClick={() => {

@@ -84,7 +84,7 @@ const HomePackageCard = ({
     <div
       ref={containerRef}
       className={cn(
-        "group transform cursor-pointer overflow-hidden rounded-xl transition-transform",
+        "group transform cursor-pointer select-none overflow-hidden rounded-xl transition-transform",
       )}
     >
       <div className="relative">
@@ -223,20 +223,25 @@ export const SliderComponent = ({
       {images?.data?.map((image, index: number) => {
         //prettier-ignore
         //@ts-ignore
-        const smallImage =   image?.attributes?.formats?.small;
+        const smallImage =   image?.attributes?.formats?.medium;
         const fallbackImg = image?.attributes;
-        const optImg = smallImage || fallbackImg;
+        const optImg = fallbackImg;
 
         //@ts-ignore
         return (
           optImg?.url && (
-            <SwiperSlide key={`${index}-${image.id}`}>
+            <SwiperSlide
+              key={`${index}-${image.id}`}
+              className="group h-full w-full overflow-hidden rounded rounded-es-3xl rounded-se-3xl"
+            >
               <Image
                 src={optImg.url}
                 alt={optImg?.name || `Slider image ${image.id}`}
                 width={optImg?.width || 400}
                 height={optImg?.height || 400}
-                className="h-full w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
+                className="h-full w-full rounded rounded-es-3xl rounded-se-3xl object-cover transition-transform duration-2000 ease-linear group-hover:scale-110 group-hover:rounded-es-3xl"
+
+                //                className="h-full w-full rounded object-cover transition-[object-position] duration-3000 ease-linear group-hover:object-[50%_0%]"
               />
             </SwiperSlide>
           )

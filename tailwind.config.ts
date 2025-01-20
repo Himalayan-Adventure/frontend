@@ -45,6 +45,10 @@ const config = {
       },
     },
     extend: {
+      transitionDuration: {
+        "2000": "2000ms",
+        "3000": "3000ms",
+      },
       textShadow: {
         sm: "0 1px 2px hsl(var(--foreground))",
         DEFAULT: "0 2px 4px var(--gray-400)",
