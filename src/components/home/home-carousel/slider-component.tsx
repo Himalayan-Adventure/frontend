@@ -97,6 +97,7 @@ export default function SliderComponent({
             <Carousel
               opts={{
                 align: "start",
+                dragFree: true,
               }}
               className="w-full"
             >
