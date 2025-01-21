@@ -13,10 +13,19 @@ import axios from "axios";
 import { SlidersHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaChevronDown, FaLeaf, FaSnowflake, FaSun } from "react-icons/fa";
+import {
+  FaBolt,
+  FaChevronDown,
+  FaDumbbell,
+  FaFire,
+  FaLeaf,
+  FaMountain,
+  FaRegUser,
+  FaSnowflake,
+  FaSun,
+} from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa6";
-import { GiFlowerEmblem, GiHiking, GiStairsGoal } from "react-icons/gi";
-import { MdHiking } from "react-icons/md";
+import { GiFlowerEmblem } from "react-icons/gi";
 import DynamicReactIcon from "../icons/strapi-icon";
 
 export default function FilterBox() {
@@ -24,7 +33,7 @@ export default function FilterBox() {
   const [isOpen, setIsOpen] = useState(false);
   const [countries, setCountries] = useState<any>();
   const [loading, setLoading] = useState(true);
-  const [level, setLevel] = useState<number | null>(null);
+  const [level, setLevel] = useState<string | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [selectedAdventureType, setSelectedAdventureType] = useState<
     string | null
@@ -107,8 +116,7 @@ export default function FilterBox() {
       ? selectedCountry?.attributes?.name
       : "Not selected";
 
-    const selectedLevelName =
-      level !== null ? levels[level]?.title : "Not selected";
+    const selectedLevelName = level !== null ? level : "Not selected";
 
     const queryParams = new URLSearchParams();
 
@@ -135,6 +143,18 @@ export default function FilterBox() {
     router.push(`/packages?${queryParams.toString()}`);
   };
 
+  const handleClearFilter = () => {
+    setSelectedRegion("");
+    setSelectedAdventureType("");
+    setSelectedExperience("");
+    setSelectedHeight("");
+    setLevel(null);
+    setSelectedSeason("");
+
+    setIsOpen(false);
+    router.push(`/packages`);
+  };
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
@@ -149,7 +169,6 @@ export default function FilterBox() {
             <DialogHeader>
               <DialogTitle>Filters</DialogTitle>
             </DialogHeader>
-
             {/* Choosing Country (Regions) */}
             <div className="mt-4">
               <div className="flex items-center justify-between">
@@ -186,7 +205,6 @@ export default function FilterBox() {
                 ))}
               </div>
             </div>
-
             {/* choose Adventure Type */}
             <div className="mt-4 md:mt-8">
               <h2 className="text-xl font-semibold md:text-2xl">
@@ -224,7 +242,6 @@ export default function FilterBox() {
                 ))}
               </div>
             </div>
-
             {/* Choose by Month */}
             <div className="mt-4 md:mt-8">
               <h2 className="text-xl font-semibold md:text-2xl">
@@ -275,33 +292,34 @@ export default function FilterBox() {
                     <div
                       className={`rounded-full border-[1px] p-2 ${selectedExperience === exp.value ? "bg-primary text-white" : "border-black"}`}
                     >
-                      {exp?.icon}
+                      {exp.icon} {/* Render React Icon */}
                     </div>
                     <div
-                      className={`flex w-full justify-center rounded-lg border p-2 uppercase shadow ${selectedExperience === exp.value ? "bg-primary text-white" : "border-black"}`}
+                      className={`flex w-full justify-center rounded-lg border p-2 text-xs uppercase shadow sm:text-sm ${selectedExperience === exp.value ? "bg-primary text-white" : "border-black"}`}
                     >
-                      {exp?.name}
+                      {exp.name}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-
             {/* choose by level */}
             <div className="mt-4 md:mt-8">
               <h2 className="text-xl font-semibold md:text-2xl">
-                Choose By Level
+                Choose By Skill Level
               </h2>
-              <div className="mt-4 space-y-4">
-                {levels?.map((lvl, index) => (
+              <div className="mt-4 grid gap-2 md:grid-cols-2 md:gap-4">
+                {levels.map((lvl, index) => (
                   <div key={index} className="overflow-hidden">
                     <button
-                      className={`flex w-[80%] cursor-pointer items-center justify-between rounded-es-xl rounded-se-xl px-4 py-2 text-left font-semibold text-white focus:outline-none ${level === index ? "bg-primary" : "bg-gray-800"}`}
-                      onClick={() => setLevel(index === level ? null : index)}
+                      className={`flex w-full cursor-pointer items-center justify-between rounded-es-xl rounded-se-xl px-4 py-2 text-left font-semibold text-white focus:outline-none ${level === lvl.title ? "bg-primary" : "bg-gray-800"}`}
+                      onClick={() =>
+                        setLevel(level === lvl.title ? null : lvl.title)
+                      }
                     >
                       <span className="text-sm md:text-base">{lvl?.title}</span>
                       <span>
-                        {level === index ? (
+                        {level === lvl.title ? (
                           <FaChevronUp size={12} />
                         ) : (
                           <FaChevronDown size={12} />
@@ -310,7 +328,7 @@ export default function FilterBox() {
                     </button>
                     <div
                       className={`w-[80%] transition-all duration-500 ease-in-out ${
-                        level === index
+                        level === lvl.title
                           ? "max-h-[500px] opacity-100"
                           : "max-h-0 opacity-0"
                       } overflow-hidden`}
@@ -333,18 +351,26 @@ export default function FilterBox() {
                 {heights?.map((ht, index) => (
                   <div
                     key={index}
-                    onClick={() => setSelectedHeight(ht?.name)}
-                    className={`max-w-[12rem] cursor-pointer rounded px-4 py-2 text-center text-xs text-white md:text-sm ${selectedHeight === ht?.name ? "bg-primary" : "bg-gray-900"}`}
+                    onClick={() =>
+                      setSelectedHeight((prevHeight) =>
+                        prevHeight === ht.name ? null : ht.name,
+                      )
+                    }
+                    className={`max-w-[12rem] cursor-pointer rounded px-4 py-2 text-center text-xs text-white md:text-sm ${
+                      selectedHeight === ht.name ? "bg-primary" : "bg-gray-900"
+                    }`}
                   >
-                    {ht?.name}
+                    {ht.name}
                   </div>
                 ))}
               </div>
             </div>
-
             {/* Footer */}
             <DialogFooter>
               <Button onClick={handleApplyFilters}>Apply Filters</Button>
+              <Button onClick={handleClearFilter} variant="secondary">
+                Clear Filters
+              </Button>
             </DialogFooter>
           </>
         </DialogContent>
@@ -355,50 +381,70 @@ export default function FilterBox() {
 
 const experiences = [
   {
-    name: "Beginner",
-    icon: <GiStairsGoal />,
     value: "beginner",
+    name: "Beginner (grade I)",
+    icon: <FaRegUser />,
   },
   {
-    name: "Intermediate",
-    icon: <MdHiking />,
     value: "intermediate",
+    name: "Intermediate (grade II)",
+    icon: <FaBolt />,
   },
   {
-    name: "Advanced",
-    icon: <GiHiking />,
-    value: "advanced",
+    value: "challenging",
+    name: "Challenging (grade III)",
+    icon: <FaFire />,
+  },
+  {
+    value: "strenuous",
+    name: "Strenuous (grade IV)",
+    icon: <FaDumbbell />,
+  },
+  {
+    value: "extreme",
+    name: "Extreme (grade V)",
+    icon: <FaMountain />,
   },
 ];
 
 const levels = [
   {
-    title: "Level 1",
+    title: "Novice",
     description:
-      "This level is suitable for individuals with little or no prior experience in adventure activities. Expect well-marked trails and guided tours.",
+      "Ideal for first-time trekkers with limited or no experience. Basic treks with easy terrain and shorter durations.",
   },
   {
-    title: "Level 2",
+    title: "Intermediate",
     description:
-      "Designed for those with some experience in adventure activities. Includes moderate physical challenges and exploration of less familiar terrain.",
+      "For those with some trekking experience. Moderate treks with moderate difficulty, usually lasting longer or with more challenging terrain.",
   },
   {
-    title: "Level 3",
+    title: "Advanced",
     description:
-      "Perfect for seasoned adventurers seeking thrilling experiences. Expect rigorous physical activities, high altitudes, and demanding conditions.",
+      "For experienced trekkers who are comfortable with longer, more strenuous treks at higher altitudes and tougher terrains.",
+  },
+  {
+    title: "Expert",
+    description:
+      "For seasoned trekkers and mountaineers with extensive experience. Involves difficult climbs, higher altitudes, and technical challenges.",
+  },
+  {
+    title: "Professional",
+    description:
+      "For those who lead expeditions or participate in mountaineering at a professional level. Requires advanced technical skills, leadership, and high-altitude experience.",
+  },
+  {
+    title: "Elite",
+    description:
+      "The highest level, for extreme adventurers and mountaineers. This includes tackling some of the most difficult, dangerous climbs and extreme weather conditions.",
   },
 ];
 
 const heights = [
-  {
-    name: "8000 M+",
-  },
-  {
-    name: "7000 M+",
-  },
-  {
-    name: "under 2000m",
-  },
+  { name: "under 2000m" },
+  { name: "above 2000m" },
+  { name: "above 7000m" },
+  { name: "above 8000m" },
 ];
 
 const seasons = [

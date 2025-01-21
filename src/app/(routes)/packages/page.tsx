@@ -26,6 +26,9 @@ export default async function Packages({
     adventureType?: string;
     region?: string;
     season?: string;
+    experience?: string;
+    level?: string;
+    height?: string;
   };
 }) {
   const { title } = searchParams;
