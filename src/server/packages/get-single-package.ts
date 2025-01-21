@@ -8,8 +8,11 @@ import {
   APIResponseData,
 } from "@/types/types";
 import { AxiosResponse, type AxiosError } from "axios";
+
+import qs from "qs";
 export const getSinglePackage = async (id: string) => {
   try {
+    const query = qs.stringify({});
     const res: AxiosResponse<APIResponse<"api::package.package">> =
       await axiosInstance.get(`api/packages/${id}?populate=deep`);
 

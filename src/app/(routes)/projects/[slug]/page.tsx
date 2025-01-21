@@ -63,7 +63,7 @@ export default async function ProjectDetail({
 }) {
   const { slug } = params;
   const data = await getSingleProject(slug);
-  if (data.status === 404) {
+  if (data.status!==200 || !data?.data) {
     return (
       <div className="h-96">
         <CommonBanner title={`Project not found`} bgImage={bgImage} />
