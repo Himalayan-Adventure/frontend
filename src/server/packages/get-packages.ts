@@ -1,8 +1,9 @@
 "use server";
 
-import { APIResponseCollection, APIResponseData } from "@/types/types";
-import { AxiosResponse, type AxiosError } from "axios";
+import { APIResponseCollection } from "@/types/types";
+import { type AxiosError } from "axios";
 import qs from "qs";
+
 export const getPackages = async ({
   key,
   filter,
@@ -12,6 +13,9 @@ export const getPackages = async ({
   limit,
   region,
   season,
+  experience,
+  level,
+  height,
 }: {
   key?: string;
   filter?: string;
@@ -21,27 +25,52 @@ export const getPackages = async ({
   adventureType?: string;
   region?: string;
   season?: string;
+  experience?: string;
+  level?: string;
+  height?: string;
 }) => {
   try {
-    const queryGenerator = (key?: string, filter?: string) => {
-      if (key === "season") {
-        return `filters[adventure_specification][season][name][$eqi]=${filter}`;
-      } else if (key === "altitude") {
-        return `filters[adventure_specification][max_altitude][$gte]=${filter}`;
-      } else if (key === "type") {
-      } else if (key === "fitness") {
-        return `filters[adventure_specification][fitness][name][$eqi]=${filter}`;
-      } else if (key === "grade") {
-        return `filters[adventure_specification][grade][id][$eqi]=${filter}`;
-      } else if (key === "region") {
-        return `filters[package_region][id]=${filter}`;
-      } else if (key === "category") {
-        return `filters[package_categories][id]=${filter}`;
-      } else {
-        return "";
+    const queryGenerator = (key?: string, filter?: string, height?: string) => {
+      let query = "";
+
+      if (height) {
+        switch (height) {
+          case "under 2000m":
+            query += `filters[adventure_specification][max_altitude][$lte]=2000&`;
+            break;
+          case "above 2000m":
+            query += `filters[adventure_specification][max_altitude][$gte]=2000&`;
+            break;
+          case "above 7000m":
+            query += `filters[adventure_specification][max_altitude][$gte]=7000&`;
+            break;
+          case "above 8000m":
+            query += `filters[adventure_specification][max_altitude][$gte]=8000&`;
+            break;
+          default:
+            break;
+        }
       }
+
+      if (key === "season") {
+        query += `filters[adventure_specification][season][name][$eqi]=${filter}&`;
+      } else if (key === "altitude") {
+        query += `filters[adventure_specification][max_altitude][$gte]=${filter}&`;
+      } else if (key === "fitness") {
+        query += `filters[adventure_specification][fitness][name][$eqi]=${filter}&`;
+      } else if (key === "grade") {
+        query += `filters[adventure_specification][grade][id][$eqi]=${filter}&`;
+      } else if (key === "region") {
+        query += `filters[package_region][id]=${filter}&`;
+      } else if (key === "category") {
+        query += `filters[package_categories][id]=${filter}&`;
+      }
+
+      return query;
     };
-    const query = queryGenerator(key, filter);
+
+    const query = queryGenerator(key, filter, height);
+
     const additionalQuery = qs.stringify({
       filters: {
         ...(title ? { package_name: { $containsi: title } } : {}),
@@ -68,6 +97,24 @@ export const getPackages = async ({
               },
             }
           : {}),
+        ...(experience
+          ? {
+              adventure_specification: {
+                grade: {
+                  name: { $containsi: experience },
+                },
+              },
+            }
+          : {}),
+        ...(level
+          ? {
+              adventure_specification: {
+                skill_level: {
+                  name: { $containsi: level },
+                },
+              },
+            }
+          : {}),
       },
       pagination: {
         pageSize: limit || 20,
@@ -84,10 +131,10 @@ export const getPackages = async ({
         cache: "no-cache",
       },
     );
+
     const data: APIResponseCollection<"api::package.package"> =
       await res.json();
+
     return data;
-  } catch (error: AxiosError | any) {
-    console.log(error);
-  }
+  } catch (error: AxiosError | any) {}
 };
