@@ -268,13 +268,16 @@ export const SliderComponent = ({
         const optImg = smallImage || fallbackImg;
         return (
           optImg?.url && (
-            <SwiperSlide key={`${index}-${image.id}`}>
+            <SwiperSlide
+              key={`${index}-${image.id}`}
+              className="group h-full w-full overflow-hidden rounded rounded-es-3xl rounded-se-3xl"
+            >
               <Image
                 src={optImg.url}
                 alt={optImg?.name || `Slider image ${image.id}`}
                 width={optImg?.width || 400}
                 height={optImg?.height || 400}
-                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
+                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover transition-transform duration-2000 ease-linear group-hover:scale-110 group-hover:rounded-es-3xl"
               />
             </SwiperSlide>
           )

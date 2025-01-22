@@ -109,6 +109,7 @@ export default async function PackageDetail({
       description: i.description || [],
     };
   });
+  
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
   }

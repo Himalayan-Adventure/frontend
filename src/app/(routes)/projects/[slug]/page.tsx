@@ -63,7 +63,7 @@ export default async function ProjectDetail({
 }) {
   const { slug } = params;
   const data = await getSingleProject(slug);
-  if (data.status === 404) {
+  if (data.status !== 200 || !data?.data) {
     return (
       <div className="h-96">
         <CommonBanner title={`Project not found`} bgImage={bgImage} />
@@ -72,8 +72,9 @@ export default async function ProjectDetail({
   }
 
   const pkg = data.data?.attributes.package?.data.attributes;
-  const images: GalleryImageProp[] | null = pkg?.image
-    ? pkg?.image.data?.map((image) => ({
+  console.log(pkg);
+  const images: GalleryImageProp[] | null = data?.data?.attributes?.image?.data
+    ? data?.data?.attributes?.image?.data?.map((image) => ({
         src: image.attributes.url,
         alt: image.attributes?.alternativeText || image.attributes.name,
         height: image.attributes.height || 400,
@@ -128,7 +129,7 @@ export default async function ProjectDetail({
           Project
         </h3>
         <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
-          {pkg?.package_name}
+          {data?.data?.attributes?.title}
         </h1>
         {data.data?.attributes.createdAt && (
           <h5 className="text-md text-gray-700">

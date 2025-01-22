@@ -222,25 +222,21 @@ const ProjectCard = ({
               </div>
             </div>
 
-            {attr?.brief_description && (
-              <p className="text-sm text-gray-600">
-                {attr?.brief_description?.length > 50
-                  ? attr?.brief_description?.slice(0, 50) + "..."
-                  : attr?.brief_description}
-              </p>
-            )}
+            <p className="line-clamp-2 break-all text-sm text-gray-600">
+              {attr?.brief_description}
+            </p>
             {departureData.start && departureData.end && (
               <p className="text-sm text-gray-600">
                 {format(departureData.start, "dd")} -&nbsp;
                 {format(departureData.end, "dd MMM")}. · Individual Host
               </p>
             )}
-            {attr?.cost_and_budgeting?.[0] && (
-              <p className="mt-2 text-lg font-[900] text-primary underline">
-                Rs.{attr.cost_and_budgeting?.[0]?.lowest}-
-                {attr.cost_and_budgeting?.[0]?.highest}
-              </p>
-            )}
+            <p className="mt-2 text-lg font-[900] text-primary underline">
+              {priceRangeFormatter(
+                attr?.cost_and_budgeting?.[0]?.lowest,
+                attr?.cost_and_budgeting?.[0]?.highest,
+              )}
+            </p>
           </Link>
         )}
 
@@ -288,13 +284,16 @@ export const SliderComponent = ({
         const optImg = smallImage || fallbackImg;
         return (
           optImg?.url && (
-            <SwiperSlide key={`${index}-${image.id}`}>
+            <SwiperSlide
+              key={`${index}-${image.id}`}
+              className="group h-full w-full overflow-hidden rounded rounded-es-3xl rounded-se-3xl"
+            >
               <Image
                 src={optImg.url}
                 alt={optImg?.name || `Slider image ${image.id}`}
                 width={optImg?.width || 400}
                 height={optImg?.height || 400}
-                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
+                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover transition-transform duration-2000 ease-linear group-hover:scale-110 group-hover:rounded-es-3xl"
               />
             </SwiperSlide>
           )
@@ -479,3 +478,20 @@ const Overlay = forwardRef<
 });
 
 Overlay.displayName = "Overlay";
+
+const priceRangeFormatter = (
+  lowest?: number | string,
+  highest?: number | string,
+) => {
+  if (lowest && highest) {
+    return `Rs. ${lowest}-${highest}`;
+  } else {
+    if (lowest) {
+      return `Rs. ${lowest}`;
+    } else if (highest) {
+      return `Rs. ${lowest}`;
+    } else {
+      return "Price not available";
+    }
+  }
+};
