@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { PackageCardSkeleton } from "@/components/packagespage/package-card-skeleton";
 import ProjectCard from "./project-card";
+import { Text } from "@/components/ui/text";
 
 const SimilarProjects = ({ notToInclude }: { notToInclude?: number }) => {
   const { data, isFetching, status, error } = useQuery<
@@ -29,7 +30,18 @@ const SimilarProjects = ({ notToInclude }: { notToInclude?: number }) => {
     return <PackageCardSkeleton />;
   }
   if (error) {
-    return <>No projects found</>;
+    return (
+      <section className="container py-4 lg:py-8">
+        <div>
+          <h2 className="mb-6 text-lg font-semibold md:text-xl lg:text-2xl">
+            Similar Projects
+          </h2>
+          <Text variant="text-lg" bold className="w-full text-center">
+            No similar projects found
+          </Text>
+        </div>
+      </section>
+    );
   }
   return (
     <section className="container py-4 lg:py-8">

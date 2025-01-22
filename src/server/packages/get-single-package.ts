@@ -33,7 +33,7 @@ export const getSinglePackage = async (id: string) => {
         encodeValuesOnly: true, // prettify URL
       },
     );
-    console.log(params);
+
     const res: AxiosResponse<APIResponse<"api::package.package">> =
       await axiosInstance.get(`api/packages/${id}?${params}`);
 
