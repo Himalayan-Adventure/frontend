@@ -15,6 +15,7 @@ import { cn, formatDate, formatDateRange } from "@/lib/utils";
 import { APIResponseCollection, APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import Image from "next/image";
+import { truncate } from "@/lib/utils";
 
 const SimilarPackageCard = ({
   pkg,
@@ -81,13 +82,20 @@ const SimilarPackageCard = ({
               </div>
             </div>
 
-            <p className="text-sm text-gray-600">Beach and ocean views</p>
+            <p className="line-clamp-2 break-all text-sm text-gray-600">
+              {pkg?.attributes?.brief_description}
+            </p>
             <span className="flex flex-row items-center">
-              {start && end && <p>{formatDateRange(start, end as string)}</p>}
-              <p className="text-sm text-gray-600">· Individual Host</p>
+              {start && end && (
+                <p>{formatDateRange(start, end as string)} ·&nbsp;</p>
+              )}
+              <p className="text-sm text-gray-600"> Individual Host</p>
             </span>
             <p className="mt-2 text-lg font-[900] text-primary underline">
-              Rs. 40000
+              {priceRangeFormatter(
+                attr?.cost_and_budgeting?.[0]?.lowest,
+                attr?.cost_and_budgeting?.[0]?.highest,
+              )}
             </p>
           </Link>
         </div>
@@ -136,13 +144,16 @@ export const SliderComponent = ({
         const optImg = smallImage || fallbackImg;
         return (
           optImg?.url && (
-            <SwiperSlide key={`${index}-${image.id}`}>
+            <SwiperSlide
+              key={`${index}-${image.id}`}
+              className="group h-full w-full overflow-hidden rounded rounded-es-3xl rounded-se-3xl"
+            >
               <Image
                 src={optImg.url}
                 alt={optImg?.name || `Slider image ${image.id}`}
                 width={optImg?.width || 400}
                 height={optImg?.height || 400}
-                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover"
+                className="h-96 w-full rounded rounded-es-3xl rounded-se-3xl object-cover transition-transform duration-2000 ease-linear group-hover:scale-110 group-hover:rounded-es-3xl"
               />
             </SwiperSlide>
           )
@@ -150,4 +161,20 @@ export const SliderComponent = ({
       })}
     </Swiper>
   );
+};
+const priceRangeFormatter = (
+  lowest?: number | string,
+  highest?: number | string,
+) => {
+  if (lowest && highest) {
+    return `Rs. ${lowest}-${highest}`;
+  } else {
+    if (lowest) {
+      return `Rs. ${lowest}`;
+    } else if (highest) {
+      return `Rs. ${lowest}`;
+    } else {
+      return "Price not available";
+    }
+  }
 };
