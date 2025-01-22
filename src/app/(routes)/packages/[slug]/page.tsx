@@ -109,7 +109,7 @@ export default async function PackageDetail({
       description: i.description || [],
     };
   });
-  console.log(pkg?.trip_facts?.[0]);
+  
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
   }

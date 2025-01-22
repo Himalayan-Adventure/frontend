@@ -14,17 +14,23 @@ export const getSingleProject = async (id: string) => {
     const params = qs.stringify({
       populate: {
         0: "image",
-        adventure_specification: { populate: "*" },
-        sponsor_host: { populate: "*" },
-        itinerary: { populate: "*" },
-        logistics: { populate: "*" },
-        trip_facts: { populate: "*" },
-        offer: { populate: "*" },
-        cost_and_budgeting: { populate: "*" },
-        package_host: { populate: "*" },
-        hosted_by: { populate: "*" },
-        things_to_know: { populate: "*" },
-        faq: { populate: "*" },
+        populate: {
+          package: {
+            populate: {
+              adventure_specification: { populate: "*" },
+              sponsor_host: { populate: "*" },
+              itinerary: { populate: "*" },
+              logistics: { populate: "*" },
+              trip_facts: { populate: "*" },
+              offer: { populate: "*" },
+              cost_and_budgeting: { populate: "*" },
+              package_host: { populate: "*" },
+              hosted_by: { populate: "*" },
+              things_to_know: { populate: "*" },
+              faq: { populate: "*" },
+            },
+          },
+        },
       },
     });
     const res: AxiosResponse<APIResponse<"api::project.project">> =
