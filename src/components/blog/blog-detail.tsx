@@ -42,15 +42,17 @@ export default function BlogDetail({ blog }: any) {
 
         {/* Featured Image */}
         <div className="my-12">
-          <Image
-            src={blog?.data?.attributes?.thumbnail?.data?.attributes?.url}
-            alt="Featured Image"
-            width={800}
-            height={450}
-            className="max-h-[30rem] rounded-lg object-cover saturate-0"
-            objectFit="cover"
-            layout="responsive"
-          />
+          {blog?.data?.attributes?.thumbnail?.data && (
+            <Image
+              src={blog?.data?.attributes?.thumbnail?.data?.attributes?.url}
+              alt="Featured Image"
+              width={800}
+              height={450}
+              className="max-h-[30rem] rounded-lg object-cover saturate-0"
+              objectFit="cover"
+              layout="responsive"
+            />
+          )}
         </div>
 
         {/* Blog Content */}

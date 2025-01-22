@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
 import Image from "next/image";
@@ -64,18 +65,19 @@ export default function BlogCard({
       <Link
         href={`/blog/${slug}`}
         target="_blank"
-        className="h-[10rem] w-full self-stretch overflow-hidden rounded-sm bg-gray-200"
+        className="h-[10rem] w-full self-stretch overflow-hidden rounded-lg bg-gray-200"
         prefetch={false}
       >
-        <Image
+        <img
           src={
-            image?.url ||
-            "https://plus.unsplash.com/premium_photo-1677002240252-af3f88114efc?q=80&w=2925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            blog?.attributes?.thumbnail?.data
+              ? `${image.url}`
+              : "https://placehold.co/600x400?text=No+Image&font=poppins"
           }
           alt={blog?.attributes?.title || "Blog image"}
           width={image?.width || 600}
           height={image?.height || 400}
-          className="h-full w-full rounded-xl object-cover saturate-0 transition-transform duration-300 group-hover:scale-105"
+          className="h-full w-full rounded-lg object-cover saturate-0 transition-transform duration-300 group-hover:scale-105"
         />
       </Link>
 
