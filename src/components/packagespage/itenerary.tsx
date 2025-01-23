@@ -26,7 +26,6 @@ export default function Itinerary({
       : Number((data.length / 7).toFixed(0)) + 1;
   //@ts-ignore
   const weeks = [...new Set(data?.map((item) => item?.week) || [])];
-  console.log(data);
 
   const transformedData = Array.from({ length: numberOfWeeks }).map((_, i) => {
     return {
