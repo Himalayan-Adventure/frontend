@@ -24,10 +24,23 @@ export default function Itinerary({
     data.length / 7 - Number((data.length / 7).toFixed(0)) <= 0
       ? Number((data.length / 7).toFixed(0))
       : Number((data.length / 7).toFixed(0)) + 1;
+  //@ts-ignore
+  const weeks = [...new Set(data?.map((item) => item?.week) || [])];
+
   const transformedData = Array.from({ length: numberOfWeeks }).map((_, i) => {
     return {
       week: `Week ${i + 1 < 10 ? `0${i + 1}` : i + 1}`,
-      days: data.slice(i * 7, i * 7 + 7).map((item) => `${item.day}`),
+      days: data
+        .slice(i * 7, i * 7 + 7)
+        .map((item) => ({ day: `${item.day}`, desc: item.description })),
+    };
+  });
+  const transformedData1 = weeks.map((i) => {
+    return {
+      week: `Week ${i < 10 ? `0${i}` : i}`,
+      days: data
+        .filter((j) => j.week === i)
+        .map((item) => ({ day: item.day, desc: item.description })),
     };
   });
 
@@ -84,10 +97,10 @@ export default function Itinerary({
       </div>
       <div className="mt-4">
         <p className="text-base text-gray-600 lg:text-xl">
-          <span className="font-bold">Weeks</span> ({data?.length})
+          <span className="font-bold">Weeks</span> ({weeks?.length})
         </p>
         <div className="ml-4 mt-4 space-y-6 border-l">
-          {transformedData.map((item, index) => (
+          {transformedData1.map((item, index) => (
             <div key={index}>
               <div
                 className="flex cursor-pointer space-x-4 lg:space-x-8"
@@ -119,7 +132,7 @@ export default function Itinerary({
                         key={dayIndex}
                         className="mt-2 text-xs md:text-sm lg:text-base"
                       >
-                        {`Day 0${dayIndex + 1}`} &nbsp; {day}
+                        {`Day 0${day.day}`} &nbsp; {day.desc}
                       </p>
                     ))}
                   </div>
