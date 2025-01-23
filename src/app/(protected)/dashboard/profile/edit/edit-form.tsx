@@ -33,7 +33,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Label } from "@/components/ui/label";
 import { MultiInput } from "@/components/ui/multi-input";
 import { TUserDeep } from "@/types/auth";
-import { urlToFile } from "@/lib/utils";
+import { capitalize, urlToFile } from "@/lib/utils";
 import { updateUser } from "@/server/auth/update-user";
 export default function ProfileEditForm({ user }: { user: TUserDeep }) {
   const [loading, setLoading] = useState(false);
@@ -64,9 +64,9 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       email: user?.email || "",
       profilePicture: file,
       about: {
-        facebook: user?.about?.facebook || "",
-        instagram: user?.about?.instagram || "",
-        whatsapp: user?.about?.whatsapp || "",
+        facebook: user?.about?.facebook,
+        instagram: user?.about?.instagram,
+        whatsapp: user?.about?.whatsapp,
         description: user?.about?.description || "",
       },
       resume: {
@@ -75,7 +75,7 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
         email: user?.resume?.email || "",
         phone: user?.resume?.phone || user?.contact?.phone || "",
         location: user.resume?.location || "",
-        portfolio: user.resume?.portfolio || "",
+        portfolio: user.resume?.portfolio,
         hard_skill: user?.resume?.hard_skill || "",
         technical_skill: user?.resume?.technical_skill || "",
         education: user?.resume?.education?.map((i) => i.education).join("\n"),
@@ -97,6 +97,10 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       },
     },
   });
+
+  const {
+    formState: { errors },
+  } = form;
   const tabs = ["about", "resume", "contact"];
 
   async function onSubmit(values: TEditProfileForm) {
@@ -197,7 +201,23 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
           <Button
             type="submit"
             onClick={() => {
-              form.handleSubmit(onSubmit);
+              if (!form.formState.isValid) {
+                console.log(form.getFieldState('resume.portfolio'))
+                const firstError = Object.keys(errors).reduce((field, a) => {
+                  return errors[field as keyof TEditProfileForm] ? field : a;
+                }, "");
+                if (firstError) {
+                  toast.error(`${capitalize(firstError)} Field is invalid`, {
+                    className: "bg-red-100",
+                  });
+                } else {
+                  toast.error(`Please check all the fields`, {
+                    className: "bg-red-100",
+                  });
+                }
+              } else {
+                form.handleSubmit(onSubmit);
+              }
             }}
             //disabled={!form.formState.isValid}
             className="w-fit items-center gap-x-3 self-start rounded-full bg-foreground px-10 py-6 font-poppins font-bold"
