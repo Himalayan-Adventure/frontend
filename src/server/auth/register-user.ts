@@ -31,6 +31,7 @@ export const register = async (user: TRegisterPayload) => {
         password: user.password,
         username: user.username,
         phone: user.phone,
+        userType: user.userType,
       },
     );
     cookieStore.set({
