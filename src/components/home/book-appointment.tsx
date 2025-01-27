@@ -682,7 +682,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                       : a;
                   }, "");
                   if (firstError) {
-                    toast.error(`${capitalize(firstError)} field is invalid`, {
+                    toast.error(`${capitalize(firstError)} Field is invalid`, {
                       className: "bg-red-100",
                     });
                   }
