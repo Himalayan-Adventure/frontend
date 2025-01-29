@@ -7,6 +7,8 @@ import Link from "next/link";
 import { LoadMorePagination } from "@/components/services/pagination";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { getCurrentUserData } from "@/server/auth/get-me";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: `Calendar Dashboard`,
@@ -18,7 +20,11 @@ export default async function CalendarPage({
   searchParams: { available: boolean; active?: number; limit?: number };
 }) {
   const { available, active, limit } = searchParams;
-  const calendars = await getCalendars({ available, limit });
+  const user = await getCurrentUserData();
+  if (!user) {
+    redirect("/home");
+  }
+  const calendars = await getCalendars({ available, limit, id: user.id });
   return (
     <section className="space-y-8 font-poppins @container">
       <span className="flex gap-x-3">
