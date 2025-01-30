@@ -64,39 +64,42 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       email: user?.email || "",
       profilePicture: file,
       about: {
-        facebook: user?.about?.facebook,
-        instagram: user?.about?.instagram,
-        whatsapp: user?.about?.whatsapp,
+        facebook: user?.about?.facebook || undefined,
+        instagram: user?.about?.instagram || "",
+        whatsapp: user?.about?.whatsapp || undefined,
         description: user?.about?.description || "",
       },
       resume: {
-        first_name: user?.resume?.first_name || "",
-        last_name: user?.resume?.last_name || "",
-        email: user?.resume?.email || "",
-        phone: user?.resume?.phone || user?.contact?.phone || "",
-        location: user.resume?.location || "",
-        portfolio: user.resume?.portfolio,
-        hard_skill: user?.resume?.hard_skill || "",
-        technical_skill: user?.resume?.technical_skill || "",
-        education: user?.resume?.education?.map((i) => i.education).join("\n"),
+        first_name: user?.resume?.first_name || undefined,
+        last_name: user?.resume?.last_name || undefined,
+        email: user?.resume?.email || undefined,
+        phone: user?.resume?.phone || user?.contact?.phone || undefined,
+        location: user.resume?.location || undefined,
+        portfolio: user.resume?.portfolio || undefined,
+        hard_skill: user?.resume?.hard_skill || undefined,
+        technical_skill: user?.resume?.technical_skill || undefined,
+        education:
+          user?.resume?.education?.map((i) => i.education).join("\n") ||
+          undefined,
 
         // education: user?.resume?.education?.map((e) => ({
         //   education: e.education || "",
         // })),
-        interest: user?.resume?.interest || "",
+        interest: user?.resume?.interest || undefined,
       },
       contact: {
-        phone: user?.resume?.phone || user?.contact?.phone || "",
-        address: user?.resume?.location || "",
-        birthday: user?.contact?.birthday || "",
-        gender: user?.contact?.gender || "",
-        citizenship: user?.contact?.citizenship || "",
-        nationality: user?.contact?.nationality || "",
-        religion: user?.contact?.religion || "",
-        marital_status: user?.contact?.marital_status || "",
+        phone: user?.resume?.phone || user?.contact?.phone||undefined,
+        address: user?.resume?.location||undefined,
+        birthday: user?.contact?.birthday||undefined,
+        gender: user?.contact?.gender||undefined,
+        citizenship: user?.contact?.citizenship||undefined,
+        nationality: user?.contact?.nationality||undefined,
+        religion: user?.contact?.religion||undefined,
+        marital_status: user?.contact?.marital_status||undefined,
       },
     },
   });
+  console.log(form.watch("about.whatsapp"));
 
   const {
     formState: { errors },
@@ -109,6 +112,7 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
       ...form.getValues(),
       profilePicture: file,
     };
+    console.log(payload);
     try {
       const res = await updateUser(payload, user.id);
       if (res.status === 200) {
@@ -202,7 +206,6 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
             type="submit"
             onClick={() => {
               if (!form.formState.isValid) {
-                console.log(form.getFieldState('resume.portfolio'))
                 const firstError = Object.keys(errors).reduce((field, a) => {
                   return errors[field as keyof TEditProfileForm] ? field : a;
                 }, "");
@@ -211,9 +214,9 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
                     className: "bg-red-100",
                   });
                 } else {
-                  toast.error(`Please check all the fields`, {
-                    className: "bg-red-100",
-                  });
+                  // toast.error(`Please check all the fields`, {
+                  //   className: "bg-red-100",
+                  // });
                 }
               } else {
                 form.handleSubmit(onSubmit);
