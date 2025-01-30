@@ -131,7 +131,6 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
   const debouncedSearchPackage = useDebounce(searchPackage, 300);
   const [searchGuide, setSearchGuide] = useState("");
   const debouncedSearchGuide = useDebounce(searchGuide, 300);
-
   const [activeTime, setActiveTime] = useState(0);
   const [loading, setLoading] = useState(false);
   const form = useForm<TBookAppointmentSchemaProvider>({
@@ -142,6 +141,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
       phone: "",
       expectation: "",
       appointment_date: new Date(),
+      requested_by: user.id,
     },
   });
 
@@ -265,6 +265,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
     const payload = {
       ...form.getValues(),
       appointment_date: new Date(appointment_date),
+      requested_by: user.id,
     };
     const res = await makeAppointment(payload);
     if (res.status === 200) {
@@ -636,7 +637,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                     variant="text-xl"
                     className="w-fit capitalize tracking-wide"
                   >
-                    {key}:
+                    {key.split('_').join(' ')}:
                   </Text>
 
                   <Text
@@ -659,6 +660,8 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                           case "guide":
                             return guides?.find((i) => i.id === Number(value))
                               ?.username;
+                          case "requested_by":
+                            return user.username;
                           default:
                             return value.toString();
                         }

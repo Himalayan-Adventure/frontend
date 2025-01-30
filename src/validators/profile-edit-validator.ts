@@ -11,7 +11,7 @@ export const EditProfileFormSchema = z.object({
   about: z
     .object({
       facebook: z.string().url().optional(),
-      instagram: z.string().url().optional(),
+      instagram: z.string().url().optional().or(z.literal("")),
       whatsapp: z.string().url().optional(),
       description: z.string().optional(),
     })
@@ -38,7 +38,7 @@ export const EditProfileFormSchema = z.object({
   }),
   contact: z.object({
     email: z.string().email().optional(),
-    birthday: z.string(),
+    birthday: z.string().optional(),
     gender: z.string().optional(),
     citizenship: z.string().optional(),
     nationality: z.string().optional(),

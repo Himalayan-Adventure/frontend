@@ -5,15 +5,20 @@ import qs from "qs";
 export const getCalendars = async ({
   available,
   limit,
+  id,
 }: {
   available?: boolean;
   limit?: number;
+  id?: number;
 }) => {
   try {
     const query = qs.stringify({
       populate: "*",
       filters: {
         is_available: available,
+        guides: {
+          id: id,
+        },
       },
 
       pagination: {

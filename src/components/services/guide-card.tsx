@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Text } from "../ui/text";
-import { TUserDeep } from "@/types/auth";
+import { TUser, TUserDeep } from "@/types/auth";
 import EverestImg from "/public/images/everest.png";
 import { Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
@@ -84,10 +84,15 @@ const GuideCardOverlay = ({
 }) => {
   const { type, setType, setDialogOpen } = useGuideDialog();
 
+  const { user: loggedInUser } = useCurrentUser();
+  if (!loggedInUser) return <p>You need to login to perform this operation</p>;
+
   const typeMap: { [key in TGuideDialogType]: React.ReactNode } = {
-    details: <GuideDetails id={guide.id} />,
+    details: <GuideDetails id={guide.id} loggedInUser={loggedInUser} />,
     message: <MessageDialog guideId={guide.id} />,
-    appointments: <AppointmentDialog guide={guide} />,
+    appointments: (
+      <AppointmentDialog guide={guide} loggedInUser={loggedInUser} />
+    ),
   };
   return (
     <DialogContent
@@ -129,9 +134,14 @@ const GuideCardOverlay = ({
     </DialogContent>
   );
 };
-const GuideDetails = ({ id }: { id: number }) => {
-  const { user: loggedInUser, isPending:isUserPending } = useCurrentUser();
-  const { type, setType, setDialogOpen } = useGuideDialog();
+const GuideDetails = ({
+  id,
+  loggedInUser,
+}: {
+  id: number;
+  loggedInUser?: TUser;
+}) => {
+  const { setType } = useGuideDialog();
   const {
     data: guide,
     isPending,
@@ -187,10 +197,6 @@ const GuideDetails = ({ id }: { id: number }) => {
         <Text variant="text-sm">{guide.about.description}</Text>
       )}
       <div className="grid grid-cols-[auto_14px_auto] gap-4">
-        {/* <Text variant="text-sm">Service Provided</Text>
-        <Text variant="text-sm">:</Text>
-        <Text variant="text-sm">Lorem</Text> */}
-
         {guide?.email && (
           <>
             <Text variant="text-sm">Email</Text>

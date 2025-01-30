@@ -877,6 +877,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::blog.blog'
     >;
+    inquiry: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::inquiry.inquiry'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1094,6 +1099,11 @@ export interface ApiAppointmentAppointment extends Schema.CollectionType {
       'api::appointment.appointment',
       'manyToMany',
       'api::service.service'
+    >;
+    requested_by: Attribute.Relation<
+      'api::appointment.appointment',
+      'oneToOne',
+      'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1402,6 +1412,11 @@ export interface ApiInquiryInquiry extends Schema.CollectionType {
       'oneToOne',
       'api::package.package'
     >;
+    guide: Attribute.Relation<
+      'api::inquiry.inquiry',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1413,6 +1428,36 @@ export interface ApiInquiryInquiry extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::inquiry.inquiry',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiNewsletterNewsletter extends Schema.CollectionType {
+  collectionName: 'newsletters';
+  info: {
+    singularName: 'newsletter';
+    pluralName: 'newsletters';
+    displayName: 'Newsletter';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    email: Attribute.Email & Attribute.Required & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::newsletter.newsletter',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::newsletter.newsletter',
       'oneToOne',
       'admin::user'
     > &
@@ -1820,7 +1865,6 @@ export interface ApiPlanWithPlanWith extends Schema.SingleType {
   };
   attributes: {
     steps: Attribute.Component<'steps.steps', true>;
-    flags: Attribute.Component<'flag.flags', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1896,6 +1940,7 @@ export interface ApiProductOrderProductOrder extends Schema.CollectionType {
     singularName: 'product-order';
     pluralName: 'product-orders';
     displayName: 'Product Order';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1916,6 +1961,7 @@ export interface ApiProductOrderProductOrder extends Schema.CollectionType {
       Attribute.DefaultTo<false>;
     rent_description: Attribute.Text;
     quantity: Attribute.Integer;
+    order_list: Attribute.Component<'order-list.product-order-list', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -2076,15 +2122,15 @@ export interface ApiServiceService extends Schema.CollectionType {
       'oneToOne',
       'api::admin-appointment.admin-appointment'
     >;
-    service_request: Attribute.Relation<
-      'api::service.service',
-      'manyToOne',
-      'api::service-request.service-request'
-    >;
     appointments: Attribute.Relation<
       'api::service.service',
       'manyToMany',
       'api::appointment.appointment'
+    >;
+    service_requests: Attribute.Relation<
+      'api::service.service',
+      'manyToMany',
+      'api::service-request.service-request'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -2157,7 +2203,7 @@ export interface ApiServiceRequestServiceRequest extends Schema.CollectionType {
   attributes: {
     services: Attribute.Relation<
       'api::service-request.service-request',
-      'oneToMany',
+      'manyToMany',
       'api::service.service'
     >;
     users_permissions_users: Attribute.Relation<
@@ -2520,6 +2566,7 @@ declare module '@strapi/types' {
       'api::coupon.coupon': ApiCouponCoupon;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::inquiry.inquiry': ApiInquiryInquiry;
+      'api::newsletter.newsletter': ApiNewsletterNewsletter;
       'api::package.package': ApiPackagePackage;
       'api::package-category.package-category': ApiPackageCategoryPackageCategory;
       'api::package-country.package-country': ApiPackageCountryPackageCountry;

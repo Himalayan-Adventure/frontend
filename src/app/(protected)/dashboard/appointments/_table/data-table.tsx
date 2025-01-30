@@ -142,11 +142,12 @@ function DataTable<TData, TValue>({
     mutationFn: async () => {
       const iterable = Object.entries(rowSelection);
       for (const [key, value] of iterable) {
+        console.log(key, value)
         await deleteAppointment(Number(key));
       }
     },
     onSuccess(data, variables, context) {
-      toast.success("Service deleted successfully");
+      toast.success("Appointment deleted successfully");
     },
     onError(error, variables, context) {
       toast.error(`Action couldn't be performed ${error}`);
@@ -188,7 +189,7 @@ function DataTable<TData, TValue>({
           </Button>
           <DateFilter />
         </span>
-        <SearchBar selector="name" />
+        {/* <SearchBar selector="name" /> */}
       </span>
 
       {/*
