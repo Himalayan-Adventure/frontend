@@ -1,13 +1,6 @@
 "use client";
 
-import { useGuideDialog } from "@/store/get-guide-dialog-type";
-import { TUserDeep } from "@/types/auth";
-import { InquiryFormSchema, TInquiryForm } from "@/validators/inquiry-form";
-import { Text } from "../ui/text";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { Badge } from "../ui/badge";
-import qs from "qs";
 import {
   Form,
   FormControl,
@@ -16,45 +9,51 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { addInquiry } from "@/server/inquiry/write-inquiry";
-import { Textarea } from "../ui/textarea";
-import { Label } from "../ui/label";
+import { useCurrentUser } from "@/hooks/user-current-user";
+import { cn, getDateBounds } from "@/lib/utils";
+import { makeAppointment } from "@/server/appointments/post-appointment";
+import { useGuideDialog } from "@/store/get-guide-dialog-type";
+import { TUser, TUserDeep } from "@/types/auth";
+import { APIResponseCollection } from "@/types/types";
 import {
   BookAppointmentFormSchema,
   TBookAppointmentSchemaProvider,
 } from "@/validators/book-appointment-validator";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import {
-  addDays,
-  endOfDay,
-  format,
-  isSameDay,
-  startOfDay,
-  subDays,
-} from "date-fns";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { addDays, format, subDays } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import qs from "qs";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Badge } from "../ui/badge";
 import { Calendar } from "../ui/calendar";
-import { cn, getDateBounds } from "@/lib/utils";
+import { Label } from "../ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "./appointments-popover";
 import {
   Select,
-  SelectItem,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { makeAppointment } from "@/server/appointments/post-appointment";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { APIResponseCollection } from "@/types/types";
 import { Skeleton } from "../ui/skeleton";
-export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
-  const { type, setType, setDialogOpen } = useGuideDialog();
-
-  const router = useRouter();
+import { Text } from "../ui/text";
+import { Textarea } from "../ui/textarea";
+export const AppointmentDialog = ({
+  guide,
+  loggedInUser,
+}: {
+  guide: TUserDeep;
+  loggedInUser: TUser;
+}) => {
+  const { setType } = useGuideDialog();
   const [loading, setLoading] = useState(false);
   const form = useForm<TBookAppointmentSchemaProvider>({
     resolver: zodResolver(BookAppointmentFormSchema),
@@ -62,10 +61,10 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
       name: "",
       email: "",
       phone: "",
-      //      subject: "",
       expectation: "",
       appointment_date: new Date(),
       guide: guide.id,
+      requested_by: loggedInUser?.id,
     },
   });
 
@@ -75,11 +74,9 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
     setActiveTime(0);
   }, [date]);
 
-  const {
-    data: availableTime,
-    isLoading,
-    isError,
-  } = useQuery<APIResponseCollection<"api::calendar.calendar">>({
+  const { data: availableTime, isLoading } = useQuery<
+    APIResponseCollection<"api::calendar.calendar">
+  >({
     queryKey: [
       "calendars",
       `guide-calendar-${guide.id}`,
@@ -97,13 +94,6 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
               id: guide.id,
             },
             is_available: true,
-            // "[$and][0][start_date][$lte]": format(
-            //   form.getValues("appointment_date").toISOString(),
-            //   "yyyy-MM-dd",
-            // "filters[$and][1][end_date][$gte]": new Date(
-            // ),
-            //   form.getValues("appointment_date").toISOString(),
-            // ),
             $and: [
               {
                 start_date: {
@@ -130,6 +120,11 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
     placeholderData: keepPreviousData,
   });
   async function onSubmit(values: TBookAppointmentSchemaProvider) {
+    console.log("I am clcking");
+    if (!loggedInUser) {
+      toast.error("Please login to book an appointment");
+      return;
+    }
     setLoading(true);
     const appointment_date = availableTime?.data.find(
       (i) => i.id === activeTime,
@@ -142,6 +137,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
     const payload = {
       ...form.getValues(),
       appointment_date: new Date(appointment_date),
+      requested_by: loggedInUser?.id,
     };
     const res = await makeAppointment(payload);
     if (res.status === 200) {
@@ -167,7 +163,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
             control={form.control}
             name="appointment_date"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="relative z-50">
                 <Label className="text-white" required>
                   Date
                 </Label>
@@ -191,10 +187,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent
-                      className="relative z-50 w-full p-0"
-                      align="start"
-                    >
+                    <PopoverContent className="w-full p-0" align="start">
                       <Select
                         onValueChange={(value) =>
                           setDate(addDays(new Date(), parseInt(value)))
@@ -214,6 +207,7 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
+                        className="z-[10000]"
                         disabled={(date) =>
                           date < subDays(new Date(), 1) ||
                           date < new Date("1900-01-01")
@@ -280,23 +274,6 @@ export const AppointmentDialog = ({ guide }: { guide: TUserDeep }) => {
             )}
           />
 
-          {/*
-          <FormField
-            control={form.control}
-            name="subject"
-            render={({ field }) => (
-              <FormItem>
-                <Label required className="text-white">
-                  Subject
-                </Label>
-                <FormControl>
-                  <Input placeholder="e.g. Guide session" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-*/}
           <FormField
             control={form.control}
             name="expectation"

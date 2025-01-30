@@ -15,11 +15,11 @@ export const deleteAppointment = async (id: number) => {
         },
       },
     );
-    revalidateTag("appointments");
 
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
+    revalidateTag("appointments");
     return res;
   } catch (error: AxiosError | any) {
     return {

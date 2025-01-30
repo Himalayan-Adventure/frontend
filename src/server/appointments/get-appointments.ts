@@ -15,7 +15,6 @@ export const getAppointments = async ({
   page?: number;
   date?: string;
 }) => {
-  // TODO: make the email field filtering better, use the user id from strpai instead
   const cookieStore = cookies();
   const token = cookieStore.get("jwt")?.value;
 
@@ -36,7 +35,9 @@ export const getAppointments = async ({
       };
     } else {
       filters = {
-        email: user.email,
+        requested_by: {
+          id: user.id,
+        },
       };
     }
     const query = qs.stringify(

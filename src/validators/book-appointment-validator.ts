@@ -27,6 +27,7 @@ export const BookAppointmentFormSchema = z.object({
 
   guide: z.coerce.number({ required_error: "Guide is required" }),
   package: z.coerce.number().optional(),
+  requested_by: z.coerce.number(),
 });
 
 export type TBookAppointmentSchemaProvider = z.infer<
