@@ -142,7 +142,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   {user?.profilePicture && (
                     <AvatarImage
                       src={
-                        user?.profilePicture.formats.thumbnail?.url ||
+                        user?.profilePicture.formats?.thumbnail?.url ||
                         user.profilePicture?.url
                       }
                       alt={user.username}
@@ -206,7 +206,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
           <DrawerTrigger className="lg:hidden">
             <Menu />
           </DrawerTrigger>
-          <DrawerContent className="container flex h-full justify-between border-none bg-black/40 text-white lg:hidden overflow-y-scroll hide-scrollbar">
+          <DrawerContent className="hide-scrollbar container flex h-full justify-between overflow-y-scroll border-none bg-black/40 text-white lg:hidden">
             <div className="space-y-4 pt-10">
               {contacts.map((item) => (
                 <div
@@ -224,7 +224,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                   </span>
                 </div>
               ))}
-              <Separator className="bg-gray-400 w-full h-px"/>
+              <Separator className="h-px w-full bg-gray-400" />
 
               <div className="flex flex-col items-start gap-4">
                 {navLinks.map((navLink) => (
@@ -281,7 +281,7 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
                       {user?.profilePicture && (
                         <AvatarImage
                           src={
-                            user?.profilePicture.formats.thumbnail?.url ||
+                            user?.profilePicture.formats?.thumbnail?.url ||
                             user.profilePicture?.url
                           }
                           alt={user.username}

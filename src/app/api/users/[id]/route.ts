@@ -24,23 +24,30 @@ export async function PUT(
           Authorization: `Bearer ${token}`,
         },
         method: "PUT",
-        body: JSON.stringify( data ),
-        //cache: "no-store",
+        body: JSON.stringify(data),
+        cache: "force-cache",
         // next: {
         //   tags: ["users"],
         // },
       },
     );
-    revalidateTag("me");
 
-    const value = await res.json(); 
+    const value = await res.json();
     if (!res.ok) {
       return Response.json(
         { error: value.error?.details?.errors?.[0] },
         { status: res.status },
       );
     }
-    return Response.json({message:"hello",status:res.status, statusText:res.statusText, body:res.body, value:value});
+    revalidateTag("me");
+    revalidateTag(`user-${id}`);
+    return Response.json({
+      message: "Updated user",
+      status: res.status,
+      statusText: res.statusText,
+      body: res.body,
+      value: value,
+    });
   } catch (error) {
     console.log("Error updating user data");
   }
@@ -68,6 +75,7 @@ export async function GET(
           //Authorization: `Bearer ${token}`,
         },
         method: "GET",
+        cache: "force-cache",
         next: {
           tags: [`user-${id}`],
         },
