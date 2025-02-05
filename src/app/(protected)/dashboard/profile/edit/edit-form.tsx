@@ -88,18 +88,17 @@ export default function ProfileEditForm({ user }: { user: TUserDeep }) {
         interest: user?.resume?.interest || undefined,
       },
       contact: {
-        phone: user?.resume?.phone || user?.contact?.phone||undefined,
-        address: user?.resume?.location||undefined,
-        birthday: user?.contact?.birthday||undefined,
-        gender: user?.contact?.gender||undefined,
-        citizenship: user?.contact?.citizenship||undefined,
-        nationality: user?.contact?.nationality||undefined,
-        religion: user?.contact?.religion||undefined,
-        marital_status: user?.contact?.marital_status||undefined,
+        phone: user?.resume?.phone || user?.contact?.phone || undefined,
+        address: user?.resume?.location || undefined,
+        birthday: user?.contact?.birthday || undefined,
+        gender: user?.contact?.gender || undefined,
+        citizenship: user?.contact?.citizenship || undefined,
+        nationality: user?.contact?.nationality || undefined,
+        religion: user?.contact?.religion || undefined,
+        marital_status: user?.contact?.marital_status || undefined,
       },
     },
   });
-  console.log(form.watch("about.whatsapp"));
 
   const {
     formState: { errors },

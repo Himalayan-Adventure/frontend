@@ -1,14 +1,13 @@
-import Image from "next/image";
-import bgImage from "/public/images/packagesBanner.png";
-import { Badge } from "@/components/ui/badge";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
-import {
-  getCurrentUserDataDeep,
-  getCurrentUserProfilePageData,
-} from "@/server/auth/get-me";
-import { redirect } from "next/navigation";
-import { Metadata } from "next";
+import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/site-config";
+import {
+  getCurrentUserProfilePageData
+} from "@/server/auth/get-me";
+import { Metadata } from "next";
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import bgImage from "/public/images/packagesBanner.png";
 export const metadata: Metadata = {
   title: `My Profile`,
   description: ` ${siteConfig.siteDescription}`,
