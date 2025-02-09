@@ -26,7 +26,7 @@ export default async function ServicesPage({ searchParams }: TSearchParams) {
     <main className="container space-y-4">
       <Banner title="Services" bgImage={bgImage} />
 
-      <section className="relative z-20 space-y-2 md:top-52">
+      <section className="relative z-[50] space-y-2 md:top-52">
         <div className="relative flex flex-wrap items-center justify-between gap-2">
           <Suspense>
             <TopFilter />
