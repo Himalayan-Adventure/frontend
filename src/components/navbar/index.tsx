@@ -31,7 +31,7 @@ export const Navbar = () => {
   return (
     <LazyMotion features={domMax}>
       <m.div
-        className={cn("sticky top-0 z-50 w-full pb-4")}
+        className={cn("sticky top-0 z-[100] w-full pb-4")}
         initial={{
           opacity: 1,
           y: 0,

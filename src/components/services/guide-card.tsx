@@ -85,7 +85,17 @@ const GuideCardOverlay = ({
   const { type, setType, setDialogOpen } = useGuideDialog();
 
   const { user: loggedInUser } = useCurrentUser();
-  if (!loggedInUser) return <p>You need to login to perform this operation</p>;
+  if (!loggedInUser)
+    return (
+      <DialogContent
+        className={cn(
+          type === "details" && "lg:pb-48",
+          "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+        )}
+      >
+        <p>You need to login to perform this operation</p>
+      </DialogContent>
+    );
 
   const typeMap: { [key in TGuideDialogType]: React.ReactNode } = {
     details: <GuideDetails id={guide.id} loggedInUser={loggedInUser} />,
