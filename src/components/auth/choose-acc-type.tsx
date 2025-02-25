@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
   DialogDescription,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 
 import { FaRegUser as UserIcon } from "react-icons/fa";
@@ -33,9 +30,12 @@ export const ChooseAccType = () => {
   const { type, setType, setDialogOpen, setUserType } = useCurrentAuthDialog();
   const [active, setActive] = useState(0);
   return (
-    <DialogContent className="grid h-full w-full max-w-none !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:p-16 xl:w-fit [&>*]:font-poppins">
+    <>
       {/* <DialogClose className="top-0" /> */}
-      <span className="absolute left-4 top-4 cursor-pointer sm:left-8" onClick={()=>setType('login')}>
+      <span
+        className="absolute left-4 top-4 cursor-pointer sm:left-8"
+        onClick={() => setType("login")}
+      >
         <ArrowLeft strokeWidth={3} />
       </span>
       <DialogHeader className="sm:mt-none mt-14 space-y-2 sm:space-y-4 [&>*]:text-neutral-900">
@@ -104,6 +104,6 @@ export const ChooseAccType = () => {
           Continue
         </Button>
       </DialogFooter>
-    </DialogContent>
+    </>
   );
 };

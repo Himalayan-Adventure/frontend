@@ -31,6 +31,9 @@ export const AuthCard = ({}: {}) => {
           ? "h-fit w-[95vw] !pt-12 sm:h-fit"
           : "h-auto w-[95vw] md:w-fit",
         "!flex max-h-screen flex-col justify-between overflow-auto !rounded-2xl p-4 font-poppins sm:h-auto sm:p-8 md:px-20 md:py-12",
+
+        type === "select-user" &&
+          "grid h-full w-full max-w-none !rounded-2xl p-4 sm:h-auto sm:w-[90vw] sm:p-8 md:w-[90vw] md:p-16 xl:w-fit [&>*]:font-poppins",
       )}
     >
       {/* Back button*/}

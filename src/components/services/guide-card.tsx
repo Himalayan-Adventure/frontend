@@ -106,9 +106,10 @@ const GuideCardOverlay = ({
   };
   return (
     <DialogContent
+      overlayClassName="z-[101]"
       className={cn(
         type === "details" && "lg:pb-48",
-        "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+        "table-scrollbar z-[101] max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
       )}
     >
       {/* Go back button for when it's other dialog than details*/}

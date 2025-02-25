@@ -207,7 +207,10 @@ const RentDialog = ({
           RENT NOW
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] overflow-auto sm:max-w-[800px]">
+      <DialogContent
+        className="z-[101] max-h-[80vh] overflow-auto sm:max-w-[800px]"
+        overlayClassName="z-[101]"
+      >
         <div className="mb-8 p-4 md:p-8">
           {/* Product Details Section */}
           <div className="grid gap-6 md:grid-cols-2">
