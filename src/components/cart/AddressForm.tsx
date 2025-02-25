@@ -51,7 +51,10 @@ export default function AddressDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="pb-8 sm:px-20">
+      <DialogContent
+        className="z-[101] pb-8 sm:px-20"
+        overlayClassName="z-[101]"
+      >
         <DialogHeader>
           <h2 className="mb-4 text-center font-semibold md:text-lg">
             Delivery Address

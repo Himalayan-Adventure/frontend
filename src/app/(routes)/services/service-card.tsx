@@ -14,9 +14,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MessageDialog } from "@/components/services/message-dialog";
 import { useMutation } from "@tanstack/react-query";
 import { postRequestService } from "@/server/services/post-request-serivce";
-import { getCurrentUserData } from "@/server/auth/get-me";
 import { toast } from "sonner";
-import { useCurrentUser } from "@/hooks/user-current-user";
 
 export const ServiceCard = ({
   data,
@@ -151,8 +149,9 @@ export const ServiceCard = ({
                 </Button>
               </DialogTrigger>
               <DialogContent
+                overlayClassName="z-[101]"
                 className={cn(
-                  "table-scrollbar max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
+                  "table-scrollbar z-[101] max-h-[90vh] overflow-auto rounded-3xl bg-black py-10 font-poppins text-white sm:rounded-3xl lg:py-20",
                 )}
               >
                 <Image
