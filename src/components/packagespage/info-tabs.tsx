@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import { RxCrossCircled } from "react-icons/rx";
 import {
   BlocksRenderer,
   type BlocksContent,
@@ -82,7 +83,7 @@ export default function InfoTabs({ content }: { content: InfoTabsProp }) {
                 <li key={index} className="flex items-start space-x-2">
                   <span className="text-yellow-500">
                     {activeTab === "excludes" ? (
-                      <RxCrossCircled className="text-red-500 lg:text-2xl" />
+                      <RxCrossCircled className="text-primary lg:text-2xl" />
                     ) : (
                       <IoCheckmarkCircleOutline className="text-primary lg:text-2xl" />
                     )}
