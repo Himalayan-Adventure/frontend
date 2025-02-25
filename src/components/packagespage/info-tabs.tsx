@@ -81,7 +81,11 @@ export default function InfoTabs({ content }: { content: InfoTabsProp }) {
               getData(content[activeTab])?.data?.map((i, index) => (
                 <li key={index} className="flex items-start space-x-2">
                   <span className="text-yellow-500">
-                    <IoCheckmarkCircleOutline className="text-primary lg:text-2xl" />
+                    {activeTab === "excludes" ? (
+                      <RxCrossCircled className="text-red-500 lg:text-2xl" />
+                    ) : (
+                      <IoCheckmarkCircleOutline className="text-primary lg:text-2xl" />
+                    )}
                   </span>
 
                   <span className="text-sm text-gray-700 md:text-base">
