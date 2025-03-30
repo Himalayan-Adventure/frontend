@@ -50,4 +50,4 @@ Please follow the instructions below to setup the frontend of the project.
 - `refactor`: Code changes that don’t affect external behavior but enhance code structure.
 - `revert`: Reverting previous commits.
 - `style`: Changes in code style or formatting (not affecting functionality).
-- `test`: Adding or modifying tests.
+- `test`: Adding or modifying tests
