@@ -110,7 +110,7 @@ export function HeroSection() {
             delay: 1,
             ease: [0, 0.71, 0.2, 1.01],
           }}
-          className="container relative top-5 z-10 flex flex-col gap-y-4 text-white sm:top-[calc(var(--navbar-height)+2em)] sm:items-center sm:gap-y-10"
+          className="container relative top-1/2 z-10 flex -translate-y-1/2 flex-col gap-y-4 text-white sm:top-[calc(var(--navbar-height)+2em)] sm:items-center sm:gap-y-10"
         >
           <Text
             variant="display-lg"
