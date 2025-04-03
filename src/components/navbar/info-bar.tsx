@@ -87,10 +87,10 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
         boxShadow:
           scrollY < 20 ? "none" : "0px 2px 5px -3px rgba(255,255,255,0.45)",
       }}
-      className="py-7 text-white lg:py-3"
+      className="py-2 text-white lg:py-3"
     >
       <div className="container flex items-center justify-between">
-        <Logo className="max-w-[130px] lg:max-w-[220px]" />
+        <Logo className="max-w-[100px] lg:max-w-[220px]" />
         <span className="hidden items-center gap-x-7 lg:flex">
           {/* TODO: replace lucide icon with figma icons*/}
           {contacts.map((item) => (
