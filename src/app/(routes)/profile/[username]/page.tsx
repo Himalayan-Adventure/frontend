@@ -1,22 +1,22 @@
+import { ProfileTabs } from "@/components/profile/profile-tabs";
+import { Text } from "@/components/ui/text";
 import Image from "next/image";
 import bgImage from "/public/images/packagesBanner.png";
-import { ProfileTabs } from "@/components/profile/profile-tabs";
-import { getSingleUser } from "@/server/users/get-single-user";
-import { Text } from "@/components/ui/text";
 
-import type { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { getSingleUserByUsername } from "@/server/users/get-user-by-username";
+import type { Metadata, ResolvingMetadata } from "next";
 type Props = {
-  params: Promise<{ id: number }>;
+  params: Promise<{ username: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const id = (await params).id;
+  const username = (await params).username;
 
-  const data = await getSingleUser({ id });
+  const data = await getSingleUserByUsername({ username });
   if (!data) {
     return {
       title: "No user found!",
@@ -40,10 +40,10 @@ export async function generateMetadata(
 export default async function PublicProfilePage({
   params,
 }: {
-  params: { id: number };
+  params: { username: string };
 }) {
-  const { id } = params;
-  const user = await getSingleUser({ id });
+  const { username } = params;
+  const user = await getSingleUserByUsername({ username });
   return (
     <section className="container space-y-8 font-poppins">
       <Image
