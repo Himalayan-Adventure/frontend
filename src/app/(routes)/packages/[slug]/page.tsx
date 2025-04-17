@@ -8,26 +8,33 @@ import InfoTabs, { InfoTabsProp } from "@/components/packagespage/info-tabs";
 import Itenerary from "@/components/packagespage/itenerary";
 import Map from "@/components/packagespage/map";
 import Offers from "@/components/packagespage/offers";
-import Reviews from "@/components/packagespage/reviews";
+import Reviews, { Review } from "@/components/packagespage/reviews";
 import SimilarPackages from "@/components/packagespage/similar-packages";
 import ThingsToKnow from "@/components/packagespage/things-to-know";
+import Video from "@/components/packagespage/video";
 import CommonBanner from "@/components/ui/common-banner";
+import { siteConfig } from "@/config/site-config";
 import { getSinglePackage } from "@/server/packages/get-single-package";
 import { CostBudgeting, TDepartureData } from "@/types/packages/departure";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Dot } from "lucide-react";
+import type { Metadata, ResolvingMetadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import bgImage from "/public/images/packageBanner.png";
-import Video from "@/components/packagespage/video";
-import { Dot } from "lucide-react";
-import { Separator } from "@radix-ui/react-dropdown-menu";
-import type { Metadata, ResolvingMetadata } from "next";
-import { siteConfig } from "@/config/site-config";
+
+const PackagePDF = dynamic(
+  () => import("@/components/packagespage/pdf-comps/package-pdf"),
+  {
+    ssr: false,
+  },
+);
 
 type Props = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  { params }: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const slug = (await params).slug;
@@ -44,7 +51,6 @@ export async function generateMetadata(
     ? data?.data?.attributes?.image.data?.map((image) => image.attributes.url)
     : [];
 
-  // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
   return {
@@ -62,6 +68,7 @@ export default async function PackageDetail({
 }) {
   const { slug } = params;
   const data = await getSinglePackage(slug);
+
   if (data.status === 404) {
     return (
       <div className="h-96">
@@ -71,6 +78,7 @@ export default async function PackageDetail({
   }
 
   const pkg = data.data?.attributes;
+
   const images: GalleryImageProp[] | null = pkg?.image
     ? pkg?.image.data?.map((image) => ({
         src: image.attributes.url,
@@ -109,7 +117,9 @@ export default async function PackageDetail({
       description: i.description || [],
     };
   });
-  
+
+  const reviews = pkg?.reviews?.data?.map(normalizeReview) ?? [];
+
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
   }
@@ -122,7 +132,6 @@ export default async function PackageDetail({
         quality={60}
         className="absolute inset-0 h-96 w-full object-cover lg:h-auto"
       />
-
       <div className="container relative z-10 flex min-h-60 flex-col justify-center space-y-3 text-white lg:space-y-6">
         <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
           {pkg?.package_name}
@@ -207,10 +216,11 @@ export default async function PackageDetail({
             {pkg?.video && (
               <Video packageName={pkg?.package_name} videolink={pkg?.video} />
             )}
+            <PackagePDF packageDetails={pkg} />
             {pkg?.itinerary?.timeline && (
               <Itenerary
                 data={pkg?.itinerary?.timeline}
-                packageName={pkg?.package_name}
+                packageDetail={data?.data?.attributes}
               />
             )}
             <InfoTabs content={infoTabsData} />
@@ -238,7 +248,7 @@ export default async function PackageDetail({
         />
       )}
       {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
-      <Reviews />
+      {reviews.length > 0 && <Reviews reviews={{ data: reviews }} />}{" "}
       <SimilarPackages notToInclude={data.data?.id} />
       {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
       {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (
@@ -246,4 +256,25 @@ export default async function PackageDetail({
       )}
     </main>
   );
+}
+
+// Normalize review data to match the Review interface
+function normalizeReview(apiReview: any): Review {
+  return {
+    id: apiReview.id,
+    attributes: {
+      rating: apiReview.attributes.rating ?? 0,
+      review: apiReview.attributes.review,
+      createdAt: apiReview.attributes.createdAt ?? "",
+      updatedAt: apiReview.attributes.updatedAt ?? "",
+      publishedAt: apiReview.attributes.publishedAt ?? "",
+      cleanlinessRating: apiReview.attributes.cleanlinessRating ?? 0,
+      communicationRating: apiReview.attributes.communicationRating ?? 0,
+      checkInRating: apiReview.attributes.checkInRating ?? 0,
+      accuracyRating: apiReview.attributes.accuracyRating ?? 0,
+      locationRating: apiReview.attributes.locationRating ?? 0,
+      valueRating: apiReview.attributes.valueRating ?? 0,
+      users_permissions_user: apiReview.attributes.users_permissions_user,
+    },
+  };
 }
