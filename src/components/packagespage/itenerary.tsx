@@ -1,13 +1,11 @@
 "use client";
 import { IDProperty } from "@/types/types";
-import React, { useState, useRef, useEffect } from "react";
-import generatePDF, { Resolution, Margin } from "react-to-pdf";
+import { useEffect, useRef, useState } from "react";
 
 export default function Itinerary({
   data,
-  packageName,
+  packageDetail,
 }: {
-  //data: Array<{ id: number; day: string }>;
   data: IDProperty &
     Omit<
       {
@@ -18,12 +16,13 @@ export default function Itinerary({
       },
       never
     >[];
-  packageName: string;
+  packageDetail: any;
 }) {
   const numberOfWeeks =
     data.length / 7 - Number((data.length / 7).toFixed(0)) <= 0
       ? Number((data.length / 7).toFixed(0))
       : Number((data.length / 7).toFixed(0)) + 1;
+
   //@ts-ignore
   const weeks = [...new Set(data?.map((item) => item?.week) || [])];
 
@@ -35,6 +34,7 @@ export default function Itinerary({
         .map((item) => ({ day: `${item.day}`, desc: item.description })),
     };
   });
+
   const transformedData1 = weeks.map((i) => {
     return {
       week: `Week ${i < 10 ? `0${i}` : i}`,
@@ -46,8 +46,6 @@ export default function Itinerary({
 
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     contentRefs.current.forEach((ref, index) => {
@@ -62,38 +60,12 @@ export default function Itinerary({
     setExpandedWeek((prev) => (prev === index ? null : index));
   };
 
-  const getTargetElement = () => document.getElementById("pdfContent");
-
-  const handleGeneratePDF = async () => {
-    setIsLoading(true);
-    try {
-      await generatePDF(getTargetElement, {
-        filename: `${packageName} Package`,
-        method: "save",
-        page: {
-          orientation: "portrait",
-          margin: Margin.SMALL,
-        },
-      });
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
           Itinerary
         </h1>
-        <button
-          onClick={handleGeneratePDF}
-          className="rounded border border-black px-4 py-2 text-sm text-black transition hover:bg-gray-200 md:text-base"
-        >
-          {isLoading ? <span>Downloading...</span> : <span>Download Pdf</span>}
-        </button>
       </div>
       <div className="mt-4">
         <p className="text-base text-gray-600 lg:text-xl">

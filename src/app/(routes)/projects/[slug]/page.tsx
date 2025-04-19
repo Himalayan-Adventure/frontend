@@ -212,10 +212,7 @@ export default async function ProjectDetail({
               <Video packageName={pkg?.package_name} videolink={pkg?.video} />
             )}
             {pkg?.itinerary?.timeline && (
-              <Itenerary
-                data={pkg?.itinerary?.timeline}
-                packageName={pkg?.package_name}
-              />
+              <Itenerary data={pkg?.itinerary?.timeline} packageDetail={pkg} />
             )}
             <div className="w-full">
               <h2 className="mb-6 text-lg font-semibold md:text-xl lg:text-2xl">
@@ -264,7 +261,6 @@ export default async function ProjectDetail({
         />
       )}
       {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
-      <Reviews />
       <SimilarProjects notToInclude={data.data?.id} />
       {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
       {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (

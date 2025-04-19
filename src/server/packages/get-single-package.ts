@@ -1,11 +1,8 @@
 "use server";
 
 import { axiosInstance } from "@/lib/server-axios-instance";
-import { ApiPackagePackage } from "@/types/contentTypes";
 import {
-  APIResponse,
-  APIResponseCollection,
-  APIResponseData,
+  APIResponse
 } from "@/types/types";
 import { AxiosResponse, type AxiosError } from "axios";
 
@@ -15,7 +12,7 @@ export const getSinglePackage = async (id: string) => {
     const params = qs.stringify(
       {
         populate: {
-          image:{populate:"*"},
+          image: { populate: "*" },
           adventure_specification: { populate: "*" },
           sponsor_host: { populate: "*" },
           itinerary: { populate: "*" },
@@ -27,6 +24,7 @@ export const getSinglePackage = async (id: string) => {
           hosted_by: { populate: "*" },
           things_to_know: { populate: "*" },
           faq: { populate: "*" },
+          reviews: { populate: "*" },
         },
       },
       {
