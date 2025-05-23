@@ -18,12 +18,12 @@ import FirstPart from "@/components/footer/first-part";
 
 export const metadata: Metadata = {
   title: `Home | ${siteConfig.siteName}`,
-  description: ` ${siteConfig.siteName}`,
+  description: `${siteConfig.siteName} | ${siteConfig.siteDescription}`,
 };
 
 export default async function Home() {
   return (
-    <main>
+    <main className="">
       <aside className="fixed right-2 top-1/2 z-20 hidden h-screen -translate-y-1/2 flex-col justify-center gap-y-2 lg:flex">
         {socialIcons.map((item) => (
           <Link
@@ -42,8 +42,6 @@ export default async function Home() {
       <HeroSection />
       <WhatWeDo />
       <HomeCarousel />
-
-      {/* <HomeCarousel /> */}
       <WhyUs />
       <ExplorePackages />
       <Services />

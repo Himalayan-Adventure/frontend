@@ -75,10 +75,10 @@ export function HeroSection() {
             />
           </m.div>
           <m.div
-            initial={{ opacity: 0, y: "-50px" }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: "-50px", x: "-50px" }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
             transition={{
-              duration: 3,
+              duration: 2,
               ease: [0, 0.71, 0.2, 1.01],
             }}
             className="absolute bottom-0 left-0 hidden h-1/2 w-full object-cover mix-blend-hard-light sm:bottom-0 sm:block sm:mix-blend-normal md:-bottom-10 md:h-[60vh]"
@@ -87,8 +87,8 @@ export function HeroSection() {
               src={cloudImage}
               alt="Cloud Image"
               className="relative h-full w-full object-cover"
-              unoptimized
-              // quality={50}
+              // unoptimized
+              quality={50}
             />
           </m.div>
 
@@ -96,8 +96,8 @@ export function HeroSection() {
             src={cloudImage}
             alt="Cloud Image"
             className="absolute bottom-0 left-0 h-1/2 w-full object-cover mix-blend-hard-light sm:bottom-0 sm:hidden sm:mix-blend-normal md:-bottom-10 md:h-[60vh]"
-            unoptimized
-            //quality={50}
+            // unoptimized
+            quality={50}
           />
         </div>
 

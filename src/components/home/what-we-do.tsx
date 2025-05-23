@@ -42,7 +42,7 @@ export default function WhatWeDo() {
               expert guides lead you through nature's wonders, ensuring safety
               and satisfaction every step of the way."
             </p>
-            <p className="flex w-fit justify-center lg:justify-start">
+            <p className="flex w-full justify-center lg:justify-start">
               <Link
                 href="/about-us"
                 className="inline-block w-fit rounded-full border border-black px-4 py-2 text-sm font-semibold text-black transition md:text-base"

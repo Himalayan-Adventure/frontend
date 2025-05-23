@@ -94,22 +94,28 @@ export const InfoBar = ({ scrollY }: { scrollY: number }) => {
         <span className="hidden items-center gap-x-7 lg:flex">
           {/* TODO: replace lucide icon with figma icons*/}
           {contacts.map((item) => (
-            <div
+            <Link
+              href={item.href}
+              target="_blank"
               key={`info-bar-${item.name}`}
-              className="flex items-center gap-x-6"
+              className="group flex items-center gap-x-6"
             >
-              <div className="grid aspect-square h-[52px] w-[52px] place-items-center rounded-full border border-white p-2">
+              <div className="grid aspect-square h-[52px] w-[52px] place-items-center rounded-full border border-white p-2 transition ease-in-out group-hover:bg-primary">
                 {item.icon}
               </div>
               <div>
-                <Text variant="text-lg" bold>
+                <Text
+                  variant="text-lg"
+                  bold
+                  className="transition ease-in-out group-hover:text-primary/90"
+                >
                   {item.name}
                 </Text>
-                <Link href={item.href} target="_blank">
-                  <Text variant="text-sm">{item.desc}</Text>
-                </Link>
+                <Text variant="text-sm" className="group-hover:underline">
+                  {item.desc}
+                </Text>
               </div>
-            </div>
+            </Link>
           ))}
         </span>
         <span className="hidden items-stretch gap-x-3 lg:flex">
