@@ -4,7 +4,7 @@ import { axiosInstance } from "@/lib/server-axios-instance";
 import axios, { AxiosResponse, type AxiosError } from "axios";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-export const deleteWork = async (id: number) => {
+export const deleteWork = async (id: string) => {
   const cookieStore = cookies();
 
   try {

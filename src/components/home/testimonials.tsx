@@ -21,11 +21,11 @@ export default function Testimonials() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/home-page?populate=deep`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/home-page?populate[testimonials][populate]=image`,
         );
 
         const testimonials =
-          response?.data?.data?.attributes?.testimonials || [];
+          response?.data?.data?.testimonials || [];
         setClientReviews(testimonials);
       } catch (err) {
         console.error("Failed to load reviews. Please try again later.");
@@ -99,7 +99,7 @@ export default function Testimonials() {
                     >
                       <div className="mx-auto h-24 w-24 overflow-hidden rounded-full border">
                         <Image
-                          src={testimonial?.image?.data?.attributes?.url}
+                          src={testimonial?.image?.url}
                           alt={testimonial.name}
                           className="h-full w-auto object-cover grayscale"
                           width={500}

@@ -60,16 +60,16 @@ export default function ProductDetail({ product }: any) {
   };
 
   const handleAddToCart = () => {
-    const price = product?.attributes?.price || 0;
+    const price = product?.price || 0;
     const cartItem = {
       id: product?.id,
-      name: product?.attributes?.name,
+      name: product?.name,
       quantity,
-      price: discountedPrice || product?.attributes?.price,
-      img: product?.attributes?.image?.data?.[0]?.attributes?.url,
+      price: discountedPrice || product?.price,
+      img: product?.image?.[0]?.url,
       color: selectedColor,
       subtotal: quantity * price,
-      stock_count: product?.attributes?.stock_count,
+      stock_count: product?.stock_count,
     };
 
     addToCart(cartItem);
@@ -88,7 +88,7 @@ export default function ProductDetail({ product }: any) {
   };
 
   const [selectedColor, setSelectedColor] = useState(
-    product?.attributes?.colors?.[0]?.color,
+    product?.colors?.[0]?.color,
   );
 
   const handleGoBack = () => router.back();
@@ -123,8 +123,8 @@ export default function ProductDetail({ product }: any) {
     }
   };
 
-  const discountRate = product?.attributes?.discount_rate;
-  const originalPrice = product?.attributes?.price;
+  const discountRate = product?.discount_rate;
+  const originalPrice = product?.price;
 
   const discountedPrice =
     discountRate && !isNaN(discountRate)
@@ -133,16 +133,16 @@ export default function ProductDetail({ product }: any) {
 
   const rentdetails = {
     product_id: product?.id,
-    product_name: product?.attributes?.name,
-    category: product?.attributes?.shop_categories?.data?.[0]?.attributes?.name,
+    product_name: product?.name,
+    category: product?.shop_categories?.[0]?.name,
     size: "Medium",
     manufacturer: "lorem",
     quantity: quantity,
     condition: "New",
-    termsAndConditions: product?.attributes?.terms_and_condition,
-    rentalDetails: product?.attributes?.rental_detail,
-    images: product?.attributes?.image?.data,
-    stock_count: product?.attributes?.stock_count,
+    termsAndConditions: product?.terms_and_condition,
+    rentalDetails: product?.rental_detail,
+    images: product?.image,
+    stock_count: product?.stock_count,
   };
   return (
     <section className="container relative mx-auto p-8 lg:mt-32 lg:py-16">
@@ -158,52 +158,54 @@ export default function ProductDetail({ product }: any) {
           <div className="grid grid-cols-4 gap-4 sm:gap-6">
             {/* Thumbnail Images */}
             <div className="col-span-1 grid gap-2 sm:gap-4 lg:grid-cols-none lg:grid-rows-4">
-              {product?.attributes?.image?.data?.map(
-                (img: any, index: number) => (
+              {product?.image
+                ?.filter((img: any) => img?.formats?.thumbnail?.url)
+                .map((img: any, index: number) => (
                   <div
                     className="relative flex h-full w-full items-center justify-center rounded-lg bg-gray-100 p-1 sm:p-2"
                     key={index}
                   >
                     <Image
-                      src={img.attributes.formats.thumbnail.url}
-                      alt={img.attributes.alternativeText || "Product Image"}
+                      src={img.formats.thumbnail.url}
+                      alt={img.alternativeText || "Product Image"}
                       width={120}
                       height={120}
                       className="object-cover"
                     />
                   </div>
-                ),
-              )}
+                ))}
             </div>
             {/* Main Image Display */}
-            <div className="col-span-3 flex items-center justify-center rounded-lg bg-gray-100 p-4 sm:p-6">
-              <Image
-                src={product?.attributes?.image?.data[0].attributes.url}
-                alt="Selected Product Image"
-                className="max-w-full rounded object-contain"
-                width={500}
-                height={500}
-              />
-            </div>
+            {product?.image?.[0]?.url && (
+              <div className="col-span-3 flex items-center justify-center rounded-lg bg-gray-100 p-4 sm:p-6">
+                <Image
+                  src={product.image[0].url}
+                  alt="Selected Product Image"
+                  className="max-w-full rounded object-contain"
+                  width={500}
+                  height={500}
+                />
+              </div>
+            )}
           </div>
         </div>
 
         {/* Product Details Section */}
         <div className="lg:col-span-2">
           <h1 className="mb-2 text-xl font-semibold sm:text-2xl">
-            {product?.attributes?.name}
+            {product?.name}
           </h1>
           {/* <div className="mb-4 flex flex-wrap items-center space-x-3 text-sm sm:text-base">
             <StarRating rating={4} reviews={155} />
             <span className="hidden text-gray-800 sm:inline">|</span>
             <p
               className={
-                parseInt(product?.attributes?.stock_count, 10) > 0
+                parseInt(product?.stock_count, 10) > 0
                   ? "text-green-500"
                   : "text-red-500"
               }
             >
-              {parseInt(product?.attributes?.stock_count, 10) > 0
+              {parseInt(product?.stock_count, 10) > 0
                 ? "In Stock"
                 : "Not Available in stock"}
             </p>
@@ -223,19 +225,19 @@ export default function ProductDetail({ product }: any) {
 
             <span
               className={
-                parseInt(product?.attributes?.stock_count, 10) > 0
+                parseInt(product?.stock_count, 10) > 0
                   ? "text-green-500 text-base"
                   : "text-red-500 text-base"
               }
             >
-              {parseInt(product?.attributes?.stock_count, 10) > 0
+              {parseInt(product?.stock_count, 10) > 0
                 ? "In Stock"
                 : "Not Available in stock"}
             </span>
           </p>
 
           <p className="mb-4 font-poppins text-sm text-gray-800 md:text-base">
-            {product?.attributes?.description}
+            {product?.description}
           </p>
           <hr className="my-4" />
 
@@ -243,7 +245,7 @@ export default function ProductDetail({ product }: any) {
           <div className="mb-4 flex items-center space-x-2 sm:space-x-4">
             <p className="md:text-lg">Colours:</p>
             <div className="flex items-center gap-2">
-              {product?.attributes?.colors?.map((color: any) => (
+              {product?.colors?.map((color: any) => (
                 <label key={color?.id} className="flex items-center">
                   <input
                     type="radio"
@@ -343,7 +345,7 @@ export default function ProductDetail({ product }: any) {
             <div className="flex items-center space-x-4 p-4 lg:p-6">
               <BsKey className="text-2xl lg:text-3xl" />
               <div>
-                {product?.attributes?.rent_available ? (
+                {product?.rent_available ? (
                   <>
                     <h3 className="text-sm font-semibold md:text-base">
                       Rental Available
@@ -361,7 +363,7 @@ export default function ProductDetail({ product }: any) {
                   </h3>
                 )}
               </div>
-              {product?.attributes?.rent_available && (
+              {product?.rent_available && (
                 <RentDialog {...rentdetails} />
               )}
             </div>

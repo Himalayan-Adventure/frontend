@@ -45,9 +45,9 @@ const Services = ({ user }: { user: TUserDeep }) => {
               {data?.data?.map((i, index) => (
                 <ServiceItem
                   key={i.id + "services"}
-                  title={i.attributes.title}
-                  description={i.attributes.title}
-                  icon={i.attributes.icon}
+                  title={i.title || ""}
+                  description={i.title || ""}
+                  icon={i.icon ?? undefined}
                   index={index}
                 />
               ))}

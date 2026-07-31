@@ -41,7 +41,8 @@ export default function Contact() {
         },
       );
 
-      if (response.status === 200) {
+      // Strapi answers a successful create with 201, not 200
+      if (response.status >= 200 && response.status < 300) {
         setSuccess(true);
         toast.success("Form Submitted Successfully");
         setFormData({ name: "", email: "", message: "" });

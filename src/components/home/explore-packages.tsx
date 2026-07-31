@@ -90,8 +90,8 @@ const PackageCategoryCard = ({
 }) => {
   //prettier-ignore
   //@ts-ignore
-  const smallImage =   data.attributes.image?.data?.attributes?.formats?.small;
-  const fallbackImg = data?.attributes?.image?.data?.attributes;
+  const smallImage =   data.image?.formats?.small;
+  const fallbackImg = data?.image;
   const image = smallImage || fallbackImg;
   const { user, isPending } = useCurrentUser();
   const [open, setOpen] = useState(false);
@@ -116,7 +116,7 @@ const PackageCategoryCard = ({
       )}
       <div className="py-2 text-center">
         <h2 className="mb-2 text-sm font-semibold md:text-base lg:text-xl">
-          {data?.attributes?.name}
+          {data?.name}
         </h2>
         <div className="flex flex-col items-center space-y-3">
           {user ? (
@@ -139,7 +139,7 @@ const PackageCategoryCard = ({
                   alt="Cover image"
                   className="absolute -z-10 h-full w-full object-cover opacity-90"
                 />
-                <AdminInquiryDialog packageId={data.id} setOpen={setOpen} />
+                <AdminInquiryDialog packageId={Number(data.id)} setOpen={setOpen} />
               </DialogContent>
             </Dialog>
           ) : (

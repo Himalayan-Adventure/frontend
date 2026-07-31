@@ -22,17 +22,17 @@ export default function BlogCard({
   blog: APIResponseData<"api::blog.blog">;
   variant?: "default" | "edit";
 }) {
-  const slug = blog?.id;
+  const slug = blog?.documentId;
   //prettier-ignore
   //@ts-ignore
-  const image = blog?.attributes?.thumbnail?.data?.attributes.formats?.small || blog?.attributes?.thumbnail?.data;
+  const image = blog?.thumbnail?.formats?.small || blog?.thumbnail;
   const avatar =
-    blog?.attributes?.author_image?.data?.attributes ||
-    blog?.attributes?.user?.data?.attributes?.profilePicture?.data?.attributes;
-  const tags = blog?.attributes?.blog_categories?.data;
+    blog?.author_image ||
+    blog?.user?.profilePicture;
+  const tags = blog?.blog_categories;
   const { mutate: deleteAction, isPending } = useMutation({
     mutationKey: ["blogs", blog.id],
-    mutationFn: async () => await deleteBlog(blog.id),
+    mutationFn: async () => await deleteBlog(blog.documentId),
     onSuccess(data, variables, context) {
       toast.success("Blog successfully deleted");
     },
@@ -44,12 +44,12 @@ export default function BlogCard({
       {/*Overlay buttons for edit*/}
       {variant === "edit" && (
         <div className="invisible absolute inset-0 -z-20 flex w-full items-center justify-center gap-x-2 rounded-xl bg-black/40 transition-all ease-in-out group-hover:visible group-hover:z-20">
-          <Link href={`/blog/${blog.id}`} target="_blank">
+          <Link href={`/blog/${blog.documentId}`} target="_blank">
             <Button className="aspect-square h-auto bg-white text-green-400 hover:bg-green-400 hover:text-white">
               <Link2 size={24} />
             </Button>
           </Link>
-          <Link href={`/dashboard/blog/edit/${blog.id}`}>
+          <Link href={`/dashboard/blog/edit/${blog.documentId}`}>
             <Button className="aspect-square h-auto bg-white text-blue-400 hover:bg-blue-400 hover:text-white">
               <Pencil size={24} />
             </Button>
@@ -70,11 +70,11 @@ export default function BlogCard({
       >
         <img
           src={
-            blog?.attributes?.thumbnail?.data
+            blog?.thumbnail
               ? `${image.url}`
               : "https://placehold.co/600x400?text=No+Image&font=poppins"
           }
-          alt={blog?.attributes?.title || "Blog image"}
+          alt={blog?.title || "Blog image"}
           width={image?.width || 600}
           height={image?.height || 400}
           className="h-full w-full rounded-lg object-cover saturate-0 transition-transform duration-300 group-hover:scale-105"
@@ -92,7 +92,7 @@ export default function BlogCard({
                 }}
                 className="flex cursor-pointer rounded-md bg-blue-50 !px-3 !py-1 text-center text-xs font-medium leading-6 text-blue-700 ring-0 transition ease-in-out hover:bg-blue-700 hover:text-white hover:underline"
               >
-                {tag.attributes.name}
+                {tag.name}
               </Badge>
             ))}
             <Text variant="text-sm" className="text-gray-500"></Text>
@@ -110,7 +110,7 @@ export default function BlogCard({
             medium
             className="line-clamp-2 text-left text-base tracking-tight md:h-14 md:text-lg"
           >
-            {blog?.attributes?.title}
+            {blog?.title}
           </Text>
         </Link>
 
@@ -124,11 +124,11 @@ export default function BlogCard({
           )}
 
           {/*@ts-ignore*/}
-          {blog?.attributes?.author_name && (
+          {blog?.author_name && (
             <>
               <Text variant="text-sm" className="line-clamp-1 text-gray-500">
                 {/*@ts-ignore*/}
-                {blog?.attributes?.author_name}
+                {blog?.author_name}
               </Text>
 
               <Text as="span" variant="text-md" className="text-gray-500" bold>
@@ -136,9 +136,9 @@ export default function BlogCard({
               </Text>
             </>
           )}
-          {blog?.attributes?.createdAt?.toString() && (
+          {blog?.createdAt?.toString() && (
             <Text variant="text-sm" className="line-clamp-1 text-gray-500">
-              {formatDate(blog?.attributes?.createdAt?.toString())}
+              {formatDate(blog?.createdAt?.toString())}
             </Text>
           )}
         </div>

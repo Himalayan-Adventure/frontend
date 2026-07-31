@@ -74,11 +74,11 @@ const ServiceCard = ({
 }) => {
   //prettier-ignore
   //@ts-ignore
-  const smallImage =   svc.attributes.image?.data?.attributes?.formats?.small;
-  const fallbackImg = svc?.attributes?.image?.data?.attributes;
+  const smallImage =   svc.image?.formats?.small;
+  const fallbackImg = svc?.image;
   const image = smallImage || fallbackImg;
   const { user, isPending: isLoading } = useCurrentUser();
-  const service_provider = svc?.attributes?.service_provider?.data;
+  const service_provider = svc?.service_provider;
   const {
     mutate: requestSerivceMutation,
     isPending,
@@ -87,7 +87,7 @@ const ServiceCard = ({
     mutationKey: ["request-service"],
     mutationFn: async () => {
       if (user) {
-        await postRequestService({ userId: user.id, serviceId: svc.id });
+        await postRequestService({ userId: user.id, serviceId: Number(svc.id) });
       }
     },
     onSuccess: () => {
@@ -117,7 +117,7 @@ const ServiceCard = ({
         {/* Overlay */}
         <div className="absolute inset-0 flex items-end rounded-2xl bg-black bg-opacity-40">
           <h2 className="mb-4 w-full text-center text-base font-semibold text-white md:text-lg lg:text-2xl">
-            {svc.attributes.title}
+            {svc.title}
           </h2>
         </div>
       </div>
@@ -131,7 +131,7 @@ const ServiceCard = ({
             } else if (service_provider?.id === user.id) {
               toast.error(
                 "You can't request your own service , " +
-                  service_provider?.attributes.username,
+                  service_provider?.username,
               );
             } else {
               requestSerivceMutation();

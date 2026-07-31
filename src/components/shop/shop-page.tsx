@@ -23,23 +23,23 @@ export default function ShopPage({
 
     if (selectedCategory !== "All Categories") {
       filteredProducts = filteredProducts.filter((product: any) =>
-        product.attributes.shop_categories.data.some(
-          (category: any) => category.attributes.name === selectedCategory,
+        product.shop_categories.some(
+          (category: any) => category.name === selectedCategory,
         ),
       );
     }
 
     if (selectedSubcategory) {
       filteredProducts = filteredProducts.filter((product: any) =>
-        product.attributes.shop_sub_categories?.data.some(
-          (sub: any) => sub.attributes.name === selectedSubcategory,
+        product.shop_sub_categories?.some(
+          (sub: any) => sub.name === selectedSubcategory,
         ),
       );
     }
 
     if (searchQuery) {
       filteredProducts = filteredProducts.filter((product: any) =>
-        product.attributes.name
+        product.name
           .toLowerCase()
           .includes(searchQuery.toLowerCase()),
       );
@@ -54,19 +54,19 @@ export default function ShopPage({
     switch (sortOption) {
       case "Price: Low to High":
         return sortedProducts.sort(
-          (a, b) => a.attributes.price - b.attributes.price,
+          (a, b) => a.price - b.price,
         );
       case "Price: High to Low":
         return sortedProducts.sort(
-          (a, b) => b.attributes.price - a.attributes.price,
+          (a, b) => b.price - a.price,
         );
       case "Name: A to Z":
         return sortedProducts.sort((a, b) =>
-          a.attributes.name.localeCompare(b.attributes.name),
+          a.name.localeCompare(b.name),
         );
       case "Name: Z to A":
         return sortedProducts.sort((a, b) =>
-          b.attributes.name.localeCompare(a.attributes.name),
+          b.name.localeCompare(a.name),
         );
       default:
         return sortedProducts;

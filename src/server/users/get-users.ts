@@ -26,8 +26,7 @@ type TUser = {
   userType: "merchant" | "customer";
   profilePicture: TImage;
 };
-type UserObject =
-  APIResponseData<"plugin::users-permissions.role">["attributes"];
+type UserObject = APIResponseData<"plugin::users-permissions.role">;
 export const getUsers = async (
   type?: "merchant" | "customer",
   name?: string,
@@ -58,6 +57,10 @@ export const getUsers = async (
     return res.data as TUser[];
   } catch (error: AxiosError | any) {
     console.log(error);
+    // react-query rejects `undefined` as query data, which leaves the guides
+    // list stuck on its loading spinner. Fall back to an empty list so the UI
+    // renders its "no guides" state instead.
+    return [] as TUser[];
   }
 };
 
@@ -77,7 +80,7 @@ export const getUsersDeep = async (
     if (name) {
       params.set("filters[username][$containsi]", name);
     }
-    params.set("populate", "deep");
+    params.set("populate", "*");
 
     const res = await axiosInstance.get(`api/users?${params.toString()}`);
     return res.data as TUserDeep[];

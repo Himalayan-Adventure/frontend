@@ -20,12 +20,12 @@ export const columns: ColumnDef<
 >[] = [
   {
     header: "Service Name",
-    accessorKey: "attributes.services.title",
+    accessorKey: "services.title",
     cell({ row }) {
-      const service = row?.original?.attributes?.services?.data?.[0];
+      const service = row?.original?.services?.[0];
       return service ? (
         <Text variant="text-sm">
-          {row?.original?.attributes?.services?.data?.[0]?.attributes?.title ||
+          {row?.original?.services?.[0]?.title ||
             "-"}
         </Text>
       ) : (
@@ -36,11 +36,10 @@ export const columns: ColumnDef<
 
   {
     header: "IMAGES",
-    accessorKey: "attributes.image",
+    accessorKey: "image",
     cell({ row }) {
       const image =
-        row?.original?.attributes?.services?.data?.[0]?.attributes?.image?.data
-          ?.attributes;
+        row?.original?.services?.[0]?.image;
       return image?.url ? (
         <Image
           src={image?.url}
@@ -49,7 +48,7 @@ export const columns: ColumnDef<
           alt={
             image?.alternativeText ||
             image?.name ||
-            `Service image ${row?.original?.attributes?.services?.data?.[0]?.attributes?.title}`
+            `Service image ${row?.original?.services?.[0]?.title}`
           }
           className="aspect-video max-h-32 w-auto object-cover object-center"
         />
@@ -63,15 +62,15 @@ export const columns: ColumnDef<
 
   {
     header: "Service Provider",
-    accessorKey: "attributes.services.service_provider",
+    accessorKey: "services.service_provider",
     cell({ row }) {
       const serviceProvider =
-        row?.original?.attributes?.services?.data?.[0]?.attributes
+        row?.original?.services?.[0]
           ?.service_provider;
       return serviceProvider ? (
-        <Link href={`/profile/${serviceProvider.data.id}`} target="_blank">
+        <Link href={`/profile/${serviceProvider.username}`} target="_blank">
           <Text variant="text-sm">
-            {serviceProvider.data.attributes.username}
+            {serviceProvider.username}
           </Text>
         </Link>
       ) : (
@@ -139,13 +138,13 @@ export const columns: ColumnDef<
         <SortableHeaderButton sortOnClient column={column} label="Created on" />
       );
     },
-    accessorKey: "attributes.createdOn",
+    accessorKey: "createdOn",
     cell({ row }) {
       return (
-        row?.original?.attributes?.createdAt && (
+        row?.original?.createdAt && (
           <Text variant="text-sm">
             {format(
-              new Date(row?.original?.attributes?.createdAt),
+              new Date(row?.original?.createdAt),
               "yyyy-MM-dd",
             )}
           </Text>
@@ -160,7 +159,7 @@ export const columns: ColumnDef<
     cell({ row }) {
       return (
         <span className="flex gap-x-2">
-          <DeleteButton id={row.original.id} />
+          <DeleteButton id={row.original.documentId} />
         </span>
       );
     },

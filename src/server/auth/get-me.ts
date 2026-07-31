@@ -66,7 +66,9 @@ export async function getCurrentUserDataDeep() {
     const cookieStore = cookies();
     const token = cookieStore.get("jwt")?.value;
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate=deep`,
+      // `populate=deep` came from strapi-plugin-populate-deep, which has no
+      // Strapi v5 release — v5 rejects the unknown key, so populate explicitly.
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/me?populate[0]=role&populate[1]=profilePicture&populate[2]=works&populate[3]=about&populate[4]=resume&populate[5]=contact&populate[6]=services&populate[7]=blogs`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

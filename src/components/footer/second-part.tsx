@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { APIResponseCollection } from "@/types/types";
 import { getPackageRegions } from "@/server/packages/get-package-regionts";
 import { getPackageCategories } from "@/server/packages/get-package-categories";
 import { getPackageTypes } from "@/server/packages/get-package-types";
@@ -38,7 +37,7 @@ export default async function UsefulLinksSection() {
     {
       title: "Popular Regions",
       links: packageRegion?.data?.map((i) => ({
-        name: i.attributes.name,
+        name: i.name,
         href: `/packages?key=region&filter=${i.id}`,
       })),
     },
@@ -46,13 +45,12 @@ export default async function UsefulLinksSection() {
   const transformedCategories =
     packageCategory?.data && packageCategory.data.length > 0
       ? packageCategory?.data.map((i) => ({
-          title: i.attributes.name,
+          title: i.name,
           links:
-            i.attributes.packages?.data &&
-            i.attributes.packages?.data.length > 0
-              ? i.attributes.packages?.data.map((j) => ({
-                  name: j.attributes.package_name,
-                  href: `/packages/${j.id}`,
+            i.packages && i.packages.length > 0
+              ? i.packages.map((j) => ({
+                  name: j.package_name,
+                  href: `/packages/${j.documentId}`,
                 }))
               : [],
         }))
@@ -60,12 +58,12 @@ export default async function UsefulLinksSection() {
   const transformedPackageTypes =
     packageTypes?.data && packageTypes.data.length > 0
       ? packageTypes.data.map((i) => ({
-          title: i.attributes.name,
+          title: i.name,
           links:
-            i.attributes.packages?.data && i.attributes.packages.data.length > 0
-              ? i.attributes.packages.data.map((j) => ({
-                  name: j.attributes.package_name,
-                  href: `/packages/${j.id}`,
+            i.packages && i.packages.length > 0
+              ? i.packages.map((j) => ({
+                  name: j.package_name,
+                  href: `/packages/${j.documentId}`,
                 }))
               : [],
         }))

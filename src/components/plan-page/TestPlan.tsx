@@ -53,9 +53,9 @@ export default function TestPlan() {
     const fetchSteps = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/plan-with?populate=deep`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/plan-with?populate=*`,
         );
-        setSteps(response?.data?.data?.attributes?.steps || []);
+        setSteps(response?.data?.data?.steps || []);
       } catch (error) {
         console.error("Error fetching steps:", error);
         setSteps(staticSteps);

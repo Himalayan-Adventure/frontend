@@ -12,39 +12,39 @@ export default function BlogDetail({ blog }: any) {
       <div className="">
         {/* ShadCN Badge */}
         <Badge className="mb-4 rounded-lg bg-black px-3 py-1 text-xs font-medium text-white md:text-sm">
-          {blog?.data?.attributes?.blog_tags?.data?.[0]?.attributes?.name ||
+          {blog?.data?.blog_tags?.[0]?.name ||
             "Trekking"}
         </Badge>
 
         {/* Blog Title */}
         <h1 className="mb-4 text-xl font-bold text-gray-800 md:text-3xl lg:text-5xl">
-          {blog?.data?.attributes?.title}
+          {blog?.data?.title}
         </h1>
 
         {/* Author and Date */}
         <div className="flex items-center space-x-4">
           <Avatar>
             <AvatarImage
-              src={blog?.data?.attributes?.author_image?.data?.attributes?.url}
+              src={blog?.data?.author_image?.url}
               className="saturate-0"
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <p className="font-medium text-gray-600">
-            {blog?.data?.attributes?.author_name || "Guest"}
+            {blog?.data?.author_name || "Guest"}
           </p>
           <div>
             <p className="text-sm font-bold text-gray-400">
-              {formatDate(blog?.data?.attributes?.createdAt)}
+              {formatDate(blog?.data?.createdAt)}
             </p>
           </div>
         </div>
 
         {/* Featured Image */}
         <div className="my-12">
-          {blog?.data?.attributes?.thumbnail?.data && (
+          {blog?.data?.thumbnail && (
             <Image
-              src={blog?.data?.attributes?.thumbnail?.data?.attributes?.url}
+              src={blog?.data?.thumbnail?.url}
               alt="Featured Image"
               width={800}
               height={450}
@@ -57,10 +57,10 @@ export default function BlogDetail({ blog }: any) {
 
         {/* Blog Content */}
         <div className="blog-content leading-relaxed text-gray-700">
-          {/* <p className="mb-4">{blog?.data?.attributes?.description}</p> */}
+          {/* <p className="mb-4">{blog?.data?.description}</p> */}
           <div data-color-mode="light" className="space-y-10 font-sourceSerif">
             <MDEditor.Markdown
-              source={blog?.data?.attributes?.description}
+              source={blog?.data?.description}
               style={{ whiteSpace: "pre-wrap" }}
             />
           </div>

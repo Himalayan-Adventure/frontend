@@ -16,7 +16,9 @@ export async function PUT(
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?populate=deep`,
+      // `populate=deep` came from strapi-plugin-populate-deep, which has no
+      // Strapi v5 release — v5 rejects the unknown key, so populate explicitly.
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?populate[0]=role&populate[1]=profilePicture&populate[2]=works&populate[3]=about&populate[4]=resume&populate[5]=contact&populate[6]=services&populate[7]=blogs`,
 
       {
         headers: {
@@ -67,7 +69,9 @@ export async function GET(
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?populate=deep`,
+      // `populate=deep` came from strapi-plugin-populate-deep, which has no
+      // Strapi v5 release — v5 rejects the unknown key, so populate explicitly.
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/users/${id}?populate[0]=role&populate[1]=profilePicture&populate[2]=works&populate[3]=about&populate[4]=resume&populate[5]=contact&populate[6]=services&populate[7]=blogs`,
 
       {
         headers: {

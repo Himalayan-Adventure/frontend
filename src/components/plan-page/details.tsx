@@ -71,7 +71,7 @@ export default function Details({ setSelectedOption }: DetailsProps) {
 
           if (selectedDestination) {
             setDestinationName(
-              selectedDestination?.attributes?.name ||
+              selectedDestination?.name ||
                 "Destination not selected",
             );
           } else {
@@ -110,7 +110,7 @@ export default function Details({ setSelectedOption }: DetailsProps) {
   const renderPackages = () => {
     if (packages.length > 0) {
       return packages
-        .map((pkg: any) => pkg?.attributes?.package_name)
+        .map((pkg: any) => pkg?.package_name)
         .join(", ");
     }
     return "No packages selected.";

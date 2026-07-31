@@ -7,7 +7,7 @@ import {
 import axios, { type AxiosError } from "axios";
 import { uploadMedia } from "../media/add-media";
 import { toast } from "sonner";
-export const editService = async (service: TServiceForm, id: number) => {
+export const editService = async (service: TServiceForm, id: string) => {
   try {
     const validatedFields = ServiceFormSchema.safeParse(service);
 

@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const PriorityCell = ({ id }: { id: number }) => {
+export const PriorityCell = ({ id }: { id: number | string }) => {
   const PRIORITY_KEY = `appointment-priority-${id}`;
   const [priority, setPriority] = useState<string | null>();
   useEffect(() => {

@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 };
 type Props = {
   params: {
-    id: number;
+    id: string;
   };
 };
 export default async function WorkEditPage({ params }: Props) {
   const { id } = params;
-  const work = await getSingleWork(id.toString());
+  const work = await getSingleWork(id);
   if (!work?.data?.data) {
     return (
       <section className="space-y-10">

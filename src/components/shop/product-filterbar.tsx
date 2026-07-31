@@ -74,28 +74,28 @@ export default function ProductFilterBar({
                       <div
                         className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
                         onClick={() =>
-                          setSelectedCategory(category.attributes.name)
+                          setSelectedCategory(category.name)
                         }
                       >
-                        {category.attributes.name}
+                        {category.name}
                       </div>
                       {openCategoryId === category.id &&
-                        category.attributes.shop_sub_categories?.data?.length >
+                        category.shop_sub_categories?.length >
                           0 && (
                           <div className="absolute left-full top-0 w-48 border border-gray-200 bg-white shadow-lg">
                             <ul>
-                              {category.attributes.shop_sub_categories.data.map(
+                              {category.shop_sub_categories.map(
                                 (subCategory: any) => (
                                   <li
                                     key={subCategory.id}
                                     className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
                                     onClick={() =>
                                       setSelectedSubcategory(
-                                        subCategory.attributes.name,
+                                        subCategory.name,
                                       )
                                     }
                                   >
-                                    {subCategory.attributes.name}
+                                    {subCategory.name}
                                   </li>
                                 ),
                               )}

@@ -8,7 +8,7 @@ import { Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function DeleteButton({ id }: { id: number }) {
+export default function DeleteButton({ id }: { id: string }) {
   const {
     mutate: deleteMutation,
     isPending,

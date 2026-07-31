@@ -22,19 +22,20 @@ export default function OurProducts({ products }: any) {
           {products.map((product: any) => (
             <ProductCard
               key={product?.id}
-              slug={product?.attributes?.slug}
+              slug={product?.slug}
               id={product?.id}
-              name={product?.attributes?.name}
-              description={product?.attributes?.description} // Fixed typo
-              price={product?.attributes?.price}
-              discountRate={product?.attributes?.discount_rate}
-              rentAvailable={product?.attributes?.rentAvailable}
-              rentPrice={product?.attributes?.rentPrice}
-              stockCount={product?.attributes?.stockCount}
-              colors={product?.attributes?.colors} // Updated property name
+              documentId={product?.documentId}
+              name={product?.name}
+              description={product?.description} // Fixed typo
+              price={product?.price}
+              discountRate={product?.discount_rate}
+              rentAvailable={product?.rentAvailable}
+              rentPrice={product?.rentPrice}
+              stockCount={product?.stockCount}
+              colors={product?.colors} // Updated property name
               rating={4}
               reviews={54}
-              img={product?.attributes?.image?.data?.[0]?.attributes?.url}
+              img={product?.image?.[0]?.url}
             />
           ))}
         </div>

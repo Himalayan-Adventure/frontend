@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const StatusSelectCell = ({ id }: { id: number }) => {
+export const StatusSelectCell = ({ id }: { id: number | string }) => {
   const STATUS_KEY = `appointment-status-${id}`;
   const [status, setStatus] = useState<string | null>();
   useEffect(() => {

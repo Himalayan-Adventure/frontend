@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: `Edit Calendar Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
-const CalendarEditFormPage = async ({ params }: { params: { id: number } }) => {
+const CalendarEditFormPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const user = await getCurrentUserData();
   const data = await getSingleCalendar(id);

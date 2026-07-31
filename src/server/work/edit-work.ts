@@ -5,7 +5,7 @@ import { uploadMedia } from "../media/add-media";
 import { revalidateTag } from "next/cache";
 import { toast } from "sonner";
 import { TWorkForm, WorkFormSchema } from "@/validators/work-validator";
-export const editWork = async (work: TWorkForm, id: number) => {
+export const editWork = async (work: TWorkForm, id: string) => {
   try {
     const validatedFields = WorkFormSchema.safeParse(work);
 

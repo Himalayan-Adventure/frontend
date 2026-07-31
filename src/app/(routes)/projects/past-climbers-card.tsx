@@ -21,8 +21,8 @@ export const PastClimbersCard = ({
   endDate?: DateValue;
   testimonial?: string;
 }) => {
-  const user = data.attributes;
-  const profilePicture = user?.profilePicture?.data?.attributes;
+  const user = data;
+  const profilePicture = user?.profilePicture;
   return (
     <div className="relative flex w-full flex-col justify-between gap-y-4 rounded-xl py-3 text-center shadow-2xl sm:min-w-[300px] md:h-auto md:min-h-[400px] md:w-auto md:max-w-sm md:py-5 lg:py-8">
       <div className="relative flex h-full flex-col items-center gap-y-4">

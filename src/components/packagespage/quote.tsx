@@ -31,7 +31,7 @@ export const QuotesDialog = ({
   packageId,
   title,
 }: {
-  packageId?: number;
+  packageId?: number | string;
   title?: string;
 }) => {
   const router = useRouter();
@@ -52,7 +52,8 @@ export const QuotesDialog = ({
     setLoading(true);
     const payload = form.getValues();
     const res = await writeQuote(payload);
-    if (res.status === 200) {
+    // Strapi answers a successful create with 201, not 200
+    if (res.status >= 200 && res.status < 300) {
       setLoading(false);
       toast.success("Successfully sent a quote!");
     } else {

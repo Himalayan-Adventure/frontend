@@ -19,72 +19,71 @@ export const columns: ColumnDef<
 >[] = [
   {
     header: "Name",
-    accessorKey: "attributes.name",
+    accessorKey: "name",
     cell({ row }) {
       return (
-        <Text variant="text-sm">{row?.original?.attributes?.name || "-"}</Text>
+        <Text variant="text-sm">{row?.original?.name || "-"}</Text>
       );
     },
   },
 
   {
     header: "Phone",
-    accessorKey: "attributes.phone",
+    accessorKey: "phone",
     cell({ row }) {
       return (
-        <Text variant="text-sm">{row?.original?.attributes?.phone || "-"}</Text>
+        <Text variant="text-sm">{row?.original?.phone || "-"}</Text>
       );
     },
   },
 
   {
     header: "Email",
-    accessorKey: "attributes.email",
+    accessorKey: "email",
     cell({ row }) {
       return (
-        <Text variant="text-sm">{row?.original?.attributes?.email || "-"}</Text>
+        <Text variant="text-sm">{row?.original?.email || "-"}</Text>
       );
     },
   },
 
   {
     header: "Subject",
-    accessorKey: "attributes.subject",
+    accessorKey: "subject",
     cell({ row }) {
       return (
-        <Text variant="text-sm">{row?.original?.attributes?.email || "-"}</Text>
+        <Text variant="text-sm">{row?.original?.email || "-"}</Text>
       );
     },
   },
 
   {
     header: "message",
-    accessorKey: "attributes.message",
+    accessorKey: "message",
     cell({ row }) {
       return (
-        <ReadMoreCell message={row?.original?.attributes?.message || "-"} />
+        <ReadMoreCell message={row?.original?.message || "-"} />
       );
     },
   },
 
   {
     header: "PACKAGE",
-    accessorKey: "attributes.package",
+    accessorKey: "package",
     cell({ row }) {
       const package_name =
-        row?.original?.attributes?.package?.data?.attributes?.package_name;
+        row?.original?.package?.package_name;
       if (package_name)
         return (
           <div className="flex flex-wrap gap-1">
             <Link
               className="btn-primary group bg-primary"
-              href={`/packages/${row.original.id}`}
+              href={`/packages/${row.original.documentId}`}
               target="_blank"
             >
               <Tag size={16} />
               <Text variant="text-xs" className="group-hover:underline">
-                {row?.original?.attributes?.package?.data?.attributes
-                  ?.package_name || "-"}
+                {row?.original?.package?.package_name || "-"}
               </Text>
             </Link>
           </div>
@@ -98,7 +97,7 @@ export const columns: ColumnDef<
     cell({ row }) {
       return (
         <span className="flex gap-x-2">
-          <DeleteButton id={row.original.id} />
+          <DeleteButton id={row.original.documentId} />
         </span>
       );
     },

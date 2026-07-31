@@ -123,7 +123,7 @@ export const getPackages = async ({
     });
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=travel_dates&populate[package_host][populate][3]=package_host&${query}&${additionalQuery}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image]=true&fields[2]=parent_title&populate[adventure_specification][populate][1]=travel_dates&populate[package_host][populate][0]=logo&${query}&${additionalQuery}`,
       {
         next: {
           tags: ["packages"],

@@ -57,8 +57,8 @@ export default function FilterBox() {
     },
     select: (data) => {
       return data.data.map((type) => ({
-        name: type.attributes.name,
-        icon: type.attributes.react_icon,
+        name: type.name,
+        icon: type.react_icon,
       }));
     },
   });
@@ -107,13 +107,13 @@ export default function FilterBox() {
 
   const handleApplyFilters = () => {
     const selectedCountry = countries?.find((country: any) =>
-      country?.attributes?.package_regions?.data?.some(
-        (region: any) => region?.attributes?.name === selectedRegion,
+      country?.package_regions?.some(
+        (region: any) => region?.name === selectedRegion,
       ),
     );
 
     const selectedCountryName = selectedCountry
-      ? selectedCountry?.attributes?.name
+      ? selectedCountry?.name
       : "Not selected";
 
     const selectedLevelName = level !== null ? level : "Not selected";
@@ -180,23 +180,23 @@ export default function FilterBox() {
                 {countries?.map((country: any, index: number) => (
                   <div key={index} className="cursor-pointer">
                     <h3 className="text-lg font-bold uppercase md:text-xl">
-                      {country?.attributes?.name}
+                      {country?.name}
                     </h3>
                     <ul className="mt-2">
-                      {country?.attributes?.package_regions?.data?.map(
+                      {country?.package_regions?.map(
                         (region: any, index: number) => (
                           <li
                             key={index}
                             onClick={() =>
                               setSelectedRegion(
-                                region?.attributes?.name === selectedRegion
+                                region?.name === selectedRegion
                                   ? null
-                                  : region?.attributes?.name,
+                                  : region?.name,
                               )
                             }
-                            className={`cursor-pointer px-2 py-1 ${selectedRegion === region?.attributes?.name ? "rounded-lg bg-primary text-white" : ""}`}
+                            className={`cursor-pointer px-2 py-1 ${selectedRegion === region?.name ? "rounded-lg bg-primary text-white" : ""}`}
                           >
-                            {region?.attributes?.name}
+                            {region?.name}
                           </li>
                         ),
                       )}
@@ -218,7 +218,7 @@ export default function FilterBox() {
                       setSelectedAdventureType(
                         adventure.name === selectedAdventureType
                           ? null
-                          : adventure.name,
+                          : (adventure.name ?? null),
                       )
                     }
                     className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border p-3 shadow-lg hover:shadow-xl ${

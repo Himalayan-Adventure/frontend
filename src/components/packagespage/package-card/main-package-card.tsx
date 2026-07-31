@@ -12,7 +12,7 @@ import { FaStar } from "react-icons/fa";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 
 import { cn } from "@/lib/utils";
-import { APIResponseCollection, APIResponseData } from "@/types/types";
+import { APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -30,7 +30,7 @@ const MainPackageCard = ({
 }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const attr = pkg.attributes;
+  const attr = pkg;
 
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
@@ -136,7 +136,7 @@ const MainPackageCard = ({
           ref={cardRef}
         >
           <SliderComponent
-            images={pkg?.attributes?.image}
+            images={pkg?.image ?? undefined}
             type="hover"
             isOverlayVisible={isOverlayVisible}
           />
@@ -170,7 +170,7 @@ const MainPackageCard = ({
                 </p>
               </div>
               <div>
-                <Link prefetch={true} href={`/packages/${pkg.id}`}>
+                <Link prefetch={true} href={`/packages/${pkg.documentId}`}>
                   <p className="text-lg font-medium text-primary">
                     {attr?.package_name}
                   </p>
@@ -191,7 +191,7 @@ const MainPackageCard = ({
               </div>
             </>
           ) : (
-            <Link href={`/packages/${pkg.id}`} className="pt-4">
+            <Link href={`/packages/${pkg.documentId}`} className="pt-4">
               <div className="mb-2 flex items-center justify-between">
                 <h1 className="text-sm font-semibold text-primary">
                   {attr?.package_name}
@@ -237,7 +237,7 @@ export const SliderComponent = ({
   type,
   isOverlayVisible,
 }: {
-  images: APIResponseCollection<"plugin::upload.file"> | undefined;
+  images: APIResponseData<"plugin::upload.file">[] | undefined;
   type: "hover" | "default";
   isOverlayVisible: boolean;
 }) => {
@@ -260,11 +260,11 @@ export const SliderComponent = ({
             : "z-[52] hidden",
       )}
     >
-      {images?.data?.map((image, index: number) => {
+      {images?.map((image, index: number) => {
         //prettier-ignore
         //@ts-ignore
-        const smallImage =   image?.attributes?.formats?.small;
-        const fallbackImg = image?.attributes;
+        const smallImage =   image?.formats?.small;
+        const fallbackImg = image;
         const optImg = smallImage || fallbackImg;
         return (
           optImg?.url && (

@@ -2,7 +2,7 @@
 import { APIResponse } from "@/types/types";
 import { AxiosError } from "axios";
 import qs from "qs";
-export const getSingleService = async (id: number) => {
+export const getSingleService = async (id: string) => {
   try {
     const query = qs.stringify({
       populate: "*",

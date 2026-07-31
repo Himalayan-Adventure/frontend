@@ -28,10 +28,12 @@ export default function ClientsReviews() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/home-page?populate=deep`,
+          // `populate=deep` came from strapi-plugin-populate-deep, which has no
+          // Strapi v5 release — v5 rejects the unknown key, so populate explicitly.
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/home-page?populate[testimonials][populate]=image`,
         );
         const testimonials =
-          response?.data?.data?.attributes?.testimonials || [];
+          response?.data?.data?.testimonials || [];
         setClientReviews(testimonials);
         setActiveCard(testimonials[0] || null);
         setLoading(false);
@@ -77,7 +79,7 @@ export default function ClientsReviews() {
             <div className="mt-8 flex flex-col md:flex-row md:space-x-8">
               <div className="mb-4 h-24 w-32 overflow-hidden rounded-lg object-cover shadow-md transition-transform duration-300 md:h-40 md:w-96">
                 <img
-                  src={activeCard?.image?.data?.attributes?.url}
+                  src={activeCard?.image?.url}
                   alt={activeCard.name}
                   className="h-full w-full object-cover"
                 />
@@ -164,7 +166,7 @@ function MessageCard({
       <div className="flex justify-center">
         <div className="absolute -top-10">
           <img
-            src={review?.image?.data?.attributes?.url}
+            src={review?.image?.url}
             alt={review.name}
             className="h-20 w-20 rounded-full border border-gray-500 object-cover shadow-lg"
           />

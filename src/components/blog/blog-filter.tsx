@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import useUpdateQueryString from "@/hooks/use-update-query-string";
 
 interface BlogFilterBarProps {
-  categories: { id: number; attributes: { name: string } }[];
+  categories: { id: number; name: string }[];
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
   searchQuery: string;
@@ -53,10 +53,10 @@ export default function BlogFilterBar({
                         ["categoryID"]: category.id.toString(),
                       });
 
-                      setSelectedCategory(category.attributes.name);
+                      setSelectedCategory(category.name);
                     }}
                   >
-                    {category.attributes.name}
+                    {category.name}
                   </li>
                 ))}
               </ul>

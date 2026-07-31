@@ -41,15 +41,15 @@ export async function generateMetadata(
     };
   }
 
-  const images = data?.data?.attributes?.image
-    ? data?.data?.attributes?.image.data?.map((image) => image.attributes.url)
+  const images = data?.data?.image
+    ? data?.data?.image.map((image) => image.url)
     : [];
 
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
   return {
-    title: data.data?.attributes?.title,
+    title: data.data?.title,
     openGraph: {
       images: [...images, ...previousImages],
     },
@@ -71,40 +71,41 @@ export default async function ProjectDetail({
     );
   }
 
-  const pkg = data.data?.attributes.package?.data.attributes;
+  const pkg = data.data?.package;
   console.log(pkg);
-  const images: GalleryImageProp[] | null = data?.data?.attributes?.image?.data
-    ? data?.data?.attributes?.image?.data?.map((image) => ({
-        src: image.attributes.url,
-        alt: image.attributes?.alternativeText || image.attributes.name,
-        height: image.attributes.height || 400,
-        width: image.attributes?.width || 400,
+  const images: GalleryImageProp[] | null = data?.data?.image
+    ? data?.data?.image?.map((image) => ({
+        src: image.url,
+        alt: image?.alternativeText || image.name,
+        height: image.height || 400,
+        width: image?.width || 400,
       }))
     : [];
   const departureData: TDepartureData = {
     //date: pkg?.date as string,
     departure: [
       {
-        start: pkg?.adventure_specification?.travel_dates[0]?.date,
-        end: pkg?.adventure_specification?.travel_dates[1]?.date,
+        start: pkg?.adventure_specification?.travel_dates?.[0]?.date ?? undefined,
+        end: pkg?.adventure_specification?.travel_dates?.[1]?.date ?? undefined,
       },
     ],
     grade: pkg?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: pkg?.adventure_specification?.max_altitude.toString() || "",
+    altitude: pkg?.adventure_specification?.max_altitude?.toString() || "",
     duration: pkg?.adventure_specification?.duration || "",
     season: pkg?.adventure_specification?.season?.[0]?.name || "",
     cost_and_budgeting: (pkg?.cost_and_budgeting ?? []) as CostBudgeting[],
   };
 
   const infoTabsData: InfoTabsProp = {
-    includes: pkg?.itinerary?.includes,
-    excludes: pkg?.itinerary?.excludes,
+    includes: (pkg?.itinerary?.includes ?? undefined) as any,
+    excludes: (pkg?.itinerary?.excludes ?? undefined) as any,
   };
 
   const othersInfo = pkg?.itinerary?.others?.map(({ title, description }) => {
     return { title, description };
   });
   othersInfo?.forEach((i, index) => {
+    if (!i.title) return;
     infoTabsData[i.title] = {
       id: index,
       //title: i.title,
@@ -129,11 +130,11 @@ export default async function ProjectDetail({
           Project
         </h3>
         <h1 className="text-2xl font-bold md:text-4xl lg:text-[55px]">
-          {data?.data?.attributes?.title}
+          {data?.data?.title}
         </h1>
-        {data.data?.attributes.createdAt && (
+        {data.data?.createdAt && (
           <h5 className="text-md text-gray-700">
-            {format(new Date(data.data?.attributes.createdAt), "MMM, yyyy")}
+            {format(new Date(data.data?.createdAt), "MMM, yyyy")}
           </h5>
         )}
       </div>
@@ -142,10 +143,10 @@ export default async function ProjectDetail({
           <div className="relative space-y-8 lg:col-span-2">
             <Gallery images={images} />
             <div className="space-y-8 lg:col-span-1 lg:hidden">
-              <Map location={pkg.package_name} />
-              {data.data?.attributes.package?.data.id && (
+              <Map location={pkg.package_name || ""} />
+              {data.data?.package?.documentId && (
                 <Departure
-                  id={data.data?.attributes.package?.data.id}
+                  id={data.data?.package?.documentId}
                   type="default"
                   data={departureData}
                 />
@@ -167,9 +168,9 @@ export default async function ProjectDetail({
                   */}
 
                   <ul className="flex list-disc space-x-1 text-sm md:text-base">
-                    {pkg.package_types?.data?.[0] && (
+                    {pkg.package_types?.[0] && (
                       <h2>
-                        {pkg?.package_types?.data?.[0]?.attributes?.name}{" "}
+                        {pkg?.package_types?.[0]?.name}{" "}
                       </h2>
                     )}
                     <p>Fixed Departure</p>
@@ -189,17 +190,17 @@ export default async function ProjectDetail({
                 {pkg?.package_host && (
                   <Image
                     src={
-                      pkg?.package_host?.logo?.data?.attributes?.url ||
+                      pkg?.package_host?.logo?.url ||
                       "/logo.png"
                     }
                     alt={"host logo" + pkg?.package_host?.hostname}
                     priority
                     className="max-h-20 w-28 object-contain md:w-40"
                     width={
-                      pkg?.package_host?.logo?.data?.attributes?.width || 400
+                      pkg?.package_host?.logo?.width || 400
                     }
                     height={
-                      pkg?.package_host?.logo?.data?.attributes?.height || 400
+                      pkg?.package_host?.logo?.height || 400
                     }
                   />
                 )}
@@ -209,27 +210,27 @@ export default async function ProjectDetail({
 
             {pkg?.long_description && <About desc={pkg?.long_description} />}
             {pkg?.video && (
-              <Video packageName={pkg?.package_name} videolink={pkg?.video} />
+              <Video packageName={pkg?.package_name || ""} videolink={pkg?.video} />
             )}
             {pkg?.itinerary?.timeline && (
-              <Itenerary data={pkg?.itinerary?.timeline} packageDetail={pkg} />
+              <Itenerary data={pkg?.itinerary?.timeline as any} packageDetail={pkg} />
             )}
             <div className="w-full">
               <h2 className="mb-6 text-lg font-semibold md:text-xl lg:text-2xl">
                 Members
               </h2>
               <div className="grid w-full grid-cols-[repeat(auto-fill,minmax(25em,1fr))] gap-4">
-                {data.data?.attributes.users?.data &&
-                  data?.data?.attributes?.user_review &&
-                  data.data.attributes.user_review.map(
+                {data.data?.users &&
+                  data?.data?.user_review &&
+                  data.data.user_review.map(
                     (i) =>
-                      i.user?.data && (
+                      i.user && (
                         <PastClimbersCard
-                          key={`past-climbers-${i.user?.data.id}`}
-                          user={i.user?.data}
-                          startDate={i.summit_date_start}
-                          endDate={i.summit_date_end}
-                          testimonial={i.testimonial}
+                          key={`past-climbers-${i.user?.id}`}
+                          user={i.user}
+                          startDate={i.summit_date_start ?? undefined}
+                          endDate={i.summit_date_end ?? undefined}
+                          testimonial={i.testimonial ?? undefined}
                         />
                       ),
                   )}
@@ -239,10 +240,10 @@ export default async function ProjectDetail({
             <InfoTabs content={infoTabsData} />
           </div>
           <div className="hidden space-y-8 lg:col-span-1 lg:block">
-            <Map location={pkg?.package_name} />
-            {data.data?.attributes.package?.data.id && (
+            <Map location={pkg?.package_name || ""} />
+            {data.data?.package?.documentId && (
               <Departure
-                id={data.data?.attributes.package?.data.id}
+                id={data.data?.package?.documentId}
                 type="default"
                 data={departureData}
               />
@@ -250,21 +251,21 @@ export default async function ProjectDetail({
           </div>
         </div>
       </section>
-      {pkg?.trip_facts?.[0] && <Facts data={pkg?.trip_facts} />}
+      {pkg?.trip_facts?.[0] && <Facts data={pkg?.trip_facts as any} />}
       {pkg.faq && (
         <Faqs
           data={pkg?.faq.map((i, index) => ({
-            id: `${index}-faq-${pkg?.faq?.id}`,
+            id: `${index}-faq-${i.id}`,
             answer: i.answer || "",
             question: i.question || "",
           }))}
         />
       )}
-      {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
-      <SimilarProjects notToInclude={data.data?.id} />
-      {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
+      {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0] as any} />}
+      <SimilarProjects notToInclude={Number(data.data?.id)} />
+      {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host as any} />}
       {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (
-        <ThingsToKnow data={pkg?.things_to_know} />
+        <ThingsToKnow data={pkg?.things_to_know as any} />
       )}
     </main>
   );

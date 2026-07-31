@@ -5,53 +5,37 @@ import { useEffect, useMemo, useState } from "react";
 
 interface Member {
   id: number;
-  attributes: {
-    designation: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    thumbnail: {
-      data: {
-        attributes: {
-          url: string;
-        };
-      };
-    };
-    team_categories: {
-      data: [
-        {
-          id: number;
-          attributes: {
-            createdAt: string;
-            updatedAt: string;
-            publishedAt: string;
-            name: string;
-          };
-        },
-      ];
-    };
+  documentId: string;
+  designation: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  thumbnail: {
+    url: string;
   };
-}
-
-interface Category {
-  id: number;
-  attributes: {
+  team_categories: {
+    id: number;
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
     name: string;
-    teams: {
-      data: {
-        id: number;
-        attributes: {
-          designation: string;
-          createdAt: string;
-          updatedAt: string;
-          publishedAt: string;
-        };
-      }[];
-    };
-  };
+  }[];
+}
+
+interface Category {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  name: string;
+  teams: {
+    id: number;
+    designation: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }[];
 }
 
 interface TeamsListProps {
@@ -72,8 +56,8 @@ export default function TeamsList({ teamCategories, members }: TeamsListProps) {
   const filteredMembers = useMemo(
     () =>
       members?.filter((member) =>
-        member?.attributes?.team_categories?.data?.some(
-          (category) => category?.attributes?.name === selectedCategory,
+        member?.team_categories?.some(
+          (category) => category?.name === selectedCategory,
         ),
       ),
     [selectedCategory, members],
@@ -104,17 +88,17 @@ export default function TeamsList({ teamCategories, members }: TeamsListProps) {
               .map((team: Category) => (
                 <button
                   key={team.id}
-                  onClick={() => setSelectedCategory(team?.attributes?.name)}
+                  onClick={() => setSelectedCategory(team?.name)}
                   className={`border-r-2 border-gray-700 font-semibold transition-colors last:border-r-0`}
                 >
                   <span
                     className={`mx-3 pb-2 md:text-lg lg:text-xl ${
-                      selectedCategory === team?.attributes?.name
+                      selectedCategory === team?.name
                         ? "border-b-4 border-primary text-primary"
                         : "border-b-4 border-transparent text-gray-700"
                     }`}
                   >
-                    {team?.attributes?.name}
+                    {team?.name}
                   </span>
                 </button>
               ))
@@ -131,8 +115,8 @@ export default function TeamsList({ teamCategories, members }: TeamsListProps) {
             filteredMembers?.map((member) => (
               <div key={member.id} className="h-full w-full">
                 <Image
-                  src={member?.attributes?.thumbnail?.data?.attributes?.url}
-                  alt={member?.attributes?.designation}
+                  src={member?.thumbnail?.url}
+                  alt={member?.designation}
                   width={500}
                   height={500}
                   className="h-full w-full object-contain"

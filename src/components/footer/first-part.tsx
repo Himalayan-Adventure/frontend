@@ -37,7 +37,8 @@ export default function FirstPart() {
         { data: { email: email } }
       );
 
-      if (response.status === 200) {
+      // Strapi answers a successful create with 201, not 200
+      if (response.status >= 200 && response.status < 300) {
         toast.success("Subscription successful! Check your inbox for confirmation.");
         setEmail("");
       }

@@ -1,7 +1,9 @@
 export type DateValue = globalThis.Date | string;
 export type ListItem = {
   type: "list-item";
-  children: { type: "text"; text: string }[];
+  children?: { type: "text"; text: string }[];
+  // some v5 blocks payloads carry the text directly on the list item
+  text?: string;
 };
 
 export type ListType = {
@@ -34,7 +36,7 @@ export type DepartureProps =
   | {
       data: TDepartureData;
       type: "default";
-      id: number;
+      id: string;
     }
   | {
       data: TDepartureData;

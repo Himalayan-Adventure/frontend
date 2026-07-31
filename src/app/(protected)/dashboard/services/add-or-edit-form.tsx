@@ -50,7 +50,7 @@ type ServiceAddOrEditProps =
   | {
       type: "edit";
       data: APIResponse<"api::service.service">;
-      id: number;
+      id: string;
       user?: never;
     };
 export const ServiceAddOrEditForm = ({
@@ -60,10 +60,7 @@ export const ServiceAddOrEditForm = ({
   user,
 }: ServiceAddOrEditProps) => {
   const [file, setFile] = useState<File>();
-  //const image = data?.data.attributes.image?.data?.attributes;
-  const image = data?.data?.attributes?.image?.data?.attributes;
-
-  //const image = data?.data?.attributes.thumbnail?.data?.attributes;
+  const image = data?.data?.image;
 
   const { data: categories, isLoading } = useQuery({
     queryKey: ["service-categories", type, id],
@@ -74,7 +71,7 @@ export const ServiceAddOrEditForm = ({
       if (!image?.url) return;
       const imageBlob = await urlToFile(
         image?.url,
-        image?.name || data?.data.attributes.title + " thumbnail",
+        image?.name || data?.data?.title + " thumbnail",
       );
       setFile(imageBlob);
     };
@@ -82,13 +79,13 @@ export const ServiceAddOrEditForm = ({
     getBlob();
   }, []);
   const service = {
-    title: data?.data?.attributes?.title || "",
+    title: data?.data?.title || "",
     image: file,
-    categories: data?.data?.attributes?.categories?.data?.[0]?.id.toString(),
-    service_charge: Number(data?.data?.attributes?.service_charge),
-    booking_charge: Number(data?.data?.attributes?.booking_charge),
+    categories: data?.data?.categories?.[0]?.id.toString(),
+    service_charge: Number(data?.data?.service_charge),
+    booking_charge: Number(data?.data?.booking_charge),
     service_provider:
-      data?.data.attributes.service_provider?.data.id || user?.id,
+      data?.data?.service_provider?.id || user?.id,
   };
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -103,15 +100,17 @@ export const ServiceAddOrEditForm = ({
       ...form.getValues(),
     };
     if (type === "edit") {
-      const res = await editService(payload, data.data.id);
-      if (res.status === 200) {
+      const res = await editService(payload, data.data!.documentId);
+      if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
         toast.success("Added service successfully");
         router.refresh();
         router.push("/dashboard/services");
       }
     } else {
       const res = await addService(payload);
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
         toast.success("Added service successfully");
         router.refresh();
         router.push("/dashboard/services");
@@ -215,7 +214,7 @@ export const ServiceAddOrEditForm = ({
                           key={`${i.id}-service-categories`}
                           value={i.id.toString()}
                         >
-                          {i.attributes.name}
+                          {i.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

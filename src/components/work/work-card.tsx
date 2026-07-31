@@ -22,13 +22,13 @@ export const WorkCard = ({
 }) => {
   const [showMore, setShowMore] = useState(false);
   const work = {
-    id: data?.id,
-    title: data?.attributes?.title,
+    id: data?.documentId,
+    title: data?.title,
     //prettier-ignore
     //@ts-ignore
-    image: data?.attributes?.image?.data?.[0]?.attributes?.formats?.medium|| data?.attributes?.image?.data?.[0]?.attributes,
-    date: data?.attributes?.createdAt?.toString(),
-    content: data?.attributes?.description,
+    image: data?.image?.[0]?.formats?.medium|| data?.image?.[0],
+    date: data?.createdAt?.toString(),
+    content: data?.description,
   };
 
   return (
@@ -70,7 +70,7 @@ export const WorkCard = ({
             "gap-x-2",
           )}
         >
-          <Link href={`/dashboard/work/edit/${data.id}`}>
+          <Link href={`/dashboard/work/edit/${data.documentId}`}>
             <Button className="bg-black text-sm text-white">
               <PenLine size={16} />
               Edit

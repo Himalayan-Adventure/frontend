@@ -39,7 +39,9 @@ export const addAdminInquiry = async (inquiry: TAdminInquiryForm) => {
       const errorData = await res.json();
       throw {
         status: res.status,
-        message: errorData.message || "An error occurred",
+        // Strapi nests the reason under `error`, not at the top level
+        message:
+          errorData?.error?.message || errorData?.message || "An error occurred",
       };
     }
     const data = await res.json();
@@ -52,10 +54,12 @@ export const addAdminInquiry = async (inquiry: TAdminInquiryForm) => {
     console.log(error);
     return {
       error: {
-        // @ts-ignore
-        message: errorMsg(error.status, "Couldn't submit message"),
+        message: errorMsg(
+          error?.status,
+          error?.message || "Couldn't submit message",
+        ),
       },
-      status: error?.response?.status || 500,
+      status: error?.status || error?.response?.status || 500,
     };
   }
 };

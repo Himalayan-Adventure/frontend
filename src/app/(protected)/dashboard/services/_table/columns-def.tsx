@@ -42,11 +42,11 @@ export const columns: ColumnDef<
   },
   {
     header: "IMAGES",
-    accessorKey: "attributes.image",
+    accessorKey: "image",
     cell({ row }) {
       //prettier-ignore
       //@ts-ignore
-      const image = row?.original?.attributes?.image?.data?.attributes?.formats?.small || row?.original?.attributes?.image?.data?.attributes
+      const image = row?.original?.image?.formats?.small || row?.original?.image
       return image?.url ? (
         <Image
           src={image?.url}
@@ -55,7 +55,7 @@ export const columns: ColumnDef<
           alt={
             image?.alternativeText ||
             image?.name ||
-            `Service image ${row?.original?.attributes?.title}`
+            `Service image ${row?.original?.title}`
           }
           className="aspect-video object-cover object-center max-w-32"
         />
@@ -78,9 +78,9 @@ export const columns: ColumnDef<
         />
       );
     },
-    accessorKey: "attributes.title",
+    accessorKey: "title",
     cell({ row }) {
-      return <Text variant="text-sm">{row?.original?.attributes?.title}</Text>;
+      return <Text variant="text-sm">{row?.original?.title}</Text>;
     },
   },
 
@@ -95,12 +95,12 @@ export const columns: ColumnDef<
         />
       );
     },
-    accessorKey: "attributes.service_charge",
+    accessorKey: "service_charge",
     cell({ row }) {
       return (
         <Text variant="text-sm">
           {/*@ts-ignore*/}
-          Rs. {row.original?.attributes?.service_charge || "-"}
+          Rs. {row.original?.service_charge || "-"}
         </Text>
       );
     },
@@ -117,12 +117,12 @@ export const columns: ColumnDef<
         />
       );
     },
-    accessorKey: "attributes.booking_charge",
+    accessorKey: "booking_charge",
     cell({ row }) {
       return (
         <Text variant="text-sm">
           {/*@ts-ignore*/}
-          Rs. {row.original?.attributes?.booking_charge || "-"}
+          Rs. {row.original?.booking_charge || "-"}
         </Text>
       );
     },
@@ -130,11 +130,11 @@ export const columns: ColumnDef<
 
   {
     header: "SERVICE TYPE",
-    accessorKey: "attributes.categories",
+    accessorKey: "categories",
     cell({ row }) {
       return (
         <Text variant="text-sm">
-          {row?.original?.attributes?.categories?.data?.[0]?.attributes?.name ||
+          {row?.original?.categories?.[0]?.name ||
             "-"}
         </Text>
       );
@@ -143,17 +143,17 @@ export const columns: ColumnDef<
 
   {
     header: "ASSOCIATED PACKAGES",
-    accessorKey: "attributes.associated_packages",
+    accessorKey: "associated_packages",
     cell({ row }) {
-      const selectedPackage = row?.original?.attributes?.associated_packages;
+      const selectedPackage = row?.original?.associated_packages;
       return (
-        selectedPackage?.data && (
+        selectedPackage && (
           <div className="flex flex-wrap gap-1">
-            {row.original.attributes.associated_packages?.data.map((i) => (
-              <Link href={`/packages/${i.id}`} key={`package-tag-${i.id}`}>
+            {row.original.associated_packages?.map((i) => (
+              <Link href={`/packages/${i.documentId}`} key={`package-tag-${i.id}`}>
                 <span className="btn-primary bg-primary">
                   <Tag size={16} />
-                  <Text variant="text-xs">{i.attributes.package_name}</Text>
+                  <Text variant="text-xs">{i.package_name}</Text>
                 </span>
               </Link>
             ))}
@@ -170,12 +170,12 @@ export const columns: ColumnDef<
       return (
         <span className="flex gap-x-2">
           <Link
-            href={`/dashboard/services/edit/${row.original.id}`}
+            href={`/dashboard/services/edit/${row.original.documentId}`}
             className="flex h-10 w-fit flex-wrap place-items-center gap-1 rounded-lg border border-blue-500 bg-blue-100 px-2 text-blue-900 hover:bg-blue-900 hover:text-blue-100"
           >
             <PencilLine size={18} />
           </Link>
-          <DeleteButton id={row.original.id} />
+          <DeleteButton id={row.original.documentId} />
         </span>
       );
     },

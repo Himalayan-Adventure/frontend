@@ -38,7 +38,7 @@ export default function OptimizedPackagesModal() {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        let url = `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=season&populate[package_host][populate][3]=package_host&populate[adventure_specification][populate][2]=grade`;
+        let url = `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image]=true&fields[2]=parent_title&populate[adventure_specification][populate][1]=season&populate[package_host][populate][0]=logo&populate[adventure_specification][populate][2]=grade`;
 
         const filters: string[] = [];
 
@@ -61,7 +61,7 @@ export default function OptimizedPackagesModal() {
 
         const response = await axios.get(url);
 
-        if (response?.data?.data) {
+        if (response) {
           setPackages(response.data.data);
         }
       } catch (err) {
@@ -129,24 +129,24 @@ export default function OptimizedPackagesModal() {
                 <div className="max-h-32 overflow-hidden rounded sm:w-1/4">
                   <img
                     src={
-                      pkg?.attributes?.image?.data?.[0]?.attributes?.url ||
+                      pkg?.image?.[0]?.url ||
                       "/placeholder.jpg"
                     }
-                    alt={pkg?.attributes?.package_name}
+                    alt={pkg?.package_name}
                     className="h-full w-full object-cover"
                   />
                 </div>
                 <div className="border-black sm:w-2/4 sm:border-r">
                   <h3 className="text-left text-lg font-semibold">
-                    {pkg?.attributes?.package_name}
+                    {pkg?.package_name}
                   </h3>
                   <ul className="mt-2 space-y-1 text-left text-sm">
-                    {pkg?.attributes?.adventure_specification?.season?.[0]
+                    {pkg?.adventure_specification?.season?.[0]
                       ?.name && (
                       <li className="flex items-center gap-2">
                         {(() => {
                           const season =
-                            pkg?.attributes?.adventure_specification?.season?.[0]?.name.toLowerCase();
+                            pkg?.adventure_specification?.season?.[0]?.name.toLowerCase();
                           switch (season) {
                             case "summer":
                               return <FaSun />;
@@ -162,7 +162,7 @@ export default function OptimizedPackagesModal() {
                         })()}
                         <span className="font-medium capitalize">
                           {
-                            pkg?.attributes?.adventure_specification
+                            pkg?.adventure_specification
                               ?.season?.[0]?.name
                           }
                         </span>
@@ -171,20 +171,20 @@ export default function OptimizedPackagesModal() {
                     <li className="flex items-center gap-2">
                       <FaStopwatch />
                       <span className="font-medium">Duration:</span>{" "}
-                      {pkg?.attributes?.adventure_specification?.duration} days
+                      {pkg?.adventure_specification?.duration} days
                     </li>
                     <li className="flex items-center gap-2">
                       <MdUpgrade />
                       <span className="font-medium">Grade:</span>{" "}
                       {
-                        pkg?.attributes?.adventure_specification?.grade?.[0]
+                        pkg?.adventure_specification?.grade?.[0]
                           ?.name
                       }
                     </li>
                     <li className="flex items-center gap-2">
                       <FaMountain />
                       <span className="font-medium">Max Altitude:</span>{" "}
-                      {pkg?.attributes?.adventure_specification?.max_altitude}
+                      {pkg?.adventure_specification?.max_altitude}
                     </li>
                   </ul>
                 </div>

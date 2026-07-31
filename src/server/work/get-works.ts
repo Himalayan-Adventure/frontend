@@ -15,7 +15,9 @@ export const getWorks = async () => {
   // }
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/works?populate=deep`,
+      // `populate=deep` came from strapi-plugin-populate-deep, which has no
+      // Strapi v5 release — v5 rejects the unknown key, so populate explicitly.
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/works?populate[0]=image&populate[1]=user_works`,
       {
         next: {
           tags: ["works"],

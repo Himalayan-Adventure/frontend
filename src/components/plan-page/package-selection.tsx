@@ -50,7 +50,7 @@ export default function PackageSelection() {
         try {
           setLoadingPackages(true);
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?filters[package_types][name][$eq]=${selectedType}&fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&populate[adventure_specification][populate][1]=season&populate[package_host][populate][3]=package_host&populate[adventure_specification][populate][2]=grade`,
+            `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?filters[package_types][name][$eq]=${selectedType}&fields[0]=package_name&populate[image]=true&fields[2]=parent_title&populate[adventure_specification][populate][1]=season&populate[package_host][populate][0]=logo&populate[adventure_specification][populate][2]=grade`,
           );
           const fetchedPackages = response?.data?.data || [];
           setPackages(fetchedPackages);
@@ -102,28 +102,28 @@ export default function PackageSelection() {
           <div className="scrollbar-hide flex gap-4 overflow-auto pl-12 lg:gap-8">
             {types.map((type: any, index: number) => (
               <div
-                key={type?.attributes?.name}
+                key={type?.name}
                 className={`flex min-w-[10rem] cursor-pointer flex-col items-center justify-center rounded-lg p-2 transition-colors duration-300 ease-in-out md:p-4 ${
-                  selectedType === type?.attributes?.name
+                  selectedType === type?.name
                     ? "bg-primary text-white"
                     : "bg-gray-100 hover:bg-gray-200"
                 } ${index === 0 ? "-ml-12" : ""}`}
-                onClick={() => handleOptionClick(type?.attributes?.name)}
+                onClick={() => handleOptionClick(type?.name)}
               >
                 <span
                   className={`text-xl lg:text-4xl ${
-                    selectedType === type?.attributes?.name
+                    selectedType === type?.name
                       ? "text-white"
                       : "text-primary"
                   }`}
                 >
                   <DynamicReactIcon
-                    name={type?.attributes?.react_icon || "FaMountainSun"}
+                    name={type?.react_icon || "FaMountainSun"}
                   />
                 </span>
                 <hr className="my-2 w-full border-gray-300" />
                 <span className="text-sm md:text-base">
-                  {type?.attributes?.name}
+                  {type?.name}
                 </span>
               </div>
             ))}
@@ -155,25 +155,25 @@ export default function PackageSelection() {
               <div className="max-h-48 overflow-hidden sm:w-1/4">
                 <img
                   src={
-                    pkg?.attributes?.image?.data?.[0]?.attributes?.url ||
+                    pkg?.image?.[0]?.url ||
                     "/placeholder.jpg"
                   }
-                  alt={pkg?.attributes?.package_name}
+                  alt={pkg?.package_name}
                   className="h-48 w-full rounded object-cover"
                 />
               </div>
               <div className="border-black sm:w-2/4 sm:border-r">
                 <h3 className="text-left text-lg font-semibold">
-                  {pkg?.attributes?.package_name}
+                  {pkg?.package_name}
                 </h3>
                 <ul className="mt-2 space-y-1 text-left text-sm">
                   <li className="flex items-center gap-2">
-                    {pkg?.attributes?.adventure_specification?.season?.[0]
+                    {pkg?.adventure_specification?.season?.[0]
                       ?.name && (
                       <>
                         {(() => {
                           const season =
-                            pkg?.attributes?.adventure_specification?.season?.[0]?.name.toLowerCase();
+                            pkg?.adventure_specification?.season?.[0]?.name.toLowerCase();
                           switch (season) {
                             case "summer":
                               return <FaSun />;
@@ -189,7 +189,7 @@ export default function PackageSelection() {
                         })()}
                         <span className="font-medium capitalize">
                           {
-                            pkg?.attributes?.adventure_specification
+                            pkg?.adventure_specification
                               ?.season?.[0]?.name
                           }
                         </span>
@@ -199,17 +199,17 @@ export default function PackageSelection() {
                   <li className="flex items-center gap-2">
                     <FaStopwatch />
                     <span className="font-medium">Duration:</span>{" "}
-                    {pkg?.attributes?.adventure_specification?.duration} days
+                    {pkg?.adventure_specification?.duration} days
                   </li>
                   <li className="flex items-center gap-2">
                     <MdUpgrade />
                     <span className="font-medium">Grade:</span>{" "}
-                    {pkg?.attributes?.adventure_specification?.grade?.[0]?.name}
+                    {pkg?.adventure_specification?.grade?.[0]?.name}
                   </li>
                   <li className="flex items-center gap-2">
                     <FaMountain />
                     <span className="font-medium">Max Altitude:</span>{" "}
-                    {pkg?.attributes?.adventure_specification?.max_altitude}
+                    {pkg?.adventure_specification?.max_altitude}
                   </li>
                 </ul>
               </div>

@@ -10,31 +10,40 @@ import Image from "next/image";
 
 interface Project {
   id: number;
+  documentId: string;
   title: string;
   date: string;
   description: BlocksContent;
   imageUrl: string;
 }
 
-const ProjectCard = ({ id, title, date, description, imageUrl }: Project) => {
+const ProjectCard = ({
+  documentId,
+  title,
+  date,
+  description,
+  imageUrl,
+}: Project) => {
   return (
-    <Link href={`/projects/${id}`}>
+    <Link href={`/projects/${documentId}`}>
       <div className="relative font-poppins">
         <div className="absolute inset-0 -z-10 bg-gray-500 blur-lg"></div>
         <div className="shadow-3xl h-full w-full overflow-hidden rounded-lg bg-white shadow-gray-300">
-          <Image
-            src={imageUrl}
-            alt={title}
-            className="h-52 w-full object-cover object-top grayscale"
-            width={1000}
-            height={1000}
-          />
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt={title}
+              className="h-52 w-full object-cover object-top grayscale"
+              width={1000}
+              height={1000}
+            />
+          )}
           <div className="space-y-3 p-3 lg:space-y-4 lg:p-5">
             <h3 className="font-medium">{title}</h3>
             <p className="text-xs font-medium text-gray-500">{date}</p>
-            <p className="line-clamp-3 text-sm text-gray-600">
+            <div className="line-clamp-3 text-sm text-gray-600">
               <BlockRendererClient content={description} />
-            </p>
+            </div>
             <button className="mt-2 flex w-full items-center justify-center space-x-1 text-xs text-primary hover:underline">
               <span> Continue Reading</span>
               <FaChevronRight size={8} />
@@ -53,19 +62,19 @@ export default function Projects({ projectsData }: { projectsData: any[] }) {
 
   const filteredProjects = projectsData
     ?.filter((project) =>
-      project?.attributes?.title
+      project?.title
         ?.toLowerCase()
         .includes(searchQuery.toLowerCase()),
     )
     .sort((a, b) => {
       if (sortBy === "Date") {
         return (
-          new Date(a?.attributes?.date).getTime() -
-          new Date(b?.attributes?.date).getTime()
+          new Date(a?.date).getTime() -
+          new Date(b?.date).getTime()
         );
       }
       if (sortBy === "Name") {
-        return a?.attributes?.title.localeCompare(b.title);
+        return a?.title.localeCompare(b.title);
       }
       return 0;
     });
@@ -142,12 +151,13 @@ export default function Projects({ projectsData }: { projectsData: any[] }) {
                         <ProjectCard
                           key={index}
                           id={project?.id}
-                          title={project?.attributes?.title}
-                          date={project?.attributes?.date}
-                          description={project?.attributes?.about_work}
+                          documentId={project?.documentId}
+                          title={project?.title}
+                          date={project?.date}
+                          description={project?.about_work}
                           imageUrl={
-                            project?.attributes?.package?.data?.attributes
-                              ?.image?.data?.[0]?.attributes?.url
+                            project?.package
+                              ?.image?.[0]?.url
                           }
                         />
                       ))}
@@ -171,12 +181,13 @@ export default function Projects({ projectsData }: { projectsData: any[] }) {
                       <ProjectCard
                         key={index}
                         id={project?.id}
-                        title={project?.attributes?.title}
-                        date={project?.attributes?.date}
-                        description={project?.attributes?.about_work}
+                        documentId={project?.documentId}
+                        title={project?.title}
+                        date={project?.date}
+                        description={project?.about_work}
                         imageUrl={
-                          project?.attributes?.package?.data?.attributes?.image
-                            ?.data?.[0]?.attributes?.url
+                          project?.package?.image
+                            ?.[0]?.url
                         }
                       />
                     ))}

@@ -18,7 +18,7 @@ import { MdTimelapse, MdTimer } from "react-icons/md";
 import wordsToNumbers from "words-to-numbers";
 
 import { cn, formatDate } from "@/lib/utils";
-import { APIResponseCollection, APIResponseData } from "@/types/types";
+import { APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Button } from "@/components/ui/button";
 import { seasonIconMap, seasonMonthMap } from "@/config/ui-constants";
@@ -40,8 +40,8 @@ const ProjectCard = ({
 }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const attr = project.attributes.package?.data.attributes; // for the related Package attributes
-  const projectAttr = project.attributes;
+  const attr = project.package; // for the related Package attributes
+  const projectAttr = project;
 
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
@@ -152,19 +152,19 @@ const ProjectCard = ({
           )}
           ref={cardRef}
         >
-          {project?.attributes?.package && (
+          {project?.package && (
             <SliderComponent
-              images={project.attributes.package.data.attributes.image}
+              images={project.package.image ?? undefined}
               type="hover"
               isOverlayVisible={isOverlayVisible}
             />
           )}
         </div>
-        {cardState === 0 && project?.attributes?.package && (
+        {cardState === 0 && project?.package && (
           <Overlay
-            id={project.id}
+            id={project.documentId}
             ref={overlayRef}
-            pkg={project.attributes.package?.data}
+            pkg={project.package}
             isOverlayVisible={isOverlayVisible}
           />
         )}
@@ -189,9 +189,9 @@ const ProjectCard = ({
                 </p>
               </div>
               <div>
-                <Link prefetch={true} href={`/projects/${project.id}`}>
+                <Link prefetch={true} href={`/projects/${project.documentId}`}>
                   <p className="text-lg font-medium text-primary">
-                    {project.attributes.title}
+                    {project.title}
                   </p>
 
                   {attr?.package_host?.hostname && (
@@ -211,7 +211,7 @@ const ProjectCard = ({
             </div>
           </>
         ) : (
-          <Link href={`/projects/${project.id}`} className="pt-6">
+          <Link href={`/projects/${project.documentId}`} className="pt-6">
             <div className="mb-2 flex items-center justify-between">
               <h1 className="text-sm font-semibold text-primary">
                 {attr?.package_name}
@@ -233,8 +233,8 @@ const ProjectCard = ({
             )}
             <p className="mt-2 text-lg font-[900] text-primary underline">
               {priceRangeFormatter(
-                attr?.cost_and_budgeting?.[0]?.lowest,
-                attr?.cost_and_budgeting?.[0]?.highest,
+                attr?.cost_and_budgeting?.[0]?.lowest ?? undefined,
+                attr?.cost_and_budgeting?.[0]?.highest ?? undefined,
               )}
             </p>
           </Link>
@@ -253,7 +253,7 @@ export const SliderComponent = ({
   type,
   isOverlayVisible,
 }: {
-  images: APIResponseCollection<"plugin::upload.file"> | undefined;
+  images: APIResponseData<"plugin::upload.file">[] | undefined;
   type: "hover" | "default";
   isOverlayVisible: boolean;
 }) => {
@@ -276,11 +276,11 @@ export const SliderComponent = ({
             : "z-[52] hidden",
       )}
     >
-      {images?.data?.map((image, index: number) => {
+      {images?.map((image, index: number) => {
         //prettier-ignore
         //@ts-ignore
-        const smallImage =   image?.attributes?.formats?.small;
-        const fallbackImg = image?.attributes;
+        const smallImage =   image?.formats?.small;
+        const fallbackImg = image;
         const optImg = smallImage || fallbackImg;
         return (
           optImg?.url && (
@@ -308,12 +308,12 @@ const Overlay = forwardRef<
   {
     pkg: APIResponseData<"api::package.package">;
     isOverlayVisible: boolean;
-    id: number;
+    id: string;
     className?: string;
   }
 >((props, ref) => {
   const { pkg, isOverlayVisible, className, id } = props;
-  const attr = pkg.attributes;
+  const attr = pkg;
 
   const departureData: TDepartureData = {
     //date: pkg?.date as string,
@@ -326,7 +326,7 @@ const Overlay = forwardRef<
       },
     ],
     grade: attr?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: attr?.adventure_specification?.max_altitude.toString() || "",
+    altitude: attr?.adventure_specification?.max_altitude?.toString() || "",
     duration: attr?.adventure_specification?.duration || "",
     season: attr?.adventure_specification?.season?.[0]?.name || "",
   };
@@ -376,9 +376,11 @@ const Overlay = forwardRef<
             <span>
               <LuStar className="text-primary" />
             </span>
-            <span>{Math.floor(Math.random() * 5)}</span>
+            <span suppressHydrationWarning>
+              {Math.floor(Math.random() * 5)}
+            </span>
             <span className="text-xl text-gray-400">·&nbsp;</span>
-            <a href="#" className="underline">
+            <a href="#" className="underline" suppressHydrationWarning>
               {Math.floor(Math.random() * 100)} reviews
             </a>
           </p>

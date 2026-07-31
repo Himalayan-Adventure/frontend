@@ -55,18 +55,20 @@ export const columns: ColumnDef<
 
   {
     header: "client",
-    accessorKey: "attributes.name",
+    accessorKey: "name",
     cell({ row }) {
-      const user = row.original;
+      const requestedBy = row.original?.requested_by;
       return (
-        user && (
+        requestedBy?.username ? (
           <Link
-            href={`/profile/${user.id}`}
+            href={`/profile/${requestedBy.username}`}
             className="hover:underline"
             target="_blank"
           >
-            <Text variant="text-sm">{row?.original?.attributes?.name}</Text>
+            <Text variant="text-sm">{row?.original?.name}</Text>
           </Link>
+        ) : (
+          <Text variant="text-sm">{row?.original?.name}</Text>
         )
       );
     },
@@ -82,10 +84,10 @@ export const columns: ColumnDef<
 
   {
     header: "message",
-    accessorKey: "attributes.expectation",
+    accessorKey: "expectation",
     cell({ row }) {
       return (
-        <ReadMoreCell message={row?.original?.attributes?.expectation || "-"} />
+        <ReadMoreCell message={row?.original?.expectation || "-"} />
       );
     },
   },
@@ -101,12 +103,12 @@ export const columns: ColumnDef<
         />
       );
     },
-    accessorKey: "attributes.appointment_date",
+    accessorKey: "appointment_date",
     cell({ row }) {
       return (
         <p className="text-sm font-medium">
           {format(
-            new Date(row?.original?.attributes?.appointment_date),
+            new Date(row?.original?.appointment_date || 0),
             "yyyy-MM-dd hh:mm a",
           )}
         </p>
@@ -116,7 +118,7 @@ export const columns: ColumnDef<
 
   {
     header: "priority",
-    accessorKey: "attributes.priority",
+    accessorKey: "priority",
     cell({ row }) {
       return <PriorityCell id={row.original.id} />;
     },
@@ -124,16 +126,16 @@ export const columns: ColumnDef<
 
   {
     header: "package",
-    accessorKey: "attributes.package",
+    accessorKey: "package",
     cell({ row }) {
-      const selectedPackage = row?.original?.attributes?.package;
+      const selectedPackage = row?.original?.package;
       return (
-        selectedPackage?.data && (
-          <Link href={`/packages/${selectedPackage.data.id}`} target={"_blank"}>
+        selectedPackage && (
+          <Link href={`/packages/${selectedPackage.documentId}`} target={"_blank"}>
             <span className="btn-primary bg-primary">
               <Tag size={16} />
               <Text variant="text-xs">
-                {selectedPackage.data?.attributes?.package_name || "-"}
+                {selectedPackage?.package_name || "-"}
               </Text>
             </span>
           </Link>
@@ -144,7 +146,7 @@ export const columns: ColumnDef<
 
   {
     header: "status",
-    accessorKey: "attributes.status",
+    accessorKey: "status",
     cell({ row }) {
       return <StatusSelectCell id={row.original.id} />;
     },
@@ -152,10 +154,10 @@ export const columns: ColumnDef<
 
   {
     header: "creator",
-    accessorKey: "attributes.phone",
+    accessorKey: "phone",
     cell({ row }) {
-      const phone = row?.original?.attributes?.phone;
-      const email = row?.original?.attributes?.email;
+      const phone = row?.original?.phone;
+      const email = row?.original?.email;
       return (
         <span className="flex gap-x-2">
           {phone && (
@@ -186,7 +188,7 @@ export const columns: ColumnDef<
     cell({ row }) {
       return (
         <span className="flex gap-x-2">
-          <DeleteButton id={row.original.id} />
+          <DeleteButton id={row.original.documentId} />
         </span>
       );
     },
@@ -232,13 +234,13 @@ export const userColumns: ColumnDef<
 
   {
     header: "guide",
-    accessorKey: "attributes.guide",
+    accessorKey: "guide",
     cell({ row }) {
-      const guide = row?.original?.attributes?.guide?.data;
+      const guide = row?.original?.guide;
       return (
         guide && (
-          <Link href={`/profile/${guide.id}`}>
-            <Text variant="text-sm">{guide.attributes.username}</Text>
+          <Link href={`/profile/${guide.username}`}>
+            <Text variant="text-sm">{guide.username}</Text>
           </Link>
         )
       );
@@ -255,10 +257,10 @@ export const userColumns: ColumnDef<
 
   {
     header: "message",
-    accessorKey: "attributes.expectation",
+    accessorKey: "expectation",
     cell({ row }) {
       return (
-        <ReadMoreCell message={row?.original?.attributes?.expectation || "-"} />
+        <ReadMoreCell message={row?.original?.expectation || "-"} />
       );
     },
   },
@@ -274,12 +276,12 @@ export const userColumns: ColumnDef<
         />
       );
     },
-    accessorKey: "attributes.appointment_date",
+    accessorKey: "appointment_date",
     cell({ row }) {
       return (
         <p className="text-sm font-medium">
           {format(
-            new Date(row?.original?.attributes?.appointment_date),
+            new Date(row?.original?.appointment_date || 0),
             "yyyy-MM-dd hh:mm a",
           )}
         </p>
@@ -289,16 +291,16 @@ export const userColumns: ColumnDef<
 
   {
     header: "package",
-    accessorKey: "attributes.package",
+    accessorKey: "package",
     cell({ row }) {
-      const selectedPackage = row?.original?.attributes?.package;
+      const selectedPackage = row?.original?.package;
       return (
-        selectedPackage?.data && (
-          <Link href={`/packages/${selectedPackage.data.id}`} target={"_blank"}>
+        selectedPackage && (
+          <Link href={`/packages/${selectedPackage.documentId}`} target={"_blank"}>
             <span className="btn-primary bg-primary">
               <Tag size={16} />
               <Text variant="text-xs">
-                {selectedPackage.data?.attributes?.package_name || "-"}
+                {selectedPackage?.package_name || "-"}
               </Text>
             </span>
           </Link>
@@ -309,11 +311,11 @@ export const userColumns: ColumnDef<
 
   {
     header: "Contact",
-    accessorKey: "attributes.phone",
+    accessorKey: "phone",
     cell({ row }) {
-      const guide = row.original.attributes.guide?.data.attributes;
+      const guide = row.original.guide;
       //const phone = guide?.email.;
-      const email = row?.original?.attributes?.email;
+      const email = row?.original?.email;
       return (
         <span className="flex gap-x-2">
           {/* {phone && (
@@ -344,7 +346,7 @@ export const userColumns: ColumnDef<
     cell({ row }) {
       return (
         <span className="flex gap-x-2">
-          <DeleteButton id={row.original.id} />
+          <DeleteButton id={row.original.documentId} />
         </span>
       );
     },

@@ -114,7 +114,7 @@ function DataTable<TData, TValue>({
     data: memoizedData,
     columns,
     //@ts-ignore
-    getRowId: (originalRow) => originalRow.id,
+    getRowId: (originalRow) => originalRow.documentId,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -143,7 +143,7 @@ function DataTable<TData, TValue>({
       const iterable = Object.entries(rowSelection);
       for (const [key, value] of iterable) {
         console.log(key, value)
-        await deleteAppointment(Number(key));
+        await deleteAppointment(key);
       }
     },
     onSuccess(data, variables, context) {

@@ -62,14 +62,14 @@ export default function DestinationSelection() {
               >
                 <div>
                   <img
-                    src={country?.attributes?.flag_icon?.data?.attributes?.url}
-                    alt={country?.attributes?.name}
+                    src={country?.flag_icon?.url}
+                    alt={country?.name}
                     className="w-6 md:w-12"
                   />
                 </div>
                 <hr className="my-2 w-full border-gray-300" />
                 <span className="text-sm md:text-base">
-                  {country?.attributes?.name}
+                  {country?.name}
                 </span>
               </div>
             ))}
@@ -80,10 +80,10 @@ export default function DestinationSelection() {
               <div className="mt-8 text-center">
                 <img
                   src={
-                    selectedCountryData?.attributes?.flag_map?.data?.attributes
+                    selectedCountryData?.flag_map
                       ?.url
                   }
-                  alt={`${selectedCountryData?.attributes?.name} map`}
+                  alt={`${selectedCountryData?.name} map`}
                   className="mx-auto h-64 w-64 object-contain"
                 />
               </div>

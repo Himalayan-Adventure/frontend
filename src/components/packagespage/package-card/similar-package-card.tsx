@@ -12,7 +12,7 @@ import { FaStar } from "react-icons/fa";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 
 import { cn, formatDate, formatDateRange } from "@/lib/utils";
-import { APIResponseCollection, APIResponseData } from "@/types/types";
+import { APIResponseData } from "@/types/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import Image from "next/image";
 import { truncate } from "@/lib/utils";
@@ -24,7 +24,7 @@ const SimilarPackageCard = ({
 }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const attr = pkg.attributes;
+  const attr = pkg;
 
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
@@ -55,7 +55,7 @@ const SimilarPackageCard = ({
           )}
         >
           <SliderComponent
-            images={pkg?.attributes?.image}
+            images={pkg?.image ?? undefined}
             type="hover"
             isOverlayVisible={isOverlayVisible}
           />
@@ -71,7 +71,7 @@ const SimilarPackageCard = ({
         </div>
 
         <div className="py-2">
-          <Link href={`/packages/${pkg.id}`} className="pt-4">
+          <Link href={`/packages/${pkg.documentId}`} className="pt-4">
             <div className="mb-2 flex items-center justify-between">
               <h1 className="text-sm font-semibold text-primary">
                 {attr?.package_name}
@@ -83,7 +83,7 @@ const SimilarPackageCard = ({
             </div>
 
             <p className="line-clamp-2 break-all text-sm text-gray-600">
-              {pkg?.attributes?.brief_description}
+              {pkg?.brief_description}
             </p>
             <span className="flex flex-row items-center">
               {start && end && (
@@ -93,8 +93,8 @@ const SimilarPackageCard = ({
             </span>
             <p className="mt-2 text-lg font-[900] text-primary underline">
               {priceRangeFormatter(
-                attr?.cost_and_budgeting?.[0]?.lowest,
-                attr?.cost_and_budgeting?.[0]?.highest,
+                attr?.cost_and_budgeting?.[0]?.lowest ?? undefined,
+                attr?.cost_and_budgeting?.[0]?.highest ?? undefined,
               )}
             </p>
           </Link>
@@ -113,7 +113,7 @@ export const SliderComponent = ({
   type,
   isOverlayVisible,
 }: {
-  images: APIResponseCollection<"plugin::upload.file"> | undefined;
+  images: APIResponseData<"plugin::upload.file">[] | undefined;
   type: "hover" | "default";
   isOverlayVisible: boolean;
 }) => {
@@ -136,11 +136,11 @@ export const SliderComponent = ({
             : "z-[52] hidden",
       )}
     >
-      {images?.data?.map((image, index: number) => {
+      {images?.map((image, index: number) => {
         //prettier-ignore
         //@ts-ignore
-        const smallImage =   image?.attributes?.formats?.small;
-        const fallbackImg = image?.attributes;
+        const smallImage =   image?.formats?.small;
+        const fallbackImg = image;
         const optImg = smallImage || fallbackImg;
         return (
           optImg?.url && (

@@ -54,13 +54,13 @@ export default async function BlogPage({
         )}
         <div className="grid sm:grid-cols-[repeat(auto-fit,350px)] gap-4 lg:gap-8">
           {(code
-            ? blogs.filter((i) => i.attributes.title.includes(code || ""))
+            ? blogs.filter((i) => i.title?.includes(code || ""))
             : blogs
           )?.map((blog) => (
             <BlogCard
               variant="edit"
               blog={blog}
-              key={`blog-${blog.attributes.title}-${blog.attributes.publishedAt}`}
+              key={`blog-${blog.title}-${blog.publishedAt}`}
             />
           ))}
         </div>

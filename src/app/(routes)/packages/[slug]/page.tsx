@@ -47,14 +47,14 @@ export async function generateMetadata(
     };
   }
 
-  const images = data?.data?.attributes?.image
-    ? data?.data?.attributes?.image.data?.map((image) => image.attributes.url)
+  const images = data?.data?.image
+    ? data?.data?.image.map((image) => image.url)
     : [];
 
   const previousImages = (await parent).openGraph?.images || [];
 
   return {
-    title: data.data?.attributes?.package_name,
+    title: data.data?.package_name,
     openGraph: {
       images: [...images, ...previousImages],
     },
@@ -77,40 +77,41 @@ export default async function PackageDetail({
     );
   }
 
-  const pkg = data.data?.attributes;
+  const pkg = data.data;
 
   const images: GalleryImageProp[] | null = pkg?.image
-    ? pkg?.image.data?.map((image) => ({
-        src: image.attributes.url,
-        alt: image.attributes?.alternativeText || image.attributes.name,
-        height: image.attributes.height || 400,
-        width: image.attributes?.width || 400,
+    ? pkg?.image.map((image) => ({
+        src: image.url,
+        alt: image?.alternativeText || image.name,
+        height: image.height || 400,
+        width: image?.width || 400,
       }))
     : [];
   const departureData: TDepartureData = {
     //date: pkg?.date as string,
     departure: [
       {
-        start: pkg?.adventure_specification?.travel_dates[0]?.date,
-        end: pkg?.adventure_specification?.travel_dates[1]?.date,
+        start: pkg?.adventure_specification?.travel_dates?.[0]?.date ?? undefined,
+        end: pkg?.adventure_specification?.travel_dates?.[1]?.date ?? undefined,
       },
     ],
     grade: pkg?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: pkg?.adventure_specification?.max_altitude.toString() || "",
+    altitude: pkg?.adventure_specification?.max_altitude?.toString() || "",
     duration: pkg?.adventure_specification?.duration || "",
     season: pkg?.adventure_specification?.season?.[0]?.name || "",
     cost_and_budgeting: (pkg?.cost_and_budgeting ?? []) as CostBudgeting[],
   };
 
   const infoTabsData: InfoTabsProp = {
-    includes: pkg?.itinerary?.includes,
-    excludes: pkg?.itinerary?.excludes,
+    includes: (pkg?.itinerary?.includes ?? undefined) as any,
+    excludes: (pkg?.itinerary?.excludes ?? undefined) as any,
   };
 
   const othersInfo = pkg?.itinerary?.others?.map(({ title, description }) => {
     return { title, description };
   });
   othersInfo?.forEach((i, index) => {
+    if (!i.title) return;
     infoTabsData[i.title] = {
       id: index,
       //title: i.title,
@@ -118,7 +119,7 @@ export default async function PackageDetail({
     };
   });
 
-  const reviews = pkg?.reviews?.data?.map(normalizeReview) ?? [];
+  const reviews = pkg?.reviews?.map(normalizeReview) ?? [];
 
   if (!pkg) {
     return <CommonBanner title={`Package not found`} bgImage={bgImage} />;
@@ -142,12 +143,12 @@ export default async function PackageDetail({
           <div className="relative space-y-8 lg:col-span-2">
             <Gallery images={images} />
             <div className="space-y-8 lg:col-span-1 lg:hidden">
-              <Map location={pkg.package_name} />
-              {data?.data?.id && (
+              <Map location={pkg.package_name || ""} />
+              {data?.data?.documentId && (
                 <Departure
                   type="default"
                   data={departureData}
-                  id={data.data?.id}
+                  id={data.data?.documentId}
                 />
               )}
             </div>
@@ -167,9 +168,9 @@ export default async function PackageDetail({
                   */}
 
                   <ul className="flex list-disc space-x-1 text-sm md:text-base">
-                    {pkg.package_types?.data?.[0] && (
+                    {pkg.package_types?.[0] && (
                       <h2>
-                        {pkg?.package_types?.data?.[0]?.attributes?.name}{" "}
+                        {pkg?.package_types?.[0]?.name}{" "}
                       </h2>
                     )}
 
@@ -198,7 +199,7 @@ export default async function PackageDetail({
                     src={
                       //prettier-ignore
                       //@ts-ignore
-                      pkg?.package_host?.logo?.data?.attributes?.formats?.thumbnail?.url||pkg?.package_host?.logo?.data?.attributes?.url  ||
+                      pkg?.package_host?.logo?.formats?.thumbnail?.url||pkg?.package_host?.logo?.url  ||
                       "/logo.png"
                     }
                     alt={"host logo" + pkg?.package_host?.hostname}
@@ -214,45 +215,45 @@ export default async function PackageDetail({
 
             {pkg?.long_description && <About desc={pkg?.long_description} />}
             {pkg?.video && (
-              <Video packageName={pkg?.package_name} videolink={pkg?.video} />
+              <Video packageName={pkg?.package_name || ""} videolink={pkg?.video} />
             )}
             <PackagePDF packageDetails={pkg} />
             {pkg?.itinerary?.timeline && (
               <Itenerary
-                data={pkg?.itinerary?.timeline}
-                packageDetail={data?.data?.attributes}
+                data={pkg?.itinerary?.timeline as any}
+                packageDetail={data?.data}
               />
             )}
             <InfoTabs content={infoTabsData} />
           </div>
           <div className="hidden space-y-8 lg:col-span-1 lg:block">
-            <Map location={pkg?.package_name} />
-            {data?.data?.id && (
+            <Map location={pkg?.package_name || ""} />
+            {data?.data?.documentId && (
               <Departure
                 type={"default"}
                 data={departureData}
-                id={data?.data?.id}
+                id={data?.data?.documentId}
               />
             )}
           </div>
         </div>
       </section>
-      {pkg?.trip_facts?.[0] && <Facts data={pkg?.trip_facts} />}
+      {pkg?.trip_facts?.[0] && <Facts data={pkg?.trip_facts as any} />}
       {pkg.faq && (
         <Faqs
           data={pkg?.faq.map((i, index) => ({
-            id: `${index}-faq-${pkg?.faq?.id}`,
+            id: `${index}-faq-${i.id}`,
             answer: i.answer || "",
             question: i.question || "",
           }))}
         />
       )}
-      {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0]} />}
+      {pkg?.offer?.[0] && <Offers data={pkg?.offer?.[0] as any} />}
       {reviews.length > 0 && <Reviews reviews={{ data: reviews }} />}{" "}
-      <SimilarPackages notToInclude={data.data?.id} />
-      {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host} />}
+      <SimilarPackages notToInclude={Number(data.data?.id)} />
+      {pkg?.sponsor_host?.host_name && <HostInfo data={pkg?.sponsor_host as any} />}
       {pkg?.things_to_know && pkg?.things_to_know?.length > 0 && (
-        <ThingsToKnow data={pkg?.things_to_know} />
+        <ThingsToKnow data={pkg?.things_to_know as any} />
       )}
     </main>
   );
@@ -263,18 +264,18 @@ function normalizeReview(apiReview: any): Review {
   return {
     id: apiReview.id,
     attributes: {
-      rating: apiReview.attributes.rating ?? 0,
-      review: apiReview.attributes.review,
-      createdAt: apiReview.attributes.createdAt ?? "",
-      updatedAt: apiReview.attributes.updatedAt ?? "",
-      publishedAt: apiReview.attributes.publishedAt ?? "",
-      cleanlinessRating: apiReview.attributes.cleanlinessRating ?? 0,
-      communicationRating: apiReview.attributes.communicationRating ?? 0,
-      checkInRating: apiReview.attributes.checkInRating ?? 0,
-      accuracyRating: apiReview.attributes.accuracyRating ?? 0,
-      locationRating: apiReview.attributes.locationRating ?? 0,
-      valueRating: apiReview.attributes.valueRating ?? 0,
-      users_permissions_user: apiReview.attributes.users_permissions_user,
+      rating: apiReview.rating ?? 0,
+      review: apiReview.review,
+      createdAt: apiReview.createdAt ?? "",
+      updatedAt: apiReview.updatedAt ?? "",
+      publishedAt: apiReview.publishedAt ?? "",
+      cleanlinessRating: apiReview.cleanlinessRating ?? 0,
+      communicationRating: apiReview.communicationRating ?? 0,
+      checkInRating: apiReview.checkInRating ?? 0,
+      accuracyRating: apiReview.accuracyRating ?? 0,
+      locationRating: apiReview.locationRating ?? 0,
+      valueRating: apiReview.valueRating ?? 0,
+      users_permissions_user: apiReview.users_permissions_user,
     },
   };
 }

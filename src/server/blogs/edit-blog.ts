@@ -5,7 +5,7 @@ import axios, { AxiosResponse, type AxiosError } from "axios";
 import { uploadMedia } from "../media/add-media";
 import { revalidateTag } from "next/cache";
 import { toast } from "sonner";
-export const editBlog = async (blog: TBlogForm, id: number) => {
+export const editBlog = async (blog: TBlogForm, id: string) => {
   try {
     const validatedFields = BlogFormSchema.safeParse(blog);
 

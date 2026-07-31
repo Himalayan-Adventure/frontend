@@ -25,7 +25,7 @@ export const Overlay = forwardRef<
   }
 >((props, ref) => {
   const { pkg, isOverlayVisible, className } = props;
-  const attr = pkg.attributes;
+  const attr = pkg;
 
   const departureData: TDepartureData = {
     //date: pkg?.date as string,
@@ -38,7 +38,7 @@ export const Overlay = forwardRef<
       },
     ],
     grade: attr?.adventure_specification?.grade?.[0]?.name || "",
-    altitude: attr?.adventure_specification?.max_altitude.toString() || "",
+    altitude: attr?.adventure_specification?.max_altitude?.toString() || "",
     duration: attr?.adventure_specification?.duration || "",
     season: attr?.adventure_specification?.season?.[0]?.name || "",
   };
@@ -88,9 +88,11 @@ export const Overlay = forwardRef<
             <span>
               <LuStar className="text-primary" />
             </span>
-            <span>{Math.floor(Math.random() * 5)}</span>
+            <span suppressHydrationWarning>
+              {Math.floor(Math.random() * 5)}
+            </span>
             <span className="text-xl text-gray-400">·&nbsp;</span>
-            <a href="#" className="underline">
+            <a href="#" className="underline" suppressHydrationWarning>
               {Math.floor(Math.random() * 100)} reviews
             </a>
           </p>
@@ -194,7 +196,7 @@ export const Overlay = forwardRef<
       <div className="flex w-full justify-center">
         <Link
           prefetch={true}
-          href={`packages/${pkg?.id}`}
+          href={`packages/${pkg?.documentId}`}
           className="mt-4 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white hover:bg-orange-500"
         >
           View Details

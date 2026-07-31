@@ -35,7 +35,7 @@ export default function AccomodationSelection() {
   };
 
   const selectedPreferences =
-    options.find((option) => option.id === selectedOption)?.attributes
+    options.find((option) => option.id === selectedOption)
       ?.preference || [];
 
   return (
@@ -58,7 +58,7 @@ export default function AccomodationSelection() {
                     : "bg-gray-100 hover:bg-gray-200"
                 }`}
                 onClick={() =>
-                  handleOptionClick(option?.id, option?.attributes?.name)
+                  handleOptionClick(option?.id, option?.name)
                 }
               >
                 <span
@@ -66,11 +66,11 @@ export default function AccomodationSelection() {
                     selectedOption === option.id ? "text-white" : "text-primary"
                   }`}
                 >
-                  <DynamicReactIcon name={option?.attributes?.react_icon} />
+                  <DynamicReactIcon name={option?.react_icon} />
                 </span>
                 <hr className="my-2 w-full border-gray-300" />
                 <span className="text-sm md:text-base">
-                  {option?.attributes?.name}
+                  {option?.name}
                 </span>
               </div>
             ))}

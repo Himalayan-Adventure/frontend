@@ -14,15 +14,15 @@ export default function CalendarSection({
   data: APIResponseData<"api::calendar.calendar"> | undefined;
 }) {
   const updateQueryString = useUpdateQueryString();
-  if (!data?.attributes) {
+  if (!data) {
     updateQueryString({}, ["active"]);
     return <Text variant="text-lg">No data available</Text>;
   }
   const { start_date, end_date, is_available, notes, heading, guides } =
-    data?.attributes || {};
+    data || {};
 
-  const startDate = new Date(start_date);
-  const endDate = new Date(end_date);
+  const startDate = new Date(start_date || 0);
+  const endDate = new Date(end_date || 0);
   return (
     <div className="w-full space-y-4 @4xl:w-fit">
       <span className="flex items-center justify-between rounded-lg border border-black px-3 py-4 text-primary">
@@ -48,13 +48,13 @@ export default function CalendarSection({
               <Clock size={18} />
               <span className="flex items-center">
                 <Text variant="text-lg" className="text-green-800">
-                  {format(new Date(data?.attributes?.start_date), "hh:mm a")}
+                  {format(new Date(data?.start_date || 0), "hh:mm a")}
                 </Text>
                 <Text variant="text-lg" className="">
                   &nbsp;:&nbsp;
                 </Text>
                 <Text variant="text-lg" className="text-red-800">
-                  {format(new Date(data?.attributes?.end_date), "hh:mm a")}
+                  {format(new Date(data?.end_date || 0), "hh:mm a")}
                 </Text>
               </span>
             </span>

@@ -113,7 +113,7 @@ function DataTable<TData, TValue>({
     data: memoizedData,
     columns,
     //@ts-ignore
-    getRowId: (originalRow) => originalRow.id,
+    getRowId: (originalRow) => originalRow.documentId,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -146,7 +146,7 @@ function DataTable<TData, TValue>({
     mutationFn: async () => {
       const iterable = Object.entries(rowSelection);
       for (const [key, value] of iterable) {
-        await deleteService(Number(key));
+        await deleteService(key);
       }
     },
     onSuccess(data, variables, context) {

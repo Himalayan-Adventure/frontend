@@ -4,11 +4,7 @@ import React from "react";
 import { styles } from "./styles";
 
 interface User {
-  data: {
-    attributes: {
-      username: string;
-    };
-  };
+  username: string;
 }
 
 interface ReviewAttributes {
@@ -38,7 +34,7 @@ const Reviews: React.FC<ReviewsProps> = ({ reviews }) => {
       {reviewData.map(({ id, attributes }) => (
         <View key={id} style={styles.reviewBox}>
           <Text style={styles.reviewName}>
-            {attributes.users_permissions_user?.data?.attributes?.username ||
+            {attributes.users_permissions_user?.username ||
               "Anonymous"}
           </Text>
           <Text style={styles.reviewText}>{attributes.review}</Text>

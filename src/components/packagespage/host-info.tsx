@@ -29,7 +29,7 @@ type props =
 export default function HostInfo({ data }: { data: props }) {
   //prettier-ignore
   //@ts-ignore
-  const avatarImage = data?.logo?.data?.attributes?.formats?.thumbnail?.url||data?.logo?.data?.attributes?.url;
+  const avatarImage = data?.logo?.formats?.thumbnail?.url||data?.logo?.url;
   return (
     <section className="container py-4 lg:py-8">
       <div className="space-y-4">

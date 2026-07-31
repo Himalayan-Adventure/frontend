@@ -86,10 +86,10 @@ const RentDialog = ({
       );
 
       const orderData = data?.data?.[0];
-      const orderList = orderData?.attributes?.order_list || [];
+      const orderList = orderData?.order_list || [];
 
       const updatedOrderList = orderList.map((order: any) => ({
-        product: order?.product?.data?.id,
+        product: order?.product?.id,
         quantity: parseInt(order.quantity, 10),
       }));
 
@@ -220,7 +220,7 @@ const RentDialog = ({
                   {images?.map((image, index) => (
                     <img
                       key={index}
-                      src={image?.attributes?.url}
+                      src={image?.url}
                       alt={image.alt}
                       className="h-full w-full cursor-pointer rounded-md border border-gray-300"
                     />
@@ -228,7 +228,7 @@ const RentDialog = ({
                 </div>
                 <div className="col-span-3 rounded-md border border-gray-300">
                   <img
-                    src={images?.[0]?.attributes?.url || ""}
+                    src={images?.[0]?.url || ""}
                     alt={product_name}
                     className="h-full w-full object-contain"
                   />

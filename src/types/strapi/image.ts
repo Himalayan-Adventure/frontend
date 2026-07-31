@@ -17,6 +17,7 @@ type ImageFormat = {
 
 export type TImage = {
   id: number;
+  documentId: string;
   name: string;
   alternativeText: string | null;
   caption: string | null;

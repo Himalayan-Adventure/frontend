@@ -114,7 +114,7 @@ export default function SliderComponent({
                   : data.data
                       ?.filter(
                         (pkg) =>
-                          pkg?.attributes?.adventure_specification?.season?.[0]
+                          pkg?.adventure_specification?.season?.[0]
                             ?.name === activeSeason,
                       )
                       .map((pkg, index) => (

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: `Edit Service Dashboard`,
   description: ` ${siteConfig.siteName}`,
 };
-const ServiceAddPage = async ({ params }: { params: { id: number } }) => {
+const ServiceAddPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const user = await getCurrentUserData();
   const data = await getSingleService(id);

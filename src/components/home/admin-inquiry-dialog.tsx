@@ -52,7 +52,8 @@ export const AdminInquiryDialog = ({
     setLoading(true);
     const payload = form.getValues();
     const res = await addAdminInquiry(payload);
-    if (res.status === 200) {
+    // Strapi answers a successful create with 201, not 200
+    if (res.status >= 200 && res.status < 300) {
       setLoading(false);
       toast.success("Successfully sent an inquiry to admin!");
       setOpen(false);

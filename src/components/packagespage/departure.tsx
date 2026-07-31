@@ -104,7 +104,7 @@ export default function Departure({
         className="ml-3 mt-4 list-disc font-poppins font-light tracking-wider text-gray-700"
       >
         {listType.children.map((item, itemIdx) => (
-          <li key={itemIdx}>{item.children[0]?.text}</li>
+          <li key={itemIdx}>{item.children?.[0]?.text ?? item.text}</li>
         ))}
       </ul>
     ));
@@ -120,9 +120,11 @@ export default function Departure({
               <span>
                 <LuStar className="text-primary" />
               </span>
-              <span>{Math.floor(Math.random() * 5)}</span>
+              <span suppressHydrationWarning>
+                {Math.floor(Math.random() * 5)}
+              </span>
               <span className="text-xl text-gray-400">·&nbsp;</span>
-              <a href="#" className="underline">
+              <a href="#" className="underline" suppressHydrationWarning>
                 {Math.floor(Math.random() * 100)} reviews
               </a>
             </p>
@@ -211,7 +213,7 @@ export default function Departure({
                 </DialogTitle>
 
                 {/* Package Details */}
-                <DialogDescription>
+                <DialogDescription asChild>
                   <div className="mt-6 flex w-full flex-col gap-3 sm:flex-row md:gap-12">
                     {/* Inclusions */}
                     <div className="w-full rounded-3xl border border-gray-100 p-8 shadow-2xl">

@@ -20,7 +20,7 @@ const SimilarPackages = ({ notToInclude }: { notToInclude?: number }) => {
     queryFn: async () => {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image][populate]0]=image&fields[2]=parent_title&fields[3]=brief_description&populate[adventure_specification][populate][1]=travel_dates&populate[package_host][populate][3]=package_host&populate[cost_and_budgeting][populate]=*&filters[id][$ne]=${notToInclude}&pagination[pageSize]=4&pagination[page]=1`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?fields[0]=package_name&populate[image]=true&fields[2]=parent_title&fields[3]=brief_description&populate[adventure_specification][populate][1]=travel_dates&populate[package_host][populate][0]=logo&populate[cost_and_budgeting][populate]=*&filters[id][$ne]=${notToInclude}&pagination[pageSize]=4&pagination[page]=1`,
         );
         return data.data;
       } catch (error) {

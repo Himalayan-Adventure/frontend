@@ -143,15 +143,15 @@ export function SideFilter() {
                 categories.data?.map((category) => (
                   <TabsTrigger
                     key={`tab-${category.id}`}
-                    value={category.attributes.name}
+                    value={category.name || ""}
                     className="relative h-auto capitalize data-[state=active]:!text-primary"
                     asChild
                   >
                     <Button className="flex h-auto w-full flex-col items-center gap-y-1 bg-white text-black hover:bg-white hover:text-primary md:h-fit md:p-4 md:py-4">
-                      {category.attributes.icon && (
+                      {category.icon && (
                         <DynamicReactIcon
                           className="size-5 lg:size-8"
-                          name={category.attributes.icon}
+                          name={category.icon}
                         />
                       )}
                       <Text
@@ -159,7 +159,7 @@ export function SideFilter() {
                         className="text-xs leading-none md:text-sm lg:text-sm"
                         bold
                       >
-                        {category.attributes.name}
+                        {category.name}
                       </Text>
                     </Button>
                   </TabsTrigger>

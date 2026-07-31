@@ -3,7 +3,7 @@
 import axios, { AxiosResponse, type AxiosError } from "axios";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-export const deleteServiceRequest = async (id: number) => {
+export const deleteServiceRequest = async (id: string) => {
   const cookieStore = cookies();
 
   try {
@@ -18,7 +18,8 @@ export const deleteServiceRequest = async (id: number) => {
     );
     revalidateTag("service-requests");
 
-    if (res.status !== 200) {
+    // Strapi v5 answers a successful delete with 204 No Content
+    if (res.status < 200 || res.status >= 300) {
       throw new Error(res.statusText);
     }
     return res;

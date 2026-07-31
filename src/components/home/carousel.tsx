@@ -49,7 +49,7 @@ export default function HomeCarousel() {
     queryFn: async () => {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate[image][populate]=true&populate[adventure_specification][populate]=*&pagination[pageSize]=10&pagination[page]=1`,
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}api/packages?populate[image]=true&populate[adventure_specification][populate]=*&pagination[pageSize]=10&pagination[page]=1`,
         );
         return data.data;
       } catch (error) {
@@ -138,7 +138,7 @@ export default function HomeCarousel() {
                   : data.data
                       ?.filter(
                         (pkg) =>
-                          pkg?.attributes?.adventure_specification?.season?.[0]
+                          pkg?.adventure_specification?.season?.[0]
                             ?.name === activeSeason,
                       )
                       .map((pkg, index) => (

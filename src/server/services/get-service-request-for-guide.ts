@@ -44,7 +44,9 @@ export const getServiceRequests = async ({
       },
     );
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/service-requests?populate[services][populate][0]=service_provider&populate[users_permissions_users][populate][1]=name&populate[users_permissions_users][populate][2]=contact&${query}`,
+      // `populate[users_permissions_users][populate]=name` asked to populate a
+      // scalar field; v5 rejects that with 400, so only populate relations here.
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/service-requests?populate[services][populate][0]=service_provider&populate[users_permissions_users][populate][0]=contact&${query}`,
       {
         next: {
           tags: ["services-requests"],
@@ -104,7 +106,8 @@ export const getServiceRequestedByUser = async ({
       },
     );
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/service-requests?populate[services][populate][0]=service_provider&populate[users_permissions_user][populate][1]=name&${query}`,
+      // same here: `name` is a scalar, and the relation is `users_permissions_users`
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}api/service-requests?populate[services][populate][0]=service_provider&populate[users_permissions_users]=true&${query}`,
       {
         next: {
           tags: ["services-requests"],

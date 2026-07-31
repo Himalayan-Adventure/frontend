@@ -254,7 +254,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
     setLoading(true);
     const appointment_date = availableTime?.data.find(
       (i) => i.id === activeTime,
-    )?.attributes.start_date;
+    )?.start_date;
     if (!appointment_date) {
       setLoading(false);
       toast.error(
@@ -268,7 +268,8 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
       requested_by: user.id,
     };
     const res = await makeAppointment(payload);
-    if (res.status === 200) {
+    // Strapi answers a successful create with 201, not 200
+    if (res.status >= 200 && res.status < 300) {
       setLoading(false);
       toast.success("Successfully made an appointment!");
     } else {
@@ -324,7 +325,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                               ? truncate(
                                   packages?.data.find(
                                     (category) => category.id === field.value,
-                                  )?.attributes?.package_name || "",
+                                  )?.package_name || "",
                                   15,
                                 )
                               : "Select package"}
@@ -350,14 +351,14 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                               ) : (
                                 packages?.data?.map((i) => (
                                   <CommandItem
-                                    value={`${i.id.toString()}-${i.attributes.package_name}`}
+                                    value={`${i.id.toString()}-${i.package_name}`}
                                     key={`package-category-${i.id}`}
                                     className=""
                                     onSelect={() => {
-                                      form.setValue("package", i.id);
+                                      form.setValue("package", Number(i.id));
                                     }}
                                   >
-                                    {i.attributes.package_name}
+                                    {i.package_name}
                                     <CheckIcon
                                       className={cn(
                                         "ml-auto",
@@ -594,7 +595,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                 <span className="flex flex-wrap items-center justify-center gap-x-2">
                   {availableTime?.data.map((time) => (
                     <Badge
-                      onClick={() => setActiveTime(time.id)}
+                      onClick={() => setActiveTime(Number(time.id))}
                       className={cn(
                         time.id === activeTime
                           ? "bg-primary text-white"
@@ -603,7 +604,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                       )}
                       key={`availabletime-${time.id}`}
                     >
-                      {format(new Date(time.attributes.start_date), "h:mm aa")}
+                      {format(new Date(time.start_date || 0), "h:mm aa")}
                     </Badge>
                   ))}
                 </span>
@@ -654,7 +655,7 @@ const AppointmentForm = ({ user }: { user: TUser }) => {
                             return value
                               ? packages?.data.find(
                                   (i) => i.id === Number(value),
-                                )?.attributes.package_name
+                                )?.package_name
                               : "Not selected";
 
                           case "guide":

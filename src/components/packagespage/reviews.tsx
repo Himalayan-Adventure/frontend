@@ -21,12 +21,8 @@ export interface Review {
     locationRating: number;
     valueRating: number;
     users_permissions_user: {
-      data: {
-        id: number;
-        attributes: {
-          username: string;
-        };
-      };
+      id: number;
+      username: string;
     };
   };
 }
@@ -113,7 +109,7 @@ export default function Reviews({ reviews }: ReviewsProp) {
               users_permissions_user,
             } = review.attributes;
             const username =
-              users_permissions_user?.data?.attributes?.username || "Anonymous";
+              users_permissions_user?.username || "Anonymous";
 
             const isExpanded = expandedReviewIndex === index;
             const showToggle = reviewText.length > 100;

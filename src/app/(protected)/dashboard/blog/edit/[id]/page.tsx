@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 
 type Props = {
   params: {
-    id: number;
+    id: string;
   };
 };
 export default async function BlogEditPage({ params }: Props) {
   const { id } = params;
-  const blog = await getSingleBlog(id.toString());
+  const blog = await getSingleBlog(id);
   if (!blog?.data?.data) {
     return (
       <section className="space-y-10">

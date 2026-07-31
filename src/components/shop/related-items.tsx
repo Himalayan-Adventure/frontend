@@ -33,22 +33,23 @@ export default function RelatedItems({ relatedItems }: any) {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:mt-12 lg:grid-cols-4 lg:gap-12">
-        {relatedItems?.data?.map((product: any) => (
+        {relatedItems?.map((product: any) => (
           <ProductCard
             key={product?.id}
-            slug={product?.attributes?.slug}
+            slug={product?.slug}
             id={product?.id}
-            name={product?.attributes?.name}
-            description={product?.attributes?.descsription}
-            price={product?.attributes?.price}
-            discountRate={product?.attributes?.discount_rate}
-            rentAvailable={product?.attributes?.rentAvailable}
-            rentPrice={product?.attributes?.rentPrice}
-            stockCount={product?.attributes?.stockCount}
-            colors={product?.attributes?.count}
+            documentId={product?.documentId}
+            name={product?.name}
+            description={product?.descsription}
+            price={product?.price}
+            discountRate={product?.discount_rate}
+            rentAvailable={product?.rentAvailable}
+            rentPrice={product?.rentPrice}
+            stockCount={product?.stockCount}
+            colors={product?.count}
             rating={4}
             reviews={54}
-            img={product?.attributes?.image?.data?.[0]?.attributes?.url}
+            img={product?.image?.[0]?.url}
           />
         ))}
       </div>

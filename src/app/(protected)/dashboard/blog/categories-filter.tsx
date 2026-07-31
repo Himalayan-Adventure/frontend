@@ -40,7 +40,7 @@ export const CategoriesFilter = () => {
           <Shapes size={18} />
           {data?.data?.find(
             (i) => i.id === Number(searchParams.get("categoryID")),
-          )?.attributes.name || "Categories"}
+          )?.name || "Categories"}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All</SelectItem>
@@ -49,7 +49,7 @@ export const CategoriesFilter = () => {
           ) : (
             data?.data.map((i) => (
               <SelectItem key={`categories-${i.id}`} value={i.id.toString()}>
-                {i.attributes.name}
+                {i.name}
               </SelectItem>
             ))
           )}

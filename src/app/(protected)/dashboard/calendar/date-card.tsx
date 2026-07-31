@@ -16,7 +16,7 @@ export const DateCard = ({
 
   const { mutate: deleteAction, isPending } = useMutation({
     mutationKey: ["calendars", `calendars-${data.id}`],
-    mutationFn: async () => await deleteCalendar(data.id),
+    mutationFn: async () => await deleteCalendar(data.documentId),
     onSuccess() {
       if (searchParams.get("active") === data.id.toString()) {
         updateQueryString({}, ["active"]);
@@ -34,7 +34,7 @@ export const DateCard = ({
     >
       <span className="absolute right-2 top-2 hidden items-center gap-x-2 group-hover:flex">
         <Link
-          href={`/dashboard/calendar/edit/${data.id}`}
+          href={`/dashboard/calendar/edit/${data.documentId}`}
           className="rounded-full p-1 text-blue-900 hover:bg-blue-900 hover:text-white"
         >
           <PencilLine size={16} />
@@ -48,15 +48,15 @@ export const DateCard = ({
         </Button>
       </span>
       <CardTitle className="text-base font-normal">
-        {data?.attributes?.is_available ? "Available" : "Busy"}
+        {data?.is_available ? "Available" : "Busy"}
       </CardTitle>
       <div className="flex flex-col gap-y-4">
         <span className="flex flex-row gap-x-2">
           <Calendar size={18} />
           <Text variant="text-sm">
             {formatDateRange(
-              data.attributes.start_date,
-              data.attributes.end_date,
+              data.start_date || "",
+              data.end_date || "",
             )}
           </Text>
         </span>
@@ -67,19 +67,19 @@ export const DateCard = ({
               variant="text-sm"
               className="whitespace-nowrap text-green-800"
             >
-              {format(new Date(data?.attributes?.start_date), "hh:mm a")}
+              {format(new Date(data?.start_date || 0), "hh:mm a")}
             </Text>
             <Text variant="text-sm" className="">
               &nbsp;:&nbsp;
             </Text>
             <Text variant="text-sm" className="whitespace-nowrap text-red-800">
-              {format(new Date(data?.attributes?.end_date), "hh:mm a")}
+              {format(new Date(data?.end_date || 0), "hh:mm a")}
             </Text>
           </span>
         </span>
         <span>
-          {data.attributes.heading && (
-            <Text variant="text-sm">{data.attributes.heading}</Text>
+          {data.heading && (
+            <Text variant="text-sm">{data.heading}</Text>
           )}
         </span>
       </div>

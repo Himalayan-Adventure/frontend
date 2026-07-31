@@ -42,7 +42,7 @@ export default async function Packages({
             ) : (
               data?.data?.map(
                 (project, index) =>
-                  project.attributes.package && (
+                  project.package && (
                     <Suspense key={index}>
                       <ProjectCard key={index} project={project} />
                     </Suspense>

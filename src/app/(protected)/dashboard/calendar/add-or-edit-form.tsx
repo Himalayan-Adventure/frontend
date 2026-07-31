@@ -35,7 +35,7 @@ type CalendarAddOrEditProps =
   | {
       type: "edit";
       data: APIResponse<"api::calendar.calendar">;
-      id: number;
+      id: string;
       user?: never;
     };
 export const CalendarAddOrEditForm = ({
@@ -45,14 +45,14 @@ export const CalendarAddOrEditForm = ({
   id,
 }: CalendarAddOrEditProps) => {
   const { start_date, end_date, is_available, notes, heading, guides } =
-    data?.data?.attributes || {};
+    data?.data || {};
   const calendar: TCalendarForm = {
     start_date: start_date ? new Date(start_date) : new Date(),
     end_date: end_date ? new Date(end_date) : new Date(),
     is_available: is_available || false,
-    heading: heading,
-    notes: notes,
-    guides: guides?.data?.[0]?.id || user?.id,
+    heading: heading ?? undefined,
+    notes: notes ?? undefined,
+    guides: Number(guides?.[0]?.id) || user?.id,
   };
 
   const [loading, setLoading] = useState(false);
@@ -69,14 +69,16 @@ export const CalendarAddOrEditForm = ({
     };
     if (type === "edit") {
       const res = await editCalendar(payload, id);
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
         toast.success("Calendar updated successfully");
         router.refresh();
         router.back();
       }
     } else {
       const res = await addCalendar(payload);
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
         toast.success("Added calendar successfully");
         router.back();
         router.refresh();

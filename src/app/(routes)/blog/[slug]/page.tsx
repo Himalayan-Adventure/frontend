@@ -23,13 +23,13 @@ export async function generateMetadata(
   }
 
   const image =
-    data?.data?.data?.attributes?.thumbnail?.data?.attributes?.url || "";
+    data?.data?.data?.thumbnail?.url || "";
 
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
   return {
-    title: data?.data?.data?.attributes?.title,
+    title: data?.data?.data?.title,
     openGraph: {
       images: [image, ...previousImages],
     },

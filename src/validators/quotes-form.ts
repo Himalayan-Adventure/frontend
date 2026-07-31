@@ -21,7 +21,7 @@ export const QuoteFormSchema = z.object({
   subject: z.string({ required_error: "Subject is required" }).min(10),
   message: z.string({ required_error: "Message is required" }).min(10).max(500),
   //guide: z.coerce.number({ required_error: "Guide is required" }),
-  package: z.coerce.number().optional(),
+  package: z.union([z.coerce.number(), z.string()]).optional(),
 });
 
 export type TQuoteForm = z.infer<typeof QuoteFormSchema>;

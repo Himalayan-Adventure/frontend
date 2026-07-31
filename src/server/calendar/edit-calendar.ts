@@ -7,7 +7,7 @@ import {
   CalendarFormSchema,
   TCalendarForm,
 } from "@/validators/calendar-validator";
-export const editCalendar = async (calendar: TCalendarForm, id: number) => {
+export const editCalendar = async (calendar: TCalendarForm, id: string) => {
   try {
     const validatedFields = CalendarFormSchema.safeParse(calendar);
 

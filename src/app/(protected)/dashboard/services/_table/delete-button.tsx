@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
 
-export default function DeleteButton({ id }: { id: number }) {
+export default function DeleteButton({ id }: { id: string }) {
   const {
     mutate: deleteMutation,
     isPending,

@@ -19,7 +19,7 @@ const AboutUs = async () => {
   const data = await getAboutUs();
   const projectsData = await getProjects({});
 
-  if (!data || !data.data || !data.data.attributes) {
+  if (!data || !data.data) {
     return <CommonBanner title="Something Went Wrong" bgImage={bgImage} />;
   }
 
@@ -31,11 +31,11 @@ const AboutUs = async () => {
       </div>
 
       <Introduction
-        description={data?.data?.attributes?.description}
-        image={data?.data?.attributes?.image?.data?.[0]?.attributes?.url}
+        description={data?.data?.description}
+        image={data?.data?.image?.[0]?.url}
       />
 
-      <Services services={data?.data?.attributes?.service} />
+      <Services services={data?.data?.service} />
       {projectsData?.data && <Projects projectsData={projectsData?.data} />}
       <ClientsReviews />
       <Contact />

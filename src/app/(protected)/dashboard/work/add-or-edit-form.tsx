@@ -29,19 +29,19 @@ import { Textarea } from "@/components/ui/textarea";
 
 type WorkAddOrEditProps =
   | { type: "add"; data?: never; id?: never }
-  | { type: "edit"; data: APIResponse<"api::work.work">; id: number };
+  | { type: "edit"; data: APIResponse<"api::work.work">; id: string };
 export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File>();
   const router = useRouter();
-  const work = data?.data?.attributes;
-  const image = work?.image?.data?.[0]?.attributes;
+  const work = data?.data;
+  const image = work?.image?.[0];
   useEffect(() => {
     const getBlob = async () => {
       if (!image?.url) return;
       const imageBlob = await urlToFile(
         image?.url,
-        image?.name || data?.data.attributes.title + " thumbnail",
+        image?.name || data?.data?.title + " thumbnail",
       );
       setFile(imageBlob);
     };
@@ -61,24 +61,34 @@ export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
 
   async function onSubmit(values: TWorkForm) {
     setLoading(true);
-    const payload = { ...form.getValues() };
+    const payload = { ...values, image: file };
 
-    if (type === "edit") {
-      const res = await editWork(payload, id);
+    try {
+      if (type === "edit") {
+        const res = await editWork(payload, id);
 
-      if (res.status === 200) {
-        toast.success("Edited work successfully");
-        router.refresh();
-        router.back();
+        if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
+          toast.success("Edited work successfully");
+          router.refresh();
+          router.back();
+        } else {
+          toast.error(res.error?.message || "Failed to edit work");
+        }
+      } else {
+        const res = await addWork(payload);
+
+        if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
+          toast.success("Added work successfully");
+          router.refresh();
+          router.back();
+        } else {
+          toast.error(res.error?.message || "Failed to add work");
+        }
       }
-    } else {
-      const res = await addWork(payload);
-
-      if (res.status === 200) {
-        toast.success("Added work successfully");
-        router.refresh();
-        router.back();
-      }
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -173,10 +183,6 @@ export const WorkAddOrEditForm = ({ type, data, id }: WorkAddOrEditProps) => {
           <div className="flex flex-col justify-center gap-y-2 sm:justify-center">
             <Button
               type="submit"
-              onClick={() => {
-                form.setValue("image", file);
-                form.handleSubmit(onSubmit);
-              }}
               //disabled={!form.formState.isValid}
               className="w-fit items-center gap-x-3 self-start rounded-full bg-foreground px-10 py-6 font-poppins font-bold"
               isLoading={loading}

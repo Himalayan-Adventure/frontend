@@ -128,7 +128,7 @@ export const AppointmentDialog = ({
     setLoading(true);
     const appointment_date = availableTime?.data.find(
       (i) => i.id === activeTime,
-    )?.attributes.start_date;
+    )?.start_date;
     if (!appointment_date) {
       setLoading(false);
       toast.success("Appointment date is invalid");
@@ -140,7 +140,8 @@ export const AppointmentDialog = ({
       requested_by: loggedInUser?.id,
     };
     const res = await makeAppointment(payload);
-    if (res.status === 200) {
+    // Strapi answers a successful create with 201, not 200
+    if (res.status >= 200 && res.status < 300) {
       setLoading(false);
       setType("details");
       toast.success("Successfully made an appointment!");
@@ -297,7 +298,7 @@ export const AppointmentDialog = ({
               <span className="flex flex-wrap items-center gap-x-2">
                 {availableTime?.data.map((time) => (
                   <Badge
-                    onClick={() => setActiveTime(time.id)}
+                    onClick={() => setActiveTime(Number(time.id))}
                     className={cn(
                       time.id === activeTime
                         ? "bg-primary text-white"
@@ -306,7 +307,7 @@ export const AppointmentDialog = ({
                     )}
                     key={`availabletime-${time.id}`}
                   >
-                    {format(new Date(time.attributes.start_date), "h:mm aa")}
+                    {format(new Date(time.start_date || 0), "h:mm aa")}
                   </Badge>
                 ))}
               </span>

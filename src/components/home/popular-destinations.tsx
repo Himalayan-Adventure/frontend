@@ -68,9 +68,9 @@ export default function PopularDestinations() {
               destinations?.data.map((destination, index) => {
                 //prettier-ignore
                 //@ts-ignore
-                const smallImage =   destination.attributes.image?.data?.attributes?.formats?.small;
+                const smallImage =   destination.image?.formats?.small;
                 const fallbackImg =
-                  destination?.attributes?.image?.data?.attributes;
+                  destination?.image;
                 const image = smallImage || fallbackImg;
 
                 return (
@@ -104,12 +104,11 @@ export default function PopularDestinations() {
                     <div className="space-y-1 px-4 py-4 text-center lg:space-y-2">
                       <p className="line-clamp-1 text-xs text-gray-500 md:text-sm">
                         {
-                          destination?.attributes?.package_country?.data
-                            ?.attributes.name
+                          destination?.package_country?.name
                         }
                       </p>
                       <h2 className="line-clamp-1 text-sm md:text-lg lg:text-[22px]">
-                        {destination.attributes.name}
+                        {destination.name}
                       </h2>
                       <div className="flex items-center justify-center space-x-3">
                         <div className="h-3 w-3 rounded border bg-gray-200 lg:h-6 lg:w-6"></div>

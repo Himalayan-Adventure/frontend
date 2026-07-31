@@ -163,11 +163,7 @@ const GuideDetails = ({
       try {
         //const res = await fetch(`/api/users/${id}`);
         const query = qs.stringify({
-          populate: {
-            "[0]": "profilePicture",
-            "1": "contact",
-            "2": "about",
-          },
+          populate: ["profilePicture", "contact", "about"],
         });
         const data = await getSingleUser({ id, query });
         //const data = await res.json();
@@ -255,7 +251,7 @@ const GuideDetails = ({
         )}
       </div>
       <div className="flex flex-col gap-4 lg:gap-6 [&>button]:py-2 [&>button]:font-semibold [&>button]:lg:py-6">
-        <Link href={`/profile/${guide.id}`}>
+        <Link href={`/profile/${guide.username}`}>
           <Button className="w-full rounded-xl py-2 font-semibold md:py-6">
             Full Profile
           </Button>

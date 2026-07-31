@@ -30,9 +30,9 @@ export async function generateMetadata(
     };
   }
 
-  const images = data?.data?.attributes?.image
-    ? data?.data?.attributes?.image.data?.map(
-        (image: any) => image.attributes.url,
+  const images = data?.data?.image
+    ? data?.data?.image.map(
+        (image: any) => image.url,
       )
     : [];
 
@@ -40,7 +40,7 @@ export async function generateMetadata(
   const previousImages = (await parent).openGraph?.images || [];
 
   return {
-    title: `${data.data?.attributes?.name} | ${siteConfig.siteName}`,
+    title: `${data.data?.name} | ${siteConfig.siteName}`,
     description: ` ${siteConfig.siteDescription}`,
     openGraph: {
       images: [...images, ...previousImages],
@@ -71,9 +71,9 @@ export default async function ProductDetailPage({
   }
   return (
     <main>
-      <CommonBanner title={`${product?.attributes?.name}`} bgImage={bgImage} />
+      <CommonBanner title={`${product?.name}`} bgImage={bgImage} />
       <ProductDetail product={product} />
-      <RelatedItems relatedItems={products} />
+      <RelatedItems relatedItems={products?.data} />
     </main>
   );
 }

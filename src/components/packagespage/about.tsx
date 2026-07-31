@@ -16,13 +16,13 @@ export default function About({ desc }: { desc: BlocksContent }) {
         <h1 className="text-lg font-[600] md:text-xl lg:text-2xl">
           About Expedition
         </h1>
-        <p
+        <div
           className={`mt-2 text-base lg:mt-3 lg:text-[16px] ${
             isExpanded ? "line-clamp-none" : "line-clamp-3"
           }`}
         >
           <BlocksRenderer content={desc} />
-        </p>
+        </div>
         <button
           onClick={toggleExpansion}
           className="mt-2 flex items-center space-x-1 font-bold"

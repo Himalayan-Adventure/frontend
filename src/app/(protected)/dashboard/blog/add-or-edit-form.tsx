@@ -42,7 +42,7 @@ type BlogAddOrEditProps =
   | {
       type: "edit";
       data: APIResponse<"api::blog.blog">;
-      id: number;
+      id: string;
       authorID?: never;
     };
 export const BlogAddOrEditForm = ({
@@ -52,7 +52,7 @@ export const BlogAddOrEditForm = ({
   id,
 }: BlogAddOrEditProps) => {
   const [file, setFile] = useState<File>();
-  const image = data?.data?.attributes.thumbnail?.data?.attributes;
+  const image = data?.data?.thumbnail;
 
   const { data: categories, isLoading } = useQuery({
     queryKey: ["blog-categories", type, id],
@@ -63,7 +63,7 @@ export const BlogAddOrEditForm = ({
       if (!image?.url) return;
       const imageBlob = await urlToFile(
         image?.url,
-        image?.name || data?.data.attributes.title + " thumbnail",
+        image?.name || data?.data?.title + " thumbnail",
       );
       setFile(imageBlob);
     };
@@ -71,13 +71,13 @@ export const BlogAddOrEditForm = ({
     getBlob();
   }, []);
   const blog = {
-    title: data?.data?.attributes?.title || "",
-    description: data?.data?.attributes?.description || "",
+    title: data?.data?.title || "",
+    description: data?.data?.description || "",
     image: file,
     categories:
-      data?.data?.attributes?.blog_categories?.data?.[0]?.id.toString(),
-    slug: data?.data?.attributes?.slug,
-    user: data?.data?.attributes?.user,
+      data?.data?.blog_categories?.[0]?.id.toString(),
+    slug: data?.data?.slug ?? undefined,
+    user: data?.data?.user,
   };
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -89,7 +89,7 @@ export const BlogAddOrEditForm = ({
       description: blog?.description || "",
       image: blog?.image,
       slug: blog?.slug,
-      user: blog.user?.data.id || authorID,
+      user: Number(blog.user?.id) || authorID,
     },
   });
 
@@ -104,14 +104,16 @@ export const BlogAddOrEditForm = ({
     };
     if (type === "edit") {
       const res = await editBlog(payload, id);
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
         toast.success("Edited blog successfully");
         router.refresh();
         router.push("/dashboard/blog");
       }
     } else {
       const res = await addBlog(payload);
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
+        // Strapi answers a successful create with 201, not 200
         toast.success("Added blog successfully");
         router.refresh();
         router.push("/dashboard/blog");
@@ -212,7 +214,7 @@ export const BlogAddOrEditForm = ({
                           key={`${i.id}-blog-categories`}
                           value={i.id.toString()}
                         >
-                          {i.attributes.name}
+                          {i.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

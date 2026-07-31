@@ -29,7 +29,8 @@ export const postRequestService = async ({
         Authorization: `Bearer ${token}`,
       },
     });
-    if (res.status !== 200) {
+    // Strapi answers a successful create with 201, not 200
+    if (res.status < 200 || res.status >= 300) {
       if (res.status === 403 || res.status === 401) {
         throw new Error("Not authenticated");
       }
@@ -44,9 +45,15 @@ export const postRequestService = async ({
   } catch (error: any) {
     console.log(error);
     return {
+      // must stay serialisable — returning the raw error breaks the
+      // server-action -> client component boundary
       error: {
-        message: error || "Error sending request",
+        message:
+          error?.response?.data?.error?.message ||
+          error?.message ||
+          "Error sending request",
       },
+      status: error?.response?.status || 500,
     };
   }
 };

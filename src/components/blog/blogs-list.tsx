@@ -18,14 +18,14 @@ export default function BlogsList({
   const filteredBlogs = blogs.filter((blog: any) => {
     const matchesCategory =
       selectedCategory === "Categories" ||
-      blog?.attributes?.blog_categories?.data?.[0]?.attributes?.name ===
+      blog?.blog_categories?.[0]?.name ===
         selectedCategory;
     const matchesSearchQuery =
       searchQuery === "" ||
-      blog?.attributes?.title
+      blog?.title
         ?.toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
-      blog?.attributes?.content
+      blog?.content
         ?.toLowerCase()
         .includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearchQuery;

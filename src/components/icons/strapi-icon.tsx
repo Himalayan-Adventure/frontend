@@ -61,7 +61,11 @@ const DynamicReactIcon: React.FC<IDynamicReactIcon> = ({
   if (!iconComponent) return <></>;
 
   const DynamicIcon = loadable(iconComponent, {
-    resolveComponent: (el) => el[name],
+    // Fall back to a no-op component when `name` doesn't exist in the
+    // resolved icon set (e.g. a stale/invalid icon name typed in the CMS) —
+    // returning `undefined` here crashes @loadable/component's internal
+    // hoistNonReactStatics call.
+    resolveComponent: (el) => el[name] || (() => null),
   }) as IconType;
 
   return (

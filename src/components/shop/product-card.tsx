@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/CartContext";
 
 interface ProductProps {
   id: number;
+  documentId: string;
   name: string;
   price: number;
   description: string;
@@ -30,6 +31,7 @@ interface Color {
 
 const ProductCard: React.FC<ProductProps> = ({
   id,
+  documentId,
   name,
   price,
   discountRate,
@@ -113,7 +115,7 @@ const ProductCard: React.FC<ProductProps> = ({
         </div>
 
         {/* Product Image Link */}
-        <Link href={`/shop/${id}`}>
+        <Link href={`/shop/${documentId}`}>
           <img
             src={img}
             alt={name}

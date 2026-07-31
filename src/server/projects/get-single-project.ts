@@ -22,7 +22,7 @@ export const getSingleProject = async (id: string) => {
             populate: {
               user: {
                 populate: {
-                  profilePicutre: "*",
+                  profilePicture: true,
                   about: "*",
                 },
               },

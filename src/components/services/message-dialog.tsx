@@ -42,7 +42,8 @@ export const MessageDialog = ({ guideId }: { guideId: number }) => {
     setLoading(true);
     const payload = form.getValues();
     const res = await addInquiry(payload);
-    if (res.status === 200) {
+    // Strapi answers a successful create with 201, not 200
+    if (res.status >= 200 && res.status < 300) {
       setLoading(false);
       setType("details");
       toast.success("Successfully sent a message!");
