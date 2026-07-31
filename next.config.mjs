@@ -39,6 +39,19 @@ const nextConfig = {
       fullUrl: true,
     },
   },
+  // Strapi's local upload provider returns relative URLs ("/uploads/x.jpg"),
+  // which would otherwise resolve against this app instead of the CMS. Cloudinary
+  // URLs are absolute, so this rewrite is inert whenever that provider is in use.
+  async rewrites() {
+    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+    if (!strapiUrl) return [];
+    return [
+      {
+        source: "/uploads/:path*",
+        destination: `${strapiUrl.replace(/\/$/, "")}/uploads/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
