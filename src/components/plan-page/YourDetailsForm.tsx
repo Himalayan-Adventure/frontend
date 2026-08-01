@@ -8,12 +8,14 @@ import OptimizedPackagesModal from "./optimize-packages-modal";
 export default function YourDetailsForm() {
   const {
     group,
+    grade,
     budget,
     travelDates,
     selectedDestinationId,
     experience,
     accommodation,
     selectedPackageIds,
+    selectedPackageTypeId,
   } = usePlanContext();
 
   const [detailsFormData, setDetailsFormData] = useState({
@@ -51,8 +53,10 @@ export default function YourDetailsForm() {
     const payload = {
       data: {
         group: group,
+        grade: grade,
         travel_dates: travelDates,
         destination_country: selectedDestinationId,
+        package_type: selectedPackageTypeId,
         packages: selectedPackageIds,
         accommodation_preferences: accommodation.join(", "),
         customized_experience: experience.join(", "),

@@ -55,6 +55,13 @@ interface PlanContextType {
 
   selectedPackageType: string[]; // Change from string to string[]
   setSelectedPackageType: React.Dispatch<React.SetStateAction<string[]>>;
+
+  // the package-type record behind the chosen category, submitted as a relation
+  selectedPackageTypeId: number | undefined;
+  setSelectedPackageTypeId: (id: number | undefined) => void;
+
+  grade: string;
+  setGrade: (grade: string) => void;
 }
 
 const PlanContext = createContext<PlanContextType | undefined>(undefined);
@@ -92,6 +99,9 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
   const [selectedPackageIds, setSelectedPackageIds] = useState<string[]>([]);
 
   const [selectedPackageType, setSelectedPackageType] = useState<string[]>([]);
+  const [selectedPackageTypeId, setSelectedPackageTypeId] = useState<number>();
+
+  const [grade, setGrade] = useState<string>("beginner");
   return (
     <PlanContext.Provider
       value={{
@@ -127,6 +137,10 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
         setSelectedPackageIds,
         selectedPackageType,
         setSelectedPackageType,
+        selectedPackageTypeId,
+        setSelectedPackageTypeId,
+        grade,
+        setGrade,
       }}
     >
       {children}

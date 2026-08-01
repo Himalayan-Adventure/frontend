@@ -23,8 +23,12 @@ export default function PackageSelection() {
   const [loadingTypes, setLoadingTypes] = useState(true);
   const [loadingPackages, setLoadingPackages] = useState(false);
   const [showMore, setShowMore] = useState(false); // Whether to show more packages
-  const { selectedPackageIds, setSelectedPackageIds, setSelectedPackageType } =
-    usePlanContext();
+  const {
+    selectedPackageIds,
+    setSelectedPackageIds,
+    setSelectedPackageType,
+    setSelectedPackageTypeId,
+  } = usePlanContext();
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -69,9 +73,11 @@ export default function PackageSelection() {
     fetchPackages();
   }, [selectedType]);
 
-  const handleOptionClick = (type: string) => {
+  const handleOptionClick = (type: string, typeId?: number) => {
     setSelectedType(type);
     setSelectedPackageType([type]);
+    // keep the record id too — the plan is submitted with a package_type relation
+    setSelectedPackageTypeId(typeId);
   };
 
   const handleSelectPackage = (pkg: any) => {
@@ -108,7 +114,7 @@ export default function PackageSelection() {
                     ? "bg-primary text-white"
                     : "bg-gray-100 hover:bg-gray-200"
                 } ${index === 0 ? "-ml-12" : ""}`}
-                onClick={() => handleOptionClick(type?.name)}
+                onClick={() => handleOptionClick(type?.name, type?.id)}
               >
                 <span
                   className={`text-xl lg:text-4xl ${

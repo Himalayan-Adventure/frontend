@@ -25,6 +25,8 @@ export default function Details({ setSelectedOption }: DetailsProps) {
     minBudget,
     maxBudget,
     selectedPackageIds,
+    selectedPackageType,
+    grade,
   } = usePlanContext();
 
   const [packages, setPackages] = useState<any[]>([]);
@@ -169,6 +171,20 @@ export default function Details({ setSelectedOption }: DetailsProps) {
       <div className="flex flex-col">
         <h2 className="text-sm font-semibold md:text-base">Packages :</h2>
         <p className="text-sm text-gray-700 md:text-base">{renderPackages()}</p>
+      </div>
+      <div className="flex flex-col">
+        <h2 className="text-sm font-semibold md:text-base">Package Type:</h2>
+        <p className="text-sm text-gray-700 md:text-base">
+          {selectedPackageType.length > 0
+            ? selectedPackageType.join(", ")
+            : "No package type selected."}
+        </p>
+      </div>
+      <div className="flex flex-col">
+        <h2 className="text-sm font-semibold md:text-base">
+          Experience Level:
+        </h2>
+        <p className="text-sm text-gray-700 md:text-base">{grade}</p>
       </div>
 
       {/* "Check & Confirm" button */}

@@ -8,6 +8,7 @@ import BudgetSelection from "@/components/plan-page/budget-selection";
 import CustomizeExperience from "@/components/plan-page/customize-experience";
 import DateSelection from "@/components/plan-page/date-selection";
 import DestinationSelection from "@/components/plan-page/destination-selction";
+import GradeSelection from "@/components/plan-page/grade-selection";
 import PackageSelection from "@/components/plan-page/package-selection";
 import ReviewFinal from "@/components/plan-page/review-final";
 import Travel from "@/components/plan-page/travel";
@@ -28,6 +29,7 @@ export const staticSteps = [
     icon: "IoMapOutline",
   },
   { step: "Package", title: "Packages", icon: "GoArchive" },
+  { step: "Grade", title: "Your Experience Level", icon: "MdUpgrade" },
   { step: "Accommodation", title: "Accommodations", icon: "AiOutlineHome" },
   { step: "Budget", title: "Plan your Budget", icon: "CiBadgeDollar" },
   { step: "Experience", title: "Customize Experience", icon: "BsListStars" },
@@ -39,6 +41,7 @@ export const componentMapping: Record<string, PlanComponent> = {
   TravelDates: DateSelection,
   Destination: DestinationSelection,
   Package: PackageSelection,
+  Grade: GradeSelection,
   Accommodation: AccomodationSelection,
   Budget: BudgetSelection,
   Experience: CustomizeExperience,

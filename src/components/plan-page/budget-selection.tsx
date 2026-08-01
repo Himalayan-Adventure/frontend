@@ -1,12 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaDollarSign, FaRegQuestionCircle } from "react-icons/fa";
 import { RiSlideshowFill } from "react-icons/ri";
 import { usePlanContext } from "@/components/plan-page/plan-context";
 import { toast } from "sonner";
 
 interface Budget {
-  id: number;
   fixed_budget: string | null;
   budget_range_start: string | null;
   budget_range_end: string | null;
@@ -43,6 +42,39 @@ export default function BudgetSelection() {
 
   const [tripPlanned, setTripPlanned] = useState(false);
 
+  // Keep the shared plan state in step with what's on screen. "Plan My Trip"
+  // below is only a confirmation — without this, advancing with the arrow
+  // submitted an empty budget.
+  useEffect(() => {
+    if (selectedBudgetOption === "Fixed Budget") {
+      if (fixedAmount !== null && fixedAmount > 0) {
+        setBudget({
+          fixed_budget: fixedAmount.toString(),
+          budget_range_start: null,
+          budget_range_end: null,
+          decide_later: false,
+        });
+      }
+    } else if (selectedBudgetOption === "Set your Budget Range") {
+      if (minBudget !== null && maxBudget !== null && minBudget < maxBudget) {
+        setBudget({
+          fixed_budget: null,
+          budget_range_start: minBudget.toString(),
+          budget_range_end: maxBudget.toString(),
+          decide_later: false,
+        });
+      }
+    } else if (selectedBudgetOption === "I'll decide later") {
+      setBudget({
+        fixed_budget: null,
+        budget_range_start: null,
+        budget_range_end: null,
+        decide_later: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBudgetOption, fixedAmount, minBudget, maxBudget]);
+
   const handleOptionClick = (option: string) => {
     setSelectedBudgetOption(option);
     setTripPlanned(false);
@@ -67,7 +99,6 @@ export default function BudgetSelection() {
         return;
       }
       const budget: Budget = {
-        id: 1, // Assuming a valid id for demonstration
         fixed_budget: fixedAmount.toString(),
         budget_range_start: null,
         budget_range_end: null,
@@ -81,7 +112,6 @@ export default function BudgetSelection() {
         return;
       }
       const budget: Budget = {
-        id: 1, // Assuming a valid id for demonstration
         fixed_budget: null,
         budget_range_start: minBudget.toString(),
         budget_range_end: maxBudget.toString(),
@@ -91,7 +121,6 @@ export default function BudgetSelection() {
       setTripPlanned(true);
     } else if (selectedBudgetOption === "I'll decide later") {
       const budget: Budget = {
-        id: 1, // Assuming a valid id for demonstration
         fixed_budget: null,
         budget_range_start: null,
         budget_range_end: null,
